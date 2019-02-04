@@ -78,7 +78,7 @@ Run this to create flower plots for each region.
 ## source script (to be incorporated into ohicore)
 source('https://raw.githubusercontent.com/OHI-Science/arc/master/circle2016/plot_flower_local.R')
 
-PlotFlower(assessment_name = "Toolbox Demo",
+PlotFlower(assessment_name = "Baltic",
 dir_fig_save    = "reports/figures")
 ```
 
