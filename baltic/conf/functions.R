@@ -1151,8 +1151,7 @@ ICO <- function(layers) {
       iucn_cat = category,
       scenario_year,
       eval_yr,
-      ico_spp_iucn_status_year
-    ) %>%
+      ico_spp_iucn_status_year) %>%
     dplyr::mutate(iucn_cat = as.character(iucn_cat)) %>%
     dplyr::group_by(region_id, iucn_sid) %>%
     dplyr::mutate(sample_n = length(na.omit(unique(eval_yr[eval_yr > scen_year-19])))) %>%
@@ -1225,57 +1224,6 @@ ICO <- function(layers) {
   scores <-  rbind(status, trend) %>%
     dplyr::mutate('goal' = 'ICO') %>%
     dplyr::select(goal, dimension, region_id, score) %>%
-    data.frame()
-
-  ## Gapfill Oecussi Ambeno (rgn 237) with East Timor (rgn 231) data
-  ## Oecussi Ambeno is an enclave within East Timor, so the data should be very similar
-  go <- dplyr::filter(scores, region_id == 231) %>%
-    dplyr::mutate(region_id = 237)
-  scores <- rbind(scores, go)
-
-
-  ## gapfill missing regions with average scores/trends of regions that share same UN geopolitical region
-  un_regions <- georegions %>%
-    dplyr::select(region_id = rgn_id, r2)
-
-  # ID missing regions:
-  regions <- SelectLayersData(layers, layers = c('rgn_global')) %>%
-    dplyr::select(region_id = id_num)
-  regions_NA <- setdiff(regions$region_id, scores$region_id)
-
-  scores_NA <- data.frame(
-    goal = "ICO",
-    dimension = rep(c("status", "trend"),
-                    each = length(regions_NA)),
-    region_id = regions_NA,
-    score = NA
-  )
-
-  scores <- scores %>%
-    rbind(scores_NA) %>%
-    dplyr::mutate(region_id = as.numeric(region_id)) %>%
-    dplyr::left_join(un_regions, by = "region_id") %>%
-    dplyr::group_by(dimension, r2) %>%
-    dplyr::mutate(score_gf = mean(score, na.rm = TRUE)) %>%
-    dplyr::arrange(dimension, region_id) %>%
-    data.frame()
-
-  # save gapfilling records
-  scores_gf <- scores %>%
-    dplyr::mutate(gapfilled = ifelse(is.na(score) &
-                                !is.na(score_gf), "1", "0")) %>%
-    dplyr::mutate(method = ifelse(
-      is.na(score) &
-        !is.na(score_gf),
-      "UN geopolitical avg. (r2)",
-      NA
-    )) %>%
-    dplyr::select(goal, dimension, region_id, gapfilled, method)
-  write.csv(scores_gf, "temp/ICO_status_trend_gf.csv", row.names = FALSE)
-
-  scores <- scores %>%
-    dplyr::mutate(score2 = ifelse(is.na(score), score_gf, score)) %>%
-    dplyr::select(goal, dimension, region_id, score = score2) %>%
     data.frame()
 
   return(scores)
