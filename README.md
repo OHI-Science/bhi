@@ -1,2 +1,5 @@
-# bhi
-Baltic Health Index 2.0
+# Ocean Health Index for Baltic [bhi]
+
+This is the Ocean Health Index repository for Baltic. 
+
+For more information, please see http://ohi-science.org.
