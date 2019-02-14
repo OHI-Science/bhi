@@ -22,4 +22,4 @@ TRA = function(layers){
     mutate(goal = 'TRA')
 
   return(scores)
-} ## END TRA function
+} ## End TRA function

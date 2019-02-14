@@ -1,4 +1,3 @@
-
 LSP = function(layers){
 
   # status
@@ -21,4 +20,5 @@ LSP = function(layers){
     mutate(goal = 'LSP')
 
   return(scores)
-} # end LSP function
+
+} ## End LSP function

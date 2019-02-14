@@ -1,4 +1,3 @@
-
 SP = function(scores){
 
   ## to calculate the four SP dimesions, average those dimensions for ICO and LSP
@@ -16,3 +15,4 @@ SP = function(scores){
   # return all scores
   return(rbind(scores, s))
 } ## End SP function
+

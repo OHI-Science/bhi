@@ -102,11 +102,24 @@ FIS = function(layers){
     ungroup() %>%
     mutate(propCatch = avgCatch/totCatch)
 
+  #### The total proportion of landings for each region/year will sum to one:
+  #filter(weights, region_id ==3, year==2014)
+
+  ############################################################
+  #####  STEP 5: Join scores and weights to calculate status
+  ############################################################
+
 
   status <- weights %>%
     left_join(status.scores, by=c('region_id', 'year', 'stock'))%>%
     filter(!is.na(score)) %>%                    # remove missing data
     dplyr::select(region_id, year, stock, propCatch, score)        # cleaning data
+
+  ###########################################################################
+  ######### Becaue of bad cod condition in Eastern Baltic(ICES_subdivision = 2532),
+  ######### we added a penalty factor of 0.872 based on historical cod body weight.
+  ######### see FIS prep for full calculation of the penalty factor
+  ######### by Ning Jiang, 16 Feb, 2017
 
   status_with_penalty <- status %>%
     mutate(scores.with.penal = ifelse(stock == "cod_2532", score*0.872,
@@ -114,7 +127,12 @@ FIS = function(layers){
     dplyr::select(-score) %>%
     dplyr::rename(score = scores.with.penal)
 
-
+  # ## Geometric mean weighted by proportion of catch in each region
+  # status <- status %>%
+  #   group_by(region_id, year) %>%
+  #   summarize(status = prod(score^propCatch)) %>%
+  #   ungroup() %>%
+  #   data.frame()
 
   status <- status_with_penalty %>%
     group_by(region_id, year) %>%

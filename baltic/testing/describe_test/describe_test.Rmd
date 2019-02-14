@@ -6,6 +6,14 @@ output: html_document
 **This document will have name matching the folder it is in, which is dedicated to a single specific testing scenario**
 **Other files in the folder include: README, test_functions.csv**
 
+```{r set up}
+setwd(file.path(here::here(), "baltic/testing/describe_test"))
+
+source(sprintf("%s/R/testing.R", here::here()))
+source(sprintf("%s/R/common.R", here::here()))
+
+```
+
 
 ## Description
 
@@ -21,30 +29,17 @@ Pretty detailed description of what this test is all about, what kinds of data w
 
 ```{r configuring test and calculating alternative scores}
 
-source(sprintf("%s/R/testing.R", here::here()))
-
 assessment_path <- sprintf("%s/baltic", here::here())
+prep_path <- sprintf("%s%s", here::here(), "-prep/prep")
+
 configure_functions(assessment_path) # write functions to use into functions.R
 sink() # stop sinking...
 
 test_layers <- sprintf("%s/testing/alt_layers_full_table.csv", assessment_path)
-
-prep_path <- file.path("GitHub/bhi-prep/baltic2019")
 configure_layers(assessment_path, prep_path)
 
-## calculate scores routine...
-conf <- ohicore::Conf('conf')
-ohicore::CheckLayers('layers.csv', 'layers', flds_id=conf$config$layers_id_fields)
-layers <- ohicore::Layers(sprintf("%s/layers.csv", assessment_path),
-                          sprintf("%s/layers", assessment_path))
-scenario_years <- 2018
-layers$data$scenario_year <- scenario_years
-
-
-
-
-
-
-
-
+## calculate scores...
+repo_loc <- "https://raw.githubusercontent.com/OHI-Science/bhi-prep/master"
+copy_layers_for_assessment(assessment_path, repo_loc)
+calculate_scores(assessment_path, c(2015, 2018), scores_path = getwd())
 ```

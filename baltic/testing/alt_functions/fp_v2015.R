@@ -1,4 +1,3 @@
-
 FP = function(layers, scores){
 
   # weights of FIS, MAR by rgn_id
@@ -49,4 +48,4 @@ FP = function(layers, scores){
 
   ## return all scores
   return(rbind(scores, s))
-} ## End FP Function
+} ## End FP function

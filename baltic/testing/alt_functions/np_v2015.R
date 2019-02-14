@@ -1,5 +1,3 @@
-
-
 NP = function(layers){
 
   ## This is the same function as FIS except for data. Only sprat data is used here.
@@ -159,4 +157,4 @@ NP = function(layers){
     mutate(goal='NP')
   return(scores)
 
-} # end NP function
+} ## End NP function

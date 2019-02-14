@@ -1,5 +1,13 @@
-
 MAR = function(layers){
+  ##updated by Jennifer Griffiths 25Feb2016
+  ##updated by Julie 26Feb2016
+  ##updated by Jennifer Griffiths 29Feb2016 - make sure mar_status_score limited to status_years, change layer names
+  ##updated by Jennifer Griffiths 29March2016 - added code for temporal reference point but this is commented out until final decision made
+  ##updated by Jennifer Griffiths 05April2016 - made reference point temporal (removed spatial), made data unit tons of production, not per capita
+  ##updated by Jennifer Griffiths 16June2016 - change code so areas with no data are NA for status (not zero)
+  ##updated by Ning Jiang 3Nov2016 - changed status function, and ref point to: max production of most recent five years has sust coef of 1
+
+  ##layers used: mar_harvest_tonnes, mar_harvest_species, mar_sustainability_score
 
 
   ## select layers for MAR
@@ -84,4 +92,4 @@ MAR = function(layers){
   return(scores)
 
 
-} # end MAR function
+} # End MAR function

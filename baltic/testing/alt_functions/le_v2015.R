@@ -1,5 +1,3 @@
-
-
 LE = function(scores, layers){
 
   # calculate LE scores

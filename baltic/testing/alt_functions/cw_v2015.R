@@ -1,4 +1,3 @@
-
 CW = function(scores){
   #####----------------------######
   ## CW status & CW Trend
