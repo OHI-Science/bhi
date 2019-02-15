@@ -44,6 +44,7 @@ source("../R/common.R")
 repo_loc <- "https://raw.githubusercontent.com/OHI-Science/bhi-prep/master"
 
 ## at this point, double check that all bhi-prep changes have been pushed to github!
+## make sure files in bhi-prep 'layers' folder are the ones we want for calculating scores!
 ```
 
 ## Configure Toolbox
@@ -70,6 +71,35 @@ Run this chunk to calculate and save scores as `scores` object and as `scores.cs
 calculate_scores(assessment_path, scenario_years, scores_path = ".")
 ```
 
+## Score checking
+
+```{r some checking of scores, eval=FALSE}
+
+## adapt ohiglobal code
+
+# ohicore::score_check(commit="previous", scenario_year=2018,
+#             file_name="check_2019_assess", save_csv = TRUE, NA_compare = TRUE)
+# 
+# 
+# compare <- read.csv(here("eez/score_check/check_2019_assess_diff_data_2019-02-01.csv")) 
+# 
+# dplyr::filter(compare, is.na(score) & !is.na(old_score))
+# 
+# library(ggplot2)
+# p <- ggplot(dplyr::filter(compare, year==2018 & dimension=="status" & goal == "FIS"), aes(x=old_score, y=score)) +
+#   geom_point(aes(text = paste0("rgn = ", rgn_name)), shape=19) +
+#   geom_abline(slope=1, intercept=0) +
+#   labs(x="catch weighting", y="no catch weighting") + 
+#   theme_bw()
+# 
+# plotly_fig <- plotly::ggplotly(p)
+# htmlwidgets::saveWidget(plotly::as_widget(plotly_fig), "tmp_file.html", 
+#                         selfcontained = TRUE)
+# 
+# 
+# dplyr::filter(compare, is.na(old_score) & !is.na(score))
+
+```
 
 
 <!-- ## Create figures -->
