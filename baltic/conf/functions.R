@@ -4,206 +4,160 @@
 ## for example, FIS is the Fishing subgoal of Food Provision (FP).
 
 
-FIS <- function(layers) {
-    scen_year <- layers$data$scenario_year
 
-  #catch data
-  c <-
-    AlignDataYears(layer_nm = "fis_meancatch", layers_obj = layers) %>%
-    dplyr::select(
-      region_id = rgn_id,
-      year = scenario_year,
-      stock_id_taxonkey,
-      catch = mean_catch
-    )
+FIS = function(layers){
 
-  #  b_bmsy data
+  ## Based on code from v2015 BHI assessment
+  ## Revised to use multi-year framework, incorporating scenario_data_years
+  ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
 
-  b <-
-    AlignDataYears(layer_nm = "fis_b_bmsy", layers_obj = layers) %>%
-    dplyr::select(region_id = rgn_id, stock_id, year = scenario_year, bbmsy)
-
-  # The following stocks are fished in multiple regions and often have high b/bmsy values
-  # Due to the underfishing penalty, this actually penalizes the regions that have the highest
-  # proportion of catch of these stocks.  The following corrects this problem:
-   # tmp <- dplyr::filter(b, stock_id %in% c('Katsuwonus_pelamis-71', 'Sardinella_aurita-34')) %>%
-   #   dplyr::arrange(stock_id, year) %>%
-   #   data.frame()
-
-  high_bmsy <- c(
-    "Katsuwonus_pelamis-71",
-    "Clupea_harengus-27",
-    "Trachurus_capensis-47",
-    "Sardinella_aurita-34",
-    "Scomberomorus_cavalla-31"
-  )
-
-  b <- b %>%
-    dplyr::mutate(bbmsy = ifelse(stock_id %in% high_bmsy &
-                            bbmsy > 1, 1, bbmsy))
-
-  # # no underharvest penalty
-  # b <- b %>%
-  #   dplyr::mutate(bbmsy = ifelse(bbmsy > 1, 1, bbmsy))
+  scen_year <- layers$data$scenario_year
 
 
-  # separate out the stock_id and taxonkey:
-  c <- c %>%
-    dplyr::mutate(stock_id_taxonkey = as.character(stock_id_taxonkey)) %>%
-    dplyr::mutate(taxon_key = stringr::str_sub(stock_id_taxonkey,-6,-1)) %>%
-    dplyr::mutate(stock_id = substr(stock_id_taxonkey, 1, nchar(stock_id_taxonkey) -
-                               7)) %>%
-    dplyr::mutate(catch = as.numeric(catch)) %>%
-    dplyr::mutate(year = as.numeric(as.character(year))) %>%
-    dplyr::mutate(region_id = as.numeric(as.character(region_id))) %>%
-    dplyr::mutate(taxon_key = as.numeric(as.character(taxon_key))) %>%
-    dplyr::select(region_id, year, stock_id, taxon_key, catch)
+  bbmsy <- AlignDataYears(layer_nm="fis_bbmsy", layers_obj=layers) %>%
+    mutate(metric="bbmsy") %>%
+    dplyr::rename(region_id = rgn_id)
 
-  # general formatting:
-  b <- b %>%
-    dplyr::mutate(bbmsy = as.numeric(bbmsy)) %>%
-    dplyr::mutate(region_id = as.numeric(as.character(region_id))) %>%
-    dplyr::mutate(year = as.numeric(as.character(year))) %>%
-    dplyr::mutate(stock_id = as.character(stock_id))
+  ffmsy <- AlignDataYears(layer_nm="fis_ffmsy", layers_obj=layers) %>%
+    mutate(metric="ffmsy") %>%
+    dplyr::rename(region_id = rgn_id)
+
+  landings <- AlignDataYears(layer_nm="fis_landings", layers_obj=layers) %>%
+    dplyr::rename(region_id = rgn_id)
 
 
-  ####
-  # STEP 1. Calculate scores for Bbmsy values
-  ####
-  #  *************NOTE *****************************
-  #  These values can be altered
-  #  ***********************************************
-  alpha <- 0.5
-  beta <- 0.25
-  lowerBuffer <- 0.95
-  upperBuffer <- 1.05
+  ## combine bbmsy and ffmsy into single object
 
-  b$score = ifelse(
-    b$bbmsy < lowerBuffer,
-    b$bbmsy,
-    ifelse (b$bbmsy >= lowerBuffer &
-              b$bbmsy <= upperBuffer, 1, NA)
-  )
-  b$score = ifelse(!is.na(b$score),
-                   b$score,
-                   ifelse(
-                     1 - alpha * (b$bbmsy - upperBuffer) > beta,
-                     1 - alpha * (b$bbmsy - upperBuffer),
-                     beta
-                   ))
+  metric_scores <- rbind(bbmsy %>% dplyr::select(-fis_bbmsy_year),
+                         ffmsy %>% dplyr::select(-fis_ffmsy_year)) %>%
+    dplyr::select(-layer_name, year = scenario_year) %>%
+    dplyr::mutate(metric = as.factor(metric)) %>%
+    spread(metric, score)
 
 
-  ####
-  # STEP 1. Merge the b/bmsy data with catch data
-  ####
-  data_fis <- c %>%
-    dplyr::left_join(b, by = c('region_id', 'stock_id', 'year')) %>%
-    dplyr::select(region_id, stock_id, year, taxon_key, catch, bbmsy, score)
+  ## STEP 1: converting B/Bmsy and F/Fmsy to F-scores
+
+  ## see plot describing the relationship between these variables and scores
+  ## this may need to be adjusted
+
+  F_scores <- metric_scores %>%
+    mutate(score = ifelse(bbmsy < 0.8 & ffmsy >= (bbmsy + 1.5), 0, NA),
+           score = ifelse(bbmsy < 0.8 & ffmsy < (bbmsy - 0.2), ffmsy/(bbmsy - 0.2), score),
+           score = ifelse(bbmsy < 0.8 & ffmsy >= (bbmsy + 0.2) & ffmsy < (bbmsy + 1.5), (bbmsy + 1.5 - ffmsy)/1.5, score),
+           score = ifelse(bbmsy < 0.8 & ffmsy >= (bbmsy - 0.2) & ffmsy < (bbmsy + 0.2), 1, score)) %>%
+    mutate(score = ifelse(bbmsy >= 0.8 & ffmsy < 0.8, ffmsy/0.8, score),
+           score = ifelse(bbmsy >= 0.8 & ffmsy >= 0.8 & ffmsy < 1.2, 1, score),
+           score = ifelse(bbmsy >= 0.8 & ffmsy >= 1.2, (2.5 - ffmsy)/1.3, score)) %>%
+    mutate(score = ifelse(score <= 0, 0.1, score)) %>%
+    mutate(score_type = "F_score")
+
+  ## note: last score is 0.1 rather than zero because
+  ## if have one zero w/ geometric mean, results in a zero score
 
 
-  ###
-  # STEP 2. Estimate scores for taxa without b/bmsy values
-  # Median score of other fish in the region is the starting point
-  # Then a penalty is applied based on the level the taxa are reported at
-  ###
+  ## STEP 2: converting B/Bmsy to B-scores
 
-  ## this takes the mean score within each region and year
-  ## assessments prior to 2018 used the median
-  data_fis_gf <- data_fis %>%
-    dplyr::group_by(region_id, year) %>%
-    dplyr::mutate(mean_score = mean(score, na.rm = TRUE)) %>%
-    dplyr::ungroup()
-
-  ## this takes the mean score across all regions within a year
-  # (when no stocks have scores within a region)
-  data_fis_gf <- data_fis_gf %>%
-    dplyr::group_by(year) %>%
-    dplyr::mutate(mean_score_global = mean(score, na.rm = TRUE)) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(mean_score = ifelse(is.na(mean_score), mean_score_global, mean_score)) %>%
-    dplyr::select(-mean_score_global)
-
-  #  *************NOTE *****************************
-  #  In some cases, it may make sense to alter the
-  #  penalty for not identifying fisheries catch data to
-  #  species level.
-  #  ***********************************************
-
-  penaltyTable <- data.frame(TaxonPenaltyCode = 1:6,
-                             penalty = c(0.1, 0.25, 0.5, 0.8, 0.9, 1))
-
-  data_fis_gf <- data_fis_gf %>%
-    dplyr::mutate(TaxonPenaltyCode = as.numeric(substring(taxon_key, 1, 1))) %>%
-    dplyr::left_join(penaltyTable, by = 'TaxonPenaltyCode') %>%
-    dplyr::mutate(score_gf = mean_score * penalty) %>%
-    dplyr::mutate(method = ifelse(is.na(score), "Mean gapfilled", NA)) %>%
-    dplyr::mutate(gapfilled = ifelse(is.na(score), 1, 0)) %>%
-    dplyr::mutate(score = ifelse(is.na(score), score_gf, score))
+  B_scores <- metric_scores %>%
+    mutate(score = ifelse(bbmsy < 0.8 , bbmsy/0.8, NA),
+           score = ifelse(bbmsy >= 0.8 & bbmsy < 1.5, 1, score),
+           score = ifelse(bbmsy >= 1.5, (3.35 - bbmsy)/1.8, score)) %>%
+    mutate(score = ifelse(score <= 0.1, 0.1, score)) %>%
+    mutate(score = ifelse(score > 1, 1, score))%>%
+    mutate(score_type = "B_score")
 
 
-  gap_fill_data <- data_fis_gf %>%
-    dplyr::select(region_id,
-           stock_id,
-           taxon_key,
-           year,
-           catch,
-           score,
-           gapfilled,
-           method) %>%
-    dplyr::filter(year == scen_year)
+  ## STEP 3: averaging the F and B-scores to get the stock status score
 
-  write.csv(gap_fill_data, 'temp/FIS_summary_gf.csv', row.names = FALSE)
-
-  status_data <- data_fis_gf %>%
-    dplyr::select(region_id, stock_id, year, catch, score)
+  status_scores <- rbind(B_scores, F_scores) %>%
+    group_by(region_id, stock, year) %>%
+    summarize(score = mean(score, na.rm = TRUE)) %>%
+    data.frame()
 
 
-  ###
-  # STEP 4. Calculate status for each region
-  ###
+  ## STEP 4: calculating the weights
 
-  # 4a. To calculate the weight (i.e, the relative catch of each stock per region),
-  # the mean catch of taxon i is divided by the
-  # sum of mean catch of all species in region/year
+  ## subset the data to include only the most recent 10 years
+  landings <- landings %>%
+    dplyr::select(year = scenario_year, region_id, stock, landings) %>%
+    dplyr::filter(year %in% (max(year)-9):max(year))
 
-  status_data <- status_data %>%
-    dplyr::group_by(year, region_id) %>%
-    dplyr::mutate(SumCatch = sum(catch)) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(wprop = catch / SumCatch)
+  ## we use average catch for each stock/region across all yrs to obtain weights
+  weights <- landings %>%
+    group_by(region_id, stock) %>%
+    mutate(avgCatch = mean(landings)) %>%
+    ungroup() %>%
+    data.frame()
 
-  status_data <- status_data %>%
-    dplyr::group_by(region_id, year) %>%
-    dplyr::summarize(status = prod(score ^ wprop)) %>%
-    dplyr::ungroup()
-
-
-  ###
-  # STEP 5. Get yearly status and trend
-  ###
-
-  status <-  status_data %>%
-    dplyr::filter(year == scen_year) %>%
-    dplyr::mutate(score     = round(status * 100, 1),
-           dimension = 'status') %>%
-    dplyr::select(region_id, score, dimension)
+  ## each region/stock will have the same average catch across years
+  ## determine the total proportion of catch each stock accounts for
+  weights <- weights %>%
+    group_by(region_id, year) %>%
+    mutate(totCatch = sum(avgCatch)) %>%
+    ungroup() %>%
+    mutate(propCatch = avgCatch/totCatch)
 
 
-  # calculate trend
+  ## STEP 5: join scores and weights to calculate status
 
+  status <- weights %>%
+    left_join(status_scores, by=c("region_id", "year", "stock")) %>%
+    filter(!is.na(score)) %>% # remove missing data
+    dplyr::select(region_id, year, stock, propCatch, score) # clean data
+
+  ##### becaue of bad cod condition in Eastern Baltic(ICES_subdivision = 2532),
+  ##### we added a penalty factor of 0.872 based on historical cod body weight
+  ##### see FIS prep for full calculation of the penalty factor
+  ##### by Ning Jiang, 16 Feb, 2017
+  status_with_penalty <- status %>%
+    mutate(scores_with_penalty = ifelse(stock == "cod_2532", score*0.872, score)) %>%
+    dplyr::select(-score) %>%
+    dplyr::rename(score = scores_with_penalty)
+
+  status <- status_with_penalty %>%
+    group_by(region_id, year) %>%
+    summarize(status = prod(score^propCatch)) %>%
+    ungroup() %>%
+    data.frame()
+
+  ## for trend, get slope of regression model based on most recent 5 yrs of data
   trend_years <- (scen_year - 4):(scen_year)
 
-  trend <-
-    CalculateTrend(status_data = status_data, trend_years = trend_years)
+  trend <- status %>%
+    group_by(region_id) %>%
+    filter(year %in% trend_years) %>%
+    do(mdl = lm(status ~ year, data = .)) %>%
+    summarize(region_id = region_id,
+              trend = coef(mdl)["year"] * 5) %>%  # trend multiplied by 5 to predict 5 yrs out
+    ungroup() %>%
+    mutate(trend = round(trend, 2))
 
-  # assemble dimensions
-  scores <- rbind(status, trend) %>%
-    dplyr::mutate(goal = 'FIS') %>%
-    dplyr::filter(region_id != 255)
-  scores <- data.frame(scores)
+  ## could replace trend calc w/ ohicore::CalculateTrend, but then coeff is normalized by min trend year
+  ## need more years of data in scenario_data_years though for this to work
+  # trend <- ohicore::CalculateTrend(status, trend_years)
+
+  status <- status %>%
+    filter(year == scen_year) %>%
+    mutate(status = round(status * 100, 1)) %>%
+    dplyr::select(region_id, status)
+
+
+  ## STEP 6: assemble dimensions
+
+  scores <- status %>%
+    dplyr::select(region_id, score = status) %>%
+    tidyr::complete(region_id = full_seq(c(1, 42), 1)) %>%
+    dplyr::mutate(dimension = "status") %>%
+    rbind(
+      trend %>%
+        dplyr::select(region_id,
+                      score = trend) %>%
+        tidyr::complete(region_id = full_seq(c(1,42), 1)) %>%
+        dplyr::mutate(dimension = "trend")) %>%
+    dplyr::mutate(goal = "FIS")
 
   return(scores)
-}
+
+} ## End FIS function
 
 
 MAR <- function(layers) {
