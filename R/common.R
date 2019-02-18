@@ -1,3 +1,28 @@
+## For common libraries, directories, functions
+
+
+## Libraries
+library(tidyverse)
+library(here)
+library(tools)
+library(purrr)
+library(broom)
+
+library(ggmap) # install.packages("ggmap")
+library(here)
+
+library(odbc) # devtools::install_github("rstats-db/odbc")
+library(DBI) # install.packages("DBI")
+library(RMySQL)
+
+
+## Directories
+dir_baltic <- here::here()
+dir_layers <- file.path(dir_baltic, "layers")
+dir_R <- file.path(dir_baltic, "R")
+dir_spatial <- file.path(dir_baltic, "prep/spatial")
+
+
 #' copy layers from 'bhi-prep/prep/layers' to the assessment 'bhi/baltic/layers' folder
 #'
 #' @param assessment_path
@@ -113,3 +138,88 @@ update_alt_layers_tab <- function(assessment_path, prep_path, assess_year){
   readr::write_csv(alt_layers_full_table,
                    sprintf("%s/testing/%s", assessment_path, "alt_layers_full_table.csv"))
 }
+
+
+
+
+#' update scenario years and/or layers' names in scenario_data_years table
+#'
+#' @param scen_data_years
+#' @param scen_yrs
+#' @param new_lyrs
+#' @param rename_lyrs a list with two elements: 'layer_name' vector of layers to be renamed and 'to' vector of new names with placement (index) matching current layer name
+#'
+#' @return
+#' @export
+#'
+#' @examples
+scenario_data_include <- function(scen_data_years, scen_yrs, new_lyrs = "", rename_lyrs = ""){
+
+  cols <- names(scen_data_years)
+  new_scen_yrs <- setdiff(scen_yrs, scen_data_years$scenario_year %>% unique())
+
+  ## the new scenario years rows for existing layers
+  add_scen_rows <- scen_data_years %>%
+    select(layer_name) %>%
+    unique() %>%
+    dplyr::mutate(scenario_year = list(new_scen_yrs), data_year = NA) %>%
+    tidyr::unnest()
+
+  ## rows for new layers with the given range of scenario years
+  add_lyr_rows <- tibble::tibble(layer_name = new_lyrs,
+                             scenario_year = list(scen_yrs),
+                             data_year = NA) %>%
+    tidyr::unnest() %>%
+    filter(layer_name != "")
+
+  ## bind new rows to old table and rename layers if specified
+  scenario_data_years_updated <- scen_data_years %>%
+    rbind(add_scen_rows) %>%
+    rbind(add_lyr_rows) %>%
+    dplyr::arrange(layer_name, scenario_year, data_year)
+
+
+  if(rename_lyrs != ""){
+
+    rename_df <- as.data.frame(rename_lyrs, stringsAsFactors = FALSE)
+
+    scenario_data_years_updated <- scenario_data_years_updated %>%
+      dplyr::left_join(rename_df, by = "layer_name") %>%
+      dplyr::mutate(layer_name = ifelse(is.na(to), layer_name, to)) %>%
+      select(-to) %>%
+      dplyr::arrange(layer_name, scenario_year, data_year)
+  }
+
+  ## return the updated table
+  ## when using this function, overwrite file with new table
+  return(scenario_data_years_updated)
+
+}
+
+scenario_data_align <- function(scen_data_file, align_basis_file){
+
+}
+
+
+
+layers_csv_edit <- function(tab_to_update, update_using_tab, prefix){
+
+  replacements <- update_using_tab %>%
+    filter(grepl(sprintf("^%s_.*", prefix), layer)) %>%
+    select(layer, filename)
+
+  updated_tab <- update_using_tab %>%
+    filter(grepl(sprintf("^%s_.*", prefix), layer)) %>%
+    rbind(tab_to_update %>%
+            filter(!grepl(sprintf("^%s_.*", prefix), layer)) %>%
+            mutate(clip_n_ship_disag = NA,
+                   clip_n_ship_disag_description = NA,
+                   rgns_in = NA))
+
+  return(list(updated_tab, replacements))
+}
+
+
+
+
+
