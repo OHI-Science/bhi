@@ -196,12 +196,58 @@ scenario_data_include <- function(scen_data_years, scen_yrs, new_lyrs = "", rena
 
 }
 
-scenario_data_align <- function(scen_data_file, align_basis_file){
+#' aligning scenario and data years for a given layer
+#'
+#' @param scen_data_years
+#' @param layer_name
+#' @param data_yrs
+#' @param scen_yrs
+#'
+#' @return
+#' @export
+#'
+#' @examples
+scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scen_yrs){
 
+  keep_rows <- scen_data_years %>%
+    dplyr::filter(layer_name != lyr_name)
+
+  layer_years_align <- tibble::tibble(layer_name = lyr_name,
+                                      scenario_year = list(scen_yrs)) %>%
+    tidyr::unnest() %>%
+    dplyr::rowwise() %>%
+    mutate(data_year = scenario_year %>%
+             lapply(function(scenario_year){
+               d = data_yrs[data_yrs <= scenario_year]
+               ind = which.min(abs(d - scenario_year))
+               d[ind]
+             }) %>% unlist())
+
+ if(length(scen_yrs) != length(data_yrs)){
+    print("unequal numbers of scenario years and data years")
+  }
+
+  years_align <- layer_years_align %>%
+    rbind(keep_rows) %>%
+    dplyr::arrange(layer_name, scenario_year, data_year)
+
+  return(years_align)
 }
 
 
 
+#' update rows in layers.csv for a given layer
+#'
+#' I am mostly using this function just to set up bhi multiyear assessments repo from the archived repo...
+#'
+#' @param tab_to_update
+#' @param update_using_tab
+#' @param prefix
+#'
+#' @return
+#' @export
+#'
+#' @examples
 layers_csv_edit <- function(tab_to_update, update_using_tab, prefix){
 
   replacements <- update_using_tab %>%
@@ -209,7 +255,7 @@ layers_csv_edit <- function(tab_to_update, update_using_tab, prefix){
     select(layer, filename)
 
   updated_tab <- update_using_tab %>%
-    filter(grepl(sprintf("^%s_.*", prefix), layer)) %>%
+    dplyr::filter(grepl(sprintf("^%s_.*", prefix), layer)) %>%
     rbind(tab_to_update %>%
             filter(!grepl(sprintf("^%s_.*", prefix), layer)) %>%
             mutate(clip_n_ship_disag = NA,
