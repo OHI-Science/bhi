@@ -7,7 +7,7 @@
 
 FIS = function(layers){
 
-  ## Based on code from v2015 BHI assessment
+  ## Based on code from 'functions.R FIS' of v2015 BHI assessment
   ## Revised to use multi-year framework, incorporating scenario_data_years
   ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
 
@@ -15,11 +15,11 @@ FIS = function(layers){
 
 
   bbmsy <- AlignDataYears(layer_nm="fis_bbmsy", layers_obj=layers) %>%
-    mutate(metric="bbmsy") %>%
+    dplyr::mutate(metric="bbmsy") %>%
     dplyr::rename(region_id = rgn_id)
 
   ffmsy <- AlignDataYears(layer_nm="fis_ffmsy", layers_obj=layers) %>%
-    mutate(metric="ffmsy") %>%
+    dplyr::mutate(metric="ffmsy") %>%
     dplyr::rename(region_id = rgn_id)
 
   landings <- AlignDataYears(layer_nm="fis_landings", layers_obj=layers) %>%
@@ -32,24 +32,30 @@ FIS = function(layers){
                          ffmsy %>% dplyr::select(-fis_ffmsy_year)) %>%
     dplyr::select(-layer_name, year = scenario_year) %>%
     dplyr::mutate(metric = as.factor(metric)) %>%
-    spread(metric, score)
+    tidyr::spread(metric, score)
 
 
   ## STEP 1: converting B/Bmsy and F/Fmsy to F-scores
 
   ## see plot describing the relationship between these variables and scores
-  ## this may need to be adjusted
+  ## this may need to be adjusted...
 
   F_scores <- metric_scores %>%
-    mutate(score = ifelse(bbmsy < 0.8 & ffmsy >= (bbmsy + 1.5), 0, NA),
-           score = ifelse(bbmsy < 0.8 & ffmsy < (bbmsy - 0.2), ffmsy/(bbmsy - 0.2), score),
-           score = ifelse(bbmsy < 0.8 & ffmsy >= (bbmsy + 0.2) & ffmsy < (bbmsy + 1.5), (bbmsy + 1.5 - ffmsy)/1.5, score),
-           score = ifelse(bbmsy < 0.8 & ffmsy >= (bbmsy - 0.2) & ffmsy < (bbmsy + 0.2), 1, score)) %>%
-    mutate(score = ifelse(bbmsy >= 0.8 & ffmsy < 0.8, ffmsy/0.8, score),
-           score = ifelse(bbmsy >= 0.8 & ffmsy >= 0.8 & ffmsy < 1.2, 1, score),
-           score = ifelse(bbmsy >= 0.8 & ffmsy >= 1.2, (2.5 - ffmsy)/1.3, score)) %>%
-    mutate(score = ifelse(score <= 0, 0.1, score)) %>%
-    mutate(score_type = "F_score")
+    dplyr::mutate(score = ifelse(bbmsy < 0.8 & ffmsy >= (bbmsy + 1.5), 0, NA),
+                  score = ifelse(bbmsy < 0.8 & ffmsy < (bbmsy - 0.2),
+                                 ffmsy/(bbmsy - 0.2),
+                                 score),
+                  score = ifelse(bbmsy < 0.8 & ffmsy >= (bbmsy + 0.2) & ffmsy < (bbmsy + 1.5),
+                                 (bbmsy + 1.5 - ffmsy)/1.5,
+                                 score),
+                  score = ifelse(bbmsy < 0.8 & ffmsy >= (bbmsy - 0.2) & ffmsy < (bbmsy + 0.2), 1, score)) %>%
+
+    dplyr::mutate(score = ifelse(bbmsy >= 0.8 & ffmsy < 0.8, ffmsy/0.8, score),
+                  score = ifelse(bbmsy >= 0.8 & ffmsy >= 0.8 & ffmsy < 1.2, 1, score),
+                  score = ifelse(bbmsy >= 0.8 & ffmsy >= 1.2, (2.5 - ffmsy)/1.3, score)) %>%
+
+    dplyr::mutate(score = ifelse(score <= 0, 0.1, score)) %>%
+    dplyr::mutate(score_type = "F_score")
 
   ## note: last score is 0.1 rather than zero because
   ## if have one zero w/ geometric mean, results in a zero score
@@ -58,19 +64,21 @@ FIS = function(layers){
   ## STEP 2: converting B/Bmsy to B-scores
 
   B_scores <- metric_scores %>%
-    mutate(score = ifelse(bbmsy < 0.8 , bbmsy/0.8, NA),
-           score = ifelse(bbmsy >= 0.8 & bbmsy < 1.5, 1, score),
-           score = ifelse(bbmsy >= 1.5, (3.35 - bbmsy)/1.8, score)) %>%
-    mutate(score = ifelse(score <= 0.1, 0.1, score)) %>%
-    mutate(score = ifelse(score > 1, 1, score))%>%
-    mutate(score_type = "B_score")
+    dplyr::mutate(score = ifelse(bbmsy < 0.8 , bbmsy/0.8, NA),
+                  score = ifelse(bbmsy >= 0.8 & bbmsy < 1.5, 1, score),
+                  score = ifelse(bbmsy >= 1.5, (3.35 - bbmsy)/1.8, score)) %>%
+
+    dplyr::mutate(score = ifelse(score <= 0.1, 0.1, score)) %>%
+    dplyr::mutate(score = ifelse(score > 1, 1, score))%>%
+
+    dplyr::mutate(score_type = "B_score")
 
 
   ## STEP 3: averaging the F and B-scores to get the stock status score
 
   status_scores <- rbind(B_scores, F_scores) %>%
-    group_by(region_id, stock, year) %>%
-    summarize(score = mean(score, na.rm = TRUE)) %>%
+    dplyr::group_by(region_id, stock, year) %>%
+    dplyr::summarize(score = mean(score, na.rm = TRUE)) %>%
     data.frame()
 
 
@@ -83,25 +91,25 @@ FIS = function(layers){
 
   ## we use average catch for each stock/region across all yrs to obtain weights
   weights <- landings %>%
-    group_by(region_id, stock) %>%
-    mutate(avgCatch = mean(landings)) %>%
-    ungroup() %>%
+    dplyr::group_by(region_id, stock) %>%
+    dplyr::mutate(avgCatch = mean(landings)) %>%
+    dplyr::ungroup() %>%
     data.frame()
 
   ## each region/stock will have the same average catch across years
   ## determine the total proportion of catch each stock accounts for
   weights <- weights %>%
-    group_by(region_id, year) %>%
-    mutate(totCatch = sum(avgCatch)) %>%
-    ungroup() %>%
-    mutate(propCatch = avgCatch/totCatch)
+    dplyr::group_by(region_id, year) %>%
+    dplyr::mutate(totCatch = sum(avgCatch)) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(propCatch = avgCatch/totCatch)
 
 
   ## STEP 5: join scores and weights to calculate status
 
   status <- weights %>%
-    left_join(status_scores, by=c("region_id", "year", "stock")) %>%
-    filter(!is.na(score)) %>% # remove missing data
+    dplyr::left_join(status_scores, by = c("region_id", "year", "stock")) %>%
+    dplyr::filter(!is.na(score)) %>% # remove missing data
     dplyr::select(region_id, year, stock, propCatch, score) # clean data
 
   ##### becaue of bad cod condition in Eastern Baltic(ICES_subdivision = 2532),
@@ -109,35 +117,39 @@ FIS = function(layers){
   ##### see FIS prep for full calculation of the penalty factor
   ##### by Ning Jiang, 16 Feb, 2017
   status_with_penalty <- status %>%
-    mutate(scores_with_penalty = ifelse(stock == "cod_2532", score*0.872, score)) %>%
+    dplyr::mutate(scores_with_penalty = ifelse(stock == "cod_2532",
+                                               score*0.872,
+                                               score)) %>%
     dplyr::select(-score) %>%
     dplyr::rename(score = scores_with_penalty)
 
+
   status <- status_with_penalty %>%
-    group_by(region_id, year) %>%
-    summarize(status = prod(score^propCatch)) %>%
-    ungroup() %>%
+    dplyr::group_by(region_id, year) %>%
+    dplyr::summarize(status = prod(score^propCatch)) %>%
+    dplyr::ungroup() %>%
     data.frame()
+
 
   ## for trend, get slope of regression model based on most recent 5 yrs of data
   trend_years <- (scen_year - 4):(scen_year)
 
   trend <- status %>%
-    group_by(region_id) %>%
-    filter(year %in% trend_years) %>%
-    do(mdl = lm(status ~ year, data = .)) %>%
-    summarize(region_id = region_id,
-              trend = coef(mdl)["year"] * 5) %>%  # trend multiplied by 5 to predict 5 yrs out
-    ungroup() %>%
-    mutate(trend = round(trend, 2))
+    dplyr::group_by(region_id) %>%
+    dplyr::filter(year %in% trend_years) %>%
+    dplyr::do(mdl = lm(status ~ year, data = .)) %>%
+    dplyr::summarize(region_id = region_id,
+                     trend = coef(mdl)["year"] * 5) %>%  # trend multiplied by 5 to predict 5 yrs out
+    dplyr::ungroup() %>%
+    dplyr::mutate(trend = round(trend, 2))
 
   ## could replace trend calc w/ ohicore::CalculateTrend, but then coeff is normalized by min trend year
   ## need more years of data in scenario_data_years though for this to work
   # trend <- ohicore::CalculateTrend(status, trend_years)
 
   status <- status %>%
-    filter(year == scen_year) %>%
-    mutate(status = round(status * 100, 1)) %>%
+    dplyr::filter(year == scen_year) %>%
+    dplyr::mutate(status = round(status * 100, 1)) %>%
     dplyr::select(region_id, status)
 
 
@@ -160,108 +172,97 @@ FIS = function(layers){
 } ## End FIS function
 
 
-MAR <- function(layers) {
+MAR = function(layers){
+
+  ## Based on code from 'functions.R MAR' of v2015 BHI assessment
+  ## Revised to use multi-year framework, incorporating scenario_data_years
+  ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
 
   scen_year <- layers$data$scenario_year
+  regr_length <- 5 # number of years of data to use in trend calc
+  regr_years <- seq(scen_year - regr_length + 1, scen_year)
 
-  harvest_tonnes <-
-    AlignDataYears(layer_nm = "mar_harvest_tonnes", layers_obj = layers)
-
-
-  sustainability_score <-
-    AlignDataYears(layer_nm = "mar_sustainability_score", layers_obj = layers)
-
-  popn_inland25mi <-
-    AlignDataYears(layer_nm = "mar_coastalpopn_inland25mi", layers_obj = layers) %>%
-    dplyr::mutate(popsum = popsum + 1)
+  ## layers used: mar_harvest_tonnes, mar_harvest_species, mar_sustainability_score
+  harvest_tonnes <- AlignDataYears(layer_nm="mar_harvest_tonnes",
+                                   layers_obj=layers)
+  sustainability_score <- AlignDataYears(layer_nm="mar_sustainability_score",
+                                         layers_obj=layers)
+  harvest_species <- layers$data$mar_harvest_species # lookup, no data-scenario yr
 
 
-  rky <-  harvest_tonnes %>%
-    dplyr::left_join(sustainability_score,
-              by = c('rgn_id', 'taxa_code', 'scenario_year')) %>%
-    dplyr::select(rgn_id, scenario_year, taxa_code, taxa_group, tonnes, sust_coeff)
+  # ## move this to data prep for multiyear framework, so can use AlignDataYears function...
+  # ## spread and gather data again which will result in all years present for all regions
+  # scen_years <- 2010:2015
+  # harvest_tonnes <- harvest_tonnes %>% spread(key = year, value = tonnes) %>%
+  #   gather(year, tonnes, -rgn_id,-species_code) %>%
+  #   mutate(year = as.numeric(year) ) %>%  # make sure year is not a character
+  #   arrange(rgn_id,year) %>%
+  #   filter(year %in% status_years)
 
-  # fill in gaps with no data
-  rky <- tidyr::spread(rky, scenario_year, tonnes)
-  rky <- tidyr::gather(rky, "scenario_year", "tonnes",-(1:4)) %>%
-    dplyr::mutate(scenario_year = as.numeric(scenario_year))
 
-  # adjustment for seaweeds based on protein content
-  rky <- rky %>%
-    dplyr::mutate(tonnes = ifelse(taxa_group == "AL", tonnes*0.2, tonnes)) %>%
-    dplyr::select(-taxa_group)
-
-  # 4-year rolling mean of data
-  m <- rky %>%
-    dplyr::group_by(rgn_id, taxa_code, sust_coeff) %>%
-    dplyr::arrange(rgn_id, taxa_code, scenario_year) %>%
-    dplyr::mutate(sm_tonnes = zoo::rollapply(tonnes, 4, mean, na.rm = TRUE, partial =
-                                        TRUE, align = "right")) %>%
+  ## merge harvest (production) data with sustainability score
+  ## ref_point is half of max production achieve sust coeff of 1
+  tmp <- harvest_tonnes %>%
+    dplyr::select(-layer_name) %>%
+    dplyr::left_join(harvest_species %>% select(-layer),
+                     by = "species_code") %>%
+    dplyr::left_join(sustainability_score %>% select(-"layer_name"),
+                     by = c("scenario_year", "rgn_id", "species")) %>%
+    dplyr::group_by(rgn_id, species_code) %>% # by region and species but not scen yr
+    dplyr::mutate(ref_value = max(tonnes) * 1) %>% # but why multiplying by 1?
+    dplyr::ungroup() %>%
+    dplyr::group_by(rgn_id, species_code, scenario_year) %>%
+    dplyr::mutate(tonnes_sust = tonnes * sust_coeff) %>% # per rgn per yr
     dplyr::ungroup()
 
 
-  # smoothed mariculture harvest * sustainability coefficient
-  m <- m %>%
-    dplyr::mutate(sust_tonnes = sust_coeff * sm_tonnes)
+  ## Xmar = Mar_current / Mar_ref
+  ## if use this, need to decide if the production should be scaled per capita
 
-
-  # aggregate all weighted timeseries per region, and divide by coastal human population
-  ry = m %>%
+  ## CALCULATE STATUS
+  mar_status_score <- tmp %>%
     dplyr::group_by(rgn_id, scenario_year) %>%
-    dplyr::summarize(sust_tonnes_sum = sum(sust_tonnes, na.rm = TRUE)) %>%  #na.rm = TRUE assumes that NA values are 0
-    dplyr::left_join(popn_inland25mi, by = c('rgn_id', 'scenario_year')) %>%
-    dplyr::mutate(mar_pop = sust_tonnes_sum / popsum) %>%
-    dplyr::ungroup()
+    dplyr::mutate(status = pmin(1, tonnes_sust/ref_value) * 100) %>%
+    dplyr::select(rgn_id, scenario_year, status) %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(scenario_year %in% regr_years)
 
-  # get reference quantile based on argument years
-
-  ref_95pct <- quantile(ry$mar_pop, 0.95, na.rm = TRUE)
-
-  ry = ry %>%
-    dplyr::mutate(status = ifelse(mar_pop / ref_95pct > 1,
-                           1,
-                           mar_pop / ref_95pct))
-
-  ## Add all other regions/countries with no mariculture production to the data table
-  ## Uninhabited or low population countries that don't have mariculture, should be given a NA since they are too small to ever be able to produce and sustain a mariculture industry.
-  ## Countries that have significant population size and fishing activity (these two are proxies for having the infrastructure capacity to develop mariculture), but don't produce any mariculture, are given a '0'.
-  all_rgns <- expand.grid(rgn_id = georegions$rgn_id, scenario_year = min(ry$scenario_year):max(ry$scenario_year))
-
-  all_rgns <- all_rgns[!(all_rgns$rgn_id %in% ry$rgn_id),]
-
-  uninhabited <- read.csv("https://raw.githubusercontent.com/OHI-Science/ohiprep/master/globalprep/spatial/v2017/output/rgn_uninhabited_islands.csv")
-
-  uninhabited <- uninhabited %>%
-    dplyr::filter(rgn_nam != "British Indian Ocean Territory") # remove British Indian Ocean Territory which has fishing activity and a population size of 3000 inhabitants
-
-  ## Combine all regions with mariculture data table
-  ry_all_rgns <- all_rgns %>%
-    dplyr::mutate(status = 0) %>%
-    dplyr::mutate(status = ifelse(rgn_id %in% uninhabited$rgn_id, NA, status)) %>%
-    dplyr::bind_rows(ry) %>%
-    dplyr::arrange(rgn_id)
-
-
-  status <- ry_all_rgns %>%
+  mar_status <- mar_status_score %>%
     dplyr::filter(scenario_year == scen_year) %>%
+    dplyr::select(rgn_id, score = status) %>%
+    tidyr::complete(rgn_id = full_seq(c(1, 42), 1))
+
+
+  ## CALCULATE TREND
+  mar_trend <- mar_status_score %>%
+    dplyr::group_by(rgn_id) %>%
+    dplyr::do({
+      ## calculate trend iff have all yrs of data in last 5 (regr_length) years of time series
+      ## future_year set in contants, this is the value 5 in the old code
+      if(sum(!is.na(.$status)) >= regr_length)
+        data.frame(trend_score = max(-1, min(1, coef(lm(status ~ scenario_year, .))["scenario_year"]*0.05)))
+      else data.frame(trend_score = NA)
+    }) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(trend_score = round(trend_score, 2)) %>%
+    tidyr::complete(rgn_id = full_seq(c(1, 42), 1))
+
+
+  ## ASSEMBLE DIMENSIONS & RETURN SCORES
+  scores <- mar_status %>%
+    dplyr::select(region_id = rgn_id, score = score) %>%
     dplyr::mutate(dimension = "status") %>%
-    dplyr::select(region_id = rgn_id, score = status, dimension) %>%
-    dplyr::mutate(score = round(score * 100, 2))
-
-
-  # calculate trend
-
-  trend_years <- (scen_year - 4):(scen_year)
-
-  trend <- CalculateTrend(status_data = dplyr::filter(ry_all_rgns, !is.na(status)), trend_years = trend_years)
-
-
-  # return scores
-  scores = rbind(status, trend) %>%
-    dplyr::mutate(goal = 'MAR')
+    rbind(
+      mar_trend %>%
+        dplyr::select(region_id = rgn_id,
+                      score = trend_score) %>%
+        dplyr::mutate(dimension = "trend")) %>%
+    dplyr::mutate(goal = "MAR")
 
   return(scores)
-}
+
+} # End MAR function
+
 
 
 FP <- function(layers, scores) {

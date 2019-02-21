@@ -15,6 +15,8 @@ library(odbc) # devtools::install_github("rstats-db/odbc")
 library(DBI) # install.packages("DBI")
 library(RMySQL)
 
+library(ohicore)
+
 
 ## Directories
 dir_baltic <- here::here()
@@ -218,7 +220,9 @@ scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scen_yrs){
     dplyr::rowwise() %>%
     mutate(data_year = scenario_year %>%
              lapply(function(scenario_year){
-               d = data_yrs[data_yrs <= scenario_year]
+               d = ifelse(length(data_yrs) == 1,
+                          data_yrs,
+                          data_yrs[data_yrs < scenario_year])
                ind = which.min(abs(d - scenario_year))
                d[ind]
              }) %>% unlist())
