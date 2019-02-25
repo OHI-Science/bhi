@@ -1,5 +1,5 @@
 
-FIS = function(layers){
+FIS <- function(layers){
 
   ## Based on code from 'functions.R FIS' of v2015 BHI assessment
   ## Revised to use multi-year framework, incorporating scenario_data_years

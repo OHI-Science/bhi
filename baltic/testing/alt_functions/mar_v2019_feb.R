@@ -1,5 +1,5 @@
 
-MAR = function(layers){
+MAR <- function(layers){
 
   ## Based on code from 'functions.R MAR' of v2015 BHI assessment
   ## Revised to use multi-year framework, incorporating scenario_data_years
