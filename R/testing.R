@@ -71,8 +71,8 @@ configure_layers = function(assessment_path, prep_path, test_path){
                    sprintf("%s/test_layers_used.csv", test_path),
                    append = FALSE)
 
-  one_to_one <- ifelse(length(unique(check_layers_table$multiple)) > 1, FALSE, TRUE) # TRUE => some layers w/multiple versions
-  onto <- ifelse(length(unique(check_layers_table$specified)) > 1, FALSE, TRUE) # TRUE => some layers w/out specified version
+  one_to_one <- ifelse(length(unique(check_layers_table$multiple)) > 1, FALSE, TRUE)
+  onto <- ifelse(length(unique(check_layers_table$specified)) > 1, FALSE, TRUE)
   stopifnot(one_to_one, onto) # stop if error- don't proceed to layer-copying step
 
   ## copy over the layer versions for calculations
