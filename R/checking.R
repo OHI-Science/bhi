@@ -49,7 +49,7 @@ compare_scores <- function(scores1, year1, scores2, year2, dim = "score", goal =
 
     comparison_plot <- ggplot2::ggplot(data = comparison_tab %>%
                                          na.omit(), aes(scores1, scores2)) +
-      geom_point(aes(color = dimension), alpha = 0.5, size = 3) +
+      geom_point(aes(color = dimension, label = region_id), alpha = 0.5, size = 3) +
       scale_color_manual(values = pal) +
       geom_abline(slope = 1, intercept = 0, color = "gray70") +
 
