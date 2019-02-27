@@ -1,4 +1,6 @@
 
+library(plotly)
+
 #' compare scores between two scores.csv tables for two specified years
 #'
 #' @param scores1 first scores table (dataframe) to use

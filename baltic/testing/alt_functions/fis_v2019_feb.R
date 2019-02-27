@@ -112,7 +112,7 @@ FIS <- function(layers){
   ##### by Ning Jiang, 16 Feb, 2017
   status_with_penalty <- status %>%
     dplyr::mutate(scores_with_penalty = ifelse(stock == "cod_2532",
-                                               score*0.872,
+                                               score * 0.872,
                                                score)) %>%
     dplyr::select(-score) %>%
     dplyr::rename(score = scores_with_penalty)
@@ -157,7 +157,7 @@ FIS <- function(layers){
       trend %>%
         dplyr::select(region_id,
                       score = trend) %>%
-        tidyr::complete(region_id = full_seq(c(1,42), 1)) %>%
+        tidyr::complete(region_id = full_seq(c(1, 42), 1)) %>%
         dplyr::mutate(dimension = "trend")) %>%
     dplyr::mutate(goal = "FIS")
 
