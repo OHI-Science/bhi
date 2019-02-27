@@ -21,7 +21,7 @@ layers <- ohicore::Layers("layers.csv", "layers") # layers object created from a
 bhi_archive_layers <- read_csv(file.path(archive_filepath, "layers.csv"))
 
 setwd(file.path(base_path, "bhi/baltic"))
-consider_goal_prefix <- "fis"
+consider_goal_prefix <- "fp"
 
 ### INTERM PRESSURE AND RESILIENCE MATRICES
 ### want to replace pressure and resilience weightings of layers for goal being transferred
@@ -81,8 +81,8 @@ names(layers$data) %>%
   c(add_press_res_lyrs) # include pressure and resilience layers
 
 ### CHOOSE LAYER
-consider_layer <- layers$data$res_reg_mspd # View(consider_layer)
-consider_lyr_nm <- "res_reg_mspd"
+consider_layer <- layers$data$res_reg_reach # View(consider_layer)
+consider_lyr_nm <- "res_reg_reach"
 if("year" %in% names(consider_layer)){
   consider_layer$year %>% unique() %>% sort() # years we can have in scenario_data_years.csv as data years
 } else {"no year column"}
@@ -180,7 +180,7 @@ updated_layers[[2]] # View(updated_layers[[1]])
 track_layers_added <- read_csv(
   file.path(base_path, "bhi/track_layers_added.csv")) %>%
   rbind(updated_layers[[2]] %>%
-          mutate(day_added = as.Date("2019-02-18")) %>%
+          mutate(day_added = Sys.Date()) %>%
           mutate(dummy_data_yr = TRUE) %>% # FALSE if had real data years already
           mutate(added_w_goal = str_to_upper(consider_goal_prefix))) # View(track_layers_added)
 
@@ -197,15 +197,6 @@ write_csv(track_layers_added, file.path(base_path, "bhi/track_layers_added.csv")
 ### overwrite pressure and resilience matrices before moving on to the next goal or subgoal
 write_csv(int_pressure_mat, file.path(base_path, "bhi/baltic/conf/pressures_matrix.csv"))
 write_csv(int_resilience_mat, file.path(base_path, "bhi/baltic/conf/resilience_matrix.csv"))
-
-# res_cat_add <- read_csv(file.path(archive_filepath, "conf/resilience_categories.csv"))
-# res_cat <- read_csv(file.path(base_path, "bhi/baltic/conf/resilience_categories.csv"))
-# res_cat_overlap <- intersect(res_cat_add$layer, res_cat$layer)
-# res_cat_update <- res_cat %>%
-#   filter(!layer %in% res_cat_overlap) %>%
-#   rbind(res_cat_add)
-# write_csv(res_cat_update, file.path(base_path, "bhi/baltic/conf/resilience_categories.csv"))
-
 
 ### go back to goal functions subscript to continue running model line-by-line
 ### copy goal subscript to functions.R main script
