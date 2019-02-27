@@ -1,13 +1,3 @@
-## moved from common.R --
-## copy_layers_for_assessment
-## update_alt_layers_tab
-## scenario_data_include
-## scenario_data_align
-## layers_csv_edit
-
-## left in common.R --
-## just calculate_scores for now...
-
 
 #' update scenario years and/or layers' names in scenario_data_years table
 #'
@@ -117,16 +107,16 @@ scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scen_yrs){
 #' @export
 #'
 #' @examples
-layers_csv_edit <- function(tab_to_update, update_using_tab, prefix){
+layers_csv_edit <- function(tab_to_update, update_using_tab, prefix_or_layer){
 
   replacements <- update_using_tab %>%
-    filter(grepl(sprintf("^%s_.*", prefix), layer)) %>%
+    filter(grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
     select(layer, filename)
 
   updated_tab <- update_using_tab %>%
-    dplyr::filter(grepl(sprintf("^%s_.*", prefix), layer)) %>%
+    dplyr::filter(grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
     rbind(tab_to_update %>%
-            filter(!grepl(sprintf("^%s_.*", prefix), layer)) %>%
+            filter(!grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
             mutate(clip_n_ship_disag = NA,
                    clip_n_ship_disag_description = NA,
                    rgns_in = NA))
