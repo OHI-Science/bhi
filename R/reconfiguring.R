@@ -65,27 +65,62 @@ scenario_data_include <- function(scen_data_years, scen_yrs, new_lyrs = "", rena
 #' @export
 #'
 #' @examples
-scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scen_yrs){
+scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scen_yrs, approach = ""){
 
+  ## rows of scenario_data_years we are not updating
   keep_rows <- scen_data_years %>%
     dplyr::filter(layer_name != lyr_name)
-
-  layer_years_align <- tibble::tibble(layer_name = lyr_name,
-                                      scenario_year = list(scen_yrs)) %>%
-    tidyr::unnest() %>%
-    dplyr::rowwise() %>%
-    mutate(data_year = scenario_year %>%
-             lapply(function(scenario_year){
-               d = ifelse(length(data_yrs) == 1,
-                          data_yrs,
-                          data_yrs[data_yrs < scenario_year])
-               ind = which.min(abs(d - scenario_year))
-               d[ind]
-             }) %>% unlist())
 
   if(length(scen_yrs) != length(data_yrs)){
     print("unequal numbers of scenario years and data years")
   }
+  all_data_yrs <- data_yrs
+
+  ## data_yrs we may actually want to match with scen_yrs
+  data_yrs <- data_yrs[data_yrs <= max(scen_yrs)] %>%
+    sort(decreasing = TRUE) %>% unique()
+  data_yrs <- data_yrs[1:length(scen_yrs)]
+
+  ## matrix M with potential edge-weights
+  M <- array(sort(rep(scen_yrs, length(data_yrs)),
+                  decreasing = TRUE) - rep(data_yrs, length(scen_yrs)),
+             c(length(data_yrs), length(scen_yrs)),
+             list(data_yrs, sort(scen_yrs, decreasing = TRUE)))
+
+  match_years <- data.frame(scenario_year = sort(scen_yrs, decreasing = TRUE),
+                            data_year = NA)
+
+  if(str_detect(approach, "intervals|steps|timestep")){
+    ## don't actually want to assign if si to dj if |si-dj| > reasonable_diff
+    reasonable_diff <- ifelse(str_detect(approach, "max step|maximum step|with step|max diff|maximum|max.|difference"),
+                              as.numeric(gsub("\\D", "", approach), 5))
+    for (s in 1:length(scen_yrs)){
+      match_years[s, "data_year"] <- ifelse(abs(M[s,s]) < reasonable_diff,
+                                            dimnames(M)[[1]][s],
+                                            which.min(M[,s][M[,s] >= 0]) %>%
+                                              names()) %>% as.integer()
+    }
+    print(sprintf(
+      "matching scenario years with data so when reasonable (<%syr difference), there are more discrete timesteps",
+      reasonable_diff))
+
+  } else {
+    ## default is to assign closest years
+    print("matching each scenario year with its next closest data year")
+
+    ## find min sum of edge-weights where F: S->D is onto and deg(si)=1 for all si in scen_yrs
+    for (s in 1:length(scen_yrs)){
+      match_years[s, "data_year"] <- which.min(M[,s][M[,s] >= 0]) %>%
+        names() %>% as.integer()
+    }
+  }
+
+  layer_years_align <- tibble::tibble(
+    layer_name = lyr_name,
+    scenario_year = list(scen_yrs)) %>%
+    tidyr::unnest() %>%
+    dplyr::left_join(match_years, by = "scenario_year")
+  data_yrs_unused <- setdiff(all_data_yrs, unique(layer_years_align$data_year))
 
   years_align <- layer_years_align %>%
     rbind(keep_rows) %>%
