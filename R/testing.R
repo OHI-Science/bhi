@@ -1,3 +1,14 @@
+## Libraries
+library(tidyverse)
+library(here)
+library(tools)
+
+## Directories
+dir_bhi <- here::here()
+dir_R <- file.path(dir_bhi, "R")
+
+## Functions
+
 #' configure functions.R for testing
 #'
 #' compiles files listed in a local 'test_functions.csv' into the single \code{functions.R} that ohicore needs
@@ -5,7 +16,7 @@
 #' @param assessment_path filepath specifying the assessment main folder containing 'conf' and 'testing' folders
 #' @return revises functions.R at existing location in 'conf' folder; no output
 
-configure_functions = function(assessment_path){
+configure_functions <- function(assessment_path){
 
   functionsR_path <- sprintf("%s/conf/functionsR_testing_setup.R", assessment_path)
   fun_scripts_path <- sprintf("%s/testing/alt_functions", assessment_path)
@@ -26,7 +37,6 @@ configure_functions = function(assessment_path){
 }
 
 
-
 #' configure layers for testing
 #'
 #' copies the versions of layers we want to use for testing (as specified in the 'alt_layers_full_table.csv') into `bhi-prep/prep/layers`
@@ -39,7 +49,7 @@ configure_functions = function(assessment_path){
 #'
 #' @return a table comparing layers required by \code{functions.R} to those specified in alt_layers_full_table.csv; revises 'layers.csv' and contents of 'layers' folder
 
-configure_layers = function(assessment_path, prep_path, test_path){
+configure_layers <- function(assessment_path, prep_path, test_path){
 
   test_layers_path <- sprintf("%s/testing/alt_layers_full_table.csv", assessment_path)
   functionsR_path <- sprintf("%s/conf/functionsR_testing_setup.R", assessment_path)

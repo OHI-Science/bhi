@@ -1,29 +1,13 @@
-## For common libraries, directories, functions
-
-
 ## Libraries
 library(tidyverse)
 library(here)
 library(tools)
-library(purrr)
 library(broom)
-
-library(ggmap) # install.packages("ggmap")
-library(here)
-
-library(odbc) # devtools::install_github("rstats-db/odbc")
-library(DBI) # install.packages("DBI")
-library(RMySQL)
-
 library(ohicore)
 
-
 ## Directories
-dir_baltic <- here::here()
-dir_layers <- file.path(dir_baltic, "layers")
-dir_R <- file.path(dir_baltic, "R")
-dir_spatial <- file.path(dir_baltic, "prep/spatial")
-
+dir_bhi <- here::here()
+dir_R <- file.path(dir_bhi, "R")
 
 ## Functions
 
@@ -34,9 +18,7 @@ dir_spatial <- file.path(dir_baltic, "prep/spatial")
 #' @param scores_path the directory where to save the scores.csv, by default in the 'baltic' (assessment) folder
 #'
 #' @return
-#' @export
-#'
-#' @examples
+
 calculate_scores <- function(assessment_path, scenario_yrs, scores_path = "."){
 
   currentwd <- getwd()

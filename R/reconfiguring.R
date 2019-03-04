@@ -1,3 +1,8 @@
+## Libraries
+library(tidyverse)
+library(here)
+
+## Functions
 
 #' update scenario years and/or layers' names in scenario_data_years table
 #'
@@ -130,36 +135,6 @@ scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scen_yrs, a
 }
 
 
-#' update rows in layers.csv for a given layer
-#'
-#' I am mostly using this function just to set up bhi multiyear assessments repo from the archived repo...
-#'
-#' @param tab_to_update
-#' @param update_using_tab
-#' @param prefix
-#'
-#' @return
-#' @export
-#'
-#' @examples
-layers_csv_edit <- function(tab_to_update, update_using_tab, prefix_or_layer){
-
-  replacements <- update_using_tab %>%
-    filter(grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
-    select(layer, filename)
-
-  updated_tab <- update_using_tab %>%
-    dplyr::filter(grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
-    rbind(tab_to_update %>%
-            filter(!grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
-            mutate(clip_n_ship_disag = NA,
-                   clip_n_ship_disag_description = NA,
-                   rgns_in = NA))
-
-  return(list(updated_tab, replacements))
-}
-
-
 #' copy layers from 'bhi-prep/prep/layers' to the assessment 'bhi/baltic/layers' folder
 #'
 #' @param assessment_path
@@ -233,3 +208,65 @@ update_alt_layers_tab <- function(assessment_path, prep_path, assess_year){
   readr::write_csv(alt_layers_full_table,
                    sprintf("%s/testing/%s", assessment_path, "alt_layers_full_table.csv"))
 }
+
+
+#' update rows in layers.csv for a given layer
+#'
+#' I am mostly using this function just to set up bhi multiyear assessments repo from the archived repo...
+#'
+#' @param tab_to_update
+#' @param update_using_tab
+#' @param prefix
+#'
+#' @return
+#' @export
+#'
+#' @examples
+layers_csv_edit <- function(tab_to_update, update_using_tab, prefix_or_layer){
+
+  replacements <- update_using_tab %>%
+    filter(grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
+    select(layer, filename)
+
+  updated_tab <- update_using_tab %>%
+    dplyr::filter(grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
+    rbind(tab_to_update %>%
+            filter(!grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
+            mutate(clip_n_ship_disag = NA,
+                   clip_n_ship_disag_description = NA,
+                   rgns_in = NA))
+
+  return(list(updated_tab, replacements))
+}
+
+
+#' compile readme info for functions in a script
+#'
+#' @param bhiR_dir
+#' @param script_name
+#'
+#' @return
+#' @export
+#'
+#' @examples
+bhiRfun_readme <- function(bhiR_dir, script_name){
+
+  funs_text <- scan(file = file.path(bhiR_dir, script_name), what = "character", sep = "\n")
+
+  funs_names <- funs_text %>%
+    grep(pattern = "^[a-z_]+.*function.*\\{", value = TRUE) %>%
+    stringr::str_extract("^\\S+") %>%
+    stringr::str_pad(width = str_length(.)+4, side = "both", pad = "*")
+  funs_info <- funs_text %>%
+    grep(pattern = "^#'\\s", value = TRUE) %>%
+    stringr::str_remove_all("#' ")
+  sep <- c(0, which(stringr::str_detect(funs_info, pattern = "@return")))
+
+  if(length(sep) == length(funs_names)+1){
+    for(i in 1:length(funs_names)){
+      funs_doc <- c(funs_names[i], funs_info[(sep[i]+1):(sep[i+1])], "<br/>")
+      cat(funs_doc, sep = " <br/> \n")
+    }
+  } else { print("cannot parse... check script for missing roxygen documentation") }
+}
+

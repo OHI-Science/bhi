@@ -1,5 +1,9 @@
-
+## Libraries
 library(plotly)
+library(ggplot2)
+library(dplyr)
+
+## Functions
 
 #' compare scores between two scores.csv tables for two specified years
 #'
@@ -11,6 +15,7 @@ library(plotly)
 #' @param goal a string or vector of strings specifying goal(s) to investigate
 #'
 #' @return returns a list with two objects: 1. a faceted plot and 2. a summary table
+
 compare_scores <- function(scores1, year1, scores2, year2, dim = "score", goal = "Index"){
 
   scores1_yrs <- scores1$year %>% unique()
