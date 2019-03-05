@@ -6,15 +6,13 @@ library(here)
 
 #' update scenario years and/or layers' names in scenario_data_years table
 #'
-#' @param scen_data_years
-#' @param scen_yrs
-#' @param new_lyrs
+#' @param scen_data_years scenario_data_years dataframe or tibble; the object read in from scenario_data_years.csv
+#' @param scen_yrs the scenario years to be included in the updated scenario_data_years.csv
+#' @param new_lyrs names (character vector) of any layers not yet in table, for which to create scenario-data year information
 #' @param rename_lyrs a list with two elements: 'layer_name' vector of layers to be renamed and 'to' vector of new names with placement (index) matching current layer name
 #'
 #' @return
-#' @export
-#'
-#' @examples
+
 scenario_data_include <- function(scen_data_years, scen_yrs, new_lyrs = "", rename_lyrs = ""){
 
   cols <- names(scen_data_years)
@@ -61,15 +59,16 @@ scenario_data_include <- function(scen_data_years, scen_yrs, new_lyrs = "", rena
 
 #' aligning scenario and data years for a given layer
 #'
-#' @param scen_data_years
-#' @param layer_name
-#' @param data_yrs
-#' @param scen_yrs
+#' maps years within the layer dataset to a "scenario year" for a given layer
+#' because of time lags in or aperiodic data collection...
+#'
+#' @param scen_data_years scenario_data_years dataframe or tibble; the object read in from scenario_data_years.csv
+#' @param layer_name name of the layer for which to align scenario and data years
+#' @param data_yrs the years of data for the specified layer, i.e. all the years in the layer data file
+#' @param scen_yrs the scenario years to be included in the updated scenario_data_years.csv
 #'
 #' @return
-#' @export
-#'
-#' @examples
+
 scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scen_yrs, approach = ""){
 
   ## rows of scenario_data_years we are not updating
@@ -137,13 +136,11 @@ scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scen_yrs, a
 
 #' copy layers from 'bhi-prep/prep/layers' to the assessment 'bhi/baltic/layers' folder
 #'
-#' @param assessment_path
-#' @param repo_location
+#' @param assessment_path file path to assessment folder within bhi repo
+#' @param repo_location url pointing to the bhi repo on github
 #'
 #' @return
-#' @export
-#'
-#' @examples
+
 copy_layers_for_assessment <- function(assessment_path, repo_location){
 
   repo_loc <- repo_location
@@ -167,14 +164,12 @@ copy_layers_for_assessment <- function(assessment_path, repo_location){
 
 #' update `alt_layers_full_table.csv` to include additional versions of layers created
 #'
-#' @param assessment_path
-#' @param prep_path
-#' @param assess_year
+#' @param assessment_path file path to assessment folder within bhi repo
+#' @param prep_path file path to the prep folder within bhi-prep repo
+#' @param assess_year assessment year i.e. the year for/during which the assessment is being conducted
 #'
 #' @return
-#' @export
-#'
-#' @examples
+
 update_alt_layers_tab <- function(assessment_path, prep_path, assess_year){
 
   # alt_layers <- readr::read_delim(sprintf("%s/testing/alt_layers_full_table.csv", assessment_path), delim = ";")
@@ -212,43 +207,93 @@ update_alt_layers_tab <- function(assessment_path, prep_path, assess_year){
 
 #' update rows in layers.csv for a given layer
 #'
-#' I am mostly using this function just to set up bhi multiyear assessments repo from the archived repo...
+#' registers a specified file is to the given layer, after checking registration against layers object created by ohicore::Layers
+#' written originally mostly for setting up bhi multiyear assessments repo from the archived repo...
 #'
-#' @param tab_to_update
-#' @param update_using_tab
-#' @param prefix
+#' @param layers_object a layers object created with ohicore::Layers for the bhi repo assessment folder we aim to reconfigure
+#' @param lyr_file file path to where layer data file is located, including the name of the csv file itself to be incorporated into bhi layers object
+#' @param lyr_name single character string with name of the layer (not the filename) to be associated with the
+#' @param assessment_path file path to assessment folder within bhi repo
+#' @param update_with a dataframe or tibble with at least one row, with the information to be added to layers.csv for the layer
+#' @param write if TRUE then the function will automatically overwrite layers.csv and write lyr_file to the 'layers' folder
 #'
 #' @return
-#' @export
-#'
-#' @examples
-layers_csv_edit <- function(tab_to_update, update_using_tab, prefix_or_layer){
 
-  replacements <- update_using_tab %>%
-    filter(grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
-    select(layer, filename)
+layers_edit <- function(layers_object, lyr_file, lyr_name, assessment_path, update_with = NULL, write = FALSE){
 
-  updated_tab <- update_using_tab %>%
-    dplyr::filter(grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
-    rbind(tab_to_update %>%
-            filter(!grepl(sprintf("^%s.*", prefix_or_layer), layer)) %>%
-            mutate(clip_n_ship_disag = NA,
-                   clip_n_ship_disag_description = NA,
-                   rgns_in = NA))
+  lyr_file_data <- readr::read_csv(lyr_file)
+  lyr_file_name <- basename(lyr_file)
 
-  return(list(updated_tab, replacements))
+  ## 0. using the layers object, check if layer is already registerd with the specified layer file
+  chk1 <- lyr_file_name %in% layers_object$meta$filename
+  chk2 <- lyr_name %in% layers_object$meta$layer
+  if(chk1 & chk2){
+    chk3 <- which(layers_object$meta$filename==lyr_file_name)==which(layers_object$meta$layer==lyr_name)
+  }
+
+  if(chk1 & chk2 & chk3){
+    print("layer already registered/configured with given filename")
+  } else {
+
+    ## 1. register layer in layers.csv
+
+    layers_csv <- readr::read_csv(file.path(assessment_path, "layers.csv")) # matches w layers_object 'meta' slot contents
+    layers_metadata_csv <- readr::read_csv(file.path(assessment_path, "layers_metadata.csv")) %>%
+      dplyr::select(-data_source, -gapfill_file)
+
+    ## create or extract 'update_with' information for layer, i.e. row entry for layer.csv
+    if(is.null(update_with)){
+      ## need to generate information to fill layers.csv row
+      update_with <- data.frame(array(NA, dim = c(1, ncol(layers_csv))))
+      colnames(update_with) <- names(layers_csv)
+      update_with[1, "layer"] <- lyr_name
+      update_with[1, "filename"] <- lyr_file_name
+
+      ## add other layer information if it exists in the layers_metadata.csv
+      if(lyr_name %in% layers_metadata_csv$layer){
+        update_with <- update_with %>%
+          dplyr::select(-name, -description, -units, -targets) %>%
+          dplyr::left_join(layers_metadata_csv, by = "layer") %>%
+          dplyr::select(names(layers_csv)) # original column ordering
+      } else {
+        print("check layers.csv and layers_metadata.csv: some critical information must be entered manually")
+      }
+
+    } else {
+      update_with <- update_with %>%
+        dplyr::filter(grepl(sprintf("^%s.*", lyr_name), layer))
+    }
+    updated_tab <- update_with %>%
+      rbind(layers_csv %>%
+              dplyr::filter(!grepl(sprintf("^%s.*", lyr_name), layer)) %>%
+              dplyr::mutate(clip_n_ship_disag = NA,
+                     clip_n_ship_disag_description = NA,
+                     rgns_in = NA))
+
+    ## 2. write updated layers.csv and write layer file to the layers folder, overwriting if it is already there
+    if(write == TRUE){
+      readr::write_csv(updated_tab, file.path(assessment_path, "layers.csv"))
+      readr::write_csv(lyr_file_data, file.path(assessment_path, "layers", lyr_file_name))
+    }
+
+    ## final messages and return results
+    print(sprintf("file '%s' is registered to be used for the '%s' layer", lyr_file_name, lyr_name))
+    print("IMPORTANT: now you must update scenario_data_years.csv!")
+
+    return(list(updated_tab, lyr_file_data))
+  }
 }
 
 
-#' compile readme info for functions in a script
+#' compile readme information associated with functions defined in a script
 #'
-#' @param bhiR_dir
-#' @param script_name
+#' written to generate readme content for functions in bhi/R scripts, but could be used elsewhere...
+#'
+#' @param bhiR_dir file path to the directory containing the script of interest
+#' @param script_name the name of the script with functions you want readme documentation for
 #'
 #' @return
-#' @export
-#'
-#' @examples
+
 bhiRfun_readme <- function(bhiR_dir, script_name){
 
   funs_text <- scan(file = file.path(bhiR_dir, script_name), what = "character", sep = "\n")
@@ -260,7 +305,7 @@ bhiRfun_readme <- function(bhiR_dir, script_name){
   funs_info <- funs_text %>%
     grep(pattern = "^#'\\s", value = TRUE) %>%
     stringr::str_remove_all("#' ")
-  sep <- c(0, which(stringr::str_detect(funs_info, pattern = "@return")))
+  sep <- c(0, which(stringr::str_detect(funs_info, pattern = "@return"))) # last roxygen element assumed @return... if have anything else after...
 
   if(length(sep) == length(funs_names)+1){
     for(i in 1:length(funs_names)){
@@ -269,4 +314,3 @@ bhiRfun_readme <- function(bhiR_dir, script_name){
     }
   } else { print("cannot parse... check script for missing roxygen documentation") }
 }
-
