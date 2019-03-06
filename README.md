@@ -2,7 +2,6 @@
 
 # <font size="48" color="4A68CA"> Ocean Health Index for the Baltic </font>
 
----
 
 ## `BHI2.0`
 
