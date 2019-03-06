@@ -1,10 +1,10 @@
 ---
 
-<font size="48" color="4A68CA"> Ocean Health Index for the Baltic </font>
+# <font size="48" color="4A68CA"> Ocean Health Index for the Baltic </font>
 
 ---
 
-# `BHI2.0`
+## `BHI2.0`
 
 As of January of 2019, we began working on our second Baltic Health Index assessment! We will be building on the earlier goal models, making improvements where possible, and including new datasets where relevant. We hope also to be able to conduct scenario testing and sensitivity analysis, create features for interactive data exploration/presentation, and assess interconnectivity of goals...
 
@@ -16,7 +16,7 @@ As of January of 2019, we began working on our second Baltic Health Index assess
 
 ---
 
-### BHI regions
+## BHI regions
 Our region of focus is the [Baltic Sea](https://www.google.se/maps/place/Baltic+Sea/@59.9996367,11.5210982,1517181m/data=!3m1!1e3!4m5!3m4!1s0x46f4d7d988201b2b:0xb43097ae8474cb3!8m2!3d58.487952!4d19.863281). The BHI regions are based upon Baltic Sea basins used in the HELCOM HOLAS assessement and the exclusive economic zones of the nations surrounding the Baltic Sea. Each of the 42 BHI regions belongs to a single bio-physcial basin and is associated with a single nation. The map below shows the 42 regions used in the assessment.
 
 <br/>
