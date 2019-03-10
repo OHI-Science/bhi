@@ -283,34 +283,3 @@ layers_edit <- function(layers_object, lyr_file, lyr_name, assessment_path, upda
     return(list(updated_tab, lyr_file_data))
   }
 }
-
-
-#' compile readme information associated with functions defined in a script
-#'
-#' written to generate readme content for functions in bhi/R scripts, but could be used elsewhere...
-#'
-#' @param bhiR_dir file path to the directory containing the script of interest
-#' @param script_name the name of the script with functions you want readme documentation for
-#'
-#' @return
-
-bhiRfun_readme <- function(bhiR_dir, script_name){
-
-  funs_text <- scan(file = file.path(bhiR_dir, script_name), what = "character", sep = "\n")
-
-  funs_names <- funs_text %>%
-    grep(pattern = "^[a-z_]+.*function.*\\{", value = TRUE) %>%
-    stringr::str_extract("^\\S+") %>%
-    stringr::str_pad(width = str_length(.)+4, side = "both", pad = "*")
-  funs_info <- funs_text %>%
-    grep(pattern = "^#'\\s", value = TRUE) %>%
-    stringr::str_remove_all("#' ")
-  sep <- c(0, which(stringr::str_detect(funs_info, pattern = "@return"))) # last roxygen element assumed @return... if have anything else after...
-
-  if(length(sep) == length(funs_names)+1){
-    for(i in 1:length(funs_names)){
-      funs_doc <- c(funs_names[i], funs_info[(sep[i]+1):(sep[i+1])], "<br/>")
-      cat(funs_doc, sep = " <br/> \n")
-    }
-  } else { print("cannot parse... check script for missing roxygen documentation") }
-}
