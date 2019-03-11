@@ -5,7 +5,7 @@
 
 ## `BHI2.0`
 
-As of January of 2019, we began working on our second Baltic Health Index assessment! We will be building on the earlier goal models, making improvements where possible, and including new datasets where relevant. We hope also to be able to conduct scenario testing and sensitivity analysis, create features for interactive data exploration/presentation, and assess interconnectivity of goals...
+As of January of 2019, we began working on our second Baltic Health Index assessment! We will be building on the earlier goal models, making improvements where possible, and including new datasets where relevant. We hope also to be able to conduct scenario testing and sensitivity analysis, create features for interactive data exploration/presentation, and assess interconnectivity of goals.
 
 
 **Explore the BHI on GitHub:** <br/>
@@ -20,7 +20,7 @@ Our region of focus is the [Baltic Sea](https://www.google.se/maps/place/Baltic+
 
 <br/>
 
-![](spatial/BHI_regions_plot.png)  
+![](supplement/figures/BHI_regions_plot.png)  
 
 <br/>
 

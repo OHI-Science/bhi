@@ -74,13 +74,6 @@ written originally mostly for setting up bhi multiyear assessments repo from the
 @param write if TRUE then the function will automatically overwrite layers.csv and write lyr_file to the 'layers' folder <br/> 
 @return <br/> 
 <br/>
-**bhiRfun_readme** <br/> 
-compile readme information associated with functions defined in a script <br/> 
-written to generate readme content for functions in bhi/R scripts, but could be used elsewhere... <br/> 
-@param bhiR_dir file path to the directory containing the script of interest <br/> 
-@param script_name the name of the script with functions you want readme documentation for <br/> 
-@return <br/> 
-<br/>
 
 ### `spatial.R`
 
@@ -109,6 +102,51 @@ automatically writes the name of copied file into 'filename' column of 'layers.c
 @param assessment_path filepath specifying the assessment main folder containing 'conf' and 'testing' folders <br/> 
 @param prep_path bhi-prep filepath specifying the main folder containing goal/pressure/resilience subfolders <br/> 
 @return a table comparing layers required by \code{functions.R} to those specified in alt_layers_full_table.csv; revises 'layers.csv' and contents of 'layers' folder <br/> 
+<br/>
+
+### `management.R`
+
+**bhiRfun_readme** <br/> 
+compile readme information associated with functions defined in a script <br/> 
+written to generate readme content for functions in bhi/R scripts, but could be used elsewhere... <br/> 
+@param bhiR_dir file path to the directory containing the script of interest <br/> 
+@param script_name the name of the script with functions you want readme documentation for <br/> 
+@return text for readme content is returned in the console, but output is also configured as a character vector <br/> 
+<br/>
+**readme_content** <br/> 
+function for creating metadata/readme content <br/> 
+@param folder_filepath file path to folder where README will be located and which contains objects to document <br/> 
+@param file name of the file to generate basic content for <br/> 
+@param file_type <br/> 
+@return <br/> 
+<br/>
+**readme_outline** <br/> 
+generate basic readme outline <br/> 
+look within a folder and create structure dependent on content and file tree <br/> 
+if has subfolders... <br/> 
+result not to be the end all be all, just a starting point or rough outline to start from <br/> 
+will still have to actually open and manually edit some fields, but readme_content function will help with that <br/> 
+describe_objects could be: file, table, folder, function, script <br/> 
+could use `sink` function to write readme outline output directly to a specified readme file <br/> 
+@param folder_filepath file path to folder where README will be located and which contains objects to document <br/> 
+@param type_objects character string with type of thing to document in the readme: folders, functions, files, tables, or scripts <br/> 
+@return text for readme outline is printed to the console, and can be copied from there or sunk to a file <br/> 
+<br/>
+**readme_to_df** <br/> 
+from readme markdown file to dataframe <br/> 
+@param folder_filepath file path to folder where README will be located and which contains objects to document <br/> 
+@param write a boolean variable indicating whether to write the dataframe to csv file in the folder_filepath location <br/> 
+@return dataframe created from a readme markdown file with structure outlined by `readme_outline` function above <br/> 
+<br/>
+**readme_status** <br/> 
+check up-to-date-ness status of readme <br/> 
+check whether readme actually reflects the current state of the directory and files it is written for <br/> 
+compare lines within readme and outline that would be generated via the `readme_outline` function above <br/> 
+the comparison is done via the `readme_to_csv` function, also above... <br/> 
+@param folder_filepath file path to folder where README will be located and which contains objects to document <br/> 
+@param type_objects character string with type of thing to document in the readme: folders, functions, files, tables, or scripts <br/> 
+@param temp_filepath file path to subfolder of assessment folder called 'temp' where ephemeral, non-critical files are temporarily put <br/> 
+@return no returned value, just printed messages about status of readme in comparison to expected structure <br/> 
 <br/>
 
 ### `visualization.R`

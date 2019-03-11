@@ -40,6 +40,14 @@ bhiRfun_readme <- function(bhiR_dir, script_name){
 }
 
 
+#' function for creating metadata/readme content
+#'
+#' @param folder_filepath file path to folder where README will be located and which contains objects to document
+#' @param file name of the file to generate basic content for
+#' @param file_type
+#'
+#' @return
+
 readme_content <- function(folder_filepath, file, file_type){
   ## look at a file and create some information depending on file type...
   ## eg if csv tell me about the rows and columns
@@ -98,8 +106,8 @@ readme_outline <- function(folder_filepath, type_objects = "files"){
 
   ## if we want subfolders listed (with summary descriptions for each)
   if(type_objects == "folders"){
-    obj_names <- tree[stringr::str_count(tree, pattern = S) == 2] %>%
-      stringr::str_extract(paste0(S, "[a-z0-9].*", S)) %>%
+    obj_names <- tree[stringr::str_count(tree, pattern = S) >= 2] %>%
+      stringr::str_extract(paste0("^", S, "[a-z0-9]+", S)) %>%
       gsub(pattern = S, replacement = "") %>%
       unique() # non-empty immediately-adjacent subdirectories
     for(n in obj_names){
@@ -128,7 +136,7 @@ readme_outline <- function(folder_filepath, type_objects = "files"){
     }
 
     if(type_objects == "tables"){
-      obj_names <- obj_names[grep(".csv$|.shp$", obj_names) == 1]
+      obj_names <- obj_names[grep(".csv$|.shp$", obj_names)]
       obj_info <- list() # ignore bit above about including description...
 
       for(j in obj_names){
@@ -146,8 +154,8 @@ readme_outline <- function(folder_filepath, type_objects = "files"){
           lvls <- ifelse(length(unique(tmp[, k])) < 10 &
                                  all(str_length(unique(tmp[, 1])) < 10),
                          paste(unique(tmp[, k]), collapse = ", "), "")
-          cla <- c(cla, paste0("* ", nms[k], ":", class(tmp[, k])))
-          lvl <- c(lvl, paste0("* ", nms[k], ":", paste(lvls, collapse = ", ")))
+          cla <- c(cla, paste0("* ", nms[k], ": ", class(tmp[, k])))
+          lvl <- c(lvl, paste0("* ", nms[k], ": ", paste(lvls, collapse = ", ")))
         }
         obj_info[[j]][["class"]] <- cla
         obj_info[[j]][["levels"]] <- lvl
@@ -173,8 +181,13 @@ readme_outline <- function(folder_filepath, type_objects = "files"){
     }
     cat(subt, "\n\n")
     cat(general)
-    cat(paste0(line, collapse = " <br/>\n\n<br/>\n\n"), ifelse(length(line) == 0, "<br/>\n\n", "<br/>\n\n<br/>\n\n"))
-
+    if(type_objects == "tables"){
+      cat(paste0(line, collapse = " <br/>\n"),
+          ifelse(length(line) == 0, "\n", " <br/>\n\n<br/>\n\n"))
+    } else {
+      cat(paste0(line, collapse = " <br/>\n\n<br/>\n\n"),
+          ifelse(length(line) == 0, "<br/>\n\n", "<br/>\n\n<br/>\n\n"))
+    }
     out <- c(out, subt, general, line)
   }
   out <- c(t, out)
@@ -293,46 +306,48 @@ readme_status <- function(folder_filepath, type_objects, temp_filepath){
     sprintf("there are NAs in place of descriptions for objects: %s",
             paste(readme$object[chk_na_descrip], collapse = ", "))
   }
-  ## disproportionate about of space for checking objects with class and attribute information...
-  for(i in unique(readme$object)){
-    readme_classes <- readme %>% filter(object == i)
-    readme_new_classes <- readme_new_struc %>% filter(object == i)
+  ## disproportionate amout of space for checking objects with class and attribute information...
+  if(type_objects == "tables"){
+    for(i in unique(readme$object)){
+      readme_classes <- readme %>% filter(object == i)
+      readme_new_classes <- readme_new_struc %>% filter(object == i)
 
-    chk_missing_classes <- setdiff(
-      unique(readme_new_classes$classes),
-      unique(readme_classes$classes))
-    chk_extra_classes <- setdiff(
-      unique(readme_classes$classes),
-      unique(readme_new_classes$classes))
+      chk_missing_classes <- setdiff(
+        unique(readme_new_classes$classes),
+        unique(readme_classes$classes))
+      chk_extra_classes <- setdiff(
+        unique(readme_classes$classes),
+        unique(readme_new_classes$classes))
 
-    if(length(chk_missing_classes) != 0){
-      sprintf("object '%s' is missing classes: %s", i,
-              paste(chk_missing_classes, collapse = ", "))
-    }
-    if(length(chk_extra_classes) != 0){
-      sprintf("object '%s' has unexpected classes: %s", i,
-              paste(chk_extra_classes, collapse = ", "))
-    }
+      if(length(chk_missing_classes) != 0){
+        sprintf("object '%s' is missing classes: %s", i,
+                paste(chk_missing_classes, collapse = ", "))
+      }
+      if(length(chk_extra_classes) != 0){
+        sprintf("object '%s' has unexpected classes: %s", i,
+                paste(chk_extra_classes, collapse = ", "))
+      }
 
-    readme_attrib <- readme %>% filter(object == i) %>%
-      dplyr::mutate(attributes = stringr::str_extract_all(attributes, pattern = "^[a-z]+"))
-    readme_new_attrib <- readme_new_struc %>% filter(object == i) %>%
-      dplyr::mutate(attributes = stringr::str_extract_all(attributes, pattern = "^[a-z]+"))
+      readme_attrib <- readme %>% filter(object == i) %>%
+        dplyr::mutate(attributes = stringr::str_extract_all(attributes, pattern = "^[a-z]+"))
+      readme_new_attrib <- readme_new_struc %>% filter(object == i) %>%
+        dplyr::mutate(attributes = stringr::str_extract_all(attributes, pattern = "^[a-z]+"))
 
-    chk_missing_attrib <- setdiff(
-      unique(readme_attrib$attributes),
-      unique(readme_new_attrib$attributes))
-    chk_extra_attrib <- setdiff(
-      unique(readme_new_attrib$attributes),
-      unique(readme_attrib$attributes))
+      chk_missing_attrib <- setdiff(
+        unique(readme_attrib$attributes),
+        unique(readme_new_attrib$attributes))
+      chk_extra_attrib <- setdiff(
+        unique(readme_new_attrib$attributes),
+        unique(readme_attrib$attributes))
 
-    if(length(chk_missing_attrib) != 0){
-      sprintf("object '%s' is missing classes: %s", i,
-              paste(chk_missing_attrib, collapse = ", "))
-    }
-    if(length(chk_extra_attrib) != 0){
-      sprintf("object '%s' has unexpected classes: %s", i,
-              paste(chk_extra_attrib, collapse = ", "))
+      if(length(chk_missing_attrib) != 0){
+        sprintf("object '%s' is missing classes: %s", i,
+                paste(chk_missing_attrib, collapse = ", "))
+      }
+      if(length(chk_extra_attrib) != 0){
+        sprintf("object '%s' has unexpected classes: %s", i,
+                paste(chk_extra_attrib, collapse = ", "))
+      }
     }
   }
 }
