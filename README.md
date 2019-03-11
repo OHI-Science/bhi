@@ -3,7 +3,7 @@
 # <font size="48" color="4A68CA"> Ocean Health Index for the Baltic </font>
 
 
-## `BHI2.0`
+### `BHI2.0`
 
 As of January of 2019, we began working on our second Baltic Health Index assessment! We will be building on the earlier goal models, making improvements where possible, and including new datasets where relevant. We hope also to be able to conduct scenario testing and sensitivity analysis, create features for interactive data exploration/presentation, and assess interconnectivity of goals.
 
