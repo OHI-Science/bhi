@@ -75,3 +75,41 @@ Last modified on: <br/>
 Used by functions/scripts: spatial.R create_rgn_lookup <br/>
 
 <br/>
+
+**`regions_lookup_complete.csv`** 
+
+Created on: <br/>
+Last modified on: <br/>
+Used by or referenced in functions/scripts: <br/>
+
+* region_id: integer <br/>
+* label: character <br/>
+* type: character <br/>
+* region_id: 1-42 correspond to BHI regions,301-309 to EEZs, 501-517 to Subbasins, 0 to global <br/>
+* label:  <br/>
+* type: GLOBAL, bhi, eez, subbasin  <br/>
+
+<br/>
+
+**`regions_lookup_complete_wide.csv`** 
+
+Created on: <br/>
+Last modified on: <br/>
+Used by or referenced in functions/scripts: <br/>
+
+* region_id: integer <br/>
+* region_name: character <br/>
+* area_km2_rgn: numeric <br/>
+* eez_id: integer <br/>
+* eez_name: character <br/>
+* subbasin_id: integer <br/>
+* subbasin_name: character <br/>
+* region_id:  <br/>
+* region_name:  <br/>
+* area_km2_rgn:  <br/>
+* eez_id: 301, 302, 303, 304, 305, 306, 307, 308, 309 <br/>
+* eez_name: Sweden, Denmark, Germany, Poland, Russia, Lithuania, Latvia, Estonia, Finland <br/>
+* subbasin_id:  <br/>
+* subbasin_name:   <br/>
+
+<br/>
