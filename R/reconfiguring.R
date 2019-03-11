@@ -20,7 +20,7 @@ scenario_data_include <- function(scen_data_years, scen_yrs, new_lyrs = "", rena
 
   ## the new scenario years rows for existing layers
   add_scen_rows <- scen_data_years %>%
-    select(layer_name) %>%
+    dplyr::select(layer_name) %>%
     unique() %>%
     dplyr::mutate(scenario_year = list(new_scen_yrs), data_year = NA) %>%
     tidyr::unnest()
@@ -30,7 +30,7 @@ scenario_data_include <- function(scen_data_years, scen_yrs, new_lyrs = "", rena
                                  scenario_year = list(scen_yrs),
                                  data_year = NA) %>%
     tidyr::unnest() %>%
-    filter(layer_name != "")
+    dplyr::filter(layer_name != "")
 
   ## bind new rows to old table and rename layers if specified
   scenario_data_years_updated <- scen_data_years %>%
@@ -46,7 +46,7 @@ scenario_data_include <- function(scen_data_years, scen_yrs, new_lyrs = "", rena
     scenario_data_years_updated <- scenario_data_years_updated %>%
       dplyr::left_join(rename_df, by = "layer_name") %>%
       dplyr::mutate(layer_name = ifelse(is.na(to), layer_name, to)) %>%
-      select(-to) %>%
+      dplyr::select(-to) %>%
       dplyr::arrange(layer_name, scenario_year, data_year)
   }
 
@@ -131,34 +131,6 @@ scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scen_yrs, a
     dplyr::arrange(layer_name, scenario_year, data_year)
 
   return(years_align)
-}
-
-
-#' copy layers from 'bhi-prep/prep/layers' to the assessment 'bhi/baltic/layers' folder
-#'
-#' @param assessment_path file path to assessment folder within bhi repo
-#' @param repo_location url pointing to the bhi repo on github
-#'
-#' @return
-
-copy_layers_for_assessment <- function(assessment_path, repo_location){
-
-  repo_loc <- repo_location
-
-  req <- GET("https://api.github.com/repos/OHI-Science/bhi-prep/git/trees/master?recursive=1")
-  stop_for_status(req)
-  filelist <- unlist(lapply(content(req)$tree, "[", "path"), use.names = F) %>%
-    stringr::str_extract_all("prep/layers/.*.csv", simplify = TRUE) %>%
-    as.data.frame()
-
-  for(i in 1:length(filelist$V1)){
-    tmp <- filelist[i,1] %>% as.character()
-    if(str_length(tmp) != 0){
-      url <- sprintf("%s/%s", repo_loc, tmp)
-      name_of_layer <- tmp %>% str_extract("[a-z0-9_]+.csv$")
-      GET(url, write_disk(sprintf("%s/layers/%s", assessment_path, name_of_layer), overwrite = TRUE))
-    }
-  }
 }
 
 
