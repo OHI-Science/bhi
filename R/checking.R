@@ -2,6 +2,7 @@
 library(plotly)
 library(ggplot2)
 library(dplyr)
+library(git2r)
 
 ## Functions
 
@@ -67,4 +68,57 @@ compare_scores <- function(scores1, year1, scores2, year2, dim = "score", goal =
 
     return(list(comparison_plot, comparison_summary, comparison_tab))
   }
+}
+
+
+#' change plot
+#'
+#' This function compares BHI scores from the current analysis and a previous commit
+#' Written originally by Melanie Frazier for the ohi-global assessment
+#'
+#' @param repo The repository name, e.g. 'bhi'
+#' @param scenario The scenario folder name that contains the 'scores.csv' file
+#' @param commit 7 digit sha number identifying the commit. Otherwise, it is compared to the previous commit
+#'
+#' @return list of two objects: first is the interactive html image, second is a dataframe recording the differences
+
+change_plot <- function(repo = "bhi", scenario = "baltic", commit = "previous"){
+
+  r <- here::here()
+
+  if(commit == "previous"){
+    c <- as.character(git2r::commits(git2r::repository(r))[[1]])[1]
+  } else { c <- commit }
+
+  tmp <- git2r::remote_url(git2r::repository(r))
+  org <- stringr::str_split(tmp, "/")[[1]][4]
+  path <- file.path(r, scenario, "scores.csv")
+
+  data_old <- ohicore::read_git_csv(paste(org, repo, sep = .Platform$file.sep),
+                                    substr(c, 1, 7), path) %>%
+    dplyr::select(goal, dimension, region_id, old_score = score)
+
+  ## join old data with new data, and calculate change
+  data <- read.csv(path) %>%
+    dplyr::left_join(data_old, by = c("goal", "dimension", "region_id")) %>%
+    dplyr::mutate(change = score - old_score)
+
+  ## create plot
+  p <- ggplot2::ggplot(data_new, aes(x = goal, y = change, color = dimension)) +
+    theme_bw() +
+    labs(title = paste(scenario, commit, sep = " "),
+         y = "Change in score",
+         x = "") +
+    scale_x_discrete(limits = c("Index", "AO", "FP", "FIS", "MAR", "BD",
+                                "CW", "CON", "TRA", "EUT", "SP", "LSP", "ICO",
+                                "LE", "ECO", "LIV", "TR", "CS", "NP")) +
+    scale_colour_brewer(palette = "Dark2") +
+    geom_jitter(aes(text = paste0("rgn = ", region_id)),
+                position = position_jitter(width = 0.2, height = 0), shape = 19, size = 1)
+  plotly_fig <- plotly::ggplotly(p)
+
+  return(list(plotly_fig, data))
+
+  ## to save, could use htmlwidgets package:
+  ## htmlwidgets::saveWidget(plotly::as.widget(plotly_fig), "name_file.html", selfcontained = TRUE)
 }
