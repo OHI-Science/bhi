@@ -1,6 +1,7 @@
 ## Libraries
 library(rgdal)
 library(raster)
+library(fasterize) # install.packages("fasterize)
 library(sf)
 library(sp)
 library(tibble)
@@ -8,7 +9,11 @@ library(dplyr)
 
 ## Directories
 dir_bhi <- here::here()
-dir_spatial <- file.path(dir_bhi, "spatial")
+dir_spatial <- file.path(dir_bhi, "spatial") # spatial folder of bhi repo
+
+## Additional...
+source(file.path(dir_bhi, "R", "common.R"))
+projstringCRS <- raster::crs("+proj=longlat +datum=WGS84 +no_defs") # BHI spatial data-- use lat/long coords on WGS84
 
 ## Functions
 
@@ -96,4 +101,38 @@ create_rgn_lookup <- function(dir_bhi, layers_object = NULL, conf_object = NULL)
             file.path(dir_bhi, "spatial",
                       "regions_lookup_complete.csv"),
             row.names = FALSE)
+}
+
+
+#' create BHI regions shape object
+#'
+#' @return defines a spatial shape object named 'regions_sp' in the global environment
+
+regions_shape <- function(){
+
+  cat("defining in the global environment a spatial shape object named 'regions_sp'\n")
+  regions_sp_path <- file.path(dir_B, "Spatial", "bhi_shapefile")
+
+  if(!file.exists(file.path(regions_sp_path, "bhi_shapefile.shp"))){
+    sprintf("BHI regions shapefile does not exist at location %s", regions_sp_path)
+  } else {
+    regions_sp <<- sf::st_read(dsn = regions_sp_path, layer = "bhi_shapefile")
+  }
+}
+
+
+#' load ocean mask and zones rasters
+#'
+#' @return loads and defines two raster objects into the global environment
+
+bhi_rasters <- function(){
+  cat("loads 2 rasters: zones and ocean\n",
+      "zones = raster cells with BHI region ID values, see rgn_labels.csv to link IDs with names\n",
+      "ocean = raster with ocean cells identified as 1, otherwise 0\n\n")
+
+  zones <<- raster::raster(file.path(dir_B, "Spatial", "rgns_zones.tif"))
+
+  ## an ocean raster for masking spatial raster data
+  ocean <<- raster::raster(file.path(dir_B, "Spatial", "rgns_ocean.tif"))
+
 }
