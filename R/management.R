@@ -1,5 +1,5 @@
 ## Libraries
-library(tidyverse) # install.packages("tidyverse")
+source(file.path(here::here(), "R", "common.R"))
 library(sf) # install.packages("sf")
 
 ## Functions
@@ -86,7 +86,7 @@ readme_content <- function(folder_filepath, file, file_type){
 #'
 #' @return text for readme outline is printed to the console, and can be copied from there or sunk to a file
 
-readme_outline <- function(folder_filepath, type_objects = "files"){
+readme_outline <- function(folder_filepath, type_objects = "files", delim = ","){
 
   ## setup and extract file tree
   S <- .Platform$file.sep
@@ -107,7 +107,7 @@ readme_outline <- function(folder_filepath, type_objects = "files"){
   ## if we want subfolders listed (with summary descriptions for each)
   if(type_objects == "folders"){
     obj_names <- tree[stringr::str_count(tree, pattern = S) >= 2] %>%
-      stringr::str_extract(paste0("^", S, "[a-z0-9]+", S)) %>%
+      stringr::str_extract(paste0("^", S, "[a-z0-9_]+", S)) %>%
       gsub(pattern = S, replacement = "") %>%
       unique() # non-empty immediately-adjacent subdirectories
     for(n in obj_names){
@@ -129,6 +129,7 @@ readme_outline <- function(folder_filepath, type_objects = "files"){
   }
   ## if we want each file listed (with summary of purpose and description of its contents)
   if(type_objects %in% c("files", "tables", "scripts")){
+    tree <- tree[stringr::str_count(tree, pattern = S) < 2] # eliminate files in subdirectories
     obj_names <- basename(tree)[basename(tree) != "README.md"] %>%
       gsub(pattern = S, replacement = "")
     for(n in obj_names){
@@ -137,11 +138,16 @@ readme_outline <- function(folder_filepath, type_objects = "files"){
 
     if(type_objects == "tables"){
       obj_names <- obj_names[grep(".csv$|.shp$", obj_names)]
-      obj_info <- list() # ignore bit above about including description...
+      obj_info <- list() # ignore bit above about including description in obj_info...
 
       for(j in obj_names){
         if(stringr::str_detect(j, "\\.csv$")){ # for csv files
-          tmp <- read.csv(file.path(folder_filepath, j), stringsAsFactors = FALSE)
+          if(delim == ","){
+            tmp <- read.csv(file.path(folder_filepath, j), stringsAsFactors = FALSE)
+          } else {
+            tmp <- readr::read_delim(file.path(folder_filepath, j), delim = delim) %>%
+              as.data.frame()
+          }
         }
         if(stringr::str_detect(j, "\\.shp$")){ # for shapefiles; requires sf package
           tmp <- sf::st_read(folder_filepath, substr(j, 1, nchar(j)-4))
@@ -151,7 +157,7 @@ readme_outline <- function(folder_filepath, type_objects = "files"){
         cla <- vector() # classes of each attribute or column
         lvl <- vector() # levels or categories (or a place for descriptions)
         for(k in 1:ncol(tmp)){
-          lvls <- ifelse(length(unique(tmp[, k])) < 10 &
+          lvls <- ifelse(length(unique(tmp[, k])) < 10 & # these won't work if tmp is a tibble
                                  all(str_length(unique(tmp[, 1])) < 10),
                          paste(unique(tmp[, k]), collapse = ", "), "")
           cla <- c(cla, paste0("* ", nms[k], ": ", class(tmp[, k])))
