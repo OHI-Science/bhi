@@ -5,7 +5,7 @@ The README documents sprinkled throughout the repo aim to provide guidance on fo
 
 The documents contained in this folder are intended to give more detailed information on how to use the BHI repo to run assessments. They break the process into sub-tasks including:
 
-* `updating_data.md`: gathering data, especially through automated routines, and checking whether new datasets will add value  
+* `updating_data.md`: gathering data especially through automated routines, checking whether new datasets will add value  
 * `exploring_layers.md`: exploring the data layers and conducting basic checks prior to score calculation  
 * `gapfilling.md`: filling data gaps and tracking the occurance and patterns of gapfilling  
 * `investigating_uncertainty.md`: investigating uncertainties  

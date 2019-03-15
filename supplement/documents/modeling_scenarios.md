@@ -6,7 +6,7 @@
 
 ### Creating and Using Simulated Data
 
-### Structure & Contents of the `testing` Folder
+### Structure & Contents of the testing Folder
 
 ### Testing Alternative Data Layers or Model Specifications
 

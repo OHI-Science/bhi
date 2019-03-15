@@ -1,4 +1,4 @@
-# Using the `BHI` Database
+# Using the BHI Database
 
 ### Introduction
 

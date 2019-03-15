@@ -2,9 +2,9 @@
 
 ### Introduction
 
-### Key `ohicore` Functions
+### Key ohicore Functions
 
-### The `calculate_scores.Rmd` Routine
+### The calculate_scores.Rmd Routine
 
 ### Mechanisms & Mechanics
 
