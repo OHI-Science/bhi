@@ -1,5 +1,5 @@
 ## Libraries
-source(file.path("R", "common.R"))
+source(file.path(here::here(), "R", "common.R"))
 library(tools)
 library(tidyr)
 library(tibble)

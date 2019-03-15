@@ -1,4 +1,5 @@
 ## Libraries
+source(file.path(here::here(), "R", "common.R"))
 library(plotly)
 library(ggplot2)
 library(dplyr)
