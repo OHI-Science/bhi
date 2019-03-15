@@ -1,21 +1,26 @@
 ---
-title: "Example Scenario Testing"
+title: "Example Testing"
 output: html_document
 ---
 
-**This document will have name matching the folder it is in, which is dedicated to a single specific testing scenario**
-**Other files in the folder include: README, test_functions.csv**
+**Name of this RMarkdown file will match the name of the folder it is in, dedicated to a single specific scenario**
 
-```{r set up}
-setwd(file.path(here::here(), "baltic/testing/describe_test"))
-
-source(sprintf("%s/R/testing.R", here::here()))
-source(sprintf("%s/R/common.R", here::here()))
-
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+source(file.path(here::here(), "R", "testing.R")) # testing.R sources common.R which creates dir_baltic
+setwd(file.path(dir_baltic, "testing", "describe_test"))
 ```
 
 
-## Description
+### Summary of the Analysis
+
+Synopsis of the _Description of the Analysis_ and _Summary of Results_ sections below.
+
+### Rationale
+
+Reasons we decided it was worthwhile to do this analysis.
+
+### Description of the Analysis: Simulated Data or Alternative Model Specifications
 
 Pretty detailed description of what this test is all about, what kinds of data we're going to test and why. Any variations in parameters, summary of alternate data preparation, links to documentation of alternative data prep, and visualiations.
 
@@ -23,23 +28,25 @@ Pretty detailed description of what this test is all about, what kinds of data w
 
 ```
 
-
-
-## Running Calculations
+### Run Calculations
 
 ```{r configuring test and calculating alternative scores}
+test_path <- getwd() # set working directory to testing subdirectory in setup code chunk
+assessment_path <- bhi_baltic # testing.R sources common.R which creates dir_baltic
+prep_path <- sprintf("%s%s", bhi_baltic, "-prep/prep")
 
-assessment_path <- sprintf("%s/baltic", here::here())
-prep_path <- sprintf("%s%s", here::here(), "-prep/prep")
+test_layers <- file.path(assessment_path, "testing", "alt_layers.csv") # View(test_layers)
 
 configure_functions(assessment_path) # write functions to use into functions.R
-sink() # stop sinking...
-
-test_layers <- sprintf("%s/testing/alt_layers_full_table.csv", assessment_path)
-configure_layers(assessment_path, prep_path)
+configure_layers(assessment_path, prep_path, test_path)
 
 ## calculate scores...
 repo_loc <- "https://raw.githubusercontent.com/OHI-Science/bhi-prep/master"
 copy_layers_for_assessment(assessment_path, repo_loc)
 calculate_scores(assessment_path, c(2015, 2018), scores_path = getwd())
 ```
+
+### Visualization and Exploration or Results
+
+### Summary of Results
+
