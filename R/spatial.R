@@ -100,7 +100,7 @@ create_rgn_lookup <- function(dir_bhi, layers_object = NULL, conf_object = NULL)
 
 #' create BHI regions shape object
 #'
-#' @return defines a spatial shape object named 'regions_sp' in the global environment
+#' @return defines a spatial shape objects named 'regions_sp' and 'baltic_mpas' in the global environment
 
 regions_shape <- function(rgn_shp_foldername = "bhi_shapefile", mpas_shp_foldername = "mpas_shapefile"){
 
@@ -133,9 +133,9 @@ regions_shape <- function(rgn_shp_foldername = "bhi_shapefile", mpas_shp_foldern
 }
 
 
-#' load ocean mask and zones rasters
+#' load ocean mask, zones, and mpa rasters
 #'
-#' @return loads and defines two raster objects into the global environment
+#' @return loads and defines three raster objects in the global environment
 
 bhi_rasters <- function(zones = TRUE, ocean = TRUE, mpas = TRUE){
   cat("loads 3 rasters unless otherwise specified: zones, ocean, and mpas\n",
