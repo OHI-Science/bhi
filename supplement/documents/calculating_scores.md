@@ -2,6 +2,8 @@
 
 ### Introduction
 
+### Configuration
+
 ### Key ohicore Functions
 
 ### The calculate_scores.Rmd Routine
