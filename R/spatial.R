@@ -9,14 +9,6 @@ library(sp)
 library(tibble)
 library(dplyr)
 
-## Directories
-dir_bhi <- here::here()
-dir_spatial <- file.path(dir_bhi, "spatial") # spatial folder of bhi repo
-
-## Additional...
-source(file.path(dir_bhi, "R", "common.R"))
-projstringCRS <- raster::crs("+proj=longlat +datum=WGS84 +no_defs") # BHI spatial data-- use lat/long coords on WGS84
-
 ## Functions
 
 #' create region lookup table
@@ -110,15 +102,33 @@ create_rgn_lookup <- function(dir_bhi, layers_object = NULL, conf_object = NULL)
 #'
 #' @return defines a spatial shape object named 'regions_sp' in the global environment
 
-regions_shape <- function(){
+regions_shape <- function(rgn_shp_foldername = "bhi_shapefile", mpas_shp_foldername = "mpas_shapefile"){
 
-  cat("defining in the global environment a spatial shape object named 'regions_sp'\n")
-  regions_sp_path <- file.path(dir_B, "Spatial", "bhi_shapefile")
+  cat("defining in global environment: spatial shape objects named 'regions_sp' and 'baltic_mpas'\n")
 
-  if(!file.exists(file.path(regions_sp_path, "bhi_shapefile.shp"))){
-    sprintf("BHI regions shapefile does not exist at location %s", regions_sp_path)
+  rgns_sp_path <- file.path(dir_B, "Spatial", rgn_shp_foldername)
+  mpas_sp_path <- file.path(dir_B, "Spatial", mpas_shp_foldername)
+
+  if(!file.exists(rgns_sp_path) | !file.exists(mpas_sp_path)){
+    sprintf("folders %s and/or %s not found", rgns_sp_path, mpas_sp_path)
+  }
+
+  rgns_sp <- grep(list.files(rgns_sp_path, full.names = TRUE),
+                  pattern = "[A-Za-z0-9_]+.shp$", # assumes best practice of one shapefile per folder
+                  value = TRUE)
+  if(!file.exists(rgns_sp)){
+    sprintf("the BHI regions shapefile '%s' does not exist at location %s", basename(rgns_sp), rgns_sp_path)
   } else {
-    regions_sp <<- sf::st_read(dsn = regions_sp_path, layer = "bhi_shapefile")
+    regions_sp <<- sf::st_read(dsn = rgns_sp_path, layer = rgn_shp_foldername)
+  }
+
+  mpas_sp <- grep(list.files(mpas_sp_path, full.names = TRUE),
+                  pattern = "[A-Za-z0-9_]+.shp$",
+                  value = TRUE)
+  if(!file.exists(mpas_sp)){
+    sprintf("Baltic MPAs shapefile '%s' does not exist at location %s", basename(mpas_sp), mpas_sp_path)
+  } else {
+    baltic_mpas <<- sf::st_read(dsn = mpas_sp_path, layer = mpas_shp_foldername)
   }
 }
 
@@ -127,14 +137,25 @@ regions_shape <- function(){
 #'
 #' @return loads and defines two raster objects into the global environment
 
-bhi_rasters <- function(){
-  cat("loads 2 rasters: zones and ocean\n",
+bhi_rasters <- function(zones = TRUE, ocean = TRUE, mpas = TRUE){
+  cat("loads 3 rasters unless otherwise specified: zones, ocean, and mpas\n",
       "zones = raster cells with BHI region ID values, see rgn_labels.csv to link IDs with names\n",
-      "ocean = raster with ocean cells identified as 1, otherwise 0\n\n")
+      "ocean = raster with ocean cells identified as 1, otherwise 0\n",
+      "mpas  = raster with Baltic marine protected areas identified as 1, elsewhere 0\n\n")
 
-  zones <<- raster::raster(file.path(dir_B, "Spatial", "rgns_zones.tif"))
-
+  tiffs <- c("baltic_zones.tif", "baltic_ocean.tif", "baltic_mpas.tif")
+  for(i in tiffs){
+    path <- file.path(dir_B, "Spatial", i)
+    if(!file.exists(path)){
+      sprintf("the file '%s' was not found at location '%s'",
+              i, file.path(dir_B, "Spatial"))
+      sprintf("check that BHI server '%s' is mounted, and that files are correctly named...", dir_B)
+    }
+  }
+  ## bhi regions rasterized to match ocean
+  zones <<- raster::raster(file.path(dir_B, "Spatial", "baltic_zones.tif"))
   ## an ocean raster for masking spatial raster data
-  ocean <<- raster::raster(file.path(dir_B, "Spatial", "rgns_ocean.tif"))
-
+  ocean <<- raster::raster(file.path(dir_B, "Spatial", "baltic_ocean.tif"))
+  ## baltic MPAs from specified year rasterized to match ocean and zone
+  mpas <<- raster::raster(file.path(dir_B, "Spatial", "baltic_mpas.tif"))
 }
