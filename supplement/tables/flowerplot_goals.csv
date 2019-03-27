@@ -1,0 +1,19 @@
+name,name_flower,weight,goal,parent,description
+Food Provision,Food Provision,1,FP,NA,"This goal measures the amount of seafood sustainably harvested in a given region through any means for use primarily in human consumption and thus includes wild-caught commercial fisheries, mariculture, artisanal-scale and recreational fisheries."
+Fisheries,Fisheries,0.5,FIS,FP,"This subgoal model aims to assess the amount of wild-caught seafood that can be sustainably harvested, with sustainability defined by multi-species yield, and with penalties assigned for both over- and under-harvesting."
+Mariculture,Mariculture,0.5,MAR,FP,This subgoal measures the ability to obtain maximal seafood yield from farm-raised facilities without damaging the ocean's ability to continue providing fish for people in the future.
+Artisanal Fishing Opportunity,Artisanal Fishing\nOpportunities,1,AO,NA,"This goal captures the access people have to coastal resources, whether or not they actually take fish or harvest from coastal waters."
+Natural Products,Natural Products,1,NP,NA,This goal model calculates overall status by weighting the status of sustainable harvest of each product by its proportional value relative to other harvested products.
+Carbon Storage,Carbon Storage,1,CS,NA,This goal captures the carbon stored in natural coastal ecosystems that absorb and sequester carbon in large amounts.
+Coastal Protection,Coastal\nProtection,1,CP,NA,This goal measures the amount of protection certain coastal habitats provide by measuring the current area they cover relative to the area they covered in the recent past.
+Tourism & Recreation,Tourism & \nRecreation,1,TR,NA,This goal captures the value people have for experiencing and taking pleasure in coastal areas.
+Coastal Livelihoods & Economies,Coastal Livelihoods & Economies,1,LE,NA,This goal aims to maintain coastal and ocean-dependent livelihoods and productive coastal economies while also maximizing livelihood quality.
+Livelihoods,Livelihoods,0.5,LIV,LE,This subgoal evaluates the benefits people obtain from the oceans in the form of jobs and wages.
+Economies,Economies,0.5,ECO,LE,This subgoal captures the economic value associated with marine industries.
+Sense of Place,Sense of Place,1,SP,NA,This goal aims to capture the level of protection for aspects of the coastal and marine system that contribute to a person's sense of cultural identity.
+Iconic Species,Iconic\nSpecies,0.5,ICO,SP,This subgoal captures the species that are important to a region because they are relevant to local cultural identity.
+Lasting Special Places,Lasting Special\nPlaces,0.5,LSP,SP,"This subgoal captures the conservation status of geographic locations that hold significant aesthetic, spiritual, cultural, recreational, or existence value for people."
+Clean Waters,Clean Waters,1,CW,NA,This goal captures the degree to which waters are polluted.
+Biodiversity,Biodiversity,1,BD,NA,This goal captures the conservation status of marine species.
+Habitats,Habitats,0.5,HAB,BD,This subgoal measures the condition of habitats that are important for supporting a wide array of species diversity.
+Species,Species,0.5,SPP,BD,This subgoal aims to estimate how successfully the richness and variety of marine life is being maintained.
