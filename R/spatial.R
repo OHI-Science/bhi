@@ -20,7 +20,6 @@ library(dplyr)
 #' @return no immediate output; writes
 
 create_rgn_lookup <- function(dir_bhi, layers_object = NULL, conf_object = NULL){
-
   ## from create_rgns_complete.R by @jules32 Sept 14 2016
   ## find original script in prep folder of bhi-1.0-archive github repo
 
@@ -113,18 +112,18 @@ regions_shape <- function(rgn_shp_foldername = "bhi_shapefile", mpas_shp_foldern
     sprintf("folders %s and/or %s not found", rgns_sp_path, mpas_sp_path)
   }
 
-  rgns_sp <- grep(list.files(rgns_sp_path, full.names = TRUE),
-                  pattern = "[A-Za-z0-9_]+.shp$", # assumes best practice of one shapefile per folder
-                  value = TRUE)
+  rgns_sp <-list.files(rgns_sp_path,
+                       full.names = TRUE,
+                       pattern = "[A-Za-z0-9_]+.shp$") # assumes best practice of one shapefile per folder
   if(!file.exists(rgns_sp)){
     sprintf("the BHI regions shapefile '%s' does not exist at location %s", basename(rgns_sp), rgns_sp_path)
   } else {
     regions_sp <<- sf::st_read(dsn = rgns_sp_path, layer = rgn_shp_foldername)
   }
 
-  mpas_sp <- grep(list.files(mpas_sp_path, full.names = TRUE),
-                  pattern = "[A-Za-z0-9_]+.shp$",
-                  value = TRUE)
+  mpas_sp <- list.files(mpas_sp_path,
+                        full.names = TRUE,
+                        pattern = "[A-Za-z0-9_]+.shp$")
   if(!file.exists(mpas_sp)){
     sprintf("Baltic MPAs shapefile '%s' does not exist at location %s", basename(mpas_sp), mpas_sp_path)
   } else {
