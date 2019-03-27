@@ -1,6 +1,40 @@
 ## Libraries
 source(file.path(here::here(), "R", "common.R"))
 library(sf) # install.packages("sf")
+library(rgdal)
+library(raster)
+library(fasterize)
+library(tidytext)
+library(dbplyr)
+library(DBI)
+library(odbc)
+library(config)
+library(httr)
+
+## helpful database functions in dplyr: copy_to,
+## functions in DBI: dbConnect,
+## from dbplot: creates ggplot object using data within database
+
+
+## Extra Info
+
+## https://db.rstudio.com/best-practices/drivers/
+## https://db.rstudio.com/databases/postgresql/
+## https://db.rstudio.com/odbc/
+## Connecting to database w/ method supporting DBI package makes using dplyr as a front-end possible
+## odbc connects via open database connectivity protocol
+
+## Setting up OBCD drivers (MacOS instructions):
+## first install homebrew if not installed (https://brew.sh/)
+## then via terminal, install the unixODBC library and PostgreSQL ODBC ODBC Drivers:
+# brew install unixodbc
+# brew install psqlodbc
+
+## edit odbcinst.ini (driver options) and odbc.ini (connection options) files
+## to find exact location use: odbcinst -j
+## or rather than depending on DSNs use config package:
+## 'allows connection code in R to reference external file that defines values based on the environment'
+
 
 ## Functions
 
@@ -40,37 +74,6 @@ bhiRfun_readme <- function(bhiR_dir, script_name){
 }
 
 
-#' function for creating metadata/readme content
-#'
-#' @param folder_filepath file path to folder where README will be located and which contains objects to document
-#' @param file name of the file to generate basic content for
-#' @param file_type
-#'
-#' @return
-
-readme_content <- function(folder_filepath, file, file_type){
-  ## look at a file and create some information depending on file type...
-  ## eg if csv tell me about the rows and columns
-  ## if a spatial file tell me what kind, spatial extent, something about attribute table if has one...
-  ## maybe if vector spatial file use sf package and tell me about the attrib table as if were csv
-  ## with raster can use metadata() function
-  ## don't want too much in readme, just enough to know if its what Im looking for!
-  ## documentation maybe to be used later in communication with the SQL database, so write a flexible function with that in mind...
-
-  # if(file_type %in% c("raster", "tiff", "geotiff")){
-  # }
-  # if(file_type %in% c("csv", "shapefile")){
-  # }
-  # if(file_type %in% c("image", "picture", "png", "jpg")){
-  # } else {
-  #   print("sadly, this function isn't able to tell you anything about that kind of file")
-  #   meaningful_stuff <- NULL
-  #   other_info_lumped <- NULL
-  # }
-  # return(list(meaningful_stuff, other_info_lumped))
-}
-
-
 #' generate basic readme outline
 #'
 #' look within a folder and create structure dependent on content and file tree
@@ -91,7 +94,6 @@ readme_outline <- function(folder_filepath, type_objects = "files", delim = ",")
   ## setup and extract file tree
   S <- .Platform$file.sep
   title <- basename(folder_filepath)
-  print(sprintf("generating README outline designed to document object type '%s' in '%s' directory", type_objects, title))
 
   tree <- list.files(folder_filepath, recursive = TRUE, full.names = TRUE) %>%
     gsub(pattern = folder_filepath, replacement = "")
@@ -208,13 +210,13 @@ readme_outline <- function(folder_filepath, type_objects = "files", delim = ",")
 #'
 #' @return dataframe created from a readme markdown file with structure outlined by `readme_outline` function above
 
-readme_to_df <- function(folder_filepath, write = FALSE){
+readme_to_df <- function(folder_filepath, write_df = FALSE){
 
   ## to parse look for structure (heading styles) as created by readme_outline function...
   mdtext <- scan(file = file.path(folder_filepath, "README.md"),
                  what = "character", sep = "\n") %>%
     grep(pattern = "^<br/>$", value = TRUE, invert = TRUE) %>%
-    stringr::str_remove_all(" <br/>") # Corpus would be better for string processing...
+    stringr::str_remove_all(" <br/>") # Corpus would be better for string processing maybe...
 
   h2 <- mdtext %>% grep(pattern = "^###") # subtitles start with three hashtags
   h3 <- mdtext %>% grep(pattern = "^\\*\\*") # object names start with two asterisks
@@ -222,9 +224,10 @@ readme_to_df <- function(folder_filepath, write = FALSE){
 
   ## create a row/tuple for each object-descriptive element pair
   nrws <- ifelse(length(h4) > 0, length(h4)/2, length(h3)) # 2 additional characteristics for csvs
-  info <- array(NA, dim = c(nrws, 5))
+  info <- array(NA, dim = c(nrws, 4)) # 4 cols max: "object", "description", "classes", "attributes"
   indx <- c(h3, length(mdtext)+1)
   recorded_in <- vector()
+  r0 <- 0
 
   ## ooph yikes lots of indexing
   ## would probably be better to use list-columns...
@@ -235,7 +238,6 @@ readme_to_df <- function(folder_filepath, write = FALSE){
     tmp_edt <- paste(tmp_raw, collapse = " \n ")
 
     if(length(h4) > 0){ # have additional subcategories: attributes and classes
-      r <- ((2*i)-1):(2*i)
       dim_nms <- c("object", "description", "classes", "attributes")
       tmp_edt <- tmp_raw %>%
         grep(pattern = "^\\*", value = TRUE, invert = TRUE) %>%
@@ -243,8 +245,9 @@ readme_to_df <- function(folder_filepath, write = FALSE){
       tmp_edt1 <- tmp_raw %>%
         grep(pattern = "^\\*", value = TRUE) %>%
         gsub(pattern = "\\* ", replacement = "")
-
-      info[r, 3:length(dim_nms)] <- array(tmp_edt1, dim = c(2, 2))
+      r <- 1:(length(tmp_edt1)/2)+r0
+      r0 <- max(r)
+      info[r, 3:length(dim_nms)] <- array(tmp_edt1, dim = c(length(tmp_edt1)/2, 2))
     }
     info[r, 1] <- stringr::str_extract(mdtext[h3[i]], pattern = "[A-Za-z0-9_\\.]+")
     info[r, 2] <- tmp_edt
@@ -253,17 +256,17 @@ readme_to_df <- function(folder_filepath, write = FALSE){
       recorded_in <- c(recorded_in, gsub("### ", "", mdtext[h2][which.min(h3[i] > h2) -1]))
     }
   }
-  readme_df <- data.frame(info)
+  readme_df <- data.frame(info, stringsAsFactors = FALSE)
   readme_df <- readme_df[, unlist(lapply(readme_df, function(x) !all(is.na(x))))]
   colnames(readme_df) <- dim_nms
 
   if(length(h2) > 0){
     readme_df <- readme_df %>% cbind(recorded_in)
   }
-  if(write){
-    title <- gsub("[^a-z]", "", mdtext[1])
+  if(write_df){
+    ti <- gsub("[^a-z]", "", mdtext[1])
     readr::write_csv(readme_df,
-                     file.path(folder_filepath,sprintf("%s_readme_metadata.csv", title)))
+                     file.path(folder_filepath, sprintf("%s_readme_metadata.csv", ti)))
   }
   return(readme_df)
 }
@@ -282,78 +285,82 @@ readme_to_df <- function(folder_filepath, write = FALSE){
 #' @return no returned value, just printed messages about status of readme in comparison to expected structure
 
 readme_status <- function(folder_filepath, type_objects, temp_filepath){
+
   ## current readme
   readme <- readme_to_df(folder_filepath) # depends on readme_to_df function
 
-  ## expected readme
+  ## generate expected readme
   sink(file = file.path(temp_filepath, "README.md"))
   outline <- readme_outline(folder_filepath, type_objects) # depends on readme_outline function
   closeAllConnections() # stop the sinking!
   readme_new_struc <- readme_to_df(temp_filepath)
 
-  ## checks and messages
-  chk_nrows <- nrow(readme_new_struc) != nrow(readme) # do they have same number of rows
-  chk_missing_obj <- setdiff(unique(readme_new_struc$object), unique(readme$object))
-  chk_extra_obj <- setdiff(unique(readme$object), unique(readme_new_struc$object))
-  chk_na_descrip <- is.na(readme$description) # are there any NAs in place of description
+  ## using compare_tabs function defined in common.R
+  if(type_objects == "tables"){
+    readme <- readme %>% dplyr::mutate(
+      attributes = stringr::str_extract_all(
+        attributes, pattern = "^[a-z]+"))
+    readme_new_struc <- readme_new_struc %>% dplyr::mutate(
+      attributes = stringr::str_extract_all(
+        attributes, pattern = "^[a-z]+"))
+    check_cols = c("object", "classes", "attributes")
+  }
+  check_cols <- c("object", "classes")
+  comp <- compare_tabs(tab1 = readme_new_struc, tab2 = readme,
+                       key_row_var = "object", check_cols = check_cols,
+                       check_for_nas = "description")
+  checks <- comp[[2]]
+  chk_na <- comp[[3]]
+  comparisons <- comp[[4]]
 
-  if(chk_nrows){
+  if(checks$chk_nrow){
     print("different numbers of rows in current readme and expected readme")
   }
-  if(length(chk_missing_obj) != 0){
+  if(length(checks$chk_missing_key) != 0){
     stop(sprintf("objects missing from current readme: %s",
-                 paste(chk_missing_obj, collapse = ", ")))
+                 paste(checks$chk_missing_key, collapse = ", ")))
   }
-  if(length(chk_extra_obj) != 0){
+  if(length(checks$chk_extra_key) != 0){
     stop(sprintf("unexpected objects found in current readme: %s",
-                 paste(chk_extra_obj, collapse = ", ")))
+                 paste(checks$chk_extra_key, collapse = ", ")))
   }
-  if(any(chk_na_descrip)){
-    sprintf("there are NAs in place of descriptions for objects: %s",
-            paste(readme$object[chk_na_descrip], collapse = ", "))
+  if(any(chk_na[, "description"])){
+    sprintf("some NAs found in place of descriptions for objects: %s",
+            grep(TRUE, chk_na[, "description"], value = TRUE) %>%
+              names() %>% paste(collapse = ", "))
   }
-  ## disproportionate amout of space for checking objects with class and attribute information...
+
+  ## if documented objects are tables, have an additional column (attributes) to compare
   if(type_objects == "tables"){
-    for(i in unique(readme$object)){
-      readme_classes <- readme %>% filter(object == i)
-      readme_new_classes <- readme_new_struc %>% filter(object == i)
-
-      chk_missing_classes <- setdiff(
-        unique(readme_new_classes$classes),
-        unique(readme_classes$classes))
-      chk_extra_classes <- setdiff(
-        unique(readme_classes$classes),
-        unique(readme_new_classes$classes))
-
-      if(length(chk_missing_classes) != 0){
-        sprintf("object '%s' is missing classes: %s", i,
-                paste(chk_missing_classes, collapse = ", "))
+    if(length(unlist(comparisons$missing)) != 0){
+      for(i in comparisons$missing){
+        sprintf("object '%s' is missing attributes: %s",
+                paste(unlist(missing[i]), collapse = "\n "),
+                names(comparisons$missing[i]))
       }
-      if(length(chk_extra_classes) != 0){
-        sprintf("object '%s' has unexpected classes: %s", i,
-                paste(chk_extra_classes, collapse = ", "))
-      }
-
-      readme_attrib <- readme %>% filter(object == i) %>%
-        dplyr::mutate(attributes = stringr::str_extract_all(attributes, pattern = "^[a-z]+"))
-      readme_new_attrib <- readme_new_struc %>% filter(object == i) %>%
-        dplyr::mutate(attributes = stringr::str_extract_all(attributes, pattern = "^[a-z]+"))
-
-      chk_missing_attrib <- setdiff(
-        unique(readme_attrib$attributes),
-        unique(readme_new_attrib$attributes))
-      chk_extra_attrib <- setdiff(
-        unique(readme_new_attrib$attributes),
-        unique(readme_attrib$attributes))
-
-      if(length(chk_missing_attrib) != 0){
-        sprintf("object '%s' is missing classes: %s", i,
-                paste(chk_missing_attrib, collapse = ", "))
-      }
-      if(length(chk_extra_attrib) != 0){
-        sprintf("object '%s' has unexpected classes: %s", i,
-                paste(chk_extra_attrib, collapse = ", "))
+    }
+    if(length(unlist(comparisons$extra)) != 0){
+      for(i in comparisons$extra){
+        sprintf("object '%s' is missing attributes: %s",
+                paste(unlist(missing[i]), collapse = "\n "),
+                names(comparisons$missing[i]))
       }
     }
   }
+}
+
+
+#' confirm layers in layers.csv have corresponding entries in layers_metadata.csv
+#'
+#' @param layers_csv layers.csv dataframe
+#' @param layers_metadata layers_metadata.csv dataframe
+#'
+#' @return
+
+layerscsv_metadata_exists <- function(layers_csv, layers_metadata){
+
+  compare_tabs(layers_csv, layers_metadata, )
+
+  chk <- "a boolean, true if correct matching exists"
+  return(chk)
 }
