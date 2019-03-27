@@ -84,6 +84,8 @@ compare_scores <- function(scores1, year1, scores2, year2, dim = "score", goal =
 #' @return list of two objects: first is the interactive html image, second is a dataframe recording the differences
 
 change_plot <- function(repo = "bhi", scenario = "baltic", commit = "previous"){
+  ## from ohicore/R/score_check.R by @Melsteroni
+  ## find full original script in R folder of ohicore github repo
 
   r <- here::here()
 
