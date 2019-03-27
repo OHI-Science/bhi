@@ -1,4 +1,4 @@
-# `layers.csv`
+## `layers.csv`
 
 <br/>
 
@@ -9,8 +9,6 @@ The table can be updated using the `layers_edit` function found in the `reconfig
 <br/>
 
 ### Columns to update manually
-
-<br/>
 
 **layer** <br/>
 The aliases of the layers used throughout the bhi code, by functions.R and the ohicore functions when calculating scores. These are snake case (lower case and underscores) with the first piece being the name of the two or three character code for the goal it corresponds to, rgn if it is a spatial input, or another prefix... (ideally these would be more consistent...).
@@ -37,11 +35,9 @@ Expands on the information summarized in the 'name' variable to explain more ful
 
 <br/>
 
-### To be updated by `ohicore::CheckLayer`
+### To be updated by ohicore::CheckLayer
 
-<br/>
-
-For more insight about these fields see the [source code](https://github.com/OHI-Science/ohicore/blob/master/R/CheckLayers.R) for the CheckLayers function.
+For more insight about these fields see the [source code](https://github.com/OHI-Science/ohicore/blob/master/R/CheckLayers.R) for the `ohicore::CheckLayers` function.
 
 **fld_id_num** <br/>
 **fld_id_chr** <br/>
