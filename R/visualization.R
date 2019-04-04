@@ -9,6 +9,7 @@ library(circlize) # https://jokergoo.github.io/circlize_book/book/
 library(dbplot)
 library(htmlwidgets)
 library(RColorBrewer)
+library(viridis)
 
 ## Color Palettes and Other Theme/Plot Elements
 reds <- grDevices::colorRampPalette(
@@ -177,14 +178,13 @@ make_trends_barplot <- function(rgn_scores, plot_year, color_pal, legend = FALSE
 #' @param dim
 #'
 #' @return
-make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "goal",
+make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "goal", curve_labels = FALSE,
                              center_val = TRUE, legend_tab = FALSE, save = NA, dim = "score"){
   ## from PlotFlower.R from ohicore package
   ## original function by Casey O'Hara, Julia Lowndes, Melanie Frazier
   ## find original script in R folder of ohicore github repo (as of Mar 27, 2019)
 
-
-  ## WRANGLING & PLOT CONFIG
+  ## WRANGLING & CHECKS
 
   unique_rgn <- unique(rgn_scores$region_id)
   if(length(unique_rgn) != 1){
@@ -221,6 +221,7 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "
     } else {message("fp_wildcaught_weight.csv not found in layers...")}
     w_fn <- NULL
     message("plotting FIS and MAR with equal weighting\n")
+
   } else { wgts <- readr::read_csv(w_fn)
     if(is.na(yr)){
       wgts <- dplyr::filter(wgts, year == max(year))
@@ -233,7 +234,9 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "
     )
   }
 
-  ## plotting configuration info, including how to deal with sub/supra goals
+  ## PLOTTING CONFIGURATION
+
+  ## sub/supra goals and positioning
   ## pos, pos_end, and pos_supra indicate positions ie how wide different petals should be based on weightings
   plot_config <- readr::read_csv(file.path(dir_baltic, "conf", "goals.csv")) # dir_baltic from common.R
   goals_supra <- na.omit(unique(plot_config$parent))
@@ -248,6 +251,18 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "
     dplyr::select(-preindex_function, -postindex_function, -description) %>%
     dplyr::mutate(name_flower = gsub("\\n", "\n", name_flower, fixed = TRUE)) %>%
     dplyr::arrange(order_hierarchy)
+
+  ## color palette stuff
+  if(color_by == "goal"){
+    if(length(unique(plot_config$goal)) > length(color_pal)){
+      print("color palette doesn't contain enougth colors for plotting by goal; using alternative palette")
+      color_pal <-
+    }
+    if(length(unique(plot_config$goal)) < length(color_pal)){
+      print("color palette contains too many colors for plotting by goal; did you supply a continuous palette?")
+      color_pal <- color_pal[1:nrow(plot_config)*length(color_pal)/nrow(plot_config)] # space selection out across given palette
+    }
+  }
 
   for(r in unique_rgn){
     if(!is.null(w_fn)){
@@ -271,8 +286,6 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "
     ## labels and general/basic parameters
     name_and_title <- elmts$rgn_name_lookup %>%
       dplyr::filter(region_id == r)
-    title <- name_and_title$plot_title
-    fig_name <- name_and_title$name
     score_index <- rgn_scores %>%
       dplyr::filter(region_id == r, goal == "Index", dimension == "score") %>%
       dplyr::select(region_id, score) %>%
@@ -280,9 +293,50 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "
     goal_labels <- dplyr::select(plot_df, goal, name_flower)
     p_limits <- c(0, max(plot_df$pos_end))
 
+    ## CREATING THE FLOWERPLOT
 
-    ## CREATING THE PLOT
+    ## set up plot background
+    if(str_to_lower(color_by) == "goal"){
+      plot_obj <- ggplot(plot_df, aes(x = pos, y = score, fill = goal, width = weight)) # color by goal
+    } else {
+      plot_obj <- ggplot(plot_df, aes(x = pos, y = score, fill = score, width = weight)) # color by score
+    }
+    plot_obj <- plot_obj +
+      geom_bar(aes(y = 100), stat = "identity", size = 0.2,
+               color = elmts$light_line, fill = elmts$white_fill)
+    if(any(!is.na(plot_df$plot_NA))){ # overlay dark grey background for NAs
+      plot_obj <- plot_obj +
+        geom_bar(aes(y = plot_NA), stat = "identity", size = 0.2,
+                 color = elmts$light_line, fill = elmts$light_fill)
+    }
 
+    ## flower plot petals
+    plot_obj <- plot_obj +
+      geom_bar(stat = "identity", size = 0.2, # overlay score actual value
+               color = elmts$dark_line) +
+      coord_polar(start = pi * 0.5) # from linear bar chart to polar
+
+    if(str_to_lower(color_by) == "goal"){ # set color palette
+      plot_obj <- plot_obj +
+        scale_fill_manual(values = color_pal, na.value = "black")
+    } else {
+      plot_obj <- plot_obj +
+        scale_fill_gradient(colours = color_pal, na.value = "black", limits = c(0, 100))
+    }
+
+    ## axis adjustments and labeling
+    plot_obj <- plot_obj +
+      geom_errorbar(aes(x = pos, ymin = 0, ymax = 0), # bolded baseline at zero
+                    size = 0.5, show.legend = NA, color = elmts$dark_line) +
+      scale_x_continuous(labels = plot_df$goal, # label the petals
+                         breaks = plot_df$pos, limits = p_limits) +
+      scale_y_continuous(
+        limits = c(-blank_circle_rad, # tweak plot-limits of 'polarized' y-axix
+                   ifelse(first(goal_labels == TRUE) | is.data.frame(goal_labels), 180, 100))) +
+      labs(title = name_and_title$plot_title, x = NULL, y = NULL)
+
+
+    return(invisible(plot_obj))
   }
 }
 
