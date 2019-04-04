@@ -330,55 +330,53 @@ configure_functions <- function(assessment_path, test_funs_list = NULL){
 
 configure_layers <- function(assessment_path, prep_path, test_path){
 
-  test_layers_path <- file.path(assessment_path, "testing", "alt_layers_full_table.csv")
+  test_layers_path <- file.path(assessment_path, "testing", "alt_layers.csv")
   functionsR_path <- file.path(assessment_path, "conf", "functions.R")
 
-  print("this function assumes you've already made sure alt_layers_full_table.csv is up to date!")
+  print("this function assumes you've already made sure alt_layers.csv is up to date!")
   use_layers <- readr::read_delim(test_layers_path, delim = ";") %>%
     dplyr::filter(use == "YES")
 
   ## extract names of layers specified in functions.R (i.e. which do functions.R require)
-  functionsR_layers <- scan(file = functionsR_path, what = "character", sep = "\n") %>%
-    grep(pattern = "\\s*#{1,}.*", value = TRUE, invert = TRUE) %>% # remove commented lines
-    gsub(pattern = "layer_nm\\s{1,}=\\s{1,}", replacement = "layer_nm=") %>%
-    gsub(pattern = "", replacement = "layer_nm=") %>% # to catch pressure + resilience layers given with a different pattern
-    stringr::str_split(" ") %>%
-    unlist() %>%
-    stringr::str_subset("layer_nm.*") %>% # pattern to ID layer fed into a function within fuctions.R
-    stringr::str_extract("\"[a-z0-9_]*\"") %>%
-    stringr::str_sort()
+  ## then, compare layers required by functions.R to the layers specified in table
+  ## save compare layers table to testing folder for review/reference
+  functionsR_layers <- goal_layers(functionsR_path, goal_code = "all")
 
-  ## checking: compare layers required by functions.R to the layers specified in table
   check_layers_table <- tibble::tibble(layer = functionsR_layers, fun_layer = "YES") %>%
     dplyr::full_join(use_layers, by = "layer") %>%
-    dplyr::mutate(required = ifelse(is.na(fun_layer) == TRUE, "not required", NA)) %>%
-    dplyr::mutate(specified = ifelse(is.na(filename) == TRUE, "specify version", NA)) %>%
+    dplyr::mutate(required = ifelse(is.na(fun_layer) == TRUE, "not required", "required")) %>%
+    dplyr::mutate(specified = ifelse(is.na(filename) == TRUE, "specify version", "exists")) %>%
     dplyr::group_by(layer) %>%
     dplyr::add_tally() %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(multiple = ifelse(n > 1, "overspecified", "")) %>%
+    dplyr::mutate(multiple = ifelse(n > 1, "overspecified", "unique")) %>%
     dplyr::select(-fun_layer, -use, -n)
-  readr::write_csv(check_layers_table,
-                   file.path(test_path, "test_layers_used.csv"),
-                   append = FALSE)
+  readr::write_csv(check_layers_table, file.path(test_path, "test_layers_used.csv"))
 
+  ## checks: stop if error, don't proceed to layer-copying step...
   one_to_one <- ifelse(length(unique(check_layers_table$multiple)) > 1, FALSE, TRUE)
   onto <- ifelse(length(unique(check_layers_table$specified)) > 1, FALSE, TRUE)
-  stopifnot(one_to_one, onto) # stop if error- don't proceed to layer-copying step
+  if(!one_to_one){
+    stop("instances found where multiple files are specified for a single layer")
+  }
+  if(!onto){
+    stop("instances found where no files are specified for a layer")
+  }
 
   ## copy over the layer versions for calculations
   use_layers <- check_layers_table %>%
-    dplyr::filter(required != "not required") %>%
-    dplyr::mutate(path = ifelse(is.na(subfolder) == FALSE,
-                                paste(goal, subfolder, layer, filename, sep = "/"),
-                                paste(goal, layer, filename, sep = "/")))
-
-  continue <- readline(prompt = sprintf("overwrite current contents of '%s/layers' (continue: yes/no)? ", prep_path))
-  stopifnot(continue == "yes")
+    dplyr::filter(required == "required") %>%
+    dplyr::mutate(
+      path = ifelse(specified == "specify version", NA,
+                    ifelse(is.na(subfolder),
+                           paste(goal, layer, filename, sep = "/"),
+                           paste(goal, subfolder, layer, filename, sep = "/"))
+      ))
+  # continue <- readline(prompt = sprintf("overwrite current contents of '%s/layers' (continue: yes/no)? ", prep_path))
+  # stopifnot(continue == "yes")
 
   ## copy layers to 'layers' folder, and write version into 'filename' column of 'layers.csv'
   for(i in 1:nrow(use_layers)){
-
     use_layer_path <- sprintf("%s/%s", prep_path, use_layers$paths[i]) # the layer file to copy is located here
     put_layer_path <- sprintf("%s/layers/%s", prep_path, use_layers$filename[i]) # where to put copied layer
     file.copy(use_layer_path, put_layer_path, overwrite = TRUE)
@@ -394,17 +392,14 @@ configure_layers <- function(assessment_path, prep_path, test_path){
 
     print(sprintf("copied %s to layers folder", use_layers$filename[i]))
   }
-
   return(check_layers_table) # return so can visually inspect
 }
+
+
+# configure_pressures <- function(){}
 #
 #
-# configure_pressures
-#
-#
-# configure_resilience <- function(){
-#
-# }
+# configure_resilience <- function(){}
 
 
 #' copy prepared layers from bhi-prep to bhi repo

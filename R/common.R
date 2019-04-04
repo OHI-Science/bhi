@@ -6,8 +6,8 @@ library(stringr)
 
 ## General
 assess_year <- 2019 # CHANGE BHI ASSESSMENT YEAR HERE!
-filesep <- .Platform$file.sep
 projstringCRS <- raster::crs("+proj=longlat +datum=WGS84 +no_defs") # spatial data use lat/long coords on WGS84
+filesep <- .Platform$file.sep
 
 bhi_repo_loc <- "https://github.com/OHI-Science/bhi"
 prep_repo_loc <- "https://github.com/OHI-Science/bhi-prep/prep"
@@ -16,24 +16,32 @@ prep_repo_raw <- "https://raw.githubusercontent.com/OHI-Science/bhi-prep" # usel
 bhi_api <- "https://api.github.com/repos/OHI-Science/bhi/git/trees/master?recursive=1"
 bhi_prep_api <- "https://api.github.com/repos/OHI-Science/bhi-prep/git/trees/master?recursive=1"
 
-
 ## Directories
 dir_bhi <- here::here()
-dir_spatial <- file.path(dir_bhi, "spatial") # spatial folder of bhi repo
-dir_R <- file.path(dir_bhi, "R")
 dir_baltic <- file.path(dir_bhi, "baltic") # CHANGE BHI ASSESSMENT DIRECTORY HERE!
+dir_spatial <- file.path(dir_bhi, "spatial") # spatial folder of bhi repo
 dir_prep <- file.path("..", "bhi-prep") # only works if assessment and prep repos are in same main (github) directory...
-
-dir_share <- c("Darwin" = "/Volumes/BHI_share", # "Windows" = ?
-           "Linux" = "/home/shares/ohi")[[ Sys.info()[["sysname"]] ]]
-dir_B <- file.path(dir_share, "BHI 2.0") # CHANGE MAIN AUX BHI DIRECTORY HERE!
-
+dir_B <- file.path(c("Darwin" = "/Volumes/BHI_share", # "Windows" = ?
+           "Linux" = "/home/shares/ohi")[[ Sys.info()[["sysname"]] ]], "BHI 2.0") # CHANGE MAIN AUX BHI DIRECTORY HERE!
 if(Sys.info()[["sysname"]] != "Linux" & !file.exists(dir_B)){ # warning if BHI internal, shared directory doesn't exist
   paste("The BHI directory dir_share set in R/common.R does not exist.",
         sprintf("Do you need to mount the BHI server: %s?", dir_B))
-} # note: if you do not have access to the BHI team's internal server, no worries
+}
 
 ## Functions
+
+funsR_goals_list <- function(functionsR_path = NULL, funs_text = NULL){
+  if(is.null(functionsR_path) & is.null(funs_text)){
+    stop("must provide path to functions.R, or its contents as a character vector")
+  }
+  if(!is.null(functionsR_path)){
+    txt <- scan(file = functionsR_path, what = "character", sep = "\n")
+  } else {txt <- funs_text}
+  breaks_str <- "^[A-Z]{2,3}\\s<-\\sfunction\\(|^[A-Z]{2,3}\\s=\\sfunction\\("
+  funs_goals <- stringr::str_extract(grep(breaks_str, txt, value = TRUE), "^[A-Z]{2,3}")
+  return(funs_goals)
+}
+
 
 #' extract from functions.R the text of a specific goal function
 #'
@@ -41,23 +49,34 @@ if(Sys.info()[["sysname"]] != "Linux" & !file.exists(dir_B)){ # warning if BHI i
 #' @param goal_code the two or three letter code indicating the goal or subgoal
 #'
 #' @return lines of the goal function as a character vector
-
-goal_function <- function(funs_text = NULL, functionsR_path = NULL, goal_code){
+goal_function <- function(functionsR_path = NULL, funs_text = NULL, goal_code, comments = FALSE){
   goal_code <- stringr::str_to_upper(goal_code)
 
   if(is.null(functionsR_path) & is.null(funs_text)){
-    stop(print("must provide path to functions.R, or its contents as a character vector"))
+    stop("must provide path to functions.R, or its contents as a character vector")
   }
-  if(is.null(funs_text)){
-    funs_text <- scan(file = functionsR_path, what = "character", sep = "\n")
+  if(!is.null(functionsR_path)){
+    txt <- scan(file = functionsR_path, what = "character", sep = "\n")
+  } else {txt <- funs_text}
+  breaks_str <- "^[A-Z]{2,3}\\s<-\\sfunction\\(|^[A-Z]{2,3}\\s=\\sfunction\\("
+  funs_breaks <- grep(breaks_str, txt)
+  funs_goals <- stringr::str_extract(grep(breaks_str, txt, value = TRUE), "^[A-Z]{2,3}")
+  if(!(goal_code %in% funs_goals)){
+    stop("function for the given goal code not found in functions.R")
   }
-  funs_breaks <- grep(pattern = "^[A-Z]{2,3}\\s<-\\sfunction\\(", funs_text)
-  fun_start <- grep(pattern = sprintf("^%s\\s<-\\sfunction\\(", goal_code), funs_text)
+  fun_start <- grep(pattern = sprintf("^%s\\s<-\\sfunction\\(|^%s\\s=\\sfunction\\(",
+                                      goal_code, goal_code), txt)
   fun_end <- funs_breaks[1 + which.min(abs(fun_start - funs_breaks))] - 1
+  goal_fun <- txt[fun_start:fun_end]
 
-  goal_fun <- funs_text[fun_start:fun_end]
+  ## remove commented lines if comments arg is falls
+  if(comments == FALSE){
+    goal_fun <- goal_fun %>%
+      grep(pattern = "\\s*#{1,}.*", value = TRUE, invert = TRUE)
+  }
   return(goal_fun) # cat(goal_fun, sep = "\n")
 }
+
 
 #' extract from functions.R layers associated with a specific goal function
 #'
@@ -65,27 +84,32 @@ goal_function <- function(funs_text = NULL, functionsR_path = NULL, goal_code){
 #' @param goal_code the two or three letter code indicating the goal or subgoal
 #'
 #' @return character vector naming layers
+goal_layers <- function(functionsR, goal_code = "all"){
 
-goal_layers <- function(functionsR_path, goal_code = "ALL"){
-  goal_code <- stringr::str_to_upper(goal_code)
-
-  funs_text <- scan(file = functionsR_path, what = "character", sep = "\n")
-  if(goal_code != "ALL"){
-    gc <- goal_code # do this since we're passing parameter where names are the same...
-    funs_text <- goal_function(funs_text, goal_code = gc)
+  goal_code <- stringr::str_to_upper(goal_code) %>% unlist()
+  if(goal_code != "ALL" & any(!goal_code %in% funsR_goals_list(functionsR))){
+    print("note: no function found for some of the given goals")
+  }
+  if(stringr::str_to_upper(goal_code) == "ALL"){
+    txt <- scan(file = functionsR_path, what = "character", sep = "\n") %>%
+      grep(pattern = "\\s*#{1,}.*", value = TRUE, invert = TRUE)
+  } else {
+    txt <- vector()
+    for(gc in goal_code){
+      txt <- c(txt, goal_function(functionsR, goal_code = gc, comments = FALSE))
+    }
   }
 
   ## extract names of layers specified in functions.R (i.e. which do functions.R require)
-  functionsR_layers <- funs_text %>%
-    grep(pattern = "\\s*#{1,}.*", value = TRUE, invert = TRUE) %>% # remove commented lines
+  functionsR_layers <- txt %>%
     gsub(pattern = "layer_nm\\s{1,}=\\s{1,}", replacement = "layer_nm=") %>%
     # gsub(pattern = "", replacement = "layer_nm=") %>% # to catch pressure + resilience layers given with a different pattern
     stringr::str_split(" ") %>%
     unlist() %>%
     stringr::str_subset("layer_nm.*") %>% # pattern to ID layer fed into a function within fuctions.R
-    stringr::str_extract("\"[a-z0-9_]*\"") %>%
+    stringr::str_extract("\"[a-z0-9_]*\"|\'[a-z0-9_]*\'") %>%
     stringr::str_sort() %>%
-    stringr::str_remove_all("\"") # remove any quotation marks around
+    stringr::str_remove_all("\"|\'") # remove any quotation marks around
 
   return(functionsR_layers)
 }
@@ -94,7 +118,6 @@ goal_layers <- function(functionsR_path, goal_code = "ALL"){
 #' create dataframe with names of the prepared layers within bhi-prep layers folder on github
 #'
 #' @return creates
-
 bhiprep_github_layers <- function(github_api_url = bhi_prep_api){
   req <- httr::GET(github_api_url)
   stop_for_status(req)
@@ -113,7 +136,6 @@ bhiprep_github_layers <- function(github_api_url = bhi_prep_api){
 #' @param key_row_var the variable for groupings of interest e.g. by which you would join or maybe gather the data
 #'
 #' @return
-
 compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_nas = NA){
 
   ## setup, load tables, get key variable info
@@ -132,9 +154,9 @@ compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_
 
   ## checks and messages
   checks <- list(
-    chk_nrows = nrow(tab1df) != nrow(tab2df), # do they have same number of rows?
-    chk_missing_key = setdiff(tab1_keys, tab2_keys), # tab2 missing some key vars expected (tab1)
-    chk_extra_key = setdiff(tab2_keys, tab1_keys)) # tab2 has some unexpected key vars (ones not in tab1)
+    chk_nrows = nrow(tab1df) != nrow(tab2df), # true if number of rows unequal
+    chk_missing_key = setdiff(tab1_keys, tab2_keys), # key vars missing from tab2
+    chk_extra_key = setdiff(tab2_keys, tab1_keys)) # unexpected key vars in tab2
 
   not_in_tab1 <- setdiff(check_cols, names(tab1df)) # check_cols not in tab1
   not_in_tab2 <- setdiff(check_cols, names(tab2df)) # check_cols not in tab2
@@ -158,7 +180,7 @@ compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_
   comparisons <- list(missing = list(), extra = list())
 
   if(length(checks$chk_missing_key) > 0 | length(checks$chk_extra_key) > 0){
-    print("levels/groupings of key var don't match; comparisons results will apply only to intersection")
+    message("levels/groupings of key var don't match; comparisons results will apply only to intersection")
   }
   for(i in check_cols){ # there's probably a better way with purrr or apply funs...
     e <- list()
@@ -186,7 +208,6 @@ compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_
 #' @param years the years to extract score data for
 #'
 #' @return a dataframe of OHI scores filtered by the given conditions
-
 filter_score_data <- function(score_data, dims = "all", goals = "all", rgns = NA, years = NA){
 
   filter_scores <- score_data
