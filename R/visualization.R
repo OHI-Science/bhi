@@ -313,11 +313,11 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal = NA, color_b
         dplyr::left_join(color_df, by = "goal")
     }
     if(isTRUE(gradient)){
-      plot_df_gradient <- plot_df %>%
+      plot_df <- plot_df %>%
         dplyr::mutate(x = pos - (weight/2), x_end = pos + (weight/2)) %>%
         dplyr::mutate(y_end = ifelse(is.na(score), 0, score)) %>%
         dplyr::rowwise() %>%
-        dplyr::mutate(
+        dplyr::mutate( # this line spacing sequence, togther with alpha and size parameters in geom_segement, create the gradient...
           y = list(Filter(function(x) x < y_end, 100^(seq(0, 1, 0.001))))) %>%
         ungroup() %>%
         tidyr::unnest(y) %>%
@@ -328,18 +328,24 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal = NA, color_b
     ## CREATING THE FLOWERPLOTS
 
     if(isTRUE(gradient)){
-      plot_obj <- ggplot(plot_df_gradient, aes(x = x, xend = x_end, y = y, yend = y_end))
+      plot_obj <- ggplot(plot_df, aes(x = x, xend = x_end, y = y, yend = y_end))
       if(color_by == "goal"){
         plot_obj <- plot_obj +
-          geom_segment(aes(color = goal), size = 0.2, alpha = 0.3) +
-          scale_color_manual(values = unique(plot_df_gradient$color), na.value = "black")
+          geom_segment(aes(color = goal), size = 0.2, alpha = 0.15, arrow = arrow(length = unit(0.01,"cm"))) +
+          scale_color_manual(values = unique(plot_df$color), na.value = "black")
       } else {
         plot_obj <- plot_obj +
-          geom_segment(aes(color = y), size = 0.2, alpha = 0.3) +
+          geom_segment(aes(color = y), size = 0.2, alpha = 0.3, arrow = arrow(length = unit(0.02,"cm"))) +
           scale_color_gradient2(low = color_pal[1],
-                               mid = color_pal[length(color_pal)/2],
-                               high = color_pal[length(color_pal)], midpoint = 50)
+                                mid = color_pal[length(color_pal)/2],
+                                high = color_pal[length(color_pal)], midpoint = 50)
       }
+      plot_obj <- plot_obj +
+        geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = 100.01, yend = 100.01),
+                     size = 0.1, color = elmts$dark_line) +
+        geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = 110.01, yend = 110.01),
+                     size = 1, color = elmts$lightest)
+
 
     } else {
       if(color_by == "goal"){
@@ -359,10 +365,8 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal = NA, color_b
                    color = elmts$light_line, fill = elmts$lightest)
       }
       plot_obj <- plot_obj +
-        geom_errorbar(aes(x = pos, ymin = 0, ymax = 0),
-                      size = 0.5, show.legend = NA, color = elmts$dark_line) + # bolded baseline at zero
-        geom_errorbar(aes(x = pos, ymin = 130, ymax = 130),
-                      size = 1, show.legend = NA, color = elmts$lightest) # include some kind of tipping-point line?
+        geom_errorbar(aes(x = pos, ymin = 0, ymax = 0), size = 0.5, show.legend = NA, color = elmts$dark_line) + # bolded baseline at zero
+        geom_errorbar(aes(x = pos, ymin = 130, ymax = 130), size = 1, show.legend = NA, color = elmts$lightest) # include some kind of tipping-point line?
     }
 
     goal_labels <- dplyr::select(plot_df, goal, name_flower)
@@ -375,15 +379,6 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal = NA, color_b
       scale_y_continuous(limits = c(-elmts$blank_circle_rad, # tweak plot-limits of 'polarized' y-axix
                                     ifelse(first(goal_labels == TRUE) | is.data.frame(goal_labels), 150, 100)))
 
-
-
-    # if(isTRUE(curve_labels)){
-    #   plot_obj <- plot_obj # https://jokergoo.github.io/circlize_book/book/graphics.html#text ?
-    # } else
-    plot_obj <- plot_obj +
-      geom_text(aes(label = name_flower, x = pos, y = 125), # labeling with supra/sub goal names, use geom_text_repel?
-                hjust = 0.5, vjust = 0.5, size = 3, color = elmts$dark_line)
-
     if(isTRUE(center_val)){
       score_index <- rgn_scores %>%
         dplyr::filter(region_id == r, goal == "Index", dimension == "score") %>%
@@ -395,6 +390,14 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal = NA, color_b
                   x = 0, y = -elmts$blank_circle_rad, hjust = 0.5, vjust = 0.5,
                   size = 9, color = elmts$dark_line)
     }
+
+    # if(isTRUE(curve_labels)){
+    #   plot_obj <- plot_obj # https://jokergoo.github.io/circlize_book/book/graphics.html#text ?
+    # } else
+    plot_obj <- plot_obj +
+      geom_text(aes(label = name_flower, x = pos, y = 125), # labeling with supra/sub goal names, use geom_text_repel?
+                hjust = 0.5, vjust = 0.5, size = 3, color = elmts$dark_line)
+
 
     ## SAVING PLOTS
 
