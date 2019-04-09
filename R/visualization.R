@@ -199,8 +199,8 @@ make_trends_barplot <- function(rgn_scores, plot_year, color_pal, legend = FALSE
 #'
 #' @return
 
-make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal = NA, color_by = "goal", curve_labels = FALSE,
-                             center_val = TRUE, legend_tab = FALSE, save = NA, dim = "score"){
+make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal = NA, color_by = "goal", gradient = FALSE,
+                             curve_labels = FALSE, center_val = TRUE, legend_tab = FALSE, save = NA, dim = "score"){
   ## from PlotFlower.R from ohicore package
   ## original function by Casey O'Hara, Julia Lowndes, Melanie Frazier
   ## find original script in R folder of ohicore github repo (as of Mar 27, 2019)
@@ -312,48 +312,70 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal = NA, color_b
         dplyr::arrange(goal) %>%
         dplyr::left_join(color_df, by = "goal")
     }
+    if(isTRUE(gradient)){
+      plot_df_gradient <- plot_df %>%
+        dplyr::mutate(x = pos - (weight/2), x_end = pos + (weight/2)) %>%
+        dplyr::mutate(y_end = ifelse(is.na(score), 0, score)) %>%
+        dplyr::rowwise() %>%
+        dplyr::mutate(
+          y = list(Filter(function(x) x < y_end, 100^(seq(0, 1, 0.001))))) %>%
+        ungroup() %>%
+        tidyr::unnest(y) %>%
+        dplyr::mutate(y_end = y)
+      message("plotting with a gradient takes a while... best for a single region, not all scores!")
+    }
 
     ## CREATING THE FLOWERPLOTS
 
-    ## set up plot background
-    if(color_by == "goal"){
-      plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = goal))
+    if(isTRUE(gradient)){
+      plot_obj <- ggplot(plot_df_gradient, aes(x = x, xend = x_end, y = y, yend = y_end))
+      if(color_by == "goal"){
+        plot_obj <- plot_obj +
+          geom_segment(aes(color = goal), size = 0.2, alpha = 0.3) +
+          scale_color_manual(values = unique(plot_df_gradient$color), na.value = "black")
+      } else {
+        plot_obj <- plot_obj +
+          geom_segment(aes(color = y), size = 0.2, alpha = 0.3) +
+          scale_color_gradient2(low = color_pal[1],
+                               mid = color_pal[length(color_pal)/2],
+                               high = color_pal[length(color_pal)], midpoint = 50)
+      }
+
     } else {
-      plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = score))
-    }
-    plot_obj <- plot_obj +
-      geom_bar(aes(y = 100), stat = "identity", size = 0.2,
-               color = elmts$light_line, fill = elmts$white)
-    if(any(!is.na(plot_df$plot_NA))){ # overlay light grey background for NAs
+      if(color_by == "goal"){
+        plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = goal)) +
+          geom_bar(aes(y = 100), stat = "identity", size = 0.2, color = elmts$light_line, fill = elmts$white) +
+          geom_bar(stat = "identity", size = 0.2, color = elmts$dark_line) +
+          scale_fill_manual(values = plot_df$color, na.value = "black")
+      } else {
+        plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = score)) +
+          geom_bar(aes(y = 100), stat = "identity", size = 0.2, color = elmts$light_line, fill = elmts$white) +
+          geom_bar(stat = "identity", size = 0.2, color = elmts$dark_line) +
+          scale_fill_gradientn(colors = color_pal, na.value = "black", limits = c(0, 100))
+      }
+      if(any(!is.na(plot_df$plot_NA))){ # overlay light grey background for NAs
+        plot_obj <- plot_obj +
+          geom_bar(aes(y = plot_NA), stat = "identity", size = 0.2,
+                   color = elmts$light_line, fill = elmts$lightest)
+      }
       plot_obj <- plot_obj +
-        geom_bar(aes(y = plot_NA), stat = "identity", size = 0.2,
-                 color = elmts$light_line, fill = elmts$lightest)
+        geom_errorbar(aes(x = pos, ymin = 0, ymax = 0),
+                      size = 0.5, show.legend = NA, color = elmts$dark_line) + # bolded baseline at zero
+        geom_errorbar(aes(x = pos, ymin = 130, ymax = 130),
+                      size = 1, show.legend = NA, color = elmts$lightest) # include some kind of tipping-point line?
     }
 
-    ## flower plot petals with color palette
-    ## note that the final reordering of discrete fill happens with rescaling/labeling step below
-    plot_obj <- plot_obj +
-      geom_bar(stat = "identity", size = 0.2, color = elmts$dark_line) + # overlay score actual value
-      coord_polar(start = pi * 0.5) # from linear bar chart to polar
-    if(color_by == "goal"){
-      plot_obj <- plot_obj +
-        scale_fill_manual(values = plot_df$color, na.value = "black")
-    } else {
-      plot_obj <- plot_obj +
-        scale_fill_gradientn(colors = color_pal, na.value = "black", limits = c(0, 100))
-    }
-
-    ## axis adjustments and labeling
     goal_labels <- dplyr::select(plot_df, goal, name_flower)
     name_and_title <- elmts$rgn_name_lookup %>%
       dplyr::filter(region_id == r)
     plot_obj <- plot_obj +
       labs(title = name_and_title$plot_title, x = NULL, y = NULL) +
-      geom_errorbar(aes(x = pos, ymin = 0, ymax = 0), size = 0.5, show.legend = NA, color = elmts$dark_line) + # bolded baseline at zero
-      geom_errorbar(aes(x = pos, ymin = 130, ymax = 130), size = 1, show.legend = NA, color = elmts$lightest) + # include some kind of tipping-point line?
+      coord_polar(start = pi * 0.5) + # from linear bar chart to polar
       scale_x_continuous(labels = plot_df$goal, breaks = plot_df$pos, limits = c(0, max(plot_df$pos_end))) + # label the petals
       scale_y_continuous(limits = c(-elmts$blank_circle_rad, # tweak plot-limits of 'polarized' y-axix
                                     ifelse(first(goal_labels == TRUE) | is.data.frame(goal_labels), 150, 100)))
+
+
 
     # if(isTRUE(curve_labels)){
     #   plot_obj <- plot_obj # https://jokergoo.github.io/circlize_book/book/graphics.html#text ?
