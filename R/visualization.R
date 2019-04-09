@@ -11,7 +11,7 @@ library(htmlwidgets)
 library(RColorBrewer)
 library(viridis)
 
-## Color Palettes and Other Theme/Plot Elements
+## Color Palettes and Other Plot Elements
 reds <- grDevices::colorRampPalette(
   c("#A50026","#D73027","#F46D43","#FDAE61", "#ffdcd8"))(40)
 purples <- grDevices::colorRampPalette(
@@ -19,14 +19,25 @@ purples <- grDevices::colorRampPalette(
 blues <- grDevices::colorRampPalette(
   c("#E0F3F8","#ABD9E9","#74ADD1","#4575B4","#313695"))(50)
 
+goals_pal <- tibble::tibble(
+  goal = c("MAR","FIS","FP","CW","CON","EUT","TRA",
+           "SP","LSP","ICO","LE","ECO","LIV",
+            "AO","TR","CS","NP", "BD"),
+  color = c("#549dad","#4ead9d","#53b3ac","#89b181","#60a777","#7ead6d","#9aad7e",
+            "#97a4ba","#9fb3d4","#7c96b4","#9a97ba","#7d7ca3","#9990b4",
+            "#e2de9a","#b6859a","#d0a6a1","#ccb4be","#88b1a6"))
+
+scores_pal <- "create some kind of continuous diverging palette here..."
+
 elmts <- list(
+  white = "white",
+  lightest = "grey95",
   light_line = "grey90",
-  med_line = "grey50",
-  med2_line = "grey30",
-  dark_line = "grey20",
-  white_fill = "white",
   light_fill = "grey80",
+  med_line = "grey50",
   med_fill = "grey52",
+  med2 = "grey30",
+  dark_line = "grey20",
   dark_fill = "grey22",
   text_size = 9,
   title_rel_size = 1.25,
@@ -40,35 +51,43 @@ elmts <- list(
   rgn_name_lookup = readr::read_csv(file.path(dir_spatial, "regions_lookup_complete_wide.csv")) %>%
     dplyr::select(region_id, eez_name, subbasin_name) %>%
     dplyr::mutate(plot_title = paste0(subbasin_name, ", ", eez_name)) %>%
+    rowwise() %>%
     dplyr::mutate(name = paste(
-      region_name_title %>%
+      plot_title %>%
         stringr::str_to_lower() %>%
         stringr::str_extract_all("[a-z]+") %>%
         unlist(),
-      collapse = "_"))
+      collapse = "_")) %>%
+  ungroup()
 )
 
 ## Functions
 
-#' #' customize and create standard theme for plots
-#' #'
-#' #' a function to create a standardized theme for plots, updates ggtheme...
-#' #'
-#' #' @return no return value, simply updates the ggplot theme where called
-#' plot_theme <- function(){
+#' customize and create standard theme for plots
 #'
-#'   ggplot2::theme_update(
-#'     axis.ticks = element_blank(),
-#'     text = element_text(family = "Helvetica", color = elmts$dark_line, size = elmts$text_size),
-#'     plot.title = element_text(size = ggplot2::rel(elmts$title_rel_size), hjust = 0.5, face = "bold"),
-#'     panel.border = element_blank(),
-#'     panel.grid.minor = element_blank(),
-#'     panel.grid.major = element_line(colour = elmts$light_line, size = elmts$grid_major),
-#'     legend.key = element_rect(colour = elmts$legend_colour, fill = elmts$legend_fill),
-#'     legend.position = elmts$legend_pos,
-#'     axis.line = element_line(colour = elmts$med2_line, size = elmts$axis_weight)
-#'   )
-#' }
+#' a function to create a standardized theme for plots, updates ggtheme...
+#'
+#' @return no return value, simply updates the ggplot theme where called
+
+update_bhi_theme <- function(plot_type){
+  theme_update(
+    text = element_text(family = "Helvetica", color = elmts$dark_line, size = elmts$text_size),
+    plot.title = element_text(size = ggplot2::rel(elmts$title_rel_size), hjust = 0.5, face = "bold")
+  )
+  if(plot_type == "flowerplot"){
+    theme_update(
+      axis.ticks = element_blank(),
+      panel.border = element_blank(),
+      panel.background = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_blank(),
+      legend.key = element_rect(colour = elmts$legend_colour, fill = elmts$legend_fill),
+      legend.position = elmts$legend_pos,
+      axis.line = element_blank(),
+      axis.text.y = element_blank()
+    )
+  }
+}
 
 
 #' create trends barplot
@@ -83,6 +102,7 @@ elmts <- list(
 #' @param save
 #'
 #' @return
+
 make_trends_barplot <- function(rgn_scores, plot_year, color_pal, legend = FALSE, save = NA){
   if(!"year" %in% names(rgn_scores)){
     warning("rgn_scores doesn't have a year column; assuming data is for the current year")
@@ -178,7 +198,8 @@ make_trends_barplot <- function(rgn_scores, plot_year, color_pal, legend = FALSE
 #' @param dim
 #'
 #' @return
-make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "goal", curve_labels = FALSE,
+
+make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal = NA, color_by = "goal", curve_labels = FALSE,
                              center_val = TRUE, legend_tab = FALSE, save = NA, dim = "score"){
   ## from PlotFlower.R from ohicore package
   ## original function by Casey O'Hara, Julia Lowndes, Melanie Frazier
@@ -186,27 +207,25 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "
 
   ## WRANGLING & CHECKS
 
+  ## filtering/wrangling of rgn_scores for years and dimension
   unique_rgn <- unique(rgn_scores$region_id)
   if(length(unique_rgn) != 1){
-    print("rgn_scores input contains data for more than one region")
+    message("note: rgn_scores input contains data for more than one region")
   }
   if(!"year" %in% names(rgn_scores)){
     if(is.na(plot_year)){
       plot_year <- substring(date(), 21, 24)
-      print("rgn_scores doesn't have a year column; assuming data is for current year")
+      message("rgn_scores doesn't have a year column; assuming data is for current year\n")
     } else {
-      paste("rgn_scores doesn't have a year column; assuming data is for plot_year", plot_year)
+      message(paste("rgn_scores doesn't have a year column; assuming data is for given plot_year", plot_year,"\n"))
     }
     rgn_scores$year <- plot_year
   } else {
     if(is.na(plot_year) | !plot_year %in% unique(rgn_scores$year)){
       plot_year <- max(rgn_scores$year)
-      paste("plotting from most recent year in the input data:", plot_year)
-    } else {
-      paste("plotting from most recent year in the input data:", plot_year)
+      message(paste("plotting using most recent year in the input data:", plot_year,"\n"))
     }
   }
-  ## filtering/wrangling of rgn_scores for rgn_ids and years
   rgn_scores <- rgn_scores %>%
     dplyr::filter(year == plot_year, dimension == dim)
 
@@ -220,19 +239,21 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "
       message("fp_wildcaught_weight.csv not unique...")
     } else {message("fp_wildcaught_weight.csv not found in layers...")}
     w_fn <- NULL
-    message("plotting FIS and MAR with equal weighting\n")
-
-  } else { wgts <- readr::read_csv(w_fn)
-    if(is.na(yr)){
-      wgts <- dplyr::filter(wgts, year == max(year))
-    } else {wgts <- dplyr::filter(wgts, year == yr)}
-    mean_wgt <- mean(wgts$w_fis) # mean across regions within the year of interest
-    wgts <- rbind(
-      data.frame(rgn_id = 0, w_fis = mean_wgt),
-      dplyr::filter(wgts, rgn_id %in% unique_rgn) %>%
-        dplyr::select(-year)
-    )
+  } else {
+    wgts <- readr::read_csv(w_fn) %>%
+      dplyr::filter(year == plot_year)
+    if(length(wgts$w_fis) != 0){
+      mean_wgt <- mean(wgts$w_fis) # mean across regions within the year of interest
+      wgts <- rbind(
+        data.frame(rgn_id = 0, w_fis = mean_wgt),
+        dplyr::filter(wgts, rgn_id %in% unique_rgn) %>%
+          dplyr::select(-year))
+    } else {
+      message(paste("fp_wildcaught_weight.csv doesn't have data for the plot_year:", plot_year))
+      w_fn <- NULL
+    }
   }
+  if(is.null(w_fn)){message("plotting FIS and MAR with equal weighting\n")}
 
   ## PLOTTING CONFIGURATION
 
@@ -252,20 +273,23 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "
     dplyr::mutate(name_flower = gsub("\\n", "\n", name_flower, fixed = TRUE)) %>%
     dplyr::arrange(order_hierarchy)
 
-  ## color palette stuff
+  ## some color palette and theme stuff
+  color_by <- str_to_lower(color_by)
   if(color_by == "goal"){
-    if(length(unique(plot_config$goal)) > length(color_pal)){
-      print("color palette doesn't contain enougth colors for plotting by goal; using alternative palette")
-      color_pal <-
-    }
-    if(length(unique(plot_config$goal)) < length(color_pal)){
-      print("color palette contains too many colors for plotting by goal; did you supply a continuous palette?")
-      color_pal <- color_pal[1:nrow(plot_config)*length(color_pal)/nrow(plot_config)] # space selection out across given palette
+    if(length(plot_config$goal) > length(color_pal)){
+      color_df <- goals_pal
+      message("no palette given or too few colors for plotting by goal; using a predefined color palette\n")
+    } else {
+      color_pal <- color_pal[1:nrow(plot_config)*length(color_pal)/nrow(plot_config)]
+      color_df <- tibble::tibble(goal = plot_config$goal, color = color_pal)
     }
   }
+  initial_theme <- theme_get()
+  update_bhi_theme(plot_type = "flowerplot") # theme_update() for bhi flowerplot
 
+  ## start looping over regions
   for(r in unique_rgn){
-    if(!is.null(w_fn)){
+    if(!is.null(w_fn)){ # mar vs fis weights differ between regions
       plot_config$weight[plot_config$goal == "FIS"] <- wgts$w_fis[wgts$rgn_id == r]
       plot_config$weight[plot_config$goal == "MAR"] <- 1 - wgts$w_fis[wgts$rgn_id == r]
     }
@@ -281,65 +305,88 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, color_pal, color_by = "
       dplyr::mutate(pos_supra = ifelse(!is.na(name_supra), mean(pos), NA)) %>% # to deal with unequal weights
       dplyr::ungroup() %>%
       dplyr::filter(weight != 0) %>%
+      dplyr::select(goal, score, name_flower, name_supra, weight, pos, pos_end, pos_supra) %>%
       dplyr::mutate(plot_NA = ifelse(is.na(score), 100, NA)) # for displaying NAs
+    if(color_by == "goal"){
+      plot_df <- plot_df %>%
+        dplyr::arrange(goal) %>%
+        dplyr::left_join(color_df, by = "goal")
+    }
 
-    ## labels and general/basic parameters
-    name_and_title <- elmts$rgn_name_lookup %>%
-      dplyr::filter(region_id == r)
-    score_index <- rgn_scores %>%
-      dplyr::filter(region_id == r, goal == "Index", dimension == "score") %>%
-      dplyr::select(region_id, score) %>%
-      dplyr::mutate(score = round(score))
-    goal_labels <- dplyr::select(plot_df, goal, name_flower)
-    p_limits <- c(0, max(plot_df$pos_end))
-
-    ## CREATING THE FLOWERPLOT
+    ## CREATING THE FLOWERPLOTS
 
     ## set up plot background
-    if(str_to_lower(color_by) == "goal"){
-      plot_obj <- ggplot(plot_df, aes(x = pos, y = score, fill = goal, width = weight)) # color by goal
+    if(color_by == "goal"){
+      plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = goal))
     } else {
-      plot_obj <- ggplot(plot_df, aes(x = pos, y = score, fill = score, width = weight)) # color by score
+      plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = score))
     }
     plot_obj <- plot_obj +
       geom_bar(aes(y = 100), stat = "identity", size = 0.2,
-               color = elmts$light_line, fill = elmts$white_fill)
-    if(any(!is.na(plot_df$plot_NA))){ # overlay dark grey background for NAs
+               color = elmts$light_line, fill = elmts$white)
+    if(any(!is.na(plot_df$plot_NA))){ # overlay light grey background for NAs
       plot_obj <- plot_obj +
         geom_bar(aes(y = plot_NA), stat = "identity", size = 0.2,
-                 color = elmts$light_line, fill = elmts$light_fill)
+                 color = elmts$light_line, fill = elmts$lightest)
     }
 
-    ## flower plot petals
+    ## flower plot petals with color palette
+    ## note that the final reordering of discrete fill happens with rescaling/labeling step below
     plot_obj <- plot_obj +
-      geom_bar(stat = "identity", size = 0.2, # overlay score actual value
-               color = elmts$dark_line) +
+      geom_bar(stat = "identity", size = 0.2, color = elmts$dark_line) + # overlay score actual value
       coord_polar(start = pi * 0.5) # from linear bar chart to polar
-
-    if(str_to_lower(color_by) == "goal"){ # set color palette
+    if(color_by == "goal"){
       plot_obj <- plot_obj +
-        scale_fill_manual(values = color_pal, na.value = "black")
+        scale_fill_manual(values = plot_df$color, na.value = "black")
     } else {
       plot_obj <- plot_obj +
-        scale_fill_gradient(colours = color_pal, na.value = "black", limits = c(0, 100))
+        scale_fill_gradientn(colors = color_pal, na.value = "black", limits = c(0, 100))
     }
 
     ## axis adjustments and labeling
+    goal_labels <- dplyr::select(plot_df, goal, name_flower)
+    name_and_title <- elmts$rgn_name_lookup %>%
+      dplyr::filter(region_id == r)
     plot_obj <- plot_obj +
-      geom_errorbar(aes(x = pos, ymin = 0, ymax = 0), # bolded baseline at zero
-                    size = 0.5, show.legend = NA, color = elmts$dark_line) +
-      scale_x_continuous(labels = plot_df$goal, # label the petals
-                         breaks = plot_df$pos, limits = p_limits) +
-      scale_y_continuous(
-        limits = c(-blank_circle_rad, # tweak plot-limits of 'polarized' y-axix
-                   ifelse(first(goal_labels == TRUE) | is.data.frame(goal_labels), 180, 100))) +
-      labs(title = name_and_title$plot_title, x = NULL, y = NULL)
+      labs(title = name_and_title$plot_title, x = NULL, y = NULL) +
+      geom_errorbar(aes(x = pos, ymin = 0, ymax = 0), size = 0.5, show.legend = NA, color = elmts$dark_line) + # bolded baseline at zero
+      geom_errorbar(aes(x = pos, ymin = 130, ymax = 130), size = 1, show.legend = NA, color = elmts$lightest) + # include some kind of tipping-point line?
+      scale_x_continuous(labels = plot_df$goal, breaks = plot_df$pos, limits = c(0, max(plot_df$pos_end))) + # label the petals
+      scale_y_continuous(limits = c(-elmts$blank_circle_rad, # tweak plot-limits of 'polarized' y-axix
+                                    ifelse(first(goal_labels == TRUE) | is.data.frame(goal_labels), 150, 100)))
 
+    # if(isTRUE(curve_labels)){
+    #   plot_obj <- plot_obj # https://jokergoo.github.io/circlize_book/book/graphics.html#text ?
+    # } else
+    plot_obj <- plot_obj +
+      geom_text(aes(label = name_flower, x = pos, y = 125), # labeling with supra/sub goal names, use geom_text_repel?
+                hjust = 0.5, vjust = 0.5, size = 3, color = elmts$dark_line)
 
-    return(invisible(plot_obj))
+    if(isTRUE(center_val)){
+      score_index <- rgn_scores %>%
+        dplyr::filter(region_id == r, goal == "Index", dimension == "score") %>%
+        dplyr::select(region_id, score) %>%
+        dplyr::mutate(score = round(score))
+      plot_obj <- plot_obj +
+        geom_text(data = score_index, # include central value
+                  inherit.aes = FALSE, aes(label = score_index$score),
+                  x = 0, y = -elmts$blank_circle_rad, hjust = 0.5, vjust = 0.5,
+                  size = 9, color = elmts$dark_line)
+    }
+
+    ## SAVING PLOTS
+
+    if(isFALSE(save)){save <- NA}
+    if(isTRUE(save)){
+      save <- file.path(dir_baltic, "reports", "figures", paste0("flowerplot_", name))
+    }
+    if(!is.na(save)){
+      save_loc <- file.path(save, paste0("flowerplot_", name, ".png"))
+      ggplot2::ggsave(filename = save_loc, plot = plot_obj, device = "png",
+                      height = 6, width = 8, units = "in", dpi = 300)
+    }
   }
+  theme_set(initial_theme) # set theme back to whatever it was initially
+  return(invisible(plot_obj)) # note: will only return the last plot
 }
 
-
-# create_all_plots <- function(score_data, plot_year, ){
-# }
