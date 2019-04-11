@@ -32,18 +32,16 @@ Pretty detailed description of what this test is all about, what kinds of data w
 
 ```{r configuring test and calculating alternative scores}
 test_path <- getwd() # set working directory to testing subdirectory in setup code chunk
-assessment_path <- bhi_baltic # testing.R sources common.R which creates dir_baltic
 prep_path <- sprintf("%s%s", bhi_baltic, "-prep/prep")
+test_layers <- file.path(bhi_baltic, "testing", "alt_layers.csv") # testing.R sources common.R which creates dir_baltic
 
-test_layers <- file.path(assessment_path, "testing", "alt_layers.csv") # View(test_layers)
-
-configure_functions(assessment_path) # write functions to use into functions.R
-configure_layers(assessment_path, prep_path, test_path)
+configure_functions(bhi_baltic) # write functions to use into functions.R
+configure_layers(bhi_baltic, prep_path, test_path)
 
 ## calculate scores...
-repo_loc <- "https://raw.githubusercontent.com/OHI-Science/bhi-prep/master"
-copy_layers_for_assessment(assessment_path, repo_loc)
-calculate_scores(assessment_path, c(2015, 2018), scores_path = getwd())
+repo_loc <- paste0(prep_repo_raw, "/master")
+copy_lyrs_from_bhiprep(bhi_baltic, repo_loc)
+calculate_scores(bhi_baltic, c(2015, 2018), scores_path = getwd())
 ```
 
 ### Visualization and Exploration or Results
