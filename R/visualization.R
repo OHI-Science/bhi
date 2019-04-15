@@ -20,7 +20,8 @@ library(htmltools)
 #'
 #' a function to create a standardized theme for plots, updates ggtheme...
 #'
-#' @param plot_type if applying theme for a specific type of plot, specify here (options: flowerplot, trends_barplot, ...)
+#' @param plot_type if applying theme for a specific type of plot,
+#' specify here (options: flowerplot, trends_barplot, ...)
 #'
 #' @return no return value, simply updates the ggplot theme where called
 
@@ -110,11 +111,14 @@ apply_bhi_theme <- function(plot_type = NA){
 #' requires a dataframe of OHI scores filtered to the region of interest
 #' reads in information from supplement/tables/
 #'
-#' @param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R), filtered to region
-#' @param color_pal a continuous color palette, ideally diverging, that will map to trend values in the barplots
+#' @param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R),
+#' filtered to region
+#' @param color_pal a continuous color palette, ideally diverging,
+#' that will map to trend values in the barplots
 #' @param plot_year year by which to filter region score input dataframe
 #' @param include_legend boolean indicating if legend should be included or not
-#' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string, or to "reports/figures" directory if TRUE
+#' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string,
+#' or to "reports/figures" directory if TRUE
 #'
 #' @return
 
@@ -220,20 +224,28 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
 #' requires a dataframe of OHI scores filtered to the region of interest
 #' reads in information from supplement/tables/
 #'
-#' @param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R), filtered to region
-#' @param plot_year year by which to filter region score input dataframe; defaults to current year or maximum year in score data input
+#' @param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R),
+#' filtered to region
+#' @param plot_year year by which to filter region score input dataframe;
+#' defaults to current year or maximum year in score data input
 #' @param dim the dimension the flowerplot petals should represent (typically OHI 'score')
-#' @param color_pal a color palette that will map to values of specified dimension 'dim'; ideally discrete for color_by 'goal' and continuous otherise
+#' @param color_pal a color palette that will map to values of specified dimension 'dim';
+#' ideally discrete for color_by 'goal' and continuous otherise
 #' @param color_by either "goal" or "score"
-#' @param gradient a boolean indicating whether flowerplot petals should have a gradient, i.e. more intense color near center and more transparent towards edges
+#' @param gradient a boolean indicating whether flowerplot petals should have a gradient,
+#' i.e. more intense color near center and more transparent towards edges
 #' @param legend_tab boolean indicating if legend should be included or not
-#' @param update_legend a boolean indicating whether legend will need to be recalculated for a new plot (creating the legend takes time so avoid if possible)
+#' @param update_legend a boolean indicating whether legend will need to be recalculated for a new plot
+#' (creating the legend takes time so avoid if possible)
 #' @param labels one of "none", "regular", "curved"
 #' @param center_val a boolean indicating whether the region average value should be included in the center of the flower plot
-#' @param critical_value value at which a light red line should drawn overlying the plot, to indicate a 'critical point' of some kind...
-#' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string, or to "reports/figures" directory if TRUE
+#' @param critical_value value at which a light red line should drawn overlying the plot,
+#' to indicate a 'critical point' of some kind...
+#' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string,
+#' or to "reports/figures" directory if TRUE
 #'
-#' @return result is a flower plot; if curved labels or legend table are included, the resulting class is magick-image, otherwise the result is a ggplot object
+#' @return result is a flower plot; if curved labels or legend table are included,
+#' the resulting class is magick-image, otherwise the result is a ggplot object
 
 make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
                              color_pal = NA, color_by = "goal", gradient = FALSE, legend_tab = FALSE, update_legend = FALSE,
@@ -426,18 +438,22 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
     } else {
       if(color_by == "goal"){
         plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = goal)) +
-          geom_bar(aes(y = 100), stat = "identity", size = 0.2, color = bhi_thm$elmts$med_line, fill = bhi_thm$elmts$white) +
-          geom_bar(stat = "identity", size = 0.2, color = bhi_thm$elmts$med_line, show.legend = FALSE) +
+          geom_bar(aes(y = 100), stat = "identity",
+                   size = 0.2, color = bhi_thm$elmts$med_line, fill = bhi_thm$elmts$white) +
+          geom_bar(stat = "identity",
+                   size = 0.2, color = bhi_thm$elmts$med_line, show.legend = FALSE) +
           scale_fill_manual(values = plot_df$color, na.value = "black")
       } else {
         plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = score)) +
-          geom_bar(aes(y = 100), stat = "identity", size = 0.2, color = bhi_thm$elmts$med_line, fill = bhi_thm$elmts$white) +
+          geom_bar(aes(y = 100), stat = "identity",
+                   size = 0.2, color = bhi_thm$elmts$med_line, fill = bhi_thm$elmts$white) +
           geom_bar(stat = "identity", size = 0.2, color = bhi_thm$elmts$med_line, show.legend = FALSE) +
           scale_fill_gradientn(colors = color_pal, na.value = "black", limits = c(0, 100))
       }
       if(any(!is.na(plot_df$plot_NA))){ # overlay light grey background for NAs
         plot_obj <- plot_obj +
-          geom_bar(aes(y = plot_NA), stat = "identity", size = 0.2, color = bhi_thm$elmts$med_line, fill = bhi_thm$elmts$lightest)
+          geom_bar(aes(y = plot_NA), stat = "identity",
+                   size = 0.2, color = bhi_thm$elmts$med_line, fill = bhi_thm$elmts$lightest)
       }
       plot_obj <- plot_obj +
         geom_errorbar(aes(x = pos, ymin = 0, ymax = 0), # bolded baseline at zero
@@ -490,21 +506,21 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
     if(labels == "curved"||isTRUE(legend_tab)){
       temp_plot <- file.path(dir_baltic, "temp", paste0("flowerplot_", name_and_title$name, ".png"))
       ggplot2::ggsave(filename = temp_plot, plot = plot_obj, device = "png", bg = "transparent",
-                      height = 6, width = 8, units = "in", dpi = 300) # this causes a big hangup when plot has gradient...
+                      height = 6, width = 8, units = "in", dpi = 300) # causes a hangup when plot has gradient...
       img_plot <- magick::image_read(temp_plot)
 
       if(labels == "curved"){
-        circ_df <- plot_df0 %>%
-          dplyr::select("goal", "f1", "f2", "name_supra", "weight", "order_calculate") %>%
-          dplyr::mutate(weight = 0.3 + 0.7 * weight) %>%
-          dplyr::mutate(x = sum(weight) - (cumsum(weight) - weight), x_end = sum(weight) - (cumsum(weight))) %>%
-          tidyr::gather("start_end", "range", -goal, -name_supra, -weight, -order_calculate, -f1, -f2) %>%
-          dplyr::select(-start_end, -weight, -goal) %>%
-          dplyr::arrange(order_calculate)
-
         temp_labels <- file.path(dir_baltic, "temp", paste0("flower_curvetxt_", name_and_title$name, ".jpg"))
 
         if(!file.exists(temp_labels)){ # don't recreate curved labels if already exist....
+          circ_df <- plot_df0 %>%
+            dplyr::select("goal", "f1", "f2", "name_supra", "weight", "order_calculate") %>%
+            dplyr::mutate(weight = 0.3 + 0.7 * weight) %>%
+            dplyr::mutate(x = sum(weight) - (cumsum(weight) - weight), x_end = sum(weight) - (cumsum(weight))) %>%
+            tidyr::gather("start_end", "range", -goal, -name_supra, -weight, -order_calculate, -f1, -f2) %>%
+            dplyr::select(-start_end, -weight, -goal) %>%
+            dplyr::arrange(order_calculate)
+
           jpeg(temp_labels, width = 2450, height = 2450, quality = 220)
           message("creating curved labels for plot:\n")
 
@@ -515,17 +531,20 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
 
           circos.track(factors = circ_df$order_calculate, y = circ_df$range, panel.fun = function(x, y){
             circos.text(CELL_META$xcenter, CELL_META$ycenter,
-                        CELL_META$sector.index, col = "white")}, bg.col = NA, bg.border = FALSE)
+                        CELL_META$sector.index, col = "white")},
+            bg.col = NA, bg.border = FALSE)
           circos.track(factors = circ_df$order_calculate, y = circ_df$range, panel.fun = function(x, y){
             circos.text(CELL_META$xcenter, CELL_META$ycenter,
                         circ_df$f1[circ_df$order_calculate == as.numeric(CELL_META$sector.index)][1],
                         cex = 5, col = bhi_thm$elmts$dark_line, adj = c(0.4, 1),
-                        facing = "bending.inside", niceFacing = TRUE)}, bg.col = NA, bg.border = FALSE)
+                        facing = "bending.inside", niceFacing = TRUE)},
+            bg.col = NA, bg.border = FALSE)
           circos.track(factors = circ_df$order_calculate, y = circ_df$range, panel.fun = function(x, y){
             circos.text(CELL_META$xcenter, CELL_META$ycenter,
                         circ_df$f2[circ_df$order_calculate == as.numeric(CELL_META$sector.index)][1],
                         cex = 5, col = bhi_thm$elmts$dark_line, adj = c(0.4, 0),
-                        facing = "bending.inside", niceFacing = TRUE)}, bg.col = NA, bg.border = FALSE)
+                        facing = "bending.inside", niceFacing = TRUE)},
+            bg.col = NA, bg.border = FALSE)
 
           highlight.sector(circ_df$order_calculate[circ_df$name_supra != "Food Provision"|is.na(circ_df$name_supra)],
                            track.index = 1, text = "Food Provision", cex = 6.5,
@@ -559,7 +578,8 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
             dplyr::select(goal, parent, name, name_supra) %>%
             dplyr::left_join(dplyr::filter(rgn_scores, region_id == r), by = "goal")
           if(color_by == "goal"){
-            legend_cols <- dplyr::mutate(left_join(legend_df, color_df, by = "goal"), color = ifelse(is.na(score), NA, color))$color
+            legend_cols <- dplyr::mutate(left_join(legend_df, color_df, by = "goal"),
+                                         color = ifelse(is.na(score), NA, color))$color
           } else { legend_cols <- dplyr::mutate(legend_df, color = color_pal[length(color_pal)*score/100])$color }
           legend_cols[is.na(legend_cols)] <- "#DDDDDD"
 
@@ -579,7 +599,8 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
             )
           )
           ## must have phantomjs installed- can do this with webshot::install_phantomjs()
-          path <- htmltools::html_print(as.htmlwidget(tab, width = "48%", height = NULL), background = "white", viewer = NULL)
+          path <- htmltools::html_print(as.htmlwidget(tab, width = "48%", height = NULL),
+                                        background = "white", viewer = NULL)
           url <- paste0("file:///", gsub("\\\\", "/", normalizePath(path)))
           webshot::webshot(url, file = temp_legend, selector = ".formattable_widget", delay = 0.2)
         }
@@ -609,7 +630,8 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
       if(class(plot_obj) == "magick-image"){
         magick::image_write(plot_obj, path = save_loc, format = "png")
       } else {
-        ggplot2::ggsave(filename = save_loc, plot = plot_obj, device = "png", height = 3.5, width = 5, units = "in", dpi = 400)
+        ggplot2::ggsave(filename = save_loc, plot = plot_obj, device = "png",
+                        height = 3.5, width = 5, units = "in", dpi = 400)
       }
     }
   }
