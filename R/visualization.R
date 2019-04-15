@@ -66,9 +66,11 @@ apply_bhi_theme <- function(plot_type = NA){
                 "#e2de9a","#b6859a","#d0a6a1","#ccb4be","#88b1a6")))
 
   ## region names lookup table ----
-  rgn_name_lookup <- readr::read_csv(file.path(dir_spatial, "regions_lookup_complete_wide.csv")) %>%
-    dplyr::select(region_id, eez_name, subbasin_name) %>%
-    dplyr::mutate(plot_title = paste0(subbasin_name, ", ", eez_name)) %>%
+  rgn_name_lookup <- rbind(
+    readr::read_csv(file.path(dir_spatial, "regions_lookup_complete_wide.csv")) %>%
+      dplyr::select(region_id, eez_name, subbasin_name),
+    data.frame(region_id = 0, eez_name = "", subbasin_name = "Baltic Sea")) %>%
+    dplyr::mutate(plot_title = ifelse(region_id != 0, paste0(subbasin_name, ", ", eez_name), subbasin_name)) %>%
     rowwise() %>%
     dplyr::mutate(name = paste(
       plot_title %>%
@@ -165,12 +167,7 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
     name <- "multiregion"; h <- 7; w <- 11; d <- 450
   } else {
     region_name_title <- region_name_title$plot_title
-    name <- paste(
-      region_name_title %>%
-        stringr::str_to_lower() %>%
-        stringr::str_extract_all("[a-z]+") %>%
-        unlist(),
-      collapse = "_")
+    name <- region_name_title$name
     start_pal <- (length(color_pal)/2)*(1+min(rgn_scores$score))
     end_pal <- (length(color_pal)/2)*(1+max(rgn_scores$score))
     color_pal <- color_pal[start_pal:end_pal]
@@ -226,15 +223,17 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
 #' @param color_pal
 #' @param color_by either "goal" or "score"
 #' @param gradient
+#' @param legend_tab
+#' @param update_legend
 #' @param labels one of "none", "regular", "curved"
 #' @param center_val
-#' @param legend_tab
+#' @param critical_value
 #' @param save
 #'
 #' @return
 
 make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
-                             color_pal = NA, color_by = "goal", gradient = FALSE, legend_tab = FALSE,
+                             color_pal = NA, color_by = "goal", gradient = FALSE, legend_tab = FALSE, update_legend = FALSE,
                              labels = "none", center_val = TRUE, critical_value = 10, save = NA){
 
   ## from PlotFlower.R from ohicore package
@@ -314,8 +313,8 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
       dplyr::rowwise() %>%
       dplyr::mutate(
         f = stringr::str_split(name_flower, "\n"),
-        f1 = ifelse(order_calculate <= max(plot_df$order_calculate)/2, f[1], f[2]),
-        f2 = ifelse(order_calculate <= max(plot_df$order_calculate)/2, f[2], f[1])) %>%
+        f1 = ifelse(order_calculate <= max(plot_config$order_calculate)/2, f[1],  f[2]),
+        f2 = ifelse(order_calculate <= max(plot_config$order_calculate)/2, f[2], f[1])) %>%
       dplyr::select(-f)
   }
 
@@ -366,9 +365,8 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
     }
 
     ## if plotting with a gradient, expand plot_df with y column indicating
+    plot_df0 <- plot_df
     if(isTRUE(gradient)){
-      plot_df0 <- plot_df
-
       plot_df <- plot_df %>%
         dplyr::mutate(x = pos - (weight/2), x_end = pos + (weight/2)) %>%
         dplyr::mutate(y_end = ifelse(is.na(score), 0, score)) %>%
@@ -498,7 +496,7 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
         temp_labels <- file.path(dir_baltic, "temp", paste0("flower_curvetxt_", name_and_title$name, ".jpg"))
 
         if(!file.exists(temp_labels)){ # don't recreate curved labels if already exist....
-          jpeg(temp_labels, width = 2400, height = 2400, quality = 200)
+          jpeg(temp_labels, width = 2450, height = 2450, quality = 220)
           message("creating curved labels for plot:\n")
 
           circos.clear() # curved labels created with circlize
@@ -539,10 +537,10 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
         img_plot <- image_composite(image_scale(img_text, 550), image_scale(img_plot, 330), offset = "+110+110")
       }
 
-      ## create legend table to accompany the plot ----
+      ## create legend table to accompany the plot
       if(isTRUE(legend_tab)){
         temp_legend <- file.path(dir_baltic, "temp", paste0("flowerlegend_by_", color_by, "_", name_and_title$name, ".jpg"))
-        if(!(file.exists(temp_legend) & color_by == "goal")){ # don't recreate if already exist, but difficult to know with continuous color_pal....
+        if(!(file.exists(temp_legend) & color_by == "goal")||isTRUE(update_legend)){
           message("creating legend table for plot:\n")
 
           legend_df <- plot_config %>%
@@ -561,7 +559,7 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
               Goal = paste(ifelse(is.na(name_supra),"", paste(name_supra, ": ")),
                            name,"(",ifelse(is.na(parent), goal, paste(parent, goal)),")")) %>%
             dplyr::select(Goal, Key, score)
-          names(legend_df) <- c("Goal", "Key", stringr::str_to_title(dim)) # Goal--> paste0("Goal, Year", unique(na.omit(legend_df$year)))
+          names(legend_df) <- c("Goal", "Key", stringr::str_to_title(dim))
 
           tab <- formattable(
             legend_df,
@@ -571,8 +569,8 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
                  `Key` = formatter("span", style = x ~ style("background-color" = legend_cols,
                                                              color = ifelse(is.na(x), "#DDDDDD", legend_cols)))))
 
-          ## need first to install phantomjs- can do this with webshot::install_phantomjs()
-          path <- htmltools::html_print(as.htmlwidget(tab, width = "50%", height = NULL), background = "white", viewer = NULL)
+          ## must have phantomjs installed- can do this with webshot::install_phantomjs()
+          path <- htmltools::html_print(as.htmlwidget(tab, width = "48%", height = NULL), background = "white", viewer = NULL)
           url <- paste0("file:///", gsub("\\\\", "/", normalizePath(path)))
           webshot::webshot(url, file = temp_legend, selector = ".formattable_widget", delay = 0.2)
         }
@@ -584,7 +582,7 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
           image_border("white", "80x60") %>%
           image_scale(800)
         img_legend <- img_legend %>%
-          image_border("white", "40x90") %>%
+          image_border("white", "20x92") %>%
           image_scale(600)
         img_plot <- image_append(c(img_plot, img_legend))
       }
@@ -595,14 +593,14 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
     ## saving with method based on plot_obj class ----
     if(isFALSE(save)){save <- NA}
     if(isTRUE(save)){
-      save <- file.path(dir_baltic, "reports", "figures", paste0("flowerplot_", name_and_title$name))
+      save <- file.path(dir_baltic, "reports", "figures", paste0("flowerplot_", name_and_title$name, ".png"))
     }
     if(!is.na(save)){
-      save_loc <- file.path(save, paste0("flowerplot_", name, ".png"))
+      save_loc <- save
       if(class(plot_obj) == "magick-image"){
         magick::image_write(plot_obj, path = save_loc, format = "png")
       } else {
-        ggplot2::ggsave(filename = save_loc, plot = plot_obj, device = "png", height = 6, width = 8, units = "in", dpi = 300)
+        ggplot2::ggsave(filename = save_loc, plot = plot_obj, device = "png", height = 3.5, width = 5, units = "in", dpi = 400)
       }
     }
   }
