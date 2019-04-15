@@ -384,6 +384,7 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
 
     ## CREATING THE FLOWERPLOTS
     ## with or without gradient ----
+
     ## with gradient
     if(isTRUE(gradient)){
       plot_obj <- ggplot(plot_df, aes(x = x, xend = x_end, y = y, yend = y))
@@ -411,9 +412,12 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
                     fill = bhi_thm$elmts$lightest)
       }
       plot_obj <- plot_obj +
-        geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = 0, yend = 0), size = 0.5, color = bhi_thm$elmts$dark_line) +
-        geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = critical_value, yend = critical_value), size = 0.1, color = bhi_thm$elmts$bright_line) +
-        geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = 105, yend = 105), size = 3, color = bhi_thm$elmts$lightest)
+        geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = 0, yend = 0),
+                     size = 0.5, color = bhi_thm$elmts$dark_line) +
+        geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = critical_value, yend = critical_value),
+                     size = 0.1, color = bhi_thm$elmts$bright_line) +
+        geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = 105, yend = 105),
+                     size = 3, color = bhi_thm$elmts$lightest)
 
     ## without a gradient
     } else {
@@ -433,9 +437,12 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
           geom_bar(aes(y = plot_NA), stat = "identity", size = 0.2, color = bhi_thm$elmts$med_line, fill = bhi_thm$elmts$lightest)
       }
       plot_obj <- plot_obj +
-        geom_errorbar(aes(x = pos, ymin = 0, ymax = 0), size = 0.5, show.legend = NA, color = bhi_thm$elmts$dark_line) + # bolded baseline at zero
-        geom_errorbar(aes(x = pos, ymin = critical_value, ymax = critical_value), size = 0.25,show.legend = NA, color = bhi_thm$elmts$bright_line) + # some kind of tipping-point line?
-        geom_errorbar(aes(x = pos, ymin = 105, ymax = 105), size = 3, show.legend = NA, color = bhi_thm$elmts$lightest) # outer ring indicating room for even more progress?
+        geom_errorbar(aes(x = pos, ymin = 0, ymax = 0), # bolded baseline at zero
+                      size = 0.5, show.legend = NA, color = bhi_thm$elmts$dark_line) +
+        geom_errorbar(aes(x = pos, ymin = critical_value, ymax = critical_value), # some kind of tipping-point line?
+                      size = 0.25,show.legend = NA, color = bhi_thm$elmts$bright_line) +
+        geom_errorbar(aes(x = pos, ymin = 105, ymax = 105), # outer ring indicating room for even more progress?
+                      size = 3, show.legend = NA, color = bhi_thm$elmts$lightest)
     }
 
     ## general plot elements for all flowerplots, gradient or no ----
@@ -463,7 +470,6 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
                   x = 0, y = -bhi_thm$elmts$blank_circle_rad, hjust = 0.5, vjust = 0.5,
                   size = 9, color = bhi_thm$elmts$dark_line)
     }
-
 
     ## LABELING AND LEGENDS
 
@@ -499,9 +505,11 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
           jpeg(temp_labels, width = 2450, height = 2450, quality = 220)
           message("creating curved labels for plot:\n")
 
-          circos.clear() # curved labels created with circlize
+          ## curved labels created with 'circlize' package
+          circos.clear()
           circos.par("track.height" = 0.1, cell.padding = c(0,0,0,0), "clock.wise" = FALSE, start.degree = 5)
           circos.initialize(factors = circ_df$order_calculate, x = circ_df$range)
+
           circos.track(factors = circ_df$order_calculate, y = circ_df$range, panel.fun = function(x, y){
             circos.text(CELL_META$xcenter, CELL_META$ycenter,
                         CELL_META$sector.index, col = "white")}, bg.col = NA, bg.border = FALSE)
@@ -539,8 +547,9 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
 
       ## create legend table to accompany the plot
       if(isTRUE(legend_tab)){
+
         temp_legend <- file.path(dir_baltic, "temp", paste0("flowerlegend_by_", color_by, "_", name_and_title$name, ".jpg"))
-        if(!(file.exists(temp_legend) & color_by == "goal")||isTRUE(update_legend)){
+        if(isTRUE(update_legend)||!file.exists(temp_legend)){
           message("creating legend table for plot:\n")
 
           legend_df <- plot_config %>%
@@ -548,9 +557,7 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
             dplyr::left_join(dplyr::filter(rgn_scores, region_id == r), by = "goal")
           if(color_by == "goal"){
             legend_cols <- dplyr::mutate(left_join(legend_df, color_df, by = "goal"), color = ifelse(is.na(score), NA, color))$color
-          } else {
-           legend_cols <- dplyr::mutate(legend_df, color = color_pal[length(color_pal)*score/100])$color
-          }
+          } else { legend_cols <- dplyr::mutate(legend_df, color = color_pal[length(color_pal)*score/100])$color }
           legend_cols[is.na(legend_cols)] <- "#DDDDDD"
 
           legend_df <- legend_df %>%
@@ -561,14 +568,13 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
             dplyr::select(Goal, Key, score)
           names(legend_df) <- c("Goal", "Key", stringr::str_to_title(dim))
 
-          tab <- formattable(
-            legend_df,
-            align = c("l","l","r"),
-            list(`Goal` = formatter("span", style = ~ style(color = "grey")),
-                 `Score` = formatter("span", style = x ~ style(color = ifelse(is.na(x), "white", "grey"))),
-                 `Key` = formatter("span", style = x ~ style("background-color" = legend_cols,
-                                                             color = ifelse(is.na(x), "#DDDDDD", legend_cols)))))
-
+          tab <- formattable(legend_df, align = c("l","l","r"), list(
+            `Goal` = formatter("span", style = ~ style(color = "grey")),
+            `Score` = formatter("span", style = x ~ style(color = ifelse(is.na(x), "white", "grey"))),
+            `Key` = formatter("span", style = x ~ style("background-color" = legend_cols,
+                                                        color = ifelse(is.na(x), "#DDDDDD", legend_cols)))
+            )
+          )
           ## must have phantomjs installed- can do this with webshot::install_phantomjs()
           path <- htmltools::html_print(as.htmlwidget(tab, width = "48%", height = NULL), background = "white", viewer = NULL)
           url <- paste0("file:///", gsub("\\\\", "/", normalizePath(path)))
