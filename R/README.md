@@ -36,6 +36,10 @@ Written originally by Melanie Frazier for the ohi-global assessment <br/>
 
 ### `common.R` 
 
+**funsR_goals_list** <br/>
+
+<br/>
+
 **goal_function** <br/> 
 extract from functions.R the text of a specific goal function <br/> 
 @param functionsR_path location of functions.R to extract goal from <br/> 
@@ -200,10 +204,39 @@ load ocean mask, zones, and mpa rasters <br/>
 
 ### `visualization.R` 
 
-**ggtheme_plot** <br/>
-
-**make_flower_plot** <br/>
-
-**make_arrow_plot** <br/>
-
-**make_trends_barplot** <br/>
+**apply_bhi_theme** <br/> 
+customize and create standard theme for plots <br/> 
+a function to create a standardized theme for plots, updates ggtheme... <br/> 
+@param plot_type if applying theme for a specific type of plot, specify here (options: flowerplot, trends_barplot, ...) <br/> 
+@return no return value, simply updates the ggplot theme where called <br/> 
+<br/>
+**make_trends_barplot** <br/> 
+create trends barplot <br/> 
+requires a dataframe of OHI scores filtered to the region of interest <br/> 
+reads in information from supplement/tables/ <br/> 
+@param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R), filtered to region <br/> 
+@param color_pal a continuous color palette, ideally diverging, that will map to trend values in the barplots <br/> 
+@param plot_year year by which to filter region score input dataframe <br/> 
+@param include_legend boolean indicating if legend should be included or not <br/> 
+@param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string, or to "reports/figures" directory if TRUE <br/> 
+@return <br/> 
+<br/>
+**make_flower_plot** <br/> 
+create a BHI flowerplot <br/> 
+This function creates BHI/OHI flower plots <br/> 
+requires a dataframe of OHI scores filtered to the region of interest <br/> 
+reads in information from supplement/tables/ <br/> 
+@param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R), filtered to region <br/> 
+@param plot_year year by which to filter region score input dataframe; defaults to current year or maximum year in score data input <br/> 
+@param dim the dimension the flowerplot petals should represent (typically OHI 'score') <br/> 
+@param color_pal a color palette that will map to values of specified dimension 'dim'; ideally discrete for color_by 'goal' and continuous otherise <br/> 
+@param color_by either "goal" or "score" <br/> 
+@param gradient a boolean indicating whether flowerplot petals should have a gradient, i.e. more intense color near center and more transparent towards edges <br/> 
+@param legend_tab boolean indicating if legend should be included or not <br/> 
+@param update_legend a boolean indicating whether legend will need to be recalculated for a new plot (creating the legend takes time so avoid if possible) <br/> 
+@param labels one of "none", "regular", "curved" <br/> 
+@param center_val a boolean indicating whether the region average value should be included in the center of the flower plot <br/> 
+@param critical_value value at which a light red line should drawn overlying the plot, to indicate a 'critical point' of some kind... <br/> 
+@param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string, or to "reports/figures" directory if TRUE <br/> 
+@return result is a flower plot; if curved labels or legend table are included, the resulting class is magick-image, otherwise the result is a ggplot object <br/> 
+<br/>

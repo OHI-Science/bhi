@@ -52,13 +52,13 @@ bhiRfun_readme <- function(bhiR_dir, script_name){
   funs_text <- scan(file = file.path(bhiR_dir, script_name), what = "character", sep = "\n")
 
   funs_names <- funs_text %>%
-    grep(pattern = "^[a-z_]+.*function.*\\{", value = TRUE) %>%
+    grep(pattern = "^[a-z_]+.*function.*", value = TRUE) %>%
     stringr::str_extract("^\\S+") %>%
     stringr::str_pad(width = str_length(.)+4, side = "both", pad = "*")
   funs_info <- funs_text %>%
     grep(pattern = "^#'\\s", value = TRUE) %>%
     stringr::str_remove_all("#' ")
-  sep <- c(0, which(stringr::str_detect(funs_info, pattern = "@return"))) # last roxygen element assumed @return... if have anything else after...
+  sep <- c(0, which(stringr::str_detect(funs_info, pattern = "@return|@return.*\n\n"))) # last roxygen element assumed @return... if have anything else after...
 
   out <- vector()
   if(length(sep) == length(funs_names)+1 & length(sep) > 1){
@@ -124,7 +124,7 @@ readme_outline <- function(folder_filepath, type_objects = "files", delim = ",")
     for(s in subtitles){
       obj_names <- c(scan(file = file.path(folder_filepath, s),
                           what = "character", sep = "\n") %>%
-                       grep(pattern = "^[a-z_]+.*function.*\\{", value = TRUE) %>%
+                       grep(pattern = "^[a-z_]+.*function.*", value = TRUE) %>%
                        stringr::str_extract("^\\S+"))
       obj_info[[s]][["obj_names"]] <- list(obj_names)
     }

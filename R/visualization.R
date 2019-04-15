@@ -20,7 +20,7 @@ library(htmltools)
 #'
 #' a function to create a standardized theme for plots, updates ggtheme...
 #'
-#' @param plot_type
+#' @param plot_type if applying theme for a specific type of plot, specify here (options: flowerplot, trends_barplot, ...)
 #'
 #' @return no return value, simply updates the ggplot theme where called
 
@@ -111,10 +111,10 @@ apply_bhi_theme <- function(plot_type = NA){
 #' reads in information from supplement/tables/
 #'
 #' @param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R), filtered to region
-#' @param color_pal
-#' @param plot_year
-#' @param include_legend
-#' @param save
+#' @param color_pal a continuous color palette, ideally diverging, that will map to trend values in the barplots
+#' @param plot_year year by which to filter region score input dataframe
+#' @param include_legend boolean indicating if legend should be included or not
+#' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string, or to "reports/figures" directory if TRUE
 #'
 #' @return
 
@@ -204,8 +204,10 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
   }
   if(!is.na(save)){
     save_loc <- file.path(save, paste0("trendbarplot_", name, ".png"))
-    ggplot2::ggsave(filename = save_loc, plot = trends_barplot, device = "png",
-                    height = h, width = w, units = "in", dpi = d)
+    if(!file.exists(save)){ message("that save location is not valid") } else {
+      ggplot2::ggsave(filename = save_loc, plot = trends_barplot, device = "png",
+                      height = h, width = w, units = "in", dpi = d)
+    }
   }
   theme_set(initial_theme)
   return(invisible(trends_barplot))
@@ -214,23 +216,24 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
 
 #' create a BHI flowerplot
 #'
+#' This function creates BHI/OHI flower plots
 #' requires a dataframe of OHI scores filtered to the region of interest
 #' reads in information from supplement/tables/
 #'
 #' @param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R), filtered to region
-#' @param plot_year
-#' @param dim
-#' @param color_pal
+#' @param plot_year year by which to filter region score input dataframe; defaults to current year or maximum year in score data input
+#' @param dim the dimension the flowerplot petals should represent (typically OHI 'score')
+#' @param color_pal a color palette that will map to values of specified dimension 'dim'; ideally discrete for color_by 'goal' and continuous otherise
 #' @param color_by either "goal" or "score"
-#' @param gradient
-#' @param legend_tab
-#' @param update_legend
+#' @param gradient a boolean indicating whether flowerplot petals should have a gradient, i.e. more intense color near center and more transparent towards edges
+#' @param legend_tab boolean indicating if legend should be included or not
+#' @param update_legend a boolean indicating whether legend will need to be recalculated for a new plot (creating the legend takes time so avoid if possible)
 #' @param labels one of "none", "regular", "curved"
-#' @param center_val
-#' @param critical_value
-#' @param save
+#' @param center_val a boolean indicating whether the region average value should be included in the center of the flower plot
+#' @param critical_value value at which a light red line should drawn overlying the plot, to indicate a 'critical point' of some kind...
+#' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string, or to "reports/figures" directory if TRUE
 #'
-#' @return
+#' @return result is a flower plot; if curved labels or legend table are included, the resulting class is magick-image, otherwise the result is a ggplot object
 
 make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
                              color_pal = NA, color_by = "goal", gradient = FALSE, legend_tab = FALSE, update_legend = FALSE,
