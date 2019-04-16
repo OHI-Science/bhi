@@ -402,7 +402,9 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
 
     ## with gradient
     if(isTRUE(gradient)){
-      plot_obj <- ggplot(plot_df, aes(x = x, xend = x_end, y = y, yend = y))
+      plot_obj <- ggplot(plot_df, aes(x = x, xend = x_end, y = y, yend = y)) +
+        geom_rect(inherit.aes = FALSE, aes(xmin = x, xmax = x_end, ymin = 0, ymax = 100),
+                  size = 0.15, color = bhi_thm$elmts$light_line, fill = bhi_thm$elmts$white)
       if(color_by == "goal"){
         plot_obj <- plot_obj +
           geom_segment(aes(color = goal),
@@ -636,7 +638,7 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
     }
   }
   ## wrap up function ----
-  theme_set(initial_theme) # set theme back to whatever it was initially
+  # theme_set(initial_theme) # set theme back to whatever it was initially
   return(invisible(plot_obj)) # note: will only return the last plot
 }
 
