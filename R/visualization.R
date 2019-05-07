@@ -742,6 +742,6 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend", thresho
   }
   webshot::webshot(url, file = save, selector = ".formattable_widget", delay = 0.2)
 
-  return(invisible(tab))
+  return(tab)
 }
 
