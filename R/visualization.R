@@ -692,11 +692,12 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
 
 future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend", thresholds = c(-0.2, 0.2), color_pal = NA, save = NA){
 
+  ## wrangle scores with basin info into form for table ----
   scores <- filter_score_data(rgn_scores, dims = dim)[[1]] %>%
     select(-dimension) %>%
     rename(BHI_ID = region_id)
 
-  legend_df <- readr::read_csv(file.path(dir_bhi, "spatial", "bhi_basin_country_lookup.csv")) %>%
+  table_df <- readr::read_csv(file.path(dir_bhi, "spatial", "bhi_basin_country_lookup.csv")) %>%
     dplyr::right_join(scores, by = "BHI_ID") %>%
     mutate(score = ifelse(score == "NaN", NA, score)) %>%
     group_by(Subbasin, goal) %>%
@@ -708,15 +709,16 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend", thresho
     tidyr::spread(key = goal, value = basin_means) %>%
     select(-CS)
 
+  ## row formatter to include arrow icons ----
   goals_formatter <- formatter("span", style = x ~ style(
         color = ifelse(x < thresholds[1], "darkcyan",
                        ifelse(x > thresholds[2], "firebrick", "thistle"))),
         x ~ icontext(ifelse(x < thresholds[1], "circle-arrow-down",
                             ifelse(x > thresholds[2], "circle-arrow-up", "circle-arrow-right")))
   )
-  tab <- formattable(legend_df, align = c("l", rep("c", ncol(legend_df)-1)), list(
 
-    ## cat(paste(names(legend_df), collapse = "` = goals_formatter,\n `"))
+  ## create the table ----
+  tab <- formattable(table_df, align = c("l", rep("c", ncol(table_df)-1)), list(
     `Subbasin` = formatter("span", style = ~ style(color = "grey")),
     `AO` = goals_formatter, `BD` = goals_formatter, `CON` = goals_formatter,
     `CW` = goals_formatter, `ECO` = goals_formatter, `EUT` = goals_formatter,
@@ -726,10 +728,12 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend", thresho
     `TR` = goals_formatter, `TRA` = goals_formatter
   ))
 
-  ## save table
+  ## save table ----
   ## must have phantomjs installed- can do this with webshot::install_phantomjs()
-  if(isFALSE(save)){save <- NA}
-  if(isTRUE(save)){save <- file.path(dir_baltic, "reports", "figures", paste0(dim, "s_table", ".png"))}
+  if(isFALSE(save)){ save <- NA }
+  if(isTRUE(save)){
+    save <- file.path(dir_baltic, "reports", "figures", paste0(dim, "s_table", ".png"))
+  }
   if(!is.na(save)){
     save_loc <- save
     path <- htmltools::html_print(as.htmlwidget(tab, width = "48%", height = NULL),
