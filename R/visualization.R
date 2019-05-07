@@ -684,16 +684,16 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
 #' @param plot_year year by which to filter region score input dataframe;
 #' defaults to current year or maximum year in score data input
 #' @param dim the dimension the flowerplot petals should represent (typically OHI 'score')
-#' @param color_pal a discrete color palette
+#' @param thresholds two element vector with thresholds values indicating where colors and up/down arrows should switch
 #' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string,
 #' or to "reports/figures" directory if TRUE
 #'
 #' @return result is a formattable table, saved only if save location is specified as TRUE or a filepath
 
-future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend", thresholds = c(-0.2, 0.2), color_pal = NA, save = NA){
+future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend", thresholds = c(-0.2, 0.2), save = NA){
 
   ## wrangle scores with basin info into form for table ----
-  scores <- filter_score_data(rgn_scores, dims = dim)[[1]] %>%
+  scores <- filter_score_data(rgn_scores, dims = dim, years = plot_year)[[1]] %>%
     select(-dimension) %>%
     rename(BHI_ID = region_id)
 
@@ -739,8 +739,8 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend", thresho
     path <- htmltools::html_print(as.htmlwidget(tab, width = "48%", height = NULL),
                                   background = "white", viewer = NULL)
     url <- paste0("file:///", gsub("\\\\", "/", normalizePath(path)))
-    webshot::webshot(url, file = save, selector = ".formattable_widget", delay = 0.2)
   }
+  webshot::webshot(url, file = save, selector = ".formattable_widget", delay = 0.2)
 
   return(invisible(tab))
 }
