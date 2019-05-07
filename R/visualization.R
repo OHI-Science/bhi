@@ -8,10 +8,10 @@ library(circlize) # https://jokergoo.github.io/circlize_book/book/
 library(dbplot)
 library(htmlwidgets)
 library(magick)
-library(formattable)
 library(DT)
 library(webshot) # webshot::install_phantomjs()
 library(htmltools)
+library(formattable)
 
 
 ## Functions
@@ -247,9 +247,9 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
 #' @return result is a flower plot; if curved labels or legend table are included,
 #' the resulting class is magick-image, otherwise the result is a ggplot object
 
-make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
+make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "score",
                              color_pal = NA, color_by = "goal", gradient = FALSE, legend_tab = FALSE, update_legend = FALSE,
-                             labels = "none", center_val = TRUE, critical_value = 10, save = NA){
+                             labels = "none", center_val = TRUE, score_ranges = FALSE, critical_value = 10, save = NA){
 
   ## from PlotFlower.R from ohicore package
   ## original function by Casey O'Hara, Julia Lowndes, Melanie Frazier
@@ -260,7 +260,7 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
   ## filtering/wrangling of rgn_scores for years and dimension
   unique_rgn <- unique(rgn_scores$region_id)
   if(length(unique_rgn) != 1){
-    message("note: rgn_scores input contains data for more than one region")
+    message("note: rgn_scores input contains data for more than one region, will plot all unless given rgn_id")
   }
   if(!"year" %in% names(rgn_scores)){
     if(is.na(plot_year)){
@@ -278,6 +278,24 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
   }
   rgn_scores <- rgn_scores %>%
     dplyr::filter(year == plot_year, dimension == dim)
+
+  rgn_scores_summary <- rgn_scores %>%
+    group_by(goal, dimension, year) %>%
+    summarize(
+      missing_rgn = list(
+        setdiff(0:42, region_id)),
+      n_na = sum(is.na(score)),
+      scores_range = list(range(score, na.rm = TRUE) %>% round(digits = 1))
+    ) %>%
+    ungroup()
+  if(!(rgn_id == 0 & length(unlist(rgn_scores_summary$missing_rgn)) == 0)){
+    rgn_scores_summary <- rgn_scores_summary %>%
+      select(-scores_range)
+  }
+  if(!is.na(rgn_id)){
+    rgn_scores <- dplyr::filter(rgn_scores, region_id == rgn_id)
+    unique_rgn <- unique(rgn_scores$region_id)
+  }
 
   ## fis and mar ----
   ## weights for fis vs. mar, uses layers/fp_wildcaught_weight.csv
@@ -323,7 +341,7 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
     dplyr::mutate(name_flower = gsub("\\n", "\n", name_flower, fixed = TRUE)) %>%
     dplyr::mutate(name_supra = gsub("\\n", "\n", name_supra, fixed = TRUE)) %>%
     dplyr::arrange(order_hierarchy)
-  if(labels == "curved"){
+  if(labels %in% c("curved", "arc")){
     plot_config <- plot_config %>%
       dplyr::rowwise() %>%
       dplyr::mutate(
@@ -377,6 +395,13 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
         dplyr::arrange(goal) %>% # for matching colors with correct petals, this arrangment is important...
         dplyr::left_join(color_df, by = "goal")
       # color_pal <- dplyr::arrange(plot_df, order_calculate)$color
+    }
+    if(r == 0 & isTRUE(score_ranges)){
+      plot_df <- plot_df %>%
+        left_join(select(rgn_scores_summary, goal, scores_range), by = "goal") %>%
+        rowwise() %>%
+        mutate(min_score = unlist(scores_range)[1],
+               max_score = unlist(scores_range)[2])
     }
 
     ## if plotting with a gradient, expand plot_df with y column indicating
@@ -479,7 +504,7 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
       scale_y_continuous(limits = c(-bhi_thm$elmts$blank_circle_rad, # tweak plot-limits of 'polarized' axes
                                     ifelse(first(goal_labels == TRUE)|is.data.frame(goal_labels), 150, 100)))
 
-    ## include average value in center if center_val is true
+    ## include average value in center if center_val is true & ranges for overall BHI if score_ranges is true
     if(isTRUE(center_val)){
       score_index <- rgn_scores %>%
         dplyr::filter(region_id == r, goal == "Index", dimension == "score") %>%
@@ -490,6 +515,13 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
                   inherit.aes = FALSE, aes(label = score_index$score),
                   x = 0, y = -bhi_thm$elmts$blank_circle_rad, hjust = 0.5, vjust = 0.5,
                   size = 9, color = bhi_thm$elmts$dark_line)
+    }
+    if(isTRUE(score_ranges)){
+      plot_obj <- plot_obj +
+        geom_errorbar(aes(ymin = min_score, ymax = max_score),
+                      alpha = 0.3, width = 0) +
+        geom_errorbar(aes(ymin = min_score, ymax = max_score),
+                        alpha = 0.3, width = 0, color = plot_df$color)
     }
 
     ## LABELING AND LEGENDS
@@ -505,13 +537,13 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
                   size = 3, hjust = 0.5, vjust = 0.5,
                   color = bhi_thm$elmts$dark_line)
     }
-    if(labels == "curved"||isTRUE(legend_tab)){
+    if(labels %in% c("curved", "arc")||isTRUE(legend_tab)){
       temp_plot <- file.path(dir_baltic, "temp", paste0("flowerplot_", name_and_title$name, ".png"))
       ggplot2::ggsave(filename = temp_plot, plot = plot_obj, device = "png", bg = "transparent",
                       height = 6, width = 8, units = "in", dpi = 300) # causes a hangup when plot has gradient...
       img_plot <- magick::image_read(temp_plot)
 
-      if(labels == "curved"){
+      if(labels %in% c("curved", "arc")){
         temp_labels <- file.path(dir_baltic, "temp", paste0("flower_curvetxt_", name_and_title$name, ".jpg"))
 
         if(!file.exists(temp_labels)){ # don't recreate curved labels if already exist....
@@ -640,5 +672,72 @@ make_flower_plot <- function(rgn_scores, plot_year = NA, dim = "score",
   ## wrap up function ----
   # theme_set(initial_theme) # set theme back to whatever it was initially
   return(invisible(plot_obj)) # note: will only return the last plot
+}
+
+#' create trend table
+#'
+#' requires a dataframe of OHI scores filtered to the region of interest
+#' reads in information from supplement/tables/
+#'
+#' @param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R),
+#' filtered to region
+#' @param plot_year year by which to filter region score input dataframe;
+#' defaults to current year or maximum year in score data input
+#' @param dim the dimension the flowerplot petals should represent (typically OHI 'score')
+#' @param color_pal a discrete color palette
+#' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string,
+#' or to "reports/figures" directory if TRUE
+#'
+#' @return result is a formattable table, saved only if save location is specified as TRUE or a filepath
+
+future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend", thresholds = c(-0.2, 0.2), color_pal = NA, save = NA){
+
+  scores <- filter_score_data(rgn_scores, dims = dim)[[1]] %>%
+    select(-dimension) %>%
+    rename(BHI_ID = region_id)
+
+  legend_df <- readr::read_csv(file.path(dir_bhi, "spatial", "bhi_basin_country_lookup.csv")) %>%
+    dplyr::right_join(scores, by = "BHI_ID") %>%
+    mutate(score = ifelse(score == "NaN", NA, score)) %>%
+    group_by(Subbasin, goal) %>%
+    summarize(
+      basin_means = mean(score, na.rm = TRUE) %>%
+        round(digits = 4)
+    ) %>%
+    mutate(basin_means = ifelse(basin_means == "NaN", NA, basin_means)) %>%
+    tidyr::spread(key = goal, value = basin_means) %>%
+    select(-CS)
+
+  goals_formatter <- formatter("span", style = x ~ style(
+        color = ifelse(x < thresholds[1], "darkcyan",
+                       ifelse(x > thresholds[2], "firebrick", "thistle"))),
+        x ~ icontext(ifelse(x < thresholds[1], "circle-arrow-down",
+                            ifelse(x > thresholds[2], "circle-arrow-up", "circle-arrow-right")))
+  )
+  tab <- formattable(legend_df, align = c("l", rep("c", ncol(legend_df)-1)), list(
+
+    ## cat(paste(names(legend_df), collapse = "` = goals_formatter,\n `"))
+    `Subbasin` = formatter("span", style = ~ style(color = "grey")),
+    `AO` = goals_formatter, `BD` = goals_formatter, `CON` = goals_formatter,
+    `CW` = goals_formatter, `ECO` = goals_formatter, `EUT` = goals_formatter,
+    `FIS` = goals_formatter, `FP` = goals_formatter, `ICO` = goals_formatter,
+    `LE` = goals_formatter, `LIV` = goals_formatter, `LSP` = goals_formatter,
+    `MAR` = goals_formatter, `NP` = goals_formatter, `SP` = goals_formatter,
+    `TR` = goals_formatter, `TRA` = goals_formatter
+  ))
+
+  ## save table
+  ## must have phantomjs installed- can do this with webshot::install_phantomjs()
+  if(isFALSE(save)){save <- NA}
+  if(isTRUE(save)){save <- file.path(dir_baltic, "reports", "figures", paste0(dim, "s_table", ".png"))}
+  if(!is.na(save)){
+    save_loc <- save
+    path <- htmltools::html_print(as.htmlwidget(tab, width = "48%", height = NULL),
+                                  background = "white", viewer = NULL)
+    url <- paste0("file:///", gsub("\\\\", "/", normalizePath(path)))
+    webshot::webshot(url, file = save, selector = ".formattable_widget", delay = 0.2)
+  }
+
+  return(invisible(tab))
 }
 

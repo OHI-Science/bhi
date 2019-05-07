@@ -11,11 +11,11 @@ projstringCRS <- raster::crs("+proj=longlat +datum=WGS84 +no_defs") # spatial da
 filesep <- .Platform$file.sep
 
 bhi_repo_loc <- "https://github.com/OHI-Science/bhi"
-prep_repo_loc <- "https://github.com/OHI-Science/bhi-prep/prep"
-bhi_repo_raw <- "https://raw.githubusercontent.com/OHI-Science/bhi" # useless alone; must append so ends at a csv
-prep_repo_raw <- "https://raw.githubusercontent.com/OHI-Science/bhi-prep" # useless alone; must append so ends at csv
+bhiprep_repo_loc <- "https://github.com/OHI-Science/bhi-prep/prep"
+bhi_repo_raw <- "https://raw.githubusercontent.com/OHI-Science/bhi"
+bhiprep_repo_raw <- "https://raw.githubusercontent.com/OHI-Science/bhi-prep"
 bhi_api <- "https://api.github.com/repos/OHI-Science/bhi/git/trees/master?recursive=1"
-bhi_prep_api <- "https://api.github.com/repos/OHI-Science/bhi-prep/git/trees/master?recursive=1"
+bhiprep_api <- "https://api.github.com/repos/OHI-Science/bhi-prep/git/trees/master?recursive=1"
 
 ## Directories
 dir_bhi <- here::here()
@@ -140,14 +140,15 @@ bhiprep_github_layers <- function(github_api_url = bhi_prep_api){
 compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_nas = NA){
 
   ## setup, load tables, get key variable info
-  if("all" %in% check_cols){
-    check_cols <- names(tab1)
-    print("using all columns of table 1 in the comparision")
-  }
   if(!is.data.frame(tab1)){tab1df <- read.csv(tab1, stringsAsFactors = FALSE)
   } else {tab1df <- tab1}
   if(!is.data.frame(tab2)){tab2df <- read.csv(tab2, stringsAsFactors = FALSE)
   } else {tab2df <- tab2}
+
+  if("all" %in% check_cols){
+    check_cols <- names(tab1)
+    print("using all columns of table 1 in the comparision")
+  }
 
   tab1_keys <- unique(tab1df[, key_row_var])
   tab2_keys <- unique(tab2df[, key_row_var])
@@ -216,7 +217,7 @@ filter_score_data <- function(score_data, dims = "all", goals = "all", rgns = NA
     filter_scores <- filter_scores %>%
       dplyr::filter(dimension %in% unlist(dims))
     if(length(filter_scores$score) == 0){
-      print("filtering score data by these dimensions returns zero rows")
+      message("filtering score data by these dimensions returns zero rows")
     }
   }
   if(goals != "all" & length(filter_scores$score) > 0){
@@ -224,14 +225,14 @@ filter_score_data <- function(score_data, dims = "all", goals = "all", rgns = NA
     filter_scores <- filter_scores %>%
       dplyr::filter(goal %in% goals)
     if(length(filter_scores$score) == 0){
-      print("filtering score data by these goals returns zero rows")
+      message("filtering score data by these goals returns zero rows")
     }
   }
   if(!is.na(rgns) & length(filter_scores$score) > 0){
     filter_scores <- filter_scores %>%
       dplyr::filter(region_id %in% unlist(rgns))
     if(length(filter_scores$score) == 0){
-      print("filtering score data by these region ID values returns zero rows")
+      message("filtering score data by these region ID values returns zero rows")
     }
   }
   if(!is.na(years) & "year" %in% names(filter_scores) & length(filter_scores$score) > 0){
@@ -241,11 +242,43 @@ filter_score_data <- function(score_data, dims = "all", goals = "all", rgns = NA
     filter_scores <- filter_scores %>%
       dplyr::filter(year %in% unlist(years))
     if(length(filter_scores$score) == 0){
-      print("filtering score data by these years returns zero rows")
+      message("filtering score data by these years returns zero rows")
     }
   }
   if(!is.na(years) & !("year" %in% names(filter_scores))){
     print("there is no year column in the scores data table provided")
   }
-  return(filter_scores)
+
+  ## checking completeness
+  chk1a <- identical(
+    names(filter_scores),
+    c("goal","dimension","region_id","score"))
+  chk1b <- identical(
+    names(filter_scores),
+    c("goal","dimension","region_id","score","year"))
+
+  if(chk1b){
+    summary_tab <- filter_scores %>%
+      group_by(goal, dimension, year)
+  } else {
+    summary_tab <- filter_scores %>%
+      group_by(goal, dimension)
+  }
+  summary_tab <- summary_tab %>%
+    summarize(
+      missing_rgn = list(setdiff(0:42, region_id)),
+      num_NAs = sum(is.na(score)),
+      scores_range = list(range(score, na.rm = TRUE))
+    ) %>%
+    ungroup()
+  chk2 <- length(unlist(summary_tab$missing_rgn)) == 0
+
+  if(!(chk1a|chk1b)){
+    message("double check columns included in score_data input")
+  }
+  if(!chk2){
+    message("missing for some regions and/or for some goals; see 2nd output summary_tab")
+  }
+
+  return(list(filter_scores, summary_tab))
 }
