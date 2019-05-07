@@ -359,8 +359,48 @@ readme_status <- function(folder_filepath, type_objects, temp_filepath){
 
 layerscsv_metadata_exists <- function(layers_csv, layers_metadata){
 
-  compare_tabs(layers_csv, layers_metadata, )
+  compare_tabs(tab1 = layers_csv, tab2 = layers_metadata, key_row_var = "layer")
 
   chk <- "a boolean, true if correct matching exists"
   return(chk)
+}
+
+
+#' update links to bhi-prep docs in goals.Rmd
+#'
+#' @param dir project root of bhi-prep
+#' @param version_year the assessment year with a preceeding "v", specified as a string
+#'
+#' @return no immediate output; effect of the function is updated links to prep files in supplement/web/goals.Rmd
+
+update_goalsRmd_links <- function(dir, version_year){
+
+  if(basename(dir) == "prep"){dir <- dirname(dir)}
+  goalsRmd_path <- file.path(here::here(), "supplement", "web", "goals.Rmd")
+
+  txt_updated <- readLines(goalsRmd_path)
+  replace <- grep(pattern = "https://github.com/OHI-Science/.*/prep/.*", x = txt_updated)
+
+  for(r in replace){
+
+    w <- str_replace(
+      str_extract(txt_updated[r], pattern = "/prep/.*.md"),
+      pattern = ifelse(str_detect(txt_updated[r], pattern = "v[0-9]{4}"),
+                       str_extract(txt_updated[r], pattern = "v[0-9]{4}/.*.md"),
+                       basename(str_extract(txt_updated[r], pattern = "/prep/.*.md"))),
+      replacement = paste(
+        version_year,
+        basename(str_extract(txt_updated[r], pattern = "/prep/.*.md")),
+        sep = "/")
+    )
+
+    txt_updated[r] <- stringr::str_replace(
+      txt_updated[r],
+      "https://github.com/OHI-Science/.*/prep/.*",
+      sprintf("https://github.com/OHI-Science/%s/blob/master%s.rmd)  ",
+              basename(dir), tools::file_path_sans_ext(w))
+    )
+  }
+
+  writeLines(txt_updated, goalsRmd_path)
 }
