@@ -690,7 +690,8 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
 #'
 #' @return result is a formattable table, saved only if save location is specified as TRUE or a filepath
 
-future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend", thresholds = c(-0.2, 0.2), save = NA){
+future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
+                              thresholds = c(-0.1, 0.1), include_vals, save = NA){
 
   ## wrangle scores with basin info into form for table ----
   scores <- filter_score_data(rgn_scores, dims = dim, years = plot_year)[[1]] %>%
@@ -707,14 +708,18 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend", thresho
     ) %>%
     mutate(basin_means = ifelse(basin_means == "NaN", NA, basin_means)) %>%
     tidyr::spread(key = goal, value = basin_means) %>%
-    select(-CS)
+    left_join(read_csv(file.path(dir_bhi, "spatial", "subbasins_ordered.csv")), by = "Subbasin") %>%
+    arrange(Order) %>%
+    select(-CS, -Order)
 
   ## row formatter to include arrow icons ----
   goals_formatter <- formatter("span", style = x ~ style(
-        color = ifelse(x < thresholds[1], "darkcyan",
-                       ifelse(x > thresholds[2], "firebrick", "thistle"))),
-        x ~ icontext(ifelse(x < thresholds[1], "circle-arrow-down",
-                            ifelse(x > thresholds[2], "circle-arrow-up", "circle-arrow-right")))
+        color = ifelse(is.na(x), "white",
+                       ifelse(x < thresholds[1], "darkcyan",
+                              ifelse(x > thresholds[2], "firebrick", "gainsboro")))),
+        x ~ icontext(ifelse(x < thresholds[1], "circle-arrow-up",
+                            ifelse(x > thresholds[2], "circle-arrow-down", "circle-arrow-right")),
+                     round(x, digits = 1))
   )
 
   ## create the table ----
