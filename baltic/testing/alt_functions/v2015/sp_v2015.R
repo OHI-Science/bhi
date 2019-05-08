@@ -15,4 +15,3 @@ SP = function(scores){
   # return all scores
   return(rbind(scores, s))
 } ## End SP function
-

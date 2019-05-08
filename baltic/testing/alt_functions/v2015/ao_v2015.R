@@ -58,4 +58,4 @@ AO = function(layers){
 
   return(scores)
 
-} ## End AO function
+} ## END AO function

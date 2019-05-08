@@ -72,4 +72,4 @@ FinalizeScores = function(layers, conf, scores){
   scores$score = round(scores$score, 2)
 
   return(scores)
-} ## End FinalizeScores function
+}

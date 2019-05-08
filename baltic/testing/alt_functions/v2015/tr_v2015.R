@@ -16,4 +16,4 @@ TR = function(layers){
 
   return(scores)
   ##-------------------------------------------------------------------##
-} ## End TR function
+} ## end TR function

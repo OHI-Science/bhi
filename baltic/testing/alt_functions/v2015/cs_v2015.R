@@ -13,4 +13,4 @@ CS = function(layers){
     mutate(goal = 'CS')
 
   return(scores)
-} ## End CS function
+}## End CS function

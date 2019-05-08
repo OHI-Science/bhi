@@ -1,5 +1,6 @@
 
 FP <- function(layers, scores){
+
   scen_year <- layers$data$scenario_year
 
   ## From code in 'functions.R FP' of v2015 BHI assessment

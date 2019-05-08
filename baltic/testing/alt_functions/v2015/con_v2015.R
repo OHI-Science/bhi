@@ -111,4 +111,4 @@ CON = function(layers){
 
   return(scores)
 
-}  ## End CON function
+}  ## END CON Function

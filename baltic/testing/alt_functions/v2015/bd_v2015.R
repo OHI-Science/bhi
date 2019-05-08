@@ -24,4 +24,4 @@ BD = function(layers){
     mutate(goal = 'BD')
 
   return(scores)
-} ## End BD function
+} ## End BD Function

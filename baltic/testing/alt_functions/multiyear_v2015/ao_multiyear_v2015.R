@@ -7,7 +7,6 @@ AO <- function(layers){
 
   scen_year <- layers$data$scenario_year
 
-
   ao_stock_status <- AlignDataYears(layer_nm="ao_stock_status", layers_obj=layers) %>%
     dplyr::mutate(dimension = as.character(dimension)) %>%
     dplyr::filter(scenario_year == scen_year) %>%

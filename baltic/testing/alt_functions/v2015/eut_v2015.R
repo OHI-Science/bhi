@@ -25,4 +25,4 @@ EUT = function(layers){
   return(scores)
   #####----------------------######
 
-} ## End EUT function
+} ## End NUT Function

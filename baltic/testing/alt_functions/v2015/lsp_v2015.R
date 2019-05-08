@@ -20,5 +20,4 @@ LSP = function(layers){
     mutate(goal = 'LSP')
 
   return(scores)
-
-} ## End LSP function
+}

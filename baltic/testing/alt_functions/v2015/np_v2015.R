@@ -157,4 +157,4 @@ NP = function(layers){
     mutate(goal='NP')
   return(scores)
 
-} ## End NP function
+}

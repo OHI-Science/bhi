@@ -32,4 +32,4 @@ ICO = function(layers){
   return(scores)
 
 
-} ## End ICO function
+} ## end ICO function
