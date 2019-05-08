@@ -29,7 +29,6 @@ apply_bhi_theme <- function(plot_type = NA){
 
   ## plot elements ----
   elmts <- list(
-    white = "white",
     lightest = "grey95",
     light_line = "grey90",
     light_fill = "grey80",
@@ -144,10 +143,10 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
   }
 
   initial_theme <- theme_get()
-  bhi_thm <- apply_bhi_theme("trends_barplot")
+  thm <- apply_bhi_theme("trends_barplot")
 
   unique_rgn <- unique(rgn_scores$region_id)
-  region_name_title <- bhi_thm$rgn_name_lookup %>%
+  region_name_title <- thm$rgn_name_lookup %>%
     dplyr::filter(region_id %in% unique_rgn)
   rgn_scores <- rgn_scores %>%
     dplyr::filter(year == plot_year) %>%
@@ -184,7 +183,7 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
     geom_bar(stat = "identity", position = position_dodge(), show.legend = include_legend) +
     geom_hline(yintercept = 0) +
     theme_calc() +
-    theme(axis.line = element_blank(), element_line(colour = bhi_thm$elmts$light_line)) +
+    theme(axis.line = element_blank(), element_line(colour = thm$elmts$light_line)) +
     labs(x = NULL, y = NULL)
 
   if(length(unique_rgn) > 1){
@@ -204,7 +203,7 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
   ## saving plots ----
   if(isFALSE(save)){save <- NA}
   if(isTRUE(save)){
-    save <- file.path(dir_baltic, "reports", "figures", paste0("trendbarplot_", name))
+    save <- file.path(dir_assess, "reports", "figures", paste0("trendbarplot_", name))
   }
   if(!is.na(save)){
     save_loc <- file.path(save, paste0("trendbarplot_", name, ".png"))
@@ -249,7 +248,7 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
 
 make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "score",
                              color_pal = NA, color_by = "goal", gradient = FALSE, legend_tab = FALSE, update_legend = FALSE,
-                             labels = "none", center_val = TRUE, score_ranges = FALSE, critical_value = 10, save = NA){
+                             labels = "none", center_val = TRUE, score_ranges = FALSE, critical_value = 0, save = NA){
 
   ## from PlotFlower.R from ohicore package
   ## original function by Casey O'Hara, Julia Lowndes, Melanie Frazier
@@ -300,7 +299,7 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
   ## fis and mar ----
   ## weights for fis vs. mar, uses layers/fp_wildcaught_weight.csv
   ## csv info determines relative width in the flowerplot of the two food provision subgoals
-  w_fn <- list.files(file.path(dir_baltic, "layers"),
+  w_fn <- list.files(file.path(dir_assess, "layers"),
                      pattern = "fp_wildcaught_weight",
                      full.names = TRUE)
   if(length(w_fn) != 1){
@@ -327,7 +326,7 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
   ## PLOTTING CONFIGURATION
   ## sub/supra goals and positioning ----
   ## pos, pos_end, and pos_supra indicate positions, how wide different petals should be based on weightings
-  plot_config <- readr::read_csv(file.path(dir_baltic, "conf", "goals.csv")) # dir_baltic from common.R
+  plot_config <- readr::read_csv(file.path(dir_assess, "conf", "goals.csv")) # dir_assess from common.R
   goals_supra <- na.omit(unique(plot_config$parent))
 
   supra_lookup <- plot_config %>%
@@ -353,12 +352,12 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
 
   ## some color palette and theme stuff ----
   initial_theme <- theme_get()
-  bhi_thm <- apply_bhi_theme(plot_type = "flowerplot") # theme_update() for bhi flowerplot
+  thm <- apply_bhi_theme(plot_type = "flowerplot") # theme_update() for bhi flowerplot
 
   color_by <- str_to_lower(color_by)
   if(color_by == "goal"){
     if(length(plot_config$goal) > length(color_pal)){
-      color_df <- bhi_thm$bhi_palettes$goals_pal
+      color_df <- thm$bhi_palettes$goals_pal
       message("no palette given or too few colors for plotting by goal; using a predefined color palette\n")
     } else {
       color_pal <- color_pal[1:nrow(plot_config)*length(color_pal)/nrow(plot_config)]
@@ -398,7 +397,9 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
     }
     if(r == 0 & isTRUE(score_ranges)){
       plot_df <- plot_df %>%
-        left_join(select(rgn_scores_summary, goal, scores_range), by = "goal") %>%
+        left_join(rgn_scores_summary %>%
+                    select(goal, scores_range),
+                  by = "goal") %>%
         rowwise() %>%
         mutate(min_score = unlist(scores_range)[1],
                max_score = unlist(scores_range)[2])
@@ -429,7 +430,7 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
     if(isTRUE(gradient)){
       plot_obj <- ggplot(plot_df, aes(x = x, xend = x_end, y = y, yend = y)) +
         geom_rect(inherit.aes = FALSE, aes(xmin = x, xmax = x_end, ymin = 0, ymax = 100),
-                  size = 0.15, color = bhi_thm$elmts$light_line, fill = bhi_thm$elmts$white)
+                  size = 0.15, color = thm$elmts$light_line, fill = "white")
       if(color_by == "goal"){
         plot_obj <- plot_obj +
           geom_segment(aes(color = goal),
@@ -451,49 +452,49 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
         plot_obj <- plot_obj +
           geom_rect(data = filter(plot_df, !is.na(plot_NA)),
                     inherit.aes = FALSE, aes(xmin = x, xmax = x_end, ymin = 0, ymax = plot_NA),
-                    fill = bhi_thm$elmts$lightest)
+                    fill = thm$elmts$lightest)
       }
       plot_obj <- plot_obj +
         geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = 0, yend = 0),
-                     size = 0.5, color = bhi_thm$elmts$dark_line) +
+                     size = 0.5, color = thm$elmts$dark_line) +
         geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = critical_value, yend = critical_value),
-                     size = 0.1, color = bhi_thm$elmts$bright_line) +
+                     size = 0.1, color = thm$elmts$bright_line) +
         geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = 105, yend = 105),
-                     size = 3, color = bhi_thm$elmts$lightest)
+                     size = 3, color = thm$elmts$lightest)
 
     ## without a gradient
     } else {
       if(color_by == "goal"){
         plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = goal)) +
           geom_bar(aes(y = 100), stat = "identity",
-                   size = 0.2, color = bhi_thm$elmts$med_line, fill = bhi_thm$elmts$white) +
+                   size = 0.2, color = thm$elmts$med_line, fill = "white") +
           geom_bar(stat = "identity",
-                   size = 0.2, color = bhi_thm$elmts$med_line, show.legend = FALSE) +
+                   size = 0.2, color = thm$elmts$med_line, show.legend = FALSE) +
           scale_fill_manual(values = plot_df$color, na.value = "black")
       } else {
         plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = score)) +
           geom_bar(aes(y = 100), stat = "identity",
-                   size = 0.2, color = bhi_thm$elmts$med_line, fill = bhi_thm$elmts$white) +
-          geom_bar(stat = "identity", size = 0.2, color = bhi_thm$elmts$med_line, show.legend = FALSE) +
+                   size = 0.2, color = thm$elmts$med_line, fill ="white") +
+          geom_bar(stat = "identity", size = 0.2, color = thm$elmts$med_line, show.legend = FALSE) +
           scale_fill_gradientn(colors = color_pal, na.value = "black", limits = c(0, 100))
       }
       if(any(!is.na(plot_df$plot_NA))){ # overlay light grey background for NAs
         plot_obj <- plot_obj +
           geom_bar(aes(y = plot_NA), stat = "identity",
-                   size = 0.2, color = bhi_thm$elmts$med_line, fill = bhi_thm$elmts$lightest)
+                   size = 0.2, color = thm$elmts$med_line, fill = thm$elmts$lightest)
       }
       plot_obj <- plot_obj +
         geom_errorbar(aes(x = pos, ymin = 0, ymax = 0), # bolded baseline at zero
-                      size = 0.5, show.legend = NA, color = bhi_thm$elmts$dark_line) +
+                      size = 0.5, show.legend = NA, color = thm$elmts$dark_line) +
         geom_errorbar(aes(x = pos, ymin = critical_value, ymax = critical_value), # some kind of tipping-point line?
-                      size = 0.25,show.legend = NA, color = bhi_thm$elmts$bright_line) +
+                      size = 0.25,show.legend = NA, color = thm$elmts$bright_line) +
         geom_errorbar(aes(x = pos, ymin = 105, ymax = 105), # outer ring indicating room for even more progress?
-                      size = 3, show.legend = NA, color = bhi_thm$elmts$lightest)
+                      size = 3, show.legend = NA, color = thm$elmts$lightest)
     }
 
     ## general plot elements for all flowerplots, gradient or no ----
     goal_labels <- dplyr::select(plot_df, goal, name_flower)
-    name_and_title <- bhi_thm$rgn_name_lookup %>%
+    name_and_title <- thm$rgn_name_lookup %>%
       dplyr::filter(region_id == r)
     plot_obj <- plot_obj +
       labs(x = NULL, y = NULL) +
@@ -501,7 +502,7 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
       scale_x_continuous(labels = NULL,
                          breaks = plot_df$pos,
                          limits = c(0, max(plot_df$pos_end))) +
-      scale_y_continuous(limits = c(-bhi_thm$elmts$blank_circle_rad, # tweak plot-limits of 'polarized' axes
+      scale_y_continuous(limits = c(-thm$elmts$blank_circle_rad, # tweak plot-limits of 'polarized' axes
                                     ifelse(first(goal_labels == TRUE)|is.data.frame(goal_labels), 150, 100)))
 
     ## include average value in center if center_val is true & ranges for overall BHI if score_ranges is true
@@ -513,13 +514,13 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
       plot_obj <- plot_obj +
         geom_text(data = score_index, # include central value
                   inherit.aes = FALSE, aes(label = score_index$score),
-                  x = 0, y = -bhi_thm$elmts$blank_circle_rad, hjust = 0.5, vjust = 0.5,
-                  size = 9, color = bhi_thm$elmts$dark_line)
+                  x = 0, y = -thm$elmts$blank_circle_rad, hjust = 0.5, vjust = 0.5,
+                  size = 9, color = thm$elmts$dark_line)
     }
     if(isTRUE(score_ranges)){
       plot_obj <- plot_obj +
         geom_errorbar(aes(ymin = min_score, ymax = max_score),
-                      alpha = 0.3, width = 0) +
+                      alpha = 0.4, width = 0) +
         geom_errorbar(aes(ymin = min_score, ymax = max_score),
                         alpha = 0.3, width = 0, color = plot_df$color)
     }
@@ -532,19 +533,19 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
         # labs(title = name_and_title$plot_title) +
         geom_text(aes(label = name_supra, x = pos_supra, y = 150),
                   size = 3.4, hjust = 0.4, vjust = 0.8,
-                  color = bhi_thm$elmts$light_fill) +
+                  color = thm$elmts$light_fill) +
         geom_text(aes(label = name_flower, x = pos, y = 120),
                   size = 3, hjust = 0.5, vjust = 0.5,
-                  color = bhi_thm$elmts$dark_line)
+                  color = thm$elmts$dark_line)
     }
     if(labels %in% c("curved", "arc")||isTRUE(legend_tab)){
-      temp_plot <- file.path(dir_baltic, "temp", paste0("flowerplot_", name_and_title$name, ".png"))
+      temp_plot <- file.path(dir_assess, "temp", paste0("flowerplot_", name_and_title$name, ".png"))
       ggplot2::ggsave(filename = temp_plot, plot = plot_obj, device = "png", bg = "transparent",
                       height = 6, width = 8, units = "in", dpi = 300) # causes a hangup when plot has gradient...
       img_plot <- magick::image_read(temp_plot)
 
       if(labels %in% c("curved", "arc")){
-        temp_labels <- file.path(dir_baltic, "temp", paste0("flower_curvetxt_", name_and_title$name, ".jpg"))
+        temp_labels <- file.path(dir_assess, "temp", paste0("flower_curvetxt_", name_and_title$name, ".jpg"))
 
         if(!file.exists(temp_labels)){ # don't recreate curved labels if already exist....
           circ_df <- plot_df0 %>%
@@ -570,27 +571,27 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
           circos.track(factors = circ_df$order_calculate, y = circ_df$range, panel.fun = function(x, y){
             circos.text(CELL_META$xcenter, CELL_META$ycenter,
                         circ_df$f1[circ_df$order_calculate == as.numeric(CELL_META$sector.index)][1],
-                        cex = 5, col = bhi_thm$elmts$dark_line, adj = c(0.4, 1),
+                        cex = 5, col = thm$elmts$dark_line, adj = c(0.4, 1),
                         facing = "bending.inside", niceFacing = TRUE)},
             bg.col = NA, bg.border = FALSE)
           circos.track(factors = circ_df$order_calculate, y = circ_df$range, panel.fun = function(x, y){
             circos.text(CELL_META$xcenter, CELL_META$ycenter,
                         circ_df$f2[circ_df$order_calculate == as.numeric(CELL_META$sector.index)][1],
-                        cex = 5, col = bhi_thm$elmts$dark_line, adj = c(0.4, 0),
+                        cex = 5, col = thm$elmts$dark_line, adj = c(0.4, 0),
                         facing = "bending.inside", niceFacing = TRUE)},
             bg.col = NA, bg.border = FALSE)
 
           highlight.sector(circ_df$order_calculate[circ_df$name_supra != "Food Provision"|is.na(circ_df$name_supra)],
                            track.index = 1, text = "Food Provision", cex = 6.5,
-                           text.col = bhi_thm$elmts$light_line, col = NA,
+                           text.col = thm$elmts$light_line, col = NA,
                            facing = "bending.outside", niceFacing = TRUE)
           highlight.sector(circ_df$order_calculate[circ_df$name_supra != "Coastal Livelihoods & Economies"|is.na(circ_df$name_supra)],
                            track.index = 1, text = "Coastal Livelihoods & Economies", cex = 6.5,
-                           text.col = bhi_thm$elmts$light_line, col = NA,
+                           text.col = thm$elmts$light_line, col = NA,
                            facing = "bending.outside", niceFacing = TRUE)
           highlight.sector(circ_df$order_calculate[circ_df$name_supra != "Sense of Place"|is.na(circ_df$name_supra)],
                            track.index = 1, text = "Sense of Place", cex = 6.5,
-                           text.col = bhi_thm$elmts$light_line, col = NA,
+                           text.col = thm$elmts$light_line, col = NA,
                            facing = "bending.outside", niceFacing = TRUE)
           dev.off()
         }
@@ -604,7 +605,7 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
       ## create legend table to accompany the plot
       if(isTRUE(legend_tab)){
 
-        temp_legend <- file.path(dir_baltic, "temp", paste0("flowerlegend_by_", color_by, "_", name_and_title$name, ".jpg"))
+        temp_legend <- file.path(dir_assess, "temp", paste0("flowerlegend_by_", color_by, "_", name_and_title$name, ".jpg"))
         if(isTRUE(update_legend)||!file.exists(temp_legend)){
           message("creating legend table for plot:\n")
 
@@ -657,7 +658,7 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
     ## saving with method based on plot_obj class ----
     if(isFALSE(save)){save <- NA}
     if(isTRUE(save)){
-      save <- file.path(dir_baltic, "reports", "figures", paste0("flowerplot_", name_and_title$name, ".png"))
+      save <- file.path(dir_assess, "reports", "figures", paste0("flowerplot_", name_and_title$name, ".png"))
     }
     if(!is.na(save)){
       save_loc <- save
@@ -737,7 +738,7 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
   ## must have phantomjs installed- can do this with webshot::install_phantomjs()
   if(isFALSE(save)){ save <- NA }
   if(isTRUE(save)){
-    save <- file.path(dir_baltic, "reports", "figures", paste0(dim, "s_table", ".png"))
+    save <- file.path(dir_assess, "reports", "figures", paste0(dim, "s_table", ".png"))
   }
   if(!is.na(save)){
     save_loc <- save

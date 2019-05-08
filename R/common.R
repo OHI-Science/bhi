@@ -19,7 +19,7 @@ bhiprep_api <- "https://api.github.com/repos/OHI-Science/bhi-prep/git/trees/mast
 
 ## Directories
 dir_bhi <- here::here()
-dir_baltic <- file.path(dir_bhi, "baltic") # CHANGE BHI ASSESSMENT DIRECTORY HERE!
+dir_assess <- file.path(dir_bhi, "baltic"); dir_baltic <- file.path(dir_bhi, "baltic") # CHANGE BHI ASSESSMENT DIRECTORY HERE!
 dir_spatial <- file.path(dir_bhi, "spatial") # spatial folder of bhi repo
 dir_prep <- file.path("..", "bhi-prep") # only works if assessment and prep repos are in same main (github) directory...
 dir_B <- file.path(c("Darwin" = "/Volumes/BHI_share", # "Windows" = ?
