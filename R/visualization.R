@@ -255,7 +255,7 @@ make_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, incl
 
 make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "score",
                              color_pal = NA, color_by = "goal", gradient = FALSE, legend_tab = FALSE, update_legend = FALSE,
-                             labels = "none", center_val = TRUE, score_ranges = FALSE, critical_value = 0, save = NA){
+                             labels = "none", center_val = TRUE, include_ranges = FALSE, critical_value = 0, save = NA){
 
   ## from PlotFlower.R from ohicore package
   ## original function by Casey O'Hara, Julia Lowndes, Melanie Frazier
@@ -294,9 +294,12 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
       scores_range = list(range(score, na.rm = TRUE) %>% round(digits = 1))
     ) %>%
     ungroup()
-  if(!(rgn_id == 0 & length(unlist(rgn_scores_summary$missing_rgn)) == 0)){
+  if(rgn_id != 0){
     rgn_scores_summary <- rgn_scores_summary %>%
       select(-scores_range)
+  }
+  if(length(unlist(rgn_scores_summary$missing_rgn)) != 0 & isTRUE(include_ranges)){
+    message("note: some missing regions for some goals... rgn_scores must be full scores.csv if wanting to include ranges!")
   }
   if(!is.na(rgn_id)){
     rgn_scores <- dplyr::filter(rgn_scores, region_id == rgn_id)
@@ -333,7 +336,8 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
   ## PLOTTING CONFIGURATION
   ## sub/supra goals and positioning ----
   ## pos, pos_end, and pos_supra indicate positions, how wide different petals should be based on weightings
-  plot_config <- readr::read_csv(file.path(dir_assess, "conf", "goals.csv")) # dir_assess from common.R
+  plot_config <- readr::read_csv(file.path(dir_assess, "conf", "goals.csv"),
+                                 col_types = cols()) # dir_assess from common.R
   goals_supra <- na.omit(unique(plot_config$parent))
 
   supra_lookup <- plot_config %>%
@@ -402,7 +406,7 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
         dplyr::left_join(color_df, by = "goal")
       # color_pal <- dplyr::arrange(plot_df, order_calculate)$color
     }
-    if(r == 0 & isTRUE(score_ranges)){
+    if(r == 0 & isTRUE(include_ranges)){
       plot_df <- plot_df %>%
         left_join(rgn_scores_summary %>%
                     select(goal, scores_range),
@@ -524,7 +528,7 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
                   x = 0, y = -thm$elmts$blank_circle_rad, hjust = 0.5, vjust = 0.5,
                   size = 9, color = thm$elmts$dark_line)
     }
-    if(isTRUE(score_ranges)){
+    if(isTRUE(include_ranges)){
       plot_obj <- plot_obj +
         geom_errorbar(aes(ymin = min_score, ymax = max_score),
                       alpha = 0.4, width = 0) +
