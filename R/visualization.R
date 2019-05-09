@@ -51,7 +51,7 @@ apply_bhi_theme <- function(plot_type = NA){
   bhi_palettes <- list(
 
     reds = grDevices::colorRampPalette(
-      c("#A50026","#D73027","#F46D43","#FDAE61", "#ffdcd8"))(40),
+      c("#A50026","#D73027","#F46D43","#FDAE61", "#ffdcd8"))(50),
     purples = grDevices::colorRampPalette(
       c("#EEDFFF","#C093F7","#9E5AF0","#822BEA"))(50),
     blues = grDevices::colorRampPalette(
@@ -67,7 +67,8 @@ apply_bhi_theme <- function(plot_type = NA){
 
   ## region names lookup table ----
   rgn_name_lookup <- rbind(
-    readr::read_csv(file.path(dir_spatial, "regions_lookup_complete_wide.csv")) %>%
+    readr::read_csv(file.path(dir_spatial, "regions_lookup_complete_wide.csv"),
+                    col_types = cols()) %>%
       dplyr::select(region_id, eez_name, subbasin_name),
     data.frame(region_id = 0, eez_name = "", subbasin_name = "Baltic Sea")) %>%
     dplyr::mutate(plot_title = ifelse(region_id != 0, paste0(subbasin_name, ", ", eez_name), subbasin_name)) %>%
@@ -121,7 +122,7 @@ apply_bhi_theme <- function(plot_type = NA){
 #'
 #' @return
 
-make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_legend = FALSE, save = NA){
+make_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, include_legend = FALSE, save = NA){
 
   ## checks, filtering, wrangling ----
   if(!"year" %in% names(rgn_scores)){
@@ -144,6 +145,9 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
 
   initial_theme <- theme_get()
   thm <- apply_bhi_theme("trends_barplot")
+  if(is.na(color_pal)){
+    color_pal <- c(thm$bhi_palettes$reds, thm$bhi_palettes$blues)
+  }
 
   unique_rgn <- unique(rgn_scores$region_id)
   region_name_title <- thm$rgn_name_lookup %>%
@@ -169,7 +173,7 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
       dplyr::left_join(region_name_title, by = "region_id")
     name <- "multiregion"; h <- 7; w <- 11; d <- 450
   } else {
-    region_name_title <- region_name_title$plot_title
+    region_title <- region_name_title$plot_title
     name <- region_name_title$name
     start_pal <- (length(color_pal)/2)*(1+min(rgn_scores$score))
     end_pal <- (length(color_pal)/2)*(1+max(rgn_scores$score))
@@ -193,10 +197,13 @@ make_trends_barplot <- function(rgn_scores, color_pal, plot_year = NA, include_l
       facet_wrap( ~ plot_title, ncol = facet_ncol)
   } else {
     trends_barplot <- trends_barplot +
-      geom_text_repel(aes(label = goals_reordered), size = 3, family = "Helvetica") +
+      geom_label_repel(aes(label = goals_reordered),
+                      size = 2.5, nudge_y = 0.01,
+                      segment.alpha = 0, family = "Helvetica",
+                      show.legend = FALSE) +
       theme(axis.text.y = element_blank()) +
       scale_fill_gradientn(colors = color_pal) +
-      labs(title = region_name_title)  +
+      labs(title = region_title)  +
       coord_flip()
   }
 
