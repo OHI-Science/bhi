@@ -186,7 +186,7 @@ make_rgn_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, 
     ggplot(aes(x = goals_reordered, y = score, fill = score)) +
     geom_bar(stat = "identity", position = position_dodge(), show.legend = include_legend) +
     geom_hline(yintercept = 0) +
-    theme_calc() +
+    theme_light() +
     theme(axis.line = element_blank(), element_line(colour = thm$elmts$light_line)) +
     labs(x = NULL, y = NULL)
 
@@ -322,22 +322,22 @@ trends_barplots_by_goal <- function(scores, plot_year = NA, by = NA,
     } else {
       start_pal <- (length(color_pal)/2)*(1 + min(non_NaN))
       end_pal <- (length(color_pal)/2)*(1 + max(non_NaN))
-      plot_color_pal <- color_pal[start_pal:end_pal]
+      plot_color_pal <- color_pal[start_pal:(end_pal+1)]
 
       ## creating plots ----
       trends_barplot <- goal_scores %>%
         ggplot(aes(x = north_south_reordered, y = score, fill = score)) +
         geom_bar(stat = "identity", position = position_dodge(), show.legend = include_legend) +
         geom_hline(yintercept = 0) +
-        geom_text_repel(aes(label = north_south_reordered),
-                        size = 3, angle = 90, segment.alpha = 0, nudge_y = 0.01, # angle = 0
+        geom_label_repel(aes(label = north_south_reordered), # geom_text_repel
+                        size = 3, angle = 0, segment.alpha = 0.3, direction = "x", segment.size = 0.1, # nudge_y = 0.01, # angle = 90
                         family = "Helvetica", show.legend = FALSE) +
-        theme_calc() +
+        theme_light() +
         theme(axis.line = element_blank(), element_line(colour = thm$elmts$light_line)) +
-        labs(x = "Subbasin", y = NULL, title = plot_title) +
-        theme(axis.text.x = element_blank()) +
-        # theme(axis.text.y = element_blank()) +
-        # coord_flip() +
+        labs(title = plot_title, y = NULL, x = NULL) + # x = "Subbasin") +
+        # theme(axis.text.x = element_text(angle = 90, hjust = 1)) + # element_text(angle = 90)) +
+        theme(axis.text.y =  element_blank()) + # element_text(hjust = 1)) +
+        coord_flip() +
         scale_fill_gradientn(colors = plot_color_pal)
 
 
@@ -350,7 +350,7 @@ trends_barplots_by_goal <- function(scores, plot_year = NA, by = NA,
         save_loc <- file.path(save, paste0(by, "s_trendbarplot_", str_to_lower(g), ".png"))
         if(!file.exists(save)){ message("that save location is not valid") } else {
           ggplot2::ggsave(filename = save_loc, plot = trends_barplot, device = "png",
-                          height = 4, width = 7, units = "in", dpi = 300)
+                          height = 5, width = 8.5, units = "in", dpi = 300)
         }
       }
     }
