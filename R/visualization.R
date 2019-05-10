@@ -106,7 +106,7 @@ apply_bhi_theme <- function(plot_type = NA){
 }
 
 
-#' create trends barplot
+#' create trends barplot by region
 #'
 #' requires a dataframe of OHI scores filtered to the region of interest
 #' reads in information from supplement/tables/
@@ -122,7 +122,7 @@ apply_bhi_theme <- function(plot_type = NA){
 #'
 #' @return
 
-make_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, include_legend = FALSE, save = NA){
+make_rgn_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, include_legend = FALSE, save = NA){
 
   ## checks, filtering, wrangling ----
   if(!"year" %in% names(rgn_scores)){
@@ -210,7 +210,7 @@ make_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, incl
   ## saving plots ----
   if(isFALSE(save)){save <- NA}
   if(isTRUE(save)){
-    save <- file.path(dir_assess, "reports", "figures", paste0("trendbarplot_", name))
+    save <- file.path(dir_assess, "reports", "figures")
   }
   if(!is.na(save)){
     save_loc <- file.path(save, paste0("trendbarplot_", name, ".png"))
@@ -220,6 +220,142 @@ make_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, incl
     }
   }
   theme_set(initial_theme)
+  return(invisible(trends_barplot))
+}
+
+#' create trends barplot by goal
+#'
+#' requires a dataframe of OHI scores filtered to the region of interest
+#' reads in information from supplement/tables/
+#'
+#' @param scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R)
+#' @param plot_year year by which to filter region score input dataframe
+#' @param by the spatial unit by which to aggregate and plot; one of region, subbasin, or eez
+#' @param color_pal a continuous color palette, ideally diverging,
+#' that will map to trend values in the barplots
+#' @param include_legend boolean indicating if legend should be included or not
+#' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string,
+#' or to "reports/figures" directory if TRUE
+#'
+#' @return
+
+trends_barplots_by_goal <- function(scores, plot_year = NA, by = NA,
+                                    color_pal = NA, include_legend = FALSE, save = NA){
+
+  ## checks, filtering, wrangling ----
+  if(!"year" %in% names(scores)){
+    if(is.na(plot_year)){
+      plot_year <- substring(date(), 21, 24)
+      message("scores doesn't have a year column; assuming data is for current year\n")
+    } else {
+      message(paste("scores doesn't have a year column; assuming data is for given plot_year", plot_year,"\n"))
+    }
+    scores$year <- plot_year
+  } else {
+    if(!plot_year %in% unique(scores$year)){
+      message("no data for given plot_year in the scores input")
+    }
+    if(is.na(plot_year) | !plot_year %in% unique(scores$year)){
+      plot_year <- max(scores$year)
+      message(paste("plotting using most recent year in the input data:", plot_year,"\n"))
+    }
+  }
+
+  thm <- apply_bhi_theme("trends_barplot")
+  if(any(is.na(color_pal))||length(color_pal) == 0){
+    color_pal <- c(thm$bhi_palettes$reds, thm$bhi_palettes$blues)
+  }
+
+  goal_subgoal_list <- unique(scores$goal)
+  goal_names_titles <- readr::read_csv(file.path(dir_assess, "conf", "goals.csv"), col_types = cols()) %>%
+    select(order_hierarchy, goal, name)
+
+  scores <- scores %>%
+    dplyr::filter(year == plot_year) %>%
+    dplyr::filter(dimension == "trend") %>%
+    left_join(readr::read_csv(file.path(dir_spatial, "bhi_basin_country_lookup.csv"),
+                              col_types = cols()) %>%
+                rename(region_id = BHI_ID, area_km2_rgn = Area_km2, subbasin = Subbasin) %>%
+                select(-HELCOM_ID), by = "region_id")
+
+  for(g in goal_subgoal_list){
+
+    goal_scores <- filter(scores, goal == g)
+
+    if(!is.na(by)){
+      by <- str_to_lower(by)
+      if(by == "basin"|| by =="subbasin"){
+        goal_scores <- goal_scores %>%
+          dplyr::group_by(goal, subbasin) %>%
+          dplyr::summarise(score = weighted.mean(score, area_km2_rgn, na.rm = TRUE)) %>%
+          ungroup()
+        ordering <- readr::read_csv(
+            file.path(dir_spatial, "subbasins_ordered.csv"),
+            col_types = cols()) %>%
+          left_join(goal_scores, by = "subbasin") %>%
+          arrange(order)
+        goal_scores$north_south_reordered <- factor(
+          goal_scores$subbasin,
+          levels = ordering$subbasin)
+
+      } else if(by == "eez"){
+        goal_scores <- goal_scores %>%
+          dplyr::group_by(goal, rgn_key) %>%
+          dplyr::summarise(score = weighted.mean(score, area_km2_rgn, na.rm = TRUE)) %>%
+          ungroup() %>%
+          rename(eez = rgn_key)
+        goal_scores$north_south_reordered <- factor(
+          goal_scores$eez,
+          levels = c("DNK", "DEU", "POL",
+                     "LVA", "LTU", "SWE",
+                     "EST", "RUS", "FIN"))
+
+      } else {
+        print("for each goal or subgoal, plotting trend vs. all 42 BHI regions")
+      }
+    }
+
+    plot_title <- ifelse(g == "Index", "Index", filter(goal_names_titles, goal == g)$name)
+    non_NaN <- goal_scores$score[goal_scores$score != "NaN"]
+    if(length(non_NaN) == 0){
+      message(paste("cannot plot for", g, "goal, lacking valid data for trend"))
+    } else {
+      start_pal <- (length(color_pal)/2)*(1 + min(non_NaN))
+      end_pal <- (length(color_pal)/2)*(1 + max(non_NaN))
+      plot_color_pal <- color_pal[start_pal:end_pal]
+
+      ## creating plots ----
+      trends_barplot <- goal_scores %>%
+        ggplot(aes(x = north_south_reordered, y = score, fill = score)) +
+        geom_bar(stat = "identity", position = position_dodge(), show.legend = include_legend) +
+        geom_hline(yintercept = 0) +
+        geom_text_repel(aes(label = north_south_reordered),
+                        size = 3, angle = 90, segment.alpha = 0, nudge_y = 0.01, # angle = 0
+                        family = "Helvetica", show.legend = FALSE) +
+        theme_calc() +
+        theme(axis.line = element_blank(), element_line(colour = thm$elmts$light_line)) +
+        labs(x = "Subbasin", y = NULL, title = plot_title) +
+        theme(axis.text.x = element_blank()) +
+        # theme(axis.text.y = element_blank()) +
+        # coord_flip() +
+        scale_fill_gradientn(colors = plot_color_pal)
+
+
+      ## saving plots ----
+      if(isFALSE(save)){save <- NA}
+      if(isTRUE(save)){
+        save <- file.path(dir_assess, "reports", "figures")
+      }
+      if(!is.na(save)){
+        save_loc <- file.path(save, paste0(by, "s_trendbarplot_", str_to_lower(g), ".png"))
+        if(!file.exists(save)){ message("that save location is not valid") } else {
+          ggplot2::ggsave(filename = save_loc, plot = trends_barplot, device = "png",
+                          height = 4, width = 7, units = "in", dpi = 300)
+        }
+      }
+    }
+  }
+
   return(invisible(trends_barplot))
 }
 
@@ -720,9 +856,9 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
     ) %>%
     mutate(basin_means = ifelse(basin_means == "NaN", NA, basin_means)) %>%
     tidyr::spread(key = goal, value = basin_means) %>%
-    left_join(read_csv(file.path(dir_bhi, "spatial", "subbasins_ordered.csv")), by = "Subbasin") %>%
-    arrange(Order) %>%
-    select(-CS, -Order)
+    left_join(read_csv(file.path(dir_spatial, "subbasins_ordered.csv")), by = "subbasin") %>%
+    arrange(order) %>%
+    select(-CS, -order)
 
   ## row formatter to include arrow icons ----
   goals_formatter <- formatter("span", style = x ~ style(
