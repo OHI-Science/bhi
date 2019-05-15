@@ -33,3 +33,5 @@ res_reg_cbd,res_reg_cbd_bhi2015.csv,2019-05-15,TRUE,BD
 res_reg_cites,res_reg_cites_bhi2015.csv,2019-05-15,TRUE,BD
 res_reg_nd,res_reg_nd_bhi2015.csv,2019-05-15,TRUE,BD
 res_reg_uwwtd,res_reg_uwwtd_bhi2015.csv,2019-05-15,TRUE,BD
+cs_status,cs_status_bhi2015.csv,2019-05-15,TRUE,CS
+res_reg_ied,res_reg_ied_bhi2015.csv,2019-05-15,TRUE,CS
