@@ -42,3 +42,4 @@ po_inverse_secchi,po_inverse_secchi_bhi2015.csv,2019-05-15,TRUE,TR
 res_reg_bwd,res_reg_bwd_bhi2015.csv,2019-05-15,TRUE,TR
 lsp_status,lsp_status_by_rgn_bhi2015.csv,2019-05-15,TRUE,LSP
 lsp_trend,lsp_trend_bhi2015.csv,2019-05-15,TRUE,LSP
+ico_status,ico_status_bhi2015.csv,2019-05-15,TRUE,ICO
