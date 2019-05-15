@@ -1,7 +1,7 @@
 
 MAR <- function(layers){
 
-  ## Based on code from 'functions.R MAR' of v2015 BHI assessment
+  ## From code in 'functions.R MAR' of v2015 BHI assessment, see bhi-1.0-archive github repo
   ## Revised to use multi-year framework, incorporating scenario_data_years
   ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
 
@@ -9,6 +9,7 @@ MAR <- function(layers){
   regr_length <- 5 # number of years of data to use in trend calc
   regr_years <- seq(scen_year - regr_length + 1, scen_year)
 
+  ## COLLECT LAYERS ----
   ## layers used: mar_harvest_tonnes, mar_harvest_species, mar_sustainability_score
   harvest_tonnes <- AlignDataYears(layer_nm="mar_harvest_tonnes",
                                    layers_obj=layers)
@@ -46,7 +47,7 @@ MAR <- function(layers){
   ## Xmar = Mar_current / Mar_ref
   ## if use this, need to decide if the production should be scaled per capita
 
-  ## CALCULATE STATUS
+  ## CALCULATE STATUS ----
   mar_status_score <- tmp %>%
     dplyr::group_by(rgn_id, scenario_year) %>%
     dplyr::mutate(status = pmin(1, tonnes_sust/ref_value) * 100) %>%
@@ -60,22 +61,22 @@ MAR <- function(layers){
     tidyr::complete(rgn_id = full_seq(c(1, 42), 1))
 
 
-  ## CALCULATE TREND
+  ## CALCULATE TREND ----
   mar_trend <- mar_status_score %>%
     dplyr::group_by(rgn_id) %>%
     dplyr::do({
       ## calculate trend iff have all yrs of data in last 5 (regr_length) years of time series
-      ## future_year set in contants, this is the value 5 in the old code
-      if(sum(!is.na(.$status)) >= regr_length)
+      ## regr_length set in contants, this is the value 5 in the old code
+      if(sum(!is.na(.$status)) >= regr_length){
         data.frame(trend_score = max(-1, min(1, coef(lm(status ~ scenario_year, .))["scenario_year"]*0.05)))
-      else data.frame(trend_score = NA)
+      } else {data.frame(trend_score = NA)}
     }) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(trend_score = round(trend_score, 2)) %>%
     tidyr::complete(rgn_id = full_seq(c(1, 42), 1))
 
 
-  ## ASSEMBLE DIMENSIONS & RETURN SCORES
+  ## ASSEMBLE DIMENSIONS & RETURN SCORES ----
   scores <- mar_status %>%
     dplyr::select(region_id = rgn_id, score = score) %>%
     dplyr::mutate(dimension = "status") %>%

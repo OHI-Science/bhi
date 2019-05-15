@@ -3,7 +3,7 @@ FP <- function(layers, scores){
 
   scen_year <- layers$data$scenario_year
 
-  ## From code in 'functions.R FP' of v2015 BHI assessment
+  ## From code in 'functions.R FP' of v2015 BHI assessment, see bhi-1.0-archive github repo
   ## Revised to use multi-year framework, incorporating scenario_data_years
   ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
 
@@ -24,12 +24,14 @@ FP <- function(layers, scores){
     dplyr::mutate(weight = ifelse(goal == "FIS", w_fis, w_mar))
 
 
-  ## some warning messages for potential mismatches in data
+  ## warning messages for potential data mismatches ----
   ## NA score but there is a weight
-  tmp <- s %>% dplyr::filter(goal == "FIS" &
-                               is.na(score) &
-                               dimension == "score" &
-                               (!is.na(w_fis) & w_fis != 0))
+  tmp <- s %>% dplyr::filter(
+    goal == "FIS" &
+      is.na(score) &
+      dimension == "score" &
+      (!is.na(w_fis) & w_fis != 0)
+  )
   if (dim(tmp)[1] > 0) {
     warning(sprintf(
       "Check: these regions have a FIS weight but no score: %s",
@@ -37,10 +39,12 @@ FP <- function(layers, scores){
     ))
   }
 
-  tmp <- s %>% dplyr::filter(goal == 'MAR' &
-                               is.na(score) &
-                               dimension == "score" &
-                               (!is.na(w_mar) & w_mar != 0))
+  tmp <- s %>% dplyr::filter(
+    goal == "MAR" &
+      is.na(score) &
+      dimension == "score" &
+      (!is.na(w_mar) & w_mar != 0)
+  )
   if(dim(tmp)[1] > 0){
     warning(sprintf(
       "Check: these regions have a MAR weight but no score: %s",
@@ -49,11 +53,13 @@ FP <- function(layers, scores){
   }
 
   ## there is a score, but weight is NA or 0
-  tmp <- s %>% dplyr::filter(goal == "FIS" &
-                               dimension == "score" &
-                               region_id != 0 &
-                               (!is.na(score) & score > 0) &
-                               (is.na(w_fis) | w_fis == 0))
+  tmp <- s %>% dplyr::filter(
+    goal == "FIS" &
+      dimension == "score" &
+      region_id != 0 &
+      (!is.na(score) & score > 0) &
+      (is.na(w_fis) | w_fis == 0)
+  )
   if(dim(tmp)[1] > 0) {
     warning(sprintf(
       "Check: these regions have a FIS score but no weight: %s",
@@ -61,11 +67,13 @@ FP <- function(layers, scores){
     ))
   }
 
-  tmp <- s %>% dplyr::filter(goal == "MAR" &
-                               (!is.na(score) & score > 0) &
-                               (is.na(w_mar) | w_mar == 0) &
-                               dimension == "score" &
-                               region_id != 0)
+  tmp <- s %>% dplyr::filter(
+    goal == "MAR" &
+      (!is.na(score) & score > 0) &
+      (is.na(w_mar) | w_mar == 0) &
+      dimension == "score" &
+      region_id != 0
+  )
   if(dim(tmp)[1] > 0) {
     warning(sprintf(
       "Check: these regions have a MAR score but no weight: %s",
@@ -74,7 +82,8 @@ FP <- function(layers, scores){
   }
 
 
-  ## summarize scores as FP based on MAR, and FIS weight
+  ## summarize scores for FP ----
+  ## FP scores are based on MAR, and FIS weights
   scores_fp <- s %>%
     dplyr::group_by(region_id, dimension) %>%
     dplyr::summarize(score = weighted.mean(score, weight, na.rm = TRUE)) %>%

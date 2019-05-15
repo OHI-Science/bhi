@@ -4,7 +4,7 @@ FinalizeScores <- function(layers, conf, scores){
   ## From code in 'functions.R FinalizeScores' of v2015 BHI assessment, see bhi-1.0-archive github repo
   ## modified from functions.R template to aggregte to EEZs and Subbasins of Baltic
 
-  ## Regions to aggregate as EEZs and Basins
+  ## Regions to aggregate as EEZs and Basins ----
 
   if(!file.exists(file.path(here::here(), "spatial", "regions_lookup_complete.csv"))){
     source(file.path(here::here(), "R", "spatial.R"))
@@ -19,7 +19,7 @@ FinalizeScores <- function(layers, conf, scores){
   rgns_aggregate <- rgns_complete %>%
     dplyr::filter(type %in% c("eez", "subbasin", "GLOBAL")) # exclude bhi rgns; eez, subbasin, and global
 
-  ## Calculate Scores for EEZs and SUBBASINS by area weighting
+  ## Calculate Scores for EEZs and SUBBASINS by area weighting ----
   cat(sprintf("Calculating scores for EEZ and SUBBASIN AREAS by area weighting...\n"))
 
   ## For EEZs
@@ -43,7 +43,7 @@ FinalizeScores <- function(layers, conf, scores){
   ## combine scores with EEZ and SUBBASIN scores
   scores <- bind_rows(scores, scores_eez, scores_subbasin)
 
-  ## add NAs to missing combos of region_id, goal, dimension
+  ## Add NAs to missing combos of region_id, goal, dimension ----
   d <- expand.grid(list(
     score_NA = NA,
     region_id = c(rgns_complete$region_id),
@@ -57,6 +57,8 @@ FinalizeScores <- function(layers, conf, scores){
       !(dimension %in% c("pressures", "resilience", "status", "trend") &
           goal == "Index"))
 
+
+  ## RETURN SCORES ----
   scores <- merge(scores, d, all = TRUE)[, c("goal", "dimension", "region_id", "score")] %>%
     dplyr::arrange(goal, dimension, region_id) # merge NAs dataframe with scores, and arrange
   scores$score <- round(scores$score, 2) # round scores

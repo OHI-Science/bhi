@@ -1,7 +1,7 @@
 
 FIS <- function(layers){
 
-  ## Based on code from 'functions.R FIS' of v2015 BHI assessment
+  ## From code in 'functions.R FIS' of v2015 BHI assessment, see bhi-1.0-archive github repo
   ## Revised to use multi-year framework, incorporating scenario_data_years
   ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
 
@@ -29,7 +29,7 @@ FIS <- function(layers){
     tidyr::spread(metric, score)
 
 
-  ## STEP 1: converting B/Bmsy and F/Fmsy to F-scores
+  ## STEP 1: converting B/Bmsy and F/Fmsy to F-scores ----
 
   ## see plot describing the relationship between these variables and scores
   ## this may need to be adjusted...
@@ -55,7 +55,7 @@ FIS <- function(layers){
   ## if have one zero w/ geometric mean, results in a zero score
 
 
-  ## STEP 2: converting B/Bmsy to B-scores
+  ## STEP 2: converting B/Bmsy to B-scores ----
 
   B_scores <- metric_scores %>%
     dplyr::mutate(score = ifelse(bbmsy < 0.8 , bbmsy/0.8, NA),
@@ -68,7 +68,7 @@ FIS <- function(layers){
     dplyr::mutate(score_type = "B_score")
 
 
-  ## STEP 3: averaging the F and B-scores to get the stock status score
+  ## STEP 3: averaging the F and B-scores to get the stock status score ----
 
   status_scores <- rbind(B_scores, F_scores) %>%
     dplyr::group_by(region_id, stock, year) %>%
@@ -76,7 +76,7 @@ FIS <- function(layers){
     data.frame()
 
 
-  ## STEP 4: calculating the weights
+  ## STEP 4: calculating the weights ----
 
   ## subset the data to include only the most recent 10 years
   landings <- landings %>%
@@ -99,24 +99,25 @@ FIS <- function(layers){
     dplyr::mutate(propCatch = avgCatch/totCatch)
 
 
-  ## STEP 5: join scores and weights to calculate status
+  ## STEP 5: alculate status and trend ----
 
+  ## join scores and weights to calculate status
   status <- weights %>%
     dplyr::left_join(status_scores, by = c("region_id", "year", "stock")) %>%
     dplyr::filter(!is.na(score)) %>% # remove missing data
     dplyr::select(region_id, year, stock, propCatch, score) # clean data
 
-  ##### becaue of bad cod condition in Eastern Baltic(ICES_subdivision = 2532),
-  ##### we added a penalty factor of 0.872 based on historical cod body weight
-  ##### see FIS prep for full calculation of the penalty factor
-  ##### by Ning Jiang, 16 Feb, 2017
+  ## becaue of bad cod condition in Eastern Baltic(ICES_subdivision = 2532),
+  ## we added a penalty factor of 0.872 based on historical cod body weight
+  ## see FIS prep for full calculation of the penalty factor
+  ## by Ning Jiang, 16 Feb, 2017
   status_with_penalty <- status %>%
-    dplyr::mutate(scores_with_penalty = ifelse(stock == "cod_2532",
-                                               score * 0.872,
-                                               score)) %>%
+    dplyr::mutate(scores_with_penalty = ifelse(
+      stock == "cod_2532",
+      score * 0.872,
+      score)) %>%
     dplyr::select(-score) %>%
     dplyr::rename(score = scores_with_penalty)
-
 
   status <- status_with_penalty %>%
     dplyr::group_by(region_id, year) %>%
@@ -137,7 +138,7 @@ FIS <- function(layers){
     dplyr::ungroup() %>%
     dplyr::mutate(trend = round(trend, 2))
 
-  ## could replace trend calc w/ ohicore::CalculateTrend, but then coeff is normalized by min trend year
+  ## could replace trend calc w/ ohicore::CalculateTrend, but then coeff is normalized by min trend year...
   ## need more years of data in scenario_data_years though for this to work
   # trend <- ohicore::CalculateTrend(status, trend_years)
 
@@ -147,7 +148,7 @@ FIS <- function(layers){
     dplyr::select(region_id, status)
 
 
-  ## STEP 6: assemble dimensions
+  ## STEP 6: assemble dimensions ----
 
   scores <- status %>%
     dplyr::select(region_id, score = status) %>%
