@@ -69,6 +69,7 @@ scenario_data_include <- function(scen_data_years, scen_yrs, new_lyrs = "", rena
 #' @param layer_name name of the layer for which to align scenario and data years
 #' @param data_yrs the years of data for the specified layer, i.e. all the years in the layer data file
 #' @param scen_yrs the scenario years to be included in the updated scenario_data_years.csv
+#' @param approach
 #'
 #' @return
 
@@ -100,7 +101,7 @@ scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scen_yrs, a
   if(str_detect(approach, "intervals|steps|timestep")){
     ## don't actually want to assign if si to dj if |si-dj| > reasonable_diff
     reasonable_diff <- ifelse(str_detect(approach, "max step|maximum step|with step|max diff|maximum|max.|difference"),
-                              as.numeric(gsub("\\D", "", approach), 5))
+                              as.numeric(gsub("\\D", "", approach)), 5)
     for (s in 1:length(scen_yrs)){
       match_years[s, "data_year"] <- ifelse(abs(M[s,s]) < reasonable_diff,
                                             dimnames(M)[[1]][s],
@@ -145,7 +146,7 @@ scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scen_yrs, a
 #'
 #' @return
 
-update_alt_layers <- function(assessment_path = dir_baltic, prep_path = dir_prep, assess_year){
+update_alt_layers <- function(assessment_path = dir_assess, prep_path = dir_prep, assess_year){
 
   print("if creating an entirely new layer not just a different version, you must have added it in layers.csv")
   lyrscsv <- readr::read_csv(file.path(assessment_path, "layers.csv"))
@@ -193,42 +194,57 @@ update_alt_layers <- function(assessment_path = dir_baltic, prep_path = dir_prep
 
 #' update rows in layers.csv for a given layer
 #'
-#' registers a specified file is to the given layer, after checking registration against layers object created by ohicore::Layers
-#' written originally mostly for setting up bhi multiyear assessments repo from the archived repo...
+#' registers a specified file to the given layer,
+#' after checking registration against layers object created by ohicore::Layers
+#' written originally/mostly for setting up bhi multiyear assessments repo from the archived repo...
 #'
-#' @param layers_object a layers object created with ohicore::Layers for the bhi repo assessment folder we aim to reconfigure
-#' @param lyr_file file path to where layer data file is located, including the name of the csv file itself to be incorporated into bhi layers object
-#' @param lyr_name single character string with name of the layer (not the filename) to be associated with the
+#' @param layers_object a layers object created with ohicore::Layers,
+#' for the repo assessment folder to reconfigure, not the archived version
+#' @param lyr_file file path to where layer data file is located,
+#' including the name of the csv file itself to be incorporated into bhi layers object
+#' @param lyr_name single character string with name of the layer (not the filename) to be associated with the layer data file
 #' @param assessment_path file path to assessment folder within bhi repo
-#' @param update_with a dataframe or tibble with at least one row, with the information to be added to layers.csv for the layer
+#' @param metadata_path file path to layers_metadata.csv that contains info corresponding to lyr_file;
+#' should have layer, name, description, units, and targets fields
+#' @param update_with a dataframe or tibble with at least one row,
+#' with the information to be added to layers.csv for the layer
 #' @param write if TRUE then the function will automatically overwrite layers.csv and write lyr_file to the 'layers' folder
 #'
-#' @return
+#' @return updated layers.csv table is first output, the second output is the contents of the layer file specified by lyr_file arg
 
-layerscsv_edit <- function(layers_object, lyr_file, lyr_name, assessment_path, update_with = NULL, write = FALSE){
+layerscsv_edit <- function(layers_object, lyr_file, lyr_name,
+                           assessment_path, metadata_path, update_with = NULL,
+                           write = FALSE){
 
-  lyr_file_data <- readr::read_csv(lyr_file)
+  lyr_file_data <- readr::read_csv(lyr_file, col_types = cols())
   lyr_file_name <- basename(lyr_file)
 
-  ## 0. using the layers object, check if layer is already registerd with the specified layer file
+  ## using the layers object, check if layer is already registerd with the specified layer file
   chk1 <- lyr_file_name %in% layers_object$meta$filename
   chk2 <- lyr_name %in% layers_object$meta$layer
   if(chk1 & chk2){
-    chk3 <- which(layers_object$meta$filename==lyr_file_name)==which(layers_object$meta$layer==lyr_name)
-  }
+    chk3a <- which(layers_object$meta$filename == lyr_file_name)
+    chk3b <- which(layers_object$meta$layer == lyr_name)
+    chk3 <- chk3a == chk3b
+  } else { chk3 <- FALSE }
 
   if(chk1 & chk2 & chk3){
-    print("layer already registered/configured with given filename")
+    message("layer already registered/configured with given filename")
   } else {
 
-    ## 1. register layer in layers.csv
+    ## register layer in layers.csv
 
-    layers_csv <- readr::read_csv(file.path(assessment_path, "layers.csv")) # matches w layers_object 'meta' slot contents
-    layers_metadata_csv <- readr::read_csv(file.path(assessment_path, "layers_metadata.csv")) %>%
+    layers_csv <- readr::read_csv(
+      file.path(assessment_path, "layers.csv"),
+      col_types = cols()) # matches w layers_object 'meta' slot contents
+    layers_metadata_csv <- readr::read_csv(
+      file.path(metadata_path),
+      col_types = cols(.default = "c")) %>%
       dplyr::select(-data_source, -gapfill_file)
 
     ## create or extract 'update_with' information for layer, i.e. row entry for layer.csv
     if(is.null(update_with)){
+
       ## need to generate information to fill layers.csv row
       update_with <- data.frame(array(NA, dim = c(1, ncol(layers_csv))))
       colnames(update_with) <- names(layers_csv)
@@ -242,9 +258,8 @@ layerscsv_edit <- function(layers_object, lyr_file, lyr_name, assessment_path, u
           dplyr::left_join(layers_metadata_csv, by = "layer") %>%
           dplyr::select(names(layers_csv)) # original column ordering
       } else {
-        print("check layers.csv and layers_metadata.csv: some critical information must be entered manually")
+        message("check layers.csv and layers_metadata.csv: some critical information must be entered manually")
       }
-
     } else {
       update_with <- update_with %>%
         dplyr::filter(grepl(sprintf("^%s.*", lyr_name), layer))
@@ -256,15 +271,15 @@ layerscsv_edit <- function(layers_object, lyr_file, lyr_name, assessment_path, u
                      clip_n_ship_disag_description = NA,
                      rgns_in = NA))
 
-    ## 2. write updated layers.csv and write layer file to the layers folder, overwriting if it is already there
+    ## write updated layers.csv and write layer file to the layers folder, overwriting if it is already there
     if(write == TRUE){
       readr::write_csv(updated_tab, file.path(assessment_path, "layers.csv"))
       readr::write_csv(lyr_file_data, file.path(assessment_path, "layers", lyr_file_name))
     }
 
     ## final messages and return results
-    print(sprintf("file '%s' is registered to be used for the '%s' layer", lyr_file_name, lyr_name))
-    print("IMPORTANT: now you must update scenario_data_years.csv!")
+    message(sprintf("file '%s' has been registered to be used for the '%s' layer", lyr_file_name, lyr_name))
+    print("note: update scenario_data_years.csv to match new layer data!")
 
     return(list(updated_tab, lyr_file_data))
   }
@@ -420,7 +435,7 @@ copy_lyrs_from_bhiprep <- function(assessment_path, copy_layers = list("all"), r
   if(unlist(copy_layers) == "all"){
     print("copying over all layers from bhi-prep repository 'layers' folder")
     print("note: will overwrite layers in bhi repo 'layers' folder with bhi-prep versions from github, of same name")
-    filelist <- bhiprep_github_layers(github_api_url = bhi_prep_api) # function defined and bhi_prep_api assigned in common.R
+    filelist <- bhiprep_github_layers(github_api_url = bhi_prep_api) # function and bhiprep_api defined in common.R
   } else {
     filelist <- data.frame(V1 = unlist(copy_layers))
   }
