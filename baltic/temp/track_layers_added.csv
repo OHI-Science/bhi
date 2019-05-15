@@ -35,3 +35,8 @@ res_reg_nd,res_reg_nd_bhi2015.csv,2019-05-15,TRUE,BD
 res_reg_uwwtd,res_reg_uwwtd_bhi2015.csv,2019-05-15,TRUE,BD
 cs_status,cs_status_bhi2015.csv,2019-05-15,TRUE,CS
 res_reg_ied,res_reg_ied_bhi2015.csv,2019-05-15,TRUE,CS
+tr_accommodation_stays,tr_accommodation_stays_bhi2015.csv,2019-05-15,FALSE,TR
+tr_status,tr_status_scores_bhi2015.csv,2019-05-15,TRUE,TR
+tr_trend,tr_trend_scores_bhi2015.csv,2019-05-15,TRUE,TR
+po_inverse_secchi,po_inverse_secchi_bhi2015.csv,2019-05-15,TRUE,TR
+res_reg_bwd,res_reg_bwd_bhi2015.csv,2019-05-15,TRUE,TR
