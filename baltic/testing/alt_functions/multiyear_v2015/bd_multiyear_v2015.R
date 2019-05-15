@@ -10,6 +10,8 @@ BD <- function(layers){
   ## status is the geometric mean of each taxa group status by basin
   ## trend is temporarily substituted by OHI-global BD trend scores
 
+  scen_year <- layers$data$scenario_year
+
   ## call status and trend layers ----
   status <- AlignDataYears(layer_nm="bd_spp_status", layers_obj=layers) %>%
     mutate(score = round(score*100)) %>%
