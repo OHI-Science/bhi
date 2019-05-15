@@ -22,3 +22,6 @@ res_reg_hd,res_reg_hd_bhi2015.csv,2019-02-18,TRUE,FIS
 res_reg_helcom,res_reg_helcom_bhi2015.csv,2019-02-18,TRUE,FIS
 res_reg_mspd,res_reg_mspd_bhi2015.csv,2019-02-18,TRUE,FIS
 res_reg_reach,res_reg_reach_bhi2015.csv,2019-02-27,TRUE,MAR
+np_bbmsy,np_bbmsy_bhi2015.csv,2019-05-14,FALSE,NP
+np_ffmsy,np_ffmsy_bhi2015.csv,2019-05-14,FALSE,NP
+np_landings,np_landings_bhi2015.csv,2019-05-14,FALSE,NP
