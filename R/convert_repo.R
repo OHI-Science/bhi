@@ -71,7 +71,7 @@ convert_repo <- function(new_repo, archive_filepath,
       press_res_lyrs,
       layers_most_recent$layer)
 
-    cat("pressure and resilience layers needing to be added: ",
+    cat("pressure and resilience layers needing to be added: \n",
         ifelse(length(add_press_res_lyrs) == 0, "none\n", paste(add_press_res_lyrs, collapse = "\n")),
         sep = "")
 
@@ -87,7 +87,7 @@ convert_repo <- function(new_repo, archive_filepath,
 
 
     ## WORK LAYER BY LAYER ----
-    for(consider_lyr_nm in goal_specific_layers){ # consider_lyr_nm = goal_specific_layers[2]
+    for(consider_lyr_nm in goal_specific_layers){ # consider_lyr_nm = goal_specific_layers[8]
 
       cat(sprintf("incorporating and/or reviewing '%s' layer for '%s' goal\n\n", consider_lyr_nm, consider_goal))
 
@@ -142,7 +142,7 @@ convert_repo <- function(new_repo, archive_filepath,
         metadata_path = file.path(new_repo, "layers_metadata.csv"),
         update_with = archive_layerscsv,
         write = FALSE
-      )
+      ) # View(updated_layers[[1]])
       write_csv(updated_layers[[1]], file.path(new_repo, "layers.csv"))
 
       track_layers_entry <- data.frame(
