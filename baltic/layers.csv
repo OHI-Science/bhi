@@ -1,4 +1,24 @@
 "targets","layer","name","description","fld_value","units","filename","clip_n_ship_disag","clip_n_ship_disag_description","layer_gl","path_in","rgns_in","fld_id_num","fld_id_chr","fld_category","fld_year","fld_val_num","fld_val_chr","file_exists","year_min","year_max","val_min","val_max","val_0to1","flds_unused","flds_missing","rows_duplicated","num_ids_unique","data_na"
+"LIV","liv_trend","Trend of Livelihood","LIV trend calculated in data prep. Based on most recent five years' status scores.","score","trend score","liv_trend_score_bhi2015.csv",,,"","",,"rgn_id",,"dimension","year","score",,TRUE,2014,2014,0,0,TRUE,,,,42,FALSE
+"LIV","liv_status","Status of Livelihood","LIV status calculated in LIV data prep based on ratio of coastal/national employment rate.","score","status score","liv_status_scores_bhi2015.csv",,,"","",,"rgn_id",,"country","year","score",,TRUE,2012,2012,91.1267605633803,99.8701298701299,FALSE,,,,42,FALSE
+"LIV","liv_regional_employ","Number of people employed in each BHI region 25km buffer based on eutS2 employment rates","Employment percentage by eutS2 region from Eurostat.
+
+
+
+Data sources:
+
+
+
+- [Eurostat database lfst_r_lfe2emprt](http://ec.europa.eu/eurostat/data/database?p_auth=BgwyNWIM&p_p_id=estatsearchportlet_WAR_estatsearchportlet&p_p_lifecycle=1&p_p_state=maximized&p_p_mode=view&_estatsearchportlet_WAR_estatsearchportlet_action=search&text=lfst_r_lfe2emprt)","bhi_employ_rate","number people employed","liv_regional_employ_bhi2015.csv",,,"","",,"rgn_id",,,"year","bhi_employ_rate",,TRUE,2000,2014,46.8728462680099,79.5,FALSE,,,,42,FALSE
+"LIV","liv_national_employ","Number of people employed nationally based on national employment rates","Employment percentage by eutS0 region from Eurostat.
+
+
+
+Data sources:
+
+
+
+- [Eurostat database lfst_r_lfe2emprt](http://ec.europa.eu/eurostat/data/database?p_auth=BgwyNWIM&p_p_id=estatsearchportlet_WAR_estatsearchportlet&p_p_lifecycle=1&p_p_state=maximized&p_p_mode=view&_estatsearchportlet_WAR_estatsearchportlet_action=search&text=lfst_r_lfe2emprt)","employ_pop","number people employed","liv_national_employ_bhi2015.csv",,,"","",,"rgn_id",,,"year","employ_pop",,TRUE,2000,2014,823463.1,70965000,FALSE,,,,42,FALSE
 "ICO","ico_status","ICO spp status based upon fish and mammals redlist threat level from HELCOM","HELCOM species distributions and threat level based upon IUCN red list criteria.  Data sources:  - [HELCOM](http://www.helcom.fi/baltic-sea-trends/biodiversity/red-list-of-species)","score","status score","ico_status_bhi2015.csv",,,"","",,"rgn_id",,,"year","score",,TRUE,2014,2014,0.716666666666667,0.757142857142857,TRUE,,,,42,FALSE
 "LSP","lsp_trend","Trend of LSP","","score","trend score","lsp_trend_bhi2015.csv",,,"","",,"rgn_id",,,"year","score",,TRUE,2014,2014,0,0.1,TRUE,,,,42,FALSE
 "LSP","lsp_status","Status scores of LSP","Status calcluated","score","status score","lsp_status_by_rgn_bhi2015.csv",,,"","",,"rgn_id",,,"year","score",,TRUE,2014,2014,8.9,100,FALSE,,,,42,FALSE
@@ -107,8 +127,6 @@
 "HAB resilienceSPP resilience","g_tourism","Management of tourism to preserve biodiversity","Survey responses by country to the Convention on Biological Diversity (CBD) Third National Report: tourism related questions","resilience score","scaled 0-1","g_tourism_gl2018.csv",,,"g_tourism","~/github/ohi-global/eez/layers/g_tourism.csv",,"rgn_id",,,,"resilience.score",,TRUE,,,0.777777777777833,0.777777777777833,TRUE,,,,42,FALSE
 "ICO","ico_spp_iucn_status","IUCN extinction risk","IUCN extinction risk category for iconic species located within each region","category","IUCN risk category","ico_spp_iucn_status_gl2018.csv",,,"ico_spp_iucn_status","~/github/ohi-global/eez/layers/ico_spp_iucn_status.csv",,"rgn_id",,"sciname","year",,"category",TRUE,1992,2018,,,FALSE,"iucn_sid,eval_yr",,3402,42,
 "ICO resilienceNP resilienceSPP resilience","g_cites","CITES signatories","Convention on International Trade in Endangered Species of Wild Fauna and Flora (CITES) signatories","resilience_score","0 or 1","g_cites_gl2018.csv",,,"g_cites","~/github/ohi-global/eez/layers/g_cites.csv",,"rgn_id",,,"year","resilience_score",,TRUE,2010,2017,1,1,TRUE,,,,42,FALSE
-"LIV","liv_status","Livelihood status scores","Calculated using adjusted job and wage data in several marine sectors  (data not updated since 2013)","status","status 0-100","liv_status_gl2018.csv",,,"liv_status","~/github/ohi-global/eez/layers/liv_status.csv",,"rgn_id",,,"year","status",,TRUE,2012,2013,100,100,FALSE,,,,42,FALSE
-"LIV","liv_trend","Livelihood trend scores","Calculated using change in adjusted job and wage data in several marine sectors  (data not updated since 2013)","trend","trend -1 to 1","liv_trend_gl2018.csv",,,"liv_trend","~/github/ohi-global/eez/layers/liv_trend.csv",,"rgn_id",,,"year","trend",,TRUE,2012,2013,0.9,0.94,TRUE,,,,42,FALSE
 "LIV resilience","li_sector_evenness","Economic diversity","Sector evenness based on Shannon's Diversity Index calculated on the proportion of jobs in each sector as a measure of economic diversity","resilience score","scaled 0-1","li_sector_evenness_gl2018.csv",,,"li_sector_evenness","~/github/ohi-global/eez/layers/li_sector_evenness.csv",,"rgn_id",,,,"resilience.score",,TRUE,,,0.166363745579,0.166363745579,TRUE,,,,42,FALSE
 "LSP","lsp_prot_area_inland1km","Inland coastal protected areas","Protected areas located 1 km inland","a_prot_1km","km2","lsp_prot_area_inland1km_gl2018.csv",,,"lsp_prot_area_inland1km","~/github/ohi-global/eez/layers/lsp_prot_area_inland1km.csv",,"rgn_id",,,"year","a_prot_1km",,TRUE,2000,2018,1607.75,2175.5,FALSE,,,,42,FALSE
 "LSP","lsp_prot_area_offshore3nm","Offshore coastal protected areas","Protected areas located 3nm offshore","a_prot_3nm","km2","lsp_prot_area_offshore3nm_gl2018.csv",,,"lsp_prot_area_offshore3nm","~/github/ohi-global/eez/layers/lsp_prot_area_offshore3nm.csv",,"rgn_id",,,"year","a_prot_3nm",,TRUE,2000,2018,5058,7896,FALSE,,,,42,FALSE
