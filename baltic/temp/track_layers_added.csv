@@ -54,3 +54,15 @@ eco_trend,eco_trend_scores_bhi2015.csv,2019-05-15,TRUE,ECO
 res_reg_nec,res_reg_nec_bhi2015.csv,2019-05-16,TRUE,ECO
 le_gdp_country,le_gdp_country_bhi2015.csv,2019-05-16,FALSE,LE
 le_gdp_region,le_gdp_region_bhi2015.csv,2019-05-16,FALSE,LE
+cw_eut_status,cw_eut_status_score_bhi2015.csv,2019-05-16,TRUE,EUT
+cw_eut_trend,cw_eut_trend_score_bhi2015.csv,2019-05-16,TRUE,EUT
+cw_trash_status_scores,cw_trash_status_scores_bhi2015.csv,2019-05-16,TRUE,TRA
+cw_tra_trend_scores,cw_tra_trend_scores_bhi2015.csv,2019-05-16,TRUE,TRA
+cw_con_dioxin_status,cw_con_dioxin_status_bhi2015.csv,2019-05-16,TRUE,CON
+cw_con_dioxin_trend,cw_con_dioxin_trend_bhi2015.csv,2019-05-16,TRUE,CON
+cw_con_ices6_status,cw_con_ices6_status_bhi2015.csv,2019-05-16,TRUE,CON
+cw_con_ices6_trend,cw_con_ices6_trend_bhi2015.csv,2019-05-16,TRUE,CON
+cw_con_penalty,cw_con_penalty_bhi2015.csv,2019-05-16,TRUE,CON
+cw_con_pfos_status,cw_con_pfos_status_bhi2015.csv,2019-05-16,TRUE,CON
+cw_con_pfos_trend,cw_con_pfos_trend_bhi2015.csv,2019-05-16,TRUE,CON
+res_reg_pop,res_reg_pop_bhi2015.csv,2019-05-16,TRUE,CON
