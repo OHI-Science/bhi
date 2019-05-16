@@ -122,7 +122,7 @@ convert_repo <- function(new_repo, archive_filepath,
         lyr_w_yr <- layer_archive_version
         ## parse layer data to see what years should go into scenario_data_years table
         y <- layer_archive_version$year %>% unique() %>% sort() # years we can have in scenario_data_years.csv as data years
-        cat("years found in layer:\n", paste(y, collapse = "\n"), sep = "")
+        cat("years found in layer:\n", paste(c(y, "\n"), collapse = "\n"), sep = "")
       }
 
       if(!file.exists(file.path(new_repo, "layers", fn))){
@@ -240,7 +240,7 @@ convert_repo <- function(new_repo, archive_filepath,
 
   ## FINAL STEPS ----
   ## 1. remove from layers folder, layer.csv, and scenario_data_years everything not used by functions.R
-  ## 2.
+  ## 2. update pressure and resilience categories tables
   ## 3. check pressure, resilience, and layers tables after finishing all reconfiguration
   prs_tab0 <- read_csv(file.path(archive_filepath, "conf", "pressures_matrix.csv"))
   chk_prs <- compare_tabs(
