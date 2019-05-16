@@ -11,7 +11,7 @@ library(broom)
 #' @param scenario_yrs which years scores are to be calculated for
 #' @param scores_path the directory where to save the scores.csv, by default in the 'baltic' (assessment) folder
 #'
-#' @return
+#' @return OHI scores
 
 calculate_scores <- function(assessment_path, scenario_yrs, scores_path = "."){
 
@@ -41,4 +41,5 @@ calculate_scores <- function(assessment_path, scenario_yrs, scores_path = "."){
                    na = "")
 
   setwd(currentwd)
+  return(scorelist)
 }
