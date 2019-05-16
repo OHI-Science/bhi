@@ -1,6 +1,10 @@
 
 CS <- function(layers){
 
+  ## From code in 'functions.R CS' of v2015 BHI assessment, see bhi-1.0-archive github repo
+  ## Revised to use multi-year framework, incorporating scenario_data_years
+  ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
+
   scen_year <- layers$data$scenario_year
 
   cs_status <- AlignDataYears(layer_nm="cs_status", layers_obj=layers) %>%
