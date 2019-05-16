@@ -6,6 +6,7 @@ convert_repo <- function(new_repo, archive_filepath,
   setwd(archive_filepath)
   archive_layers <- ohicore::Layers("layers.csv", "layers") # layers object created from archive
   archive_layerscsv <- read_csv(file.path(archive_filepath, "layers.csv"), col_types = cols())
+  previous_scores <- read_csv(file.path(archive_filepath, "scores.csv")) %>% mutate(year = 2014)
   setwd(new_repo)
 
   goal_code_list_archive <- funsR_goals_list(file.path(archive_filepath, "conf", "functions.R")) %>% str_to_lower()
@@ -13,7 +14,7 @@ convert_repo <- function(new_repo, archive_filepath,
 
 
   ## WORK GOAL BY GOAL ----
-  for(consider_goal in goal_code_list){
+  for(consider_goal in goal_code_list){ # consider_goal = goal_code_list[10]
 
     cat(paste("\n\nNOW CONVERTING GOAL: ", str_to_upper(consider_goal), "\n\n"))
 
@@ -87,17 +88,9 @@ convert_repo <- function(new_repo, archive_filepath,
 
 
     ## WORK LAYER BY LAYER ----
-    for(consider_lyr_nm in goal_specific_layers){ # consider_lyr_nm = goal_specific_layers[8]
+    for(consider_lyr_nm in goal_specific_layers){ # consider_lyr_nm = goal_specific_layers[3]
 
       cat(sprintf("incorporating and/or reviewing '%s' layer for '%s' goal\n\n", consider_lyr_nm, consider_goal))
-
-      consider_layer <- archive_layers$data[[consider_lyr_nm]] # View(consider_layer)
-      if("year" %in% names(consider_layer)){
-        y <- consider_layer$year %>% unique() %>% sort() # years we can have in scenario_data_years.csv as data years
-        cat("years found in layer:\n", paste(y, collapse = "\n"), sep = "")
-      } else {
-        message("no year column; adding dummy year col only for purpose of transitioning repo, review during data prep!")
-      }
 
       ## REPLACE WITH ARCHIVED LAYER VERSION ----
       ## check filename (fn) to use, and whether it already exists in repo
@@ -111,19 +104,26 @@ convert_repo <- function(new_repo, archive_filepath,
         fn <- fn[1]
       }
       cat(sprintf("filename for '%s' layer found in archive layers folder: %s\n", consider_lyr_nm, fn))
+      layer_archive_version <- read_csv(file.path(archive_filepath, "layers", fn),
+                                        col_types = cols()) # archive_layers$data[[consider_lyr_nm]]
 
-      ## IF NEED TO ADD YEAR COLUMN...
+      ## IF NO YEAR COLUMN IN LAYER...
       ## adding dummy year cols only for purpose of transitioning repo!
       ## especially for trend, will be more carefully reviewed when doing actual data prep!
       ## remember to review how years are actually included when doing actual data prep!
 
-      layer_archive_version <- read_csv(file.path(archive_filepath, "layers", fn),
-                                        col_types = cols())
       if(!"year" %in% names(layer_archive_version)){
         yr_col_added <- layer_archive_version %>%
           mutate(year = 2014) # temporary for setting up repo!
         lyr_w_yr <- yr_col_added
-      } else { lyr_w_yr <- layer_archive_version }
+        message("no year column; adding dummy year col only for purpose of transitioning repo, review during data prep!")
+        y <- dummy_data_yr
+      } else {
+        lyr_w_yr <- layer_archive_version
+        ## parse layer data to see what years should go into scenario_data_years table
+        y <- layer_archive_version$year %>% unique() %>% sort() # years we can have in scenario_data_years.csv as data years
+        cat("years found in layer:\n", paste(y, collapse = "\n"), sep = "")
+      }
 
       if(!file.exists(file.path(new_repo, "layers", fn))){
         write_csv(lyr_w_yr, file.path(new_repo, "layers", fn))
@@ -156,69 +156,53 @@ convert_repo <- function(new_repo, archive_filepath,
       track_layers_added <- read_csv(
         file.path(new_repo, "temp", "track_layers_added.csv"),
         col_types = cols()) %>%
-        rbind(track_layers_entry)
+        rbind(track_layers_entry) # View(track_layers_added)
       write_csv(track_layers_added, file.path(new_repo, "temp", "track_layers_added.csv"))
 
 
       ## UPDATE SCENARIO_DATA_YEARS ----
       ## need to recreate rm_lyrs and incl_new_lyrs with each layer reviewed
-      ## since otherwise will overwrite all goal-related layer rows of scenario_data_years tab!
-      ## keep all the 'rm_lyrs' until adding/reviewing the last layer of the goal
-
+      ## since otherwise will overwrite goal-related layer rows of scenario_data_years tab!
       conf <- ohicore::Conf("conf")
       current_conf_scen_data_yrs <- conf$scenario_data_years
-      r <- ifelse(
-        str_sub(consider_lyr_nm, 1, str_length(consider_goal)) == consider_goal,
-        paste0(consider_goal, "_.*"),
-        consider_lyr_nm
-      )
+      l <- paste(c(sprintf("%s_.*", consider_goal), goal_specific_layers), collapse = "|")
 
       rm_lyrs <- setdiff(
         current_conf_scen_data_yrs$layer_name %>%
-          grep(pattern = r, value = TRUE) %>% unique(),
+          grep(pattern = l, value = TRUE) %>%
+          unique(),
         names(archive_layers$data) %>%
-          grep(pattern = r, value = TRUE))
+          grep(pattern = l, value = TRUE))
 
-      incl_new_lyrs <- setdiff(
-        names(archive_layers$data) %>%
-          grep(pattern = r,
-               value = TRUE),
-        current_conf_scen_data_yrs$layer_name %>%
-          grep(pattern = r, value = TRUE) %>% unique())
+      keep_conf_scen_data_yrs <- current_conf_scen_data_yrs %>%
+        filter(is.na(str_match(layer_name, paste(c(rm_lyrs, "none"), collapse = "|"))))
 
-      if(length(incl_new_lyrs) == 1){
-        keep_conf_scen_data_yrs <- current_conf_scen_data_yrs %>%
-          filter(is.na(str_match(layer_name, paste(c(rm_lyrs, "none"), collapse = "|"))))
-      } else { keep_conf_scen_data_yrs <- current_conf_scen_data_yrs }
+      ## have to do updates by layer -not all together- since years included in datasets vary
+      ## use scenario_data_align when layer already has year information & enough years, else scenario_data_include()
+      if("year" %in% names(layer_archive_version) & length(y) >= (length(scenario_yrs)+4)){
 
-      if(length(incl_new_lyrs) != 0){
-        ## have to do scenario_data_year updates by layer not all together, since years in datasets vary
-        if("year" %in% names(layer_archive_version)){
-          ## use scenario_data_align() when layer already has year information
-          tmp <- read_csv(file.path(new_repo, "layers", fn), col_types = ) %>%
-            group_by(rgn_id) %>%
-            summarise(n = n(),
-                      min_yr = min(year),
-                      max_yr = max(year)) # View(tmp)
+        tmp <- read_csv(file.path(new_repo, "layers", fn), col_types = cols()) %>%
+          group_by(rgn_id) %>%
+          summarise(n = n(), min_yr = min(year), max_yr = max(year)) # View(tmp)
 
-          update_scen_data_yrs <- scenario_data_align(
-            scen_data_years = keep_conf_scen_data_yrs,
-            lyr_name = consider_lyr_nm,
-            data_yrs = max(tmp$min_yr):min(tmp$max_yr),
-            scen_yrs = min(scenario_yrs-5):max(scenario_yrs), # need more years for trend calculations; accomodating different num yrs used in trend calcs?
-            approach = "timestep"
-          )
-        } else {
-          ## otherwise use scenario_data_include() function
-          update_scen_data_yrs <- scenario_data_include(
-            scen_data_years = keep_conf_scen_data_yrs,
-            scen_yrs = min(scenario_yrs-5):max(scenario_yrs),
-            new_lyrs = incl_new_lyrs) %>%
-            mutate(data_year = ifelse(is.na(data_year), dummy_data_yr, data_year))
-        }
-        write_csv(update_scen_data_yrs, file.path(new_repo, "conf", "scenario_data_years.csv"))
-      }
+        update_scen_data_yrs <- scenario_data_align(
+          scen_data_years = keep_conf_scen_data_yrs,
+          lyr_name = consider_lyr_nm,
+          data_yrs = y,
+          scen_yrs = min(scenario_yrs-4):max(scenario_yrs),
+          approach = "timestep"
+        )
+        ## issue if end up with NA data_years... needs fixing...
 
+      } else {
+        update_scen_data_yrs <- scenario_data_include(
+          scen_data_years = keep_conf_scen_data_yrs,
+          scen_yrs = min(scenario_yrs-4):max(scenario_yrs),
+          new_lyrs = consider_lyr_nm) %>%
+          mutate(data_year = ifelse(is.na(data_year), dummy_data_yr, data_year))
+      } # View(filter(update_scen_data_yrs, layer_name == consider_lyr_nm))
+
+      write_csv(update_scen_data_yrs, file.path(new_repo, "conf", "scenario_data_years.csv"))
     }
 
     ## overwrite pressure and resilience matrices before moving on to the next goal/subgoal
@@ -226,8 +210,7 @@ convert_repo <- function(new_repo, archive_filepath,
     write_csv(int_resilience_mat, file.path(new_repo, "conf", "resilience_matrix.csv"))
 
     ## TRANSITION UPDATED GOAL FUNCTION TO FUNCTIONS.R ----
-    ## for troubleshooting, pause here and go back to goal functions subscript to continue running model line-by-line...
-    ## copy goal subscript to functions.R main script
+    ## for troubleshooting, pause here and go to goal functions subscript to run model line-by-line...
 
     old_funs <- grep(list.files(original_funs_dir, full.names = TRUE) %>%
                        str_extract(pattern = "v2015/.*R"),
@@ -239,6 +222,7 @@ convert_repo <- function(new_repo, archive_filepath,
                      pattern = sprintf(".*%s.*R", consider_goal),
                      value = TRUE)
 
+    ## copy goal subscript to functions.R main script
     if(length(new_funs) != 0){
       funs_to_configure <- rbind(as.data.frame(old_funs),
                                  as.data.frame(new_funs)) %>%
@@ -247,14 +231,17 @@ convert_repo <- function(new_repo, archive_filepath,
     } else {
       stop(sprintf("new function for goal %s not found...", str_to_upper(consider_goal)))
     }
+
+    ## check resulting scores
+    intermediate_scores <- calculate_scores(new_repo, 2015) # View(intermediate_scores)
+    chks <- compare_scores(intermediate_scores, 2015, previous_scores, 2015, dim = "score", goal = "Index")
+    chks[[1]]
   }
 
-  ## CHECKS AFTER FINISHING ALL RECONFIGURATION ----
-  new_scores <- read_csv(file.path(new_repo, "scores.csv")) %>% mutate(year = 2014)
-  previous_scores <- read_csv(file.path(archive_filepath, "scores.csv")) %>% mutate(year = 2014)
-  chks <- compare_scores(new_scores, 2015, previous_scores, 2015, dim = "score", goal = "Index")
-  chks[[1]]
-
+  ## FINAL STEPS ----
+  ## 1. remove from layers folder, layer.csv, and scenario_data_years everything not used by functions.R
+  ## 2.
+  ## 3. check pressure, resilience, and layers tables after finishing all reconfiguration
   prs_tab0 <- read_csv(file.path(archive_filepath, "conf", "pressures_matrix.csv"))
   chk_prs <- compare_tabs(
     prs_tab0, int_pressure_mat, key_row_var = "goal",
@@ -266,7 +253,7 @@ convert_repo <- function(new_repo, archive_filepath,
     check_cols = setdiff(names(res_tab0), c("goal", "element", "element_name"))
   )
 
-  ## wrap up the function, return results
+  ## wrap up the function, return some results
   return(list(updated_layers = updated_layers,
               track_layers_added = track_layers_added,
               pressure_mat = int_pressure_mat,
