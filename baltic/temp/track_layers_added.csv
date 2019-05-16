@@ -52,3 +52,5 @@ liv_status,liv_status_scores_bhi2015.csv,2019-05-15,FALSE,LIV
 eco_status,eco_status_scores_bhi2015.csv,2019-05-15,TRUE,ECO
 eco_trend,eco_trend_scores_bhi2015.csv,2019-05-15,TRUE,ECO
 res_reg_nec,res_reg_nec_bhi2015.csv,2019-05-16,TRUE,ECO
+le_gdp_country,le_gdp_country_bhi2015.csv,2019-05-16,FALSE,LE
+le_gdp_region,le_gdp_region_bhi2015.csv,2019-05-16,FALSE,LE
