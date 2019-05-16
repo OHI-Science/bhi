@@ -14,17 +14,18 @@ BD <- function(layers){
 
   ## call status and trend layers ----
   status <- AlignDataYears(layer_nm="bd_spp_status", layers_obj=layers) %>%
-    mutate(score = round(score*100)) %>%
+    dplyr::mutate(score = round(score*100),
+           dimension = as.character(dimension)) %>%
     dplyr::rename(region_id = rgn_id, year = bd_spp_status_year)
 
   trend <- AlignDataYears(layer_nm="bd_spp_trend", layers_obj=layers) %>%
     dplyr::rename(region_id = rgn_id, year = bd_spp_trend_year) %>%
-    mutate(dimension = "trend")
+    dplyr::mutate(dimension = "trend")
 
   scores <- dplyr::bind_rows(status, trend) %>%
-    mutate(goal = "BD") %>%
-    filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id, score, dimension)
+    dplyr::mutate(goal = "BD") %>%
+    dplyr::filter(scenario_year == scen_year) %>%
+    dplyr::select(region_id, goal, dimension, score)
 
   return(scores)
 
