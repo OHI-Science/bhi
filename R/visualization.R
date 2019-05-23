@@ -865,10 +865,10 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
   ## row formatter to include arrow icons ----
   goals_formatter <- formatter("span", style = x ~ style(
         color = ifelse(is.na(x), "white",
-                       ifelse(x < thresholds[1], "darkcyan",
-                              ifelse(x > thresholds[2], "firebrick", "gainsboro")))),
-        x ~ icontext(ifelse(x < thresholds[1], "circle-arrow-up",
-                            ifelse(x > thresholds[2], "circle-arrow-down", "circle-arrow-right")),
+                       ifelse(x < thresholds[1], "firebrick",
+                              ifelse(x > thresholds[2], "darkcyan", "gainsboro")))),
+        x ~ icontext(ifelse(x < thresholds[1], "circle-arrow-down",
+                            ifelse(x > thresholds[2], "circle-arrow-up", "circle-arrow-right")),
                      round(x, digits = 1))
   )
 
