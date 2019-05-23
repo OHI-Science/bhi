@@ -846,7 +846,7 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
     select(-dimension) %>%
     rename(BHI_ID = region_id)
 
-  table_df <- readr::read_csv(file.path(dir_bhi, "spatial", "bhi_basin_country_lookup.csv")) %>%
+  table_df <- readr::read_csv(file.path(dir_bhi, "spatial", "bhi_basin_country_lookup.csv"), col_types = cols()) %>%
     dplyr::right_join(scores, by = "BHI_ID") %>%
     mutate(score = ifelse(score == "NaN", NA, score)) %>%
     group_by(Subbasin, goal) %>%
@@ -856,7 +856,9 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
     ) %>%
     mutate(basin_means = ifelse(basin_means == "NaN", NA, basin_means)) %>%
     tidyr::spread(key = goal, value = basin_means) %>%
-    left_join(read_csv(file.path(dir_spatial, "subbasins_ordered.csv")), by = "subbasin") %>%
+    left_join(read_csv(file.path(dir_spatial, "subbasins_ordered.csv"), col_types = cols()) %>%
+                rename(Subbasin = subbasin),
+              by = "Subbasin") %>%
     arrange(order) %>%
     select(-CS, -order)
 
@@ -889,11 +891,11 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
   }
   if(!is.na(save)){
     save_loc <- save
-    path <- htmltools::html_print(as.htmlwidget(tab, width = "48%", height = NULL),
+    path <- htmltools::html_print(as.htmlwidget(tab, width = "100%", height = NULL),
                                   background = "white", viewer = NULL)
     url <- paste0("file:///", gsub("\\\\", "/", normalizePath(path)))
+    webshot::webshot(url, file = save, selector = ".formattable_widget", delay = 0.2)
   }
-  webshot::webshot(url, file = save, selector = ".formattable_widget", delay = 0.2)
 
   return(tab)
 }
