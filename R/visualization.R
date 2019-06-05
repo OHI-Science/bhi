@@ -1,17 +1,18 @@
 ## Libraries
 source(file.path(here::here(), "R", "common.R"))
 library(ggplot2)
-library(ggthemes)
 library(ggrepel)
+library(ggthemes)
 library(grDevices)
 library(circlize) # https://jokergoo.github.io/circlize_book/book/
-library(dbplot)
 library(htmlwidgets)
 library(magick)
-library(DT)
+# library(DT)
 library(webshot) # webshot::install_phantomjs()
 library(htmltools)
 library(formattable)
+# library(dbplot)
+
 
 
 ## Functions
@@ -430,16 +431,16 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
       scores_range = list(range(score, na.rm = TRUE) %>% round(digits = 1))
     ) %>%
     ungroup()
-  if(rgn_id != 0){
-    rgn_scores_summary <- rgn_scores_summary %>%
-      select(-scores_range)
+  if(!is.na(rgn_id)){
+    if(rgn_id != 0){
+      rgn_scores_summary <- rgn_scores_summary %>%
+        select(-scores_range)
+    }
+    rgn_scores <- dplyr::filter(rgn_scores, region_id == rgn_id)
+    unique_rgn <- unique(rgn_scores$region_id)
   }
   if(length(unlist(rgn_scores_summary$missing_rgn)) != 0 & isTRUE(include_ranges)){
     message("note: some missing regions for some goals... rgn_scores must be full scores.csv if wanting to include ranges!")
-  }
-  if(!is.na(rgn_id)){
-    rgn_scores <- dplyr::filter(rgn_scores, region_id == rgn_id)
-    unique_rgn <- unique(rgn_scores$region_id)
   }
 
   ## fis and mar ----
@@ -708,7 +709,7 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
 
           ## curved labels created with 'circlize' package
           circos.clear()
-          circos.par("track.height" = 0.1, cell.padding = c(0,0,0,0), "clock.wise" = FALSE, start.degree = 5)
+          circos.par("track.height" = 0.1, cell.padding = c(0,0,0,0), "clock.wise" = FALSE, start.degree = 45)
           circos.initialize(factors = circ_df$order_calculate, x = circ_df$range)
 
           circos.track(factors = circ_df$order_calculate, y = circ_df$range, panel.fun = function(x, y){
@@ -842,46 +843,85 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
                               thresholds = c(-0.1, 0.1), include_vals, save = NA){
 
   ## wrangle scores with basin info into form for table ----
-  scores <- filter_score_data(rgn_scores, dims = dim, years = plot_year)[[1]] %>%
+  dim_df <- filter_score_data(rgn_scores, dims = dim, years = plot_year)[[1]] %>%
     select(-dimension) %>%
-    rename(BHI_ID = region_id)
+    rename(BHI_ID = region_id) %>%
+    filter(goal != "Index")
+  status_df <- filter_score_data(rgn_scores, dims = "status", years = plot_year)[[1]] %>%
+    select(-dimension) %>%
+    rename(BHI_ID = region_id) %>%
+    filter(goal != "Index")
 
-  table_df <- readr::read_csv(file.path(dir_bhi, "spatial", "bhi_basin_country_lookup.csv"), col_types = cols()) %>%
-    dplyr::right_join(scores, by = "BHI_ID") %>%
-    mutate(score = ifelse(score == "NaN", NA, score)) %>%
-    group_by(Subbasin, goal) %>%
-    summarize(
-      basin_means = mean(score, na.rm = TRUE) %>%
-        round(digits = 4)
-    ) %>%
-    mutate(basin_means = ifelse(basin_means == "NaN", NA, basin_means)) %>%
-    tidyr::spread(key = goal, value = basin_means) %>%
-    left_join(read_csv(file.path(dir_spatial, "subbasins_ordered.csv"), col_types = cols()) %>%
-                rename(Subbasin = subbasin),
-              by = "Subbasin") %>%
-    arrange(order) %>%
-    select(-CS, -order)
+  area_wgt_mean <- function(df){
+    readr::read_csv(file.path(dir_bhi, "spatial", "bhi_basin_country_lookup.csv"), col_types = cols()) %>%
+      dplyr::right_join(df, by = "BHI_ID") %>%
+      mutate(score = ifelse(score == "NaN", NA, score)) %>%
+      group_by(Subbasin, goal) %>%
+      summarize(
+        basin_means = weighted.mean(score, Area_km2, na.rm = TRUE) %>%
+          round(digits = 4)
+      ) %>%
+      filter(!is.na(Subbasin)) %>%
+      mutate(basin_means = ifelse(basin_means == "NaN", NA, basin_means)) %>%
+      tidyr::spread(key = goal, value = basin_means) %>%
+      left_join(read_csv(file.path(dir_spatial, "subbasins_ordered.csv"), col_types = cols()) %>%
+                  rename(Subbasin = subbasin),
+                by = "Subbasin") %>%
+      arrange(order) %>%
+      select(-CS, -order) %>%
+      ungroup()
+  }
+  table_df <- area_wgt_mean(dim_df)
+  formatting_df <- area_wgt_mean(status_df)
 
   ## row formatter to include arrow icons ----
   goals_formatter <- formatter("span", style = x ~ style(
-        color = ifelse(is.na(x), "white",
-                       ifelse(x < thresholds[1], "firebrick",
-                              ifelse(x > thresholds[2], "darkcyan", "gainsboro")))),
-        x ~ icontext(ifelse(x < thresholds[1], "circle-arrow-down",
-                            ifelse(x > thresholds[2], "circle-arrow-up", "circle-arrow-right")),
-                     round(x, digits = 1))
-  )
+    color = ifelse(is.na(x), "white",
+                   ifelse(x < thresholds[1], "firebrick",
+                          ifelse(x > thresholds[2], "darkcyan", "gainsboro")))),
+    x ~ icontext(ifelse(x < thresholds[1], "circle-arrow-down",
+                        ifelse(x > thresholds[2], "circle-arrow-up", "circle-arrow-right")),
+                 round(x, digits = 2)))
+
+  general_formatter <- formatter("span", style = x ~ style(
+    color = ifelse(is.na(x), "white",
+                   ifelse(x < thresholds[1], "firebrick",
+                          ifelse(x > thresholds[2], "darkcyan", "gainsboro")))),
+    x ~ icontext(ifelse(x < thresholds[1], "circle-arrow-down",
+                        ifelse(x > thresholds[2], "circle-arrow-up", "circle-arrow-right")),
+                 round(x, digits = 2)))
+
+  format_by_goal <- function(g){
+    formatter("span", style = x ~ style(
+      color = ifelse(is.na(x), "white", ifelse(x < formatting_df[, g], "firebrick", "darkcyan"))),
+      x ~ icontext(ifelse(x < formatting_df[, g], "circle-arrow-down", "circle-arrow-up"), round(x, digits = 2)))
+  }
+
 
   ## create the table ----
   tab <- formattable(table_df, align = c("l", rep("c", ncol(table_df)-1)), list(
     `Subbasin` = formatter("span", style = ~ style(color = "grey")),
-    `AO` = goals_formatter, `BD` = goals_formatter, `CON` = goals_formatter,
-    `CW` = goals_formatter, `ECO` = goals_formatter, `EUT` = goals_formatter,
-    `FIS` = goals_formatter, `FP` = goals_formatter, `ICO` = goals_formatter,
-    `LE` = goals_formatter, `LIV` = goals_formatter, `LSP` = goals_formatter,
-    `MAR` = goals_formatter, `NP` = goals_formatter, `SP` = goals_formatter,
-    `TR` = goals_formatter, `TRA` = goals_formatter
+    `AO` = general_formatter, `BD` = general_formatter, `CON` = general_formatter,
+    `CW` = general_formatter, `ECO` = general_formatter, `EUT` = general_formatter,
+    `FIS` = general_formatter, `FP` = general_formatter, `ICO` = general_formatter,
+    `LE` = general_formatter, `LIV` = general_formatter, `LSP` = general_formatter,
+    `MAR` = general_formatter, `NP` = general_formatter, `SP` = general_formatter,
+    `TR` = general_formatter, `TRA` = general_formatter
   ))
+
+  tab <- formattable(table_df, align = c("l", rep("c", ncol(table_df)-1)), list(
+    `Subbasin` = formatter("span", style = ~ style(color = "grey")),
+    `AO` = format_by_goal("AO"), `BD` = format_by_goal("BD"), `CON` = format_by_goal("CON"),
+    `CW` = format_by_goal("CW"), `ECO` = format_by_goal("ECO"), `EUT` = format_by_goal("EUT"),
+    `FIS` = format_by_goal("FIS"), `FP` = format_by_goal("FP"), `ICO` = format_by_goal("ICO"),
+    `LE` = format_by_goal("LE"), `LIV` = format_by_goal("LIV"), `LSP` = format_by_goal("LSP"),
+    `MAR` = format_by_goal("MAR"), `NP` = format_by_goal("NP"), `SP` = format_by_goal("SP"),
+    `TR` = format_by_goal("TR"), `TRA` = format_by_goal("TRA")
+  ))
+  # for(g in setdiff(colnames(table_df), "Subbasin")){
+  #   print(data.frame(table_df$Subbasin, table_df[,g], formatting_df[,g], table_df[,g] >= formatting_df[,g]))
+  # }
+
 
   ## save table ----
   ## must have phantomjs installed- can do this with webshot::install_phantomjs()
