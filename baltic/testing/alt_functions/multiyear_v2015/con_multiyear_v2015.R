@@ -25,7 +25,7 @@ CON <- function(layers){
   ## penalty factor ----
   penalty <- AlignDataYears(layer_nm="cw_con_penalty", layers_obj=layers) %>%
     dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(-layer, region_id = rgn_id, penalty_factor)
+    dplyr::select(region_id = rgn_id, penalty_factor)
 
 
   ## collect and join 3 CON indicator datasets ----
@@ -84,10 +84,10 @@ CON <- function(layers){
   ## average CON indicators for status and trend ----
   cw_con <- cw_con %>%
     dplyr::select(-indicator) %>%
-    group_by(region_id, dimension)%>%
-    summarise(score = mean_NAall(score))%>% # if there is an NA, skip over now, if all are NA, NA not NaN returned
+    group_by(region_id, dimension) %>%
+    summarise(score = mean_NAall(score)) %>% # if there is an NA, skip over now, if all are NA, NA not NaN returned
     ungroup() %>%
-    mutate(subcom = "CON")%>%
+    mutate(subcom = "CON") %>%
     arrange(dimension, region_id)
 
   ## incorporate penalty factor to status scores ----

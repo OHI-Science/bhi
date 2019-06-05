@@ -4,8 +4,7 @@ SP <- function(layers, scores){
   scen_year <- layers$data$scenario_year
 
   ## From code in 'functions.R SP' of v2015 BHI assessment, see bhi-1.0-archive github repo
-  ## Revised to use multi-year framework, incorporating scenario_data_years
-  ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
+  ## Revised to use multi-year framework, incorporating scenario_data_years and layers$data$scenario_year
 
   ## to calculate the four SP dimesions, average those dimensions for ICO and LSP
 

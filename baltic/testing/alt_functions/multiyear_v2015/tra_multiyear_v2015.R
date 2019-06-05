@@ -12,15 +12,15 @@ TRA <- function(layers){
   tra_status <- AlignDataYears(layer_nm="cw_tra_status", layers_obj=layers) %>%
     dplyr::filter(scenario_year == scen_year) %>%
     dplyr::mutate(dimension = "status") %>%
-    dplyr::rename(region_id = rgn_id)
+    dplyr::rename(region_id = rgn_id, year = cw_tra_status_year)
 
   tra_trend <- AlignDataYears(layer_nm="cw_tra_trend", layers_obj=layers) %>%
     dplyr::filter(scenario_year == scen_year) %>%
     dplyr::mutate(dimension = "trend") %>%
-    dplyr::rename(region_id = rgn_id)
+    dplyr::rename(region_id = rgn_id, year = cw_tra_trend_year)
 
   scores <- rbind(tra_status, tra_trend) %>%
-    mutate(goal = "ECO") %>%
+    mutate(goal = "TRA") %>%
     select(region_id, goal, dimension, score)
 
   return(scores)
