@@ -10,11 +10,11 @@ convert_repo <- function(new_repo, archive_filepath,
   setwd(new_repo)
 
   goal_code_list_archive <- funsR_goals_list(file.path(archive_filepath, "conf", "functions.R")) %>% str_to_lower()
-  goal_code_list <- funsR_goals_list(file.path(new_repo, "conf", "functions.R")) %>% str_to_lower()
+  goal_code_list_new <- funsR_goals_list(file.path(new_repo, "conf", "functions.R")) %>% str_to_lower()
 
 
   ## WORK GOAL BY GOAL ----
-  for(consider_goal in goal_code_list){ # consider_goal = goal_code_list[10]
+  for(consider_goal in goal_code_list_archive){ # consider_goal = goal_code_list_archive[10]
 
     cat(paste("\n\nNOW CONVERTING GOAL: ", str_to_upper(consider_goal), "\n\n"))
 
@@ -99,13 +99,20 @@ convert_repo <- function(new_repo, archive_filepath,
       fn <- str_match(archive_layerscsv$filename, paste0(consider_lyr_nm, ".*.csv")) %>%
         lapply(function(x){x[!is.na(x)]}) %>%
         unlist()
-      if(length(fn) != 1){
-        message("more than one layer found in archive, using the first one found")
-        fn <- fn[1]
-      }
-      cat(sprintf("filename for '%s' layer found in archive layers folder: %s\n", consider_lyr_nm, fn))
-      layer_archive_version <- read_csv(file.path(archive_filepath, "layers", fn),
-                                        col_types = cols()) # archive_layers$data[[consider_lyr_nm]]
+
+      if(length(fn) >= 1){
+        if(length(fn) > 1){
+          message("more than one layer found in archive, using the first one found")
+          fn <- fn[1]
+        } else {
+          cat(sprintf("filename for '%s' layer found in archive layers folder: %s\n",
+                      consider_lyr_nm, fn))
+        }
+        layer_archive_version <- read_csv(file.path(archive_filepath, "layers", fn),
+                                          col_types = cols())
+        # layer_archive_version <- archive_layers$data[[consider_lyr_nm]]
+      } else {stop(sprintf("no apparent matching layer found in archive for '%s'", consider_lyr_nm)) }
+
 
       ## IF NO YEAR COLUMN IN LAYER...
       ## adding dummy year cols only for purpose of transitioning repo!
@@ -114,7 +121,7 @@ convert_repo <- function(new_repo, archive_filepath,
 
       if(!"year" %in% names(layer_archive_version)){
         yr_col_added <- layer_archive_version %>%
-          mutate(year = 2014) # temporary for setting up repo!
+          mutate(year = dummy_data_yr) # temporary for setting up repo!
         lyr_w_yr <- yr_col_added
         message("no year column; adding dummy year col only for purpose of transitioning repo, review during data prep!")
         y <- dummy_data_yr
@@ -156,7 +163,7 @@ convert_repo <- function(new_repo, archive_filepath,
       track_layers_added <- read_csv(
         file.path(new_repo, "temp", "track_layers_added.csv"),
         col_types = cols()) %>%
-        rbind(track_layers_entry) # View(track_layers_added)
+        rbind(track_layers_entry) # track_layers_added %>% filter(added_w_goal == str_to_upper(consider_goal))
       write_csv(track_layers_added, file.path(new_repo, "temp", "track_layers_added.csv"))
 
 
@@ -209,28 +216,51 @@ convert_repo <- function(new_repo, archive_filepath,
     write_csv(int_pressure_mat, file.path(new_repo, "conf", "pressures_matrix.csv"))
     write_csv(int_resilience_mat, file.path(new_repo, "conf", "resilience_matrix.csv"))
 
-    ## TRANSITION UPDATED GOAL FUNCTION TO FUNCTIONS.R ----
-    ## for troubleshooting, pause here and go to goal functions subscript to run model line-by-line...
+    ## update 'pressure_categories' and 'resilience_categories' to match updated matrices
+    new_prs_rows <-
+    updated_prs_categ <- read_csv(file.path("conf", "pressure_categories.csv")) %>%
+      filter() %>%
+      rbind()
+    new_res_rows <-
+    updated_res_categ <- read_csv(file.path(new_repo, "conf", "resilience_categories.csv")) %>%
+      filter() %>%
+      rbind()
 
-    old_funs <- grep(list.files(original_funs_dir, full.names = TRUE) %>%
-                       str_extract(pattern = "v2015/.*R"),
-                     pattern = sprintf(".*%s.*R", consider_goal),
-                     value = TRUE, invert = TRUE)
+    write_csv(updated_prs_categ, file.path(new_repo, "conf", "pressure_categories.csv"))
+    write_csv(updated_res_categ, file.path(new_repo, "conf", "resilience_categories.csv"))
 
-    new_funs <- grep(list.files(multiyear_funs_dir, full.names = TRUE) %>%
-                       str_extract(pattern = "multiyear_v2015/.*R"),
-                     pattern = sprintf(".*%s.*R", consider_goal),
-                     value = TRUE)
 
+    ## TRANSITION UPDATED GOAL FUNCTION ----
     ## copy goal subscript to functions.R main script
+
+    old_funs <- grep(
+      list.files(original_funs_dir, full.names = TRUE) %>%
+        str_extract(pattern = "v2015/.*R"),
+      pattern = sprintf(".*%s.*R", consider_goal),
+      value = TRUE, invert = TRUE)
+    new_funs <- grep(
+      list.files(new_funs_dir, full.names = TRUE) %>%
+        str_extract(pattern = "multiyear_v2015/.*R"),
+      pattern = sprintf(".*%s.*R|finalizescores", consider_goal),
+      value = TRUE)
+
     if(length(new_funs) != 0){
-      funs_to_configure <- rbind(as.data.frame(old_funs),
-                                 as.data.frame(new_funs)) %>%
-        rename(funs_locations = old_funs)
+      finalizescores_fun <- grep(new_funs, pattern = "finalizescores",
+                                 value = TRUE) %>% as.data.frame()
+      new_funs <- grep(new_funs, pattern = "finalizescores",
+                       value = TRUE, invert = TRUE) %>% as.data.frame()
+      old_funs <- old_funs %>% as.data.frame()
+
+      funs_to_configure <- rbind(old_funs, new_funs, finalizescores_fun) %>%
+        rename(funs_locations = ".")
       configure_functions(new_repo, test_funs_list = funs_to_configure)
+
     } else {
       stop(sprintf("new function for goal %s not found...", str_to_upper(consider_goal)))
     }
+
+    ## config.R pressures_elements and resilience_elements must be updated with each goal transitioned
+
 
     ## check resulting scores
     intermediate_scores <- calculate_scores(new_repo, 2015) # View(intermediate_scores)
