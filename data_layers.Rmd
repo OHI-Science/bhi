@@ -1,5 +1,5 @@
 ---
-title: "Goals"
+title: "Data Layers"
 output:
   html_document:
     toc: true
@@ -8,4 +8,5 @@ output:
 
 ---
 
-Stuff about goals...
+
+Stuff about data layers...

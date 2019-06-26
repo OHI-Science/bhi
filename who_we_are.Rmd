@@ -1,15 +1,70 @@
 ---
-title: <center>Our team
+title: "Our Team"
 author:  
 output:
   html_document:
     fig_width: 1
 ---
 
-<!--- please update--->
+---
 
-----
+The Baltic Health Index is a project jointly led by [Stockholm Resilience Centre (SRC)](https://www.stockholmresilience.org/) and [Baltic Eye at the Baltic Sea Centre](https://www.su.se/ostersjocentrum/english/baltic-eye), both at Stockholm University, together with the [Ocean Health Index team](http://ohi-science.org/about/). The project is funded by...
 
-*To be updated*
+A trans-disciplinary project, it involves many international researchers from around the Baltic Sea. The project is led by Thorsten Blenckner at SRC. Researchers appointed as Goalkeepers are responsible for one goal each, and work with teams of researchers who are experts on subjects central to each goal. The steering group includes [WHO NOW?]
+
+The Baltic Health Index formally started in 2015 and preliminary scores were completed in 2017. Members of the team conducting the first assessment additionally included [Jennifer Griffiths, Ning Jiang, Julie Lowndes, and Melanie Fraizer OTHERS?] 
+
+Currently...
 
 
+<!-- *** -->
+<!-- ## Core Team  -->
+
+<!-- ### **Data Analyst**: Ellie Campbell -->
+
+<!-- <div style="width: 100%;"> -->
+<!-- <img src="images/ellie_profile_pic.JPG" style="float: right; width: 39%; margin: 0px 6px;" /> -->
+<!-- <p> -->
+<!-- intro, role in the project, contact info... -->
+<!-- </p> -->
+<!-- <br> -->
+
+<!-- </div> -->
+
+<!-- <div style="clear:both;"></div> -->
+<!-- <br> -->
+
+<!-- *** -->
+
+
+<!-- ### **Project Manager**: Andrea De Cervo -->
+
+<!-- <div style="width: 100%;"> -->
+<!-- <img src="images/andrea_profile_pic.JPG" style="float: right; width: 39%; margin: 0px 6px;" /> -->
+<!-- <p> -->
+<!-- intro, role in the project, contact info... -->
+<!-- </p> -->
+<!-- <br> -->
+
+<!-- </div> -->
+
+<!-- <div style="clear:both;"></div> -->
+<!-- <br> -->
+
+<!-- *** -->
+
+<!-- ### **Lead Scientist**: Thorsten Blenckner -->
+
+<!-- <div style="width: 100%;"> -->
+<!-- <img src="images/thorsten_profile_pic.JPG" style="float: right; width: 39%; margin: 0px 6px;" /> -->
+<!-- <p> -->
+<!-- intro, role in the project, contact info... -->
+<!-- </p> -->
+<!-- <br> -->
+
+<!-- </div> -->
+
+<!-- <div style="clear:both;"></div> -->
+<!-- <br> -->
+
+<!-- *** -->
