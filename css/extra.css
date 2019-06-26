@@ -34,19 +34,19 @@ div.main-container {
 }
 
 #TOC {
-    margin: 22px 2px 20px 200px;
+    margin: 22px 2px 20px 20px;
 }
 
-@media (min-width: 992px) {
+@media (min-width: 990px) {
   .col-md-9 {
      float: right;
   }
 }
 
 .tocify {
-    border: 0.5px solid #5e9a92;
+    border: 0.5px solid #80b7b0;
     width: 14%;
-    max-width: 220px;
+    max-width: 210px;
 }
 
 body {
