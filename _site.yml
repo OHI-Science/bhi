@@ -1,21 +1,29 @@
 name: "The Ocean Health Index for Baltic"
 navbar:
-  title: "Home"
+  type: inverse
+  title: "BALTIC HEALTH INDEX"
   left:
-    - text: "About"
-      href: about.html
-    - text: "Frequently Asked Questions"
-      href: faq.html
-#    - text: "Goals"  ## NOTE: to display this page you'll need to delete eval=FALSE on the .Rmd
-#      href: goals.html
-#    - text: "Scores" ## NOTE: to display this page you'll need to delete eval=FALSE on the .Rmd
-#     href: scores.html
-    - text: "Who we are"
-      href: who_we_are.html
+#    - text: "BHI Goals"
+#      href:  goals.html
+#    - text: "Data Layers"
+#      icon:  fa-database
+#      href:  data_layers.html
+    - text: "Regions"
+      icon:  far fa-map
+      href:  regions.html
+  right:
+    - text: "Who Are We"
+      href:  who_we_are.html
+      icon:  fa-user-friends
+    - text: "FAQ"
+      icon:  fa-question-circle-o
+      href:  faq.html
+    - text:  "GitHub"
+      icon:  fa-github
+      href:  https://github.com/OHI-Science/bhi-prep
 output_dir: "."
 output:
   html_document:
     theme: yeti
     highlight: textmate
-    css:
-      - "_sass/main.css"
+    css: css/extra.css
