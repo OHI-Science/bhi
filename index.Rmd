@@ -6,11 +6,14 @@ output:
 
 ---
 
-<div class="page-lead" style="background-image:url(images/regions_1600x800.png)">
+<div class="page-lead" style="background-image:url(images/matt-hardy-6ArTTluciuA-unsplash-cropped.jpg)">
 <div class="wrap page-lead-content">
-<h2>An Ocean Health Index assessment for the Baltic Sea</h2>
+<br><br><br><br><br><br>
+<h3 style="color:lightgoldenrodyellow;line-height:160px">An Ocean Health Index assessment for the Baltic Sea . . . </h3>
 </div>
 </div>
+
+---
 
 # How healthy are our oceans?
 
@@ -30,5 +33,5 @@ We will use this website to share our work in progress, as well as the final res
 
 ---
 
-<!-- <img align="right" src="images/tmp_src_logo.png" width="220px"> -->
-<img align="right" src="images/ohi_logo.png" width="100px">
+<img align="right" src="images/BHI_logos.jpg" width="350px">
+<img align="left" src="images/ohi_logo.png" width="120px">
