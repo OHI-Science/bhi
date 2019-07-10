@@ -3,8 +3,8 @@ navbar:
   type: inverse
   title: "BALTIC HEALTH INDEX"
   left:
-#    - text: "BHI Goals"
-#      href:  goals.html
+    - text: "Goals"
+      href:  goals.html
 #    - text: "Data Layers"
 #      icon:  fa-database
 #      href:  data_layers.html
