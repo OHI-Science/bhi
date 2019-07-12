@@ -86,14 +86,15 @@ baltic <- ne_countries(scale = "medium", returnclass = "sf") %>%
 
 ggplot(data = baltic) +
   ## baltic countries
-  geom_sf(fill = "#f0e7d6", alpha = 0.7) +
+  geom_sf(fill = "#f0e7d6", alpha = 0.4, color = "#ae9f82", size = 0.15) +
   ## overlay goal scores by subbasin with custom continuous color palette
-  geom_sf(data = simplepolys, aes(fill = LSP, color = NULL)) +
-  scale_fill_viridis_c(alpha = 0.9) +
+  geom_sf(data = simplepolys, aes(fill = LSP), size = 0.15) +
+  scale_fill_viridis_c(direction = -1, alpha = 0.9) +
   ## some formatting and map elements
-  coord_sf(xlim = c(5, 30), ylim = c(51, 67), expand = FALSE) +
+  coord_sf(xlim = c(5, 32), ylim = c(53, 67), expand = FALSE) +
   theme(panel.grid.major = element_line(color = gray(0.5), size = 0.5),
-        panel.background = element_rect(fill = "aliceblue")) +
+        panel.background = element_rect(fill = "aliceblue"),
+        legend.position = c(0.1, 0.75)) +
   ggspatial::annotation_scale(location = "br", width_hint = 0.3) +
   ggspatial::annotation_north_arrow(
     location = "br", which_north = "true", pad_y = unit(0.25, "in"),
