@@ -117,28 +117,28 @@ map_goal <- function(goal_code, dimension_name = "score"){
 
 ggplot(data = baltic) +
   ## baltic countries
-  geom_sf(fill = "#f0e7d6", alpha = 0.5, color = "#ae9f82", size = 0.15) +
+  geom_sf(fill = "#f0e7d6", alpha = 0.68, color = "#ae9f82", size = 0.1) +
   ## overlay goal scores by subbasin with custom continuous color palette
-  geom_sf(data = simplepolys, aes(fill = CS), size = 0.15) +
+  geom_sf(data = simplepolys, aes(fill = EUT), size = 0.15) +
   ## some formatting and map elements
   scale_fill_gradientn(colours = c("#8c031a", "#cc0033", "#fbff8f", "#ffff99", "#009999", "#0278a7"),
                        breaks = c(15, 40, 60, 75, 90, 99), limits = c(0, 100),
-                       na.value = "#eaedf1") +
-  # NA white, red from  0-50, green only 95+
+                       na.value = "#e8e8ee") +
   coord_sf(xlim = c(5, 32), ylim = c(53, 66), expand = FALSE) +
   guides(fill = guide_colorbar(barheight = unit(2.5, "in"),
                                frame.colour = "black",
                                ticks.colour = "black",
                                ticks.linewidth = 0.5,
                                frame.linewidth = 1)) +
+  labs(x = element_blank(), y = element_blank()) +
   ggspatial::annotation_scale(location = "br", width_hint = 0.3) +
   ggspatial::annotation_north_arrow(
     location = "br", which_north = "true", pad_y = unit(0.25, "in"),
     style = north_arrow_fancy_orienteering) +
   geom_sf_text(data = simplepolys, aes(label = Name)) +
-  theme(panel.background = element_rect(fill = "aliceblue"),
+  theme(panel.background = element_rect(fill = "#ddedfd"),
         panel.grid.major = element_line(color = gray(0.5), size = 0.5),
-        legend.position = c(0.05, 0.85), legend.title = element_blank(),
+        legend.position = c(0.05, 0.8), legend.title = element_blank(),
         legend.spacing.x = unit(0.2, "cm"))
 
 
