@@ -108,6 +108,8 @@ mapping_data_sp <- helcom_rgns %>%
   st_transform(crs = 4326)
 
 simplepolys <- rmapshaper::ms_simplify(input = mapping_data_sp) %>% st_as_sf()
+simplepolys_x2 <- rmapshaper::ms_simplify(input = simplepolys) %>% st_as_sf()
+
 
 baltic <- ne_countries(scale = "medium", returnclass = "sf") %>%
   st_crop(xmin = -5, xmax = 35, ymin = 48, ymax = 70)
@@ -115,33 +117,47 @@ baltic <- ne_countries(scale = "medium", returnclass = "sf") %>%
 map_goal <- function(goal_code, dimension_name = "score"){
 }
 
+## used width:730 when saved plots..
 ggplot(data = baltic) +
   ## baltic countries
-  geom_sf(fill = "#f0e7d6", alpha = 0.68, color = "#ae9f82", size = 0.1) +
+  geom_sf(fill = "#f0e7d6", alpha = 0.6, color = "#b2996c", size = 0.1) + # f0e7d6
   ## overlay goal scores by subbasin with custom continuous color palette
-  geom_sf(data = simplepolys, aes(fill = EUT), size = 0.15) +
+  geom_sf(data = simplepolys, aes(fill = EUT), color = "#acb9b6", size = 0.1) +
   ## some formatting and map elements
-  scale_fill_gradientn(colours = c("#8c031a", "#cc0033", "#fbff8f", "#ffff99", "#009999", "#0278a7"),
+  scale_fill_gradientn(colours = c("#8c031a", "#cc0033", "#fff78a", "#f6ffb3", "#009999", "#0278a7"),
                        breaks = c(15, 40, 60, 75, 90, 99), limits = c(0, 100),
-                       na.value = "#e8e8ee") +
+                       na.value = "#fcfcfd") +
   coord_sf(xlim = c(5, 32), ylim = c(53, 66), expand = FALSE) +
-  guides(fill = guide_colorbar(barheight = unit(2.5, "in"),
+  guides(fill = guide_colorbar(barheight = unit(2.5, "in"), # legend formatting
                                frame.colour = "black",
                                ticks.colour = "black",
-                               ticks.linewidth = 0.5,
-                               frame.linewidth = 1)) +
-  labs(x = element_blank(), y = element_blank()) +
-  ggspatial::annotation_scale(location = "br", width_hint = 0.3) +
-  ggspatial::annotation_north_arrow(
+                               ticks.linewidth = 0.5)) +
+  labs(x = element_blank(), y = element_blank()) + # no xy axes labels
+  ggspatial::annotation_scale(location = "br", width_hint = 0.3) + # scalebar
+  ggspatial::annotation_north_arrow( # north arrow
     location = "br", which_north = "true", pad_y = unit(0.25, "in"),
     style = north_arrow_fancy_orienteering) +
-  geom_sf_text(data = simplepolys, aes(label = Name)) +
+  ## subbasin labels either with ggrepel or regular geom_text
+  ggrepel::geom_text_repel(data = simplepolys,
+                           aes(label = Name, geometry = geometry),
+                           stat = "sf_coordinates",
+                           size = 3.25) +
+  # ggrepel::geom_text(data = simplepolys, aes(label = Name, ), size = 2.6, nudge_y = 0.2) +
   theme(panel.background = element_rect(fill = "#ddedfd"),
         panel.grid.major = element_line(color = gray(0.5), size = 0.5),
-        legend.position = c(0.05, 0.8), legend.title = element_blank(),
-        legend.spacing.x = unit(0.2, "cm"))
+        legend.position = c(0.08, 0.75), # for no legend use "none"
+        legend.title = element_blank(),
+        legend.background = element_rect(fill = "aliceblue"),
+        legend.spacing.x = unit(0.25, "cm"))
 
 
 ## double check for LSP -- (MPA area 10% of EEZ water for each  country, penalized by whether there is management plan- 0:no plan, 0.4:partial or 1)
 ## double ckech MPA area % calculation (no wrong calculation, should be by country not by subbasin!)
 ## Alternative 4 in teh bhi archive lsp_prep docuemtn
+
+
+
+
+
+
+
