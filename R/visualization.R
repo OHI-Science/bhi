@@ -12,7 +12,9 @@ library(webshot) # webshot::install_phantomjs()
 library(htmltools)
 library(formattable)
 # library(dbplot)
-
+# library(rnaturalearth)
+# library(rnaturalearthdata)
+library(ggspatial)
 
 
 ## Functions
@@ -64,7 +66,11 @@ apply_bhi_theme <- function(plot_type = NA){
                "AO","TR","CS","NP", "BD"),
       color = c("#549dad","#4ead9d","#53b3ac","#89b181","#60a777","#7ead6d","#9aad7e",
                 "#97a4ba","#9fb3d4","#7c96b4","#9a97ba","#7d7ca3","#9990b4",
-                "#e2de9a","#b6859a","#d0a6a1","#ccb4be","#88b1a6")))
+                "#e2de9a","#b6859a","#d0a6a1","#ccb4be","#88b1a6")),
+
+  dims_pal = scale_fill_brewer(palette="Pastel1")
+  ) # end define color palettes
+
 
   ## region names lookup table ----
   rgn_name_lookup <- rbind(
@@ -499,7 +505,6 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
   }
 
   ## some color palette and theme stuff ----
-  initial_theme <- theme_get()
   thm <- apply_bhi_theme(plot_type = "flowerplot") # theme_update() for bhi flowerplot
 
   color_by <- str_to_lower(color_by)
@@ -939,4 +944,109 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
 
   return(tab)
 }
+
+
+basins_flowerplot <- function(basin_scores, goal_code, uniform_width = FALSE){
+
+  ## data checks?
+
+  ## apply relevant bhi_theme
+  thm <- apply_bhi_theme(plot_type = "flowerplot")
+
+  ## wrangle and join info to create plotting dataframe ----
+  basins_order <- readr::read_csv(file.path(here::here(), "spatial", "subbasins_ordered.csv"))
+  basin_areas <- readr::read_csv(file.path(here::here(), "spatial", "bhi_basin_country_lookup.csv")) %>%
+    group_by(Subbasin) %>%
+    summarise(area = sum(Area_km2, na.rm = FALSE))
+
+  if(uniform_width){
+    basin_weights <- basin_areas %>%
+      mutate(weight = 1) %>%
+      select(-area)
+  } else {
+    basin_weights <- basin_areas %>%
+      # mutate(weight = area) %>%
+      mutate(weight = area^0.6) %>%
+      select(-area)
+  }
+
+  plot_df <- basin_scores %>%
+    dplyr::filter(goal == goal_code) %>%
+    dplyr::left_join(basin_weights, by = "Subbasin") %>%
+    rename(subbasin = Subbasin) %>%
+    dplyr::left_join(basins_order, by = "subbasin") %>%
+    # dplyr::mutate(order = max(order) - order) %>%
+    dplyr::arrange(order) %>%
+    dplyr::mutate(pos = sum(weight) - (cumsum(weight) - 0.5 * weight)) %>%
+    dplyr::mutate(pos_end = sum(weight)) %>%
+    dplyr::mutate(plotNAs = ifelse(is.na(score), 100, NA)) %>% # for displaying NAs
+    select(order, subbasin, weight, score, pos, pos_end, plotNAs)
+
+
+  ## create plot ----
+  plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = score)) +
+    geom_bar(aes(y = 100),
+             stat = "identity",
+             size = 0.2,
+             color = "white",
+             fill = "white") +
+    geom_bar(stat = "identity",
+             size = 0.2,
+             color = "white",
+             alpha = 0.85,
+             show.legend = FALSE) +
+    scale_fill_gradientn(colours = c("#8c031a", "#cc0033", "#fff78a", "#f6ffb3", "#009999", "#0278a7"),
+                         breaks = c(15, 40, 60, 75, 90, 99),
+                         limits = c(0, 100),
+                         na.value = "black")
+
+  ## overlay light grey for NAs
+  if(any(!is.na(plot_df$plotNAs))){
+    plot_obj <- plot_obj +
+      geom_bar(aes(y = plotNAs),
+               stat = "identity",
+               size = 0.2,
+               color = thm$elmts$med_line,
+               fill = thm$elmts$lightest)
+  }
+
+  ## formatting
+  plot_obj <- plot_obj +
+    geom_errorbar(aes(x = pos, ymin = 0, ymax = 0),
+                  size = 0.5,
+                  show.legend = NA,
+                  color = thm$elmts$dark_line) +
+    geom_errorbar(aes(x = pos, ymin = 100, ymax = 100),
+                  size = 1,
+                  show.legend = NA,
+                  color = thm$elmts$bright_line) +
+
+    labs(x = NULL, y = NULL) +
+    coord_flip() +
+
+    # coord_polar(start = -pi/6) +
+    # scale_x_continuous(labels = NULL,
+    #                    breaks = plot_df$pos,
+    #                    limits = c(-pi/6 * 1/nrow(plot_df) * min(plot_df$pos), max(plot_df$pos_end))) +
+    # scale_y_continuous(limits = c(-thm$elmts$blank_circle_rad, 150)) +
+
+    # geom_text(data = data.frame(score = round(mean(plot_df$score, na.rm = TRUE), 0)),
+    #           inherit.aes = FALSE,
+    #           aes(label = avg_score$score),
+    #           x = 0, y = -thm$elmts$blank_circle_rad,
+    #           hjust = 0.5, vjust = 0.5,
+    #           size = 9, color = thm$elmts$dark_line) +
+
+    # ggrepel::geom_text_repel(aes(label = subbasin, x = pos, y = 120),
+    #           size = 3, hjust = 0.5, vjust = 0.5,
+    #           color = thm$elmts$dark_line)
+
+  theme_bw() +
+  theme(axis.text.y = element_blank()) +
+  geom_text_repel(aes(label = subbasin),
+                  size = 3.5, angle = 0, segment.alpha = 0.25, direction = "x", segment.size = 0.05, nudge_x = -2,
+                  family = "Helvetica", show.legend = FALSE)
+
+}
+
 
