@@ -11,21 +11,6 @@ library(sf)
 
 ## Functions
 
-wd <- "/Users/eleanorecampbell/Desktop/GitHub"
-dir_sp <- "/Volumes/BHI_share/Shapefiles"
-
-shp_name <- "HELCOM_subbasins_holasbasins"
-subbasins_shp <- sf::st_read(file.path(dir_sp, shp_name), shp_name) %>%
-  mutate(Name = stringr::str_replace(Name, pattern = "Å", replacement = "A"))
-
-scores_csv <- readr::read_csv(file.path(wd, "bhi-1.0-archive", "baltic2015", "scores.csv"))
-basin_lookup <- readr::read_delim(file.path(wd, "bhi-prep", "ref", "lookup_tabs",
-                                         "bhi_basin_country_lookup.csv"), delim = ";")
-
-rgn_shp_name <- "BHI_shapefile"
-bhi_rgns_shp <- sf::st_read(file.path(dir_sp, rgn_shp_name), rgn_shp_name)
-
-
 #' create standardized map, general function
 #'
 #' @param mapping_data_sp
