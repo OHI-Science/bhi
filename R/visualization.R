@@ -484,7 +484,7 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
 }
 
 
-basins_flowerplot <- function(basin_scores, goal_code, uniform_width = FALSE){
+basins_barplot <- function(basin_scores, goal_code, uniform_width = FALSE){
 
   ## apply relevant bhi_theme
   thm <- apply_bhi_theme(plot_type = "flowerplot")
@@ -560,34 +560,15 @@ basins_flowerplot <- function(basin_scores, goal_code, uniform_width = FALSE){
 
     labs(x = NULL, y = NULL) +
     coord_flip() +
+    theme_minimal() +
+    theme(axis.text.y = element_blank()) +
+    geom_text_repel(aes(label = subbasin),
+                    family = "Helvetica",
+                    size = 3, angle = 0, direction = "x",
+                    segment.alpha = 0.1, segment.size = 0.1, box.padding = 0.75,
+                    show.legend = FALSE)
 
-    # coord_polar(start = -pi/6) +
-    # scale_x_continuous(labels = NULL,
-    #                    breaks = plot_df$pos,
-    #                    limits = c(-pi/6 * 1/nrow(plot_df) * min(plot_df$pos), max(plot_df$pos_end))) +
-    # scale_y_continuous(limits = c(-thm$elmts$blank_circle_rad, 150)) +
-
-    # geom_text(data = data.frame(score = round(mean(plot_df$score, na.rm = TRUE), 0)),
-    #           inherit.aes = FALSE,
-    #           aes(label = avg_score$score),
-    #           x = 0, y = -thm$elmts$blank_circle_rad,
-    #           hjust = 0.5, vjust = 0.5,
-    #           size = 9, color = thm$elmts$dark_line) +
-
-    # ggrepel::geom_text_repel(aes(label = subbasin, x = pos, y = 120),
-    #           size = 3, hjust = 0.5, vjust = 0.5,
-    #           color = thm$elmts$dark_line)
-
-  theme_minimal() +
-  theme(axis.text.y = element_blank()) +
-  geom_text_repel(aes(label = subbasin),
-                  family = "Helvetica",
-                  size = 3, angle = 0, direction = "x",
-                  segment.alpha = 0.1, segment.size = 0.1, box.padding = 0.75,
-                  show.legend = FALSE)
-
-  plot_obj
-
+  return(invisible(plot_obj))
 }
 
 
