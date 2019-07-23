@@ -404,3 +404,48 @@ update_goalsRmd_links <- function(dir, version_year){
 
   writeLines(txt_updated, goalsRmd_path)
 }
+
+
+#' fill in roxygen param documentation from a common params_index
+#'
+#' the objective of this function is to facilitate consistent use of parameter names throughout the BHI repositories
+#' relevant roxygen documentation can be automatically filled in using this function and the supplemental 'params_index.md' document
+#'
+#' @param params_index
+#' @param script_name the name of the script with functions you want readme documentation for
+#' @param script_function
+#'
+
+fill_oxygendoc_param <- function(params_index, script_name, script_function = NA){
+
+  param_txt <- readLines(file.path(here::here(), "supplement", "documents", "params_index.md")) %>%
+    grep(pattern = "\\*.*", value = TRUE)
+
+  fun_path <- file.path(here::here(), "R", script_name)
+  script_txt <- readLines(fun_path)
+
+  ## identify lines containting the function of interest
+  ## and of those lines, which contain its parameter roxygen docuemntation
+  breaks_param <- "#'\\s@param\\s[A-Za-z0-9_]+$"
+  params <- grep(pattern = breaks_param, x = script_txt)
+
+  if(!is.na(script_function)){
+    start_fun <- grep(pattern = sprintf("^%s\\s<-\\sfunction\\(|^%s\\s=\\sfunction\\(",
+                                        script_function, script_function), x = script_txt)
+    breaks_fun <- c(0, grep(pattern = "^[A-Za-z0-9_]+\\s<-\\sfunction\\(|^[A-Za-z0-9_]+\\s=\\sfunction\\(", x = script_txt))
+    count <- grep(x = breaks_fun, pattern = start_fun)
+    params <- params[params %in% breaks_fun[count-1]:breaks_fun[count]]
+  }
+
+  ## match parameter documentation
+  ## and replace rows of function within script with the updated info
+  script_txt_updated <- script_txt
+  for(p in params){
+    param_match <- paste0("\\*{2}", str_extract(script_txt[p], pattern = "[A-Za-z0-9_]+$"))
+    script_txt_updated[p] <- grep(pattern = param_match, x = param_txt, value = TRUE)
+  }
+
+  ## write the updated script in the original location
+  writeLines(txt_updated, func_path)
+}
+
