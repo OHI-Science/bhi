@@ -390,9 +390,22 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
 }
 
 
-basins_barplot <- function(basin_scores, goal_code, uniform_width = FALSE){
+#' create barplot to accompany maps
+#'
+#' create a barplot with subbasin scores, arranged vertically approximately north-to-south
+#' intended to present side-by-side with map, to show distances from reference points/room for improvement
+#'
+#' @param basin_scores scores.csv aggregated by subbasin i.e. area-weighted means per goal
+#' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
+#' @param uniform_width if TRUE all subbasin bars will be the same width, otherwise a function of area
+#' @param make_html if TRUE, will create an hmtl/plottly version rather than ggplot to use e.g. for the website or shiny app
+#' @param save can be either a directory in which to save the plot, or if TRUE will save to a default location
+#'
+#' @return
 
-  ## apply relevant bhi_theme
+basins_barplot <- function(basin_scores, goal_code, uniform_width = FALSE, make_html = FALSE, save = FALSE){
+
+  ## apply bhi_theme, in this case the same as for flowerplot
   thm <- apply_bhi_theme(plot_type = "flowerplot")
 
   ## wrangle and join info to create plotting dataframe ----
@@ -401,32 +414,42 @@ basins_barplot <- function(basin_scores, goal_code, uniform_width = FALSE){
     group_by(Subbasin) %>%
     summarise(area = sum(Area_km2, na.rm = FALSE))
 
+  ## use uniform_width argument to define whether bars are uniform or scaled by a function of area
   if(uniform_width){
     basin_weights <- basin_areas %>%
       mutate(weight = 1) %>%
       select(-area)
   } else {
     basin_weights <- basin_areas %>%
+      ## scaling proportional to area results in some very thin bars
+      ## can try different functions...
       # mutate(weight = area) %>%
-      mutate(weight = area^0.6) %>%
-      select(-area)
+      mutate(weight = area^0.6)
   }
 
   plot_df <- basin_scores %>%
+    # mutate(score = basin_mean) %>%
     dplyr::filter(goal == goal_code) %>%
     dplyr::left_join(basin_weights, by = "Subbasin") %>%
     rename(subbasin = Subbasin) %>%
     dplyr::left_join(basins_order, by = "subbasin") %>%
+    dplyr::mutate(subbasin = as.factor(subbasin),
+                  score_unrounded = score,
+                  score = round(score, 2),
+                  area = paste(round(area), "km2")) %>%
     # dplyr::mutate(order = max(order) - order) %>%
     dplyr::arrange(order) %>%
     dplyr::mutate(pos = sum(weight) - (cumsum(weight) - 0.5 * weight)) %>%
     dplyr::mutate(pos_end = sum(weight)) %>%
     dplyr::mutate(plotNAs = ifelse(is.na(score), 100, NA)) %>% # for displaying NAs
-    select(order, subbasin, weight, score, pos, pos_end, plotNAs)
+    dplyr::select(order, subbasin, weight, area, score_unrounded, score, pos, pos_end, plotNAs)
 
 
   ## create plot ----
-  plot_obj <- ggplot(plot_df, aes(x = pos, y = score, width = weight, fill = score)) +
+  plot_obj <- ggplot(plot_df,
+                     aes(x = pos, y = score_unrounded,
+                         Subbasin = subbasin, Score = score, Area = area,
+                         width = weight, fill = score_unrounded)) +
     geom_bar(aes(y = 100),
              stat = "identity",
              size = 0.2,
@@ -452,13 +475,12 @@ basins_barplot <- function(basin_scores, goal_code, uniform_width = FALSE){
                color = "#acb9b6",
                fill = "#fcfcfd")
   }
-
-  ## formatting
+  ## some formatting
   plot_obj <- plot_obj +
     geom_errorbar(aes(x = pos, ymin = 0, ymax = 0),
                   size = 0.5,
                   show.legend = NA,
-                  color = thm$elmts$dark_line) +
+                  color = thm$cols$dark_grey3) +
     geom_errorbar(aes(x = pos, ymin = 100, ymax = 100),
                   size = 1,
                   show.legend = NA,
@@ -467,14 +489,50 @@ basins_barplot <- function(basin_scores, goal_code, uniform_width = FALSE){
     labs(x = NULL, y = NULL) +
     coord_flip() +
     theme_minimal() +
-    theme(axis.text.y = element_blank()) +
-    geom_text_repel(aes(label = subbasin),
-                    family = "Helvetica",
-                    size = 3, angle = 0, direction = "x",
-                    segment.alpha = 0.1, segment.size = 0.1, box.padding = 0.75,
-                    show.legend = FALSE)
+    theme(axis.text.y = element_blank())
+
+  ## html plotly vs standard ggplot ----
+  if(make_html){
+    # plot_obj <- plot_obj +
+    #   geom_text(aes(label = subbasin),
+    #             family = "Helvetica",
+    #             size = 3) # geom_text_repel not supported in ggplotly yet...
+    plot_obj <- plotly::ggplotly(plot_obj,  tooltip = c("Subbasin", "Score", "Area"))
+  } else {
+    plot_obj <- plot_obj +
+      ggrepel::geom_text_repel(
+        aes(label = subbasin),
+        family = "Helvetica",
+        size = 3, angle = 0, direction = "x",
+        segment.alpha = 0.1, segment.size = 0.1, box.padding = 0.8,
+        show.legend = FALSE)
+  }
+
+  ## saving plots ----
+  save_loc <- NULL
+  if(is.character(save)){
+    if(file.exists(save)){
+      save_loc <- file.path(save, paste0("barplot_", goal_code, ".png"))
+    }
+  }
+  if(isTRUE(save)){
+    if("plotly" %in% class(plot_obj)){
+      save_loc <- file.path(dir_assess, "reports", "widgets",
+                            paste0("barplot_", goal_code, ".png"))
+    } else {
+      save_loc <- file.path(dir_assess, "reports", "figures",
+                            paste0("barplot_", goal_code, ".png"))
+    }
+  }
+  if(!is.null(save_loc)){
+    if("plotly" %in% class(plot_obj)){
+      htmlwidgets::saveWidget(as.widget(html_plot_obj), save_loc)
+    } else {
+      ggplot2::ggsave(filename = save_loc, plot = plot_obj, device = "png",
+                      height = 5, width = 3, units = "in", dpi = 400)
+    }
+  }
 
   return(invisible(plot_obj))
 }
-
 
