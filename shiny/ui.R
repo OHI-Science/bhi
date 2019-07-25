@@ -4,11 +4,12 @@ source(file.path(here::here(), "shiny", "global.R"))
 dashboardPage(
   dashboardHeader(
     title = "Ocean Health Index for the Baltic Sea",
-    titleWidth = 380),
+    titleWidth = 380
+    ),
 
   ## Dashboard Sidebar ----
   dashboardSidebar(
-    width = 280,
+    width = 300,
 
     sidebarMenu(
       menuItem("WELCOME", tabName = "welcome"), # badgeLabel = "draft"
@@ -16,34 +17,34 @@ dashboardPage(
       convertMenuItem(
         menuItem("EXPLORE THE GOALS", tabName = "explore", startExpanded = TRUE,
                  ## AO Artisanal Fishing Opportunity
-                 menuSubItem("Artisanal Fishing Opportunity", tabName = "ao"),
+                 menuSubItem("Artisanal Fishing Opportunity", tabName = "ao", icon = icon("fish")), # icon = icon("anchor")
                  ## BD Biodiversity
-                 menuSubItem("Biodiversity", tabName = "bd"),
+                 menuSubItem("Biodiversity", tabName = "bd", icon = icon("dna")),
                  ## CS Carbon Storage
-                 menuSubItem("Carbon Storage", tabName = "cs"),
+                 menuSubItem("Carbon Storage", tabName = "cs", icon = icon("seedling")),
                  ## CW Clean Water
-                 convertMenuItem(menuItem("Clean Water", tabName = "cw", startExpanded = FALSE,
-                                          menuSubItem("Contaminants", tabName = "con"),
-                                          menuSubItem("Eutrophication", tabName = "eut"),
-                                          menuSubItem("Trash", tabName = "tra")), "cw"),
+                 convertMenuItem(menuItem(icon = icon("burn"), "Clean Water", tabName = "cw", startExpanded = FALSE,
+                                          menuSubItem("Contaminants", tabName = "con"), # icon = icon("flask")
+                                          menuSubItem("Eutrophication", tabName = "eut"), # icon = icon("burn")
+                                          menuSubItem("Trash", tabName = "tra")), "cw"), # icon = icon("eraser")
                  ## FP Food Provision
-                 convertMenuItem(menuItem("Food Provision", tabName = "fp", startExpanded = FALSE,
-                                          menuSubItem("Wild-Caught Fisheries", tabName = "fis"),
-                                          menuSubItem("Mariculture", tabName = "mar")), "fp"),
+                 convertMenuItem(menuItem(icon = icon("ship"), "Food Provision", tabName = "fp", startExpanded = FALSE,
+                                          menuSubItem("Wild-Caught Fisheries", tabName = "fis"), # icon = icon("ship")
+                                          menuSubItem("Mariculture", tabName = "mar")), "fp"), # icon = icon("fish")
                  ## LE Livelihoods & Economies
-                 convertMenuItem(menuItem("Livelihoods & Economies", tabName = "le", startExpanded = FALSE,
-                                          menuSubItem("Economies", tabName = "eco"),
-                                          menuSubItem("Livelihoods", tabName = "liv")), "le"),
+                 convertMenuItem(menuItem(icon = icon("landmark"), "Livelihoods & Economies", tabName = "le", startExpanded = FALSE,
+                                          menuSubItem("Economies", tabName = "eco"), # icon = icon("landmark")
+                                          menuSubItem("Livelihoods", tabName = "liv")), "le"), # icon = icon("dharmachakra")
                  ## SP Sense of Place
-                 convertMenuItem(menuItem("Sense of Place", tabName = "sp", startExpanded = FALSE,
-                                          menuSubItem("Iconic Species", tabName = "ico"),
-                                          menuSubItem("Lasting Special Places", tabName = "lsp")), "sp"),
+                 convertMenuItem(menuItem(icon = icon("monument"), "Sense of Place", tabName = "sp", startExpanded = FALSE,
+                                          menuSubItem("Iconic Species", tabName = "ico"), # icon = icon("kiwi-bird")
+                                          menuSubItem("Lasting Special Places", tabName = "lsp")), "sp"), # icon = icon("monument")
                  ## convertMenuItem by Jamie Afflerbach https://github.com/OHI-Northeast/ne-dashboard/tree/master/functions
 
                  ## NP Natural Products
-                 menuSubItem("Natural Products", tabName = "np"),
+                 menuSubItem("Natural Products", tabName = "np", icon = icon("mortar-pestle")),
                  ## TR Tourism
-                 menuSubItem("Tourism", tabName = "tr")), "explore"),
+                 menuSubItem("Tourism", tabName = "tr", icon = icon("suitcase"))), "explore"),
 
       menuItem("COMPARE & SUMMARIZE", tabName = "summaries", startExpanded = FALSE,
                menuSubItem("Likely Future versus Present", tabName = "futures"),
@@ -206,6 +207,12 @@ dashboardPage(
       tabItem(tabName = "pressures",
               fluidRow(box(h1("Pressures"), "SOMETHING ABOUT BHI PRESSURES", width = 12))
               # fluidRow("card_ui and/or map_ui and/or something else will go below here...")
+              # withTags(div(class = "box-con",
+              #              a(target = "_blank",
+              #                href = "https://github.com/OHI-Science/bhi",
+              #                div(class = "float box box-more",
+              #                    p(class = "intro-text", "GitHub Repo"),
+              #                    p("Access to code and documentation of analysis and results.")))))
       )
     )
   )
