@@ -1,0 +1,39 @@
+@import url('//fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Lato|Raleway&display=swap');
+
+.skin-blue .main-header .logo {
+    background-color: #1c3548;
+    color: #f3ffe2;
+    border-bottom: 4 solid;
+    font-family: "Open Sans Condensed";
+    font-weight: 200;
+}
+
+.skin-blue .main-header .navbar {
+    background-color: #1c3548;
+}
+
+.main-header .logo {
+    font-family: 'Open Sans';
+    font-weight: lighter;
+    font-size: 24px;
+}
+
+.skin-blue .main-sidebar, .skin-blue .wrapper {
+    background-color: #13231f;
+}
+
+.skin-blue .treeview-menu>li>a {
+    color: #8db1a8;
+    background-color: #13232085;
+}
+
+.main-header .logo {
+  font-family: "Open+Sans";
+  font-weight: lighter;
+  font-size: 28px;
+}
+
+h1, h4, h2, h3{
+  font-family: 'Open+Sans', 'Lato', sans-serif;
+  font-weight: 500;
+}
