@@ -320,7 +320,14 @@ apply_bhi_theme <- function(plot_type = NA){
     map_background2 = "#f0e7d6",
     map_background3 = "aliceblue",
     map_polygon_border1 = "#acb9b6",
-    map_polygon_border2 = "#b2996c")
+    map_polygon_border2 = "#b2996c",
+    web_font_light1 = "#f0fcdf",
+    web_font_light2 = "#f3ffe3",
+    web_font_light3 = "#8db1a8",
+    web_font <- "#516275",
+    web_banner = "#1c3548",
+    web_banner_light = "#006687",
+    web_sidebar_dark = "#111b19")
 
   ## color palettes ----
   palettes <- list(
@@ -391,3 +398,22 @@ apply_bhi_theme <- function(plot_type = NA){
   }
   return(list(elmts = elmts, cols = cols, palettes = palettes, rgn_name_lookup = rgn_name_lookup))
 }
+
+#' extract BHI theme as hex codes or original colornames
+#'
+#' @param ... character names of BHI  colors, as defined in the apply_bhi_theme function
+#'
+#' @return if no args given returns named character vector of BHI colors,
+#' otherwise color code for the named color
+
+get_bhi_cols <- function(...){
+  colors <- c(...)
+  thm <- apply_bhi_theme()
+
+  if(is.null(colors)){
+    return(unlist(thm$cols))
+  }
+  unlist(thm$cols)[colors]
+}
+
+
