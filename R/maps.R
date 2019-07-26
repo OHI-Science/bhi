@@ -140,7 +140,8 @@ make_subbasin_sf <- function(subbasins_shp, scores_csv, basin_lookup,
 
   if(goal_code != "all" & goal_code %in% names(mapping_data)){
     mapping_data <- mapping_data %>%
-      select(Subbasin, goal_code, dimension, simplified)
+      select(Subbasin, goal_code, dimension, simplified) %>%
+      rename(scores = goal_code)
   }
 
   ## join with spatial information from subbasin shapfile
@@ -225,6 +226,9 @@ make_rgn_sf <- function(bhi_rgns_shp, scores_csv, rgn_lookup,
                         goal_code = "all", dim = "score", year = assess_year,
                         simplify_level = 1){
 
+  ## bhi_rgns_shp <- sf::st_read("/Volumes/BHI_share/Shapefiles/BHI_shapefile", "BHI_shapefile")
+  ## rgn_lookup <- readr::read_csv(file.path(here::here(), "spatial", "regions_lookup_complete_wide.csv"))
+
   if("year" %in% names(scores_csv)){
     scores_csv <- scores_csv %>%
       dplyr::filter(year == year) %>%
@@ -235,17 +239,18 @@ make_rgn_sf <- function(bhi_rgns_shp, scores_csv, rgn_lookup,
 
   ## wrangle/reshape and join with spatial info to make sf for plotting
   mapping_data <- scores_csv %>%
-    dplyr::filter(dimension == dim, region_id %in% rgn_lookup$BHI_ID) %>%
-    dplyr::left_join(select(rgn_lookup, BHI_ID, rgn_nam, Subbasin),
-                     by = c("region_id" = "BHI_ID")) %>%
-    dplyr::mutate(label_txt = sprintf("%s, %s", Subbasin, rgn_nam)) %>%
+    dplyr::filter(dimension == dim, region_id %in% rgn_lookup$region_id) %>%
+    dplyr::left_join(select(rgn_lookup, region_id, region_name, area_km2_rgn),
+                     by = "region_id") %>%
+    dplyr::mutate(label_txt = region_name) %>%
     dplyr::select(region_id, goal, score, label_txt) %>%
     tidyr::spread(key = goal, value = score) %>%
     dplyr::mutate(dimension = dim, simplified = simplify_level)
 
   if(goal_code != "all" & goal_code %in% names(mapping_data)){
     mapping_data <- mapping_data %>%
-      select(label_txt, region_id, goal_code, dimension, simplified)
+      select(label_txt, region_id, goal_code, dimension, simplified) %>%
+      rename(scores = goal_code)
   }
 
   ## join with spatial information from subbasin shapfile
@@ -349,12 +354,9 @@ rgn_goal_map <- function(bhi_rgns_shp, scores_csv, rgn_lookup, goal_code, dim = 
 #' @param northarrow
 #'
 #' @return
-#' @export
-#'
-#' @examples
-leaflet_map <- function(scores_csv, goal_code, dim = "score", year = assess_year,
-                        basin_or_rgns = "subbasins", shp, lookup_tab, simplify_level = 1,
-                        legend = TRUE, labels = FALSE, scalebar = FALSE, northarrow = FALSE){
+
+leaflet_map <- function(scores_csv, goal_code, dim = "score", year = assess_year, basin_or_rgns = "subbasins",
+                        shp, lookup_tab, simplify_level = 1, include_legend = TRUE, legend_title = NA){
 
   ## wrangle for plotting using functions from above
   if(basin_or_rgns == "subbasins"){
@@ -370,9 +372,29 @@ leaflet_map <- function(scores_csv, goal_code, dim = "score", year = assess_year
       simplify_level)
   }
 
-  ## create leaflet map
-  leaflet_map <- leaflet::
+  ## apply theme to get standardized elements, colors, palettes
+  ## https://stackoverflow.com/questions/49126405/how-to-set-up-asymmetrical-color-gradient-for-a-numerical-variable-in-leaflet-in
+  thm <- apply_bhi_theme()
+  pal <- colorNumeric(palette = thm$palettes$divergent_red_blue,
+                      domain = c(0, 100),
+                      na.color = thm$cols$map_background1)
 
+  ## create leaflet map
+  leaflet_map <- leaflet::leaflet(data = plotting_sf) %>%
+    addProviderTiles(providers$CartoDB.Positron) %>% # "Stamen.TonerLite"
+    setView(19, 60.1, zoom = 3)
+
+  if(include_legend){
+    leaflet_map <- leaflet_map %>%
+      addLegend("bottomright", pal = pal, values = c(0:100),
+              title = legend_title, opacity = 0.8, layerId = "colorLegend")
+  }
+
+  leaflet_map <- leaflet_map %>%
+    addPolygons(
+      layerId = ~BHI_ID,
+      stroke = TRUE, opacity = 0.5, weight = 2, fillOpacity = 0.6, smoothFactor = 0.5,
+      color = thm$cols$map_polygon_border1, fillColor = ~pal(scores))
 
   return(leaflet_map)
 }

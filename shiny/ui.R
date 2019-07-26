@@ -63,8 +63,20 @@ dashboardPage(
       ## WELCOME ----
       tabItem(tabName = "welcome",
               fluidRow(box(h1("Ocean Health Dashboard for the Baltic Sea"), "SHORT OHI INFO BLURB", width = 12)),
-              fluidRow(box(h3("How healthy are our oceans?"), "MORE INFO, BORROW FROM GITHUB README OR WEBSITE?", width = 12))
-              # fluidRow("card_ui and/or map_ui and/or something else will go below here...")
+              fluidRow(box(h3("How healthy are our oceans?"), "MORE INFO, BORROW FROM GITHUB README OR WEBSITE?", width = 12)),
+
+              fluidRow(
+
+                ## flowerplot
+                tagList(box(list(h4("Baltic Sea Scores, 2014"),
+                                 p("Flowerplot with ranges, for entire Baltic Sea by BHI regions. Goal-averages."),
+                                 imageOutput("flowerplot")))),
+
+                ## map of overall scores, all goals and aggregated to subbasins
+                map_ui(id = "overall_baltic_map",
+                       title_text = "Overall Scores",
+                       sub_title_text = "This map shows scores from the previous assessment (2014)")
+              )
       ),
 
       ## AO ----
