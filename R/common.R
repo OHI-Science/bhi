@@ -17,7 +17,12 @@ bhiprep_repo_raw <- "https://raw.githubusercontent.com/OHI-Science/bhi-prep"
 bhi_api <- "https://api.github.com/repos/OHI-Science/bhi/git/trees/master?recursive=1"
 bhiprep_api <- "https://api.github.com/repos/OHI-Science/bhi-prep/git/trees/master?recursive=1"
 
-## Directories
+
+## Connections and Directories
+bhi_db_file <- "/Users/eleanorecampbell/Desktop/bhi-config.sqlite" # for now...
+bhi_db_con <- DBI::dbConnect(RSQLite::SQLite(), bhi_db_file)
+
+
 dir_bhi <- here::here()
 dir_assess <- file.path(dir_bhi, "baltic"); dir_baltic <- file.path(dir_bhi, "baltic") # CHANGE BHI ASSESSMENT DIRECTORY HERE!
 dir_spatial <- file.path(dir_bhi, "spatial") # spatial folder of bhi repo
