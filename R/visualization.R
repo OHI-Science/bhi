@@ -3,17 +3,11 @@ source(file.path(here::here(), "R", "common.R"))
 library(ggplot2)
 library(ggrepel)
 library(ggthemes)
-library(grDevices)
 library(htmlwidgets)
 library(magick)
-# library(DT)
 library(webshot) # webshot::install_phantomjs()
 library(htmltools)
 library(formattable)
-# library(dbplot)
-# library(rnaturalearth)
-# library(rnaturalearthdata)
-library(ggspatial)
 
 
 ## Functions
@@ -403,53 +397,117 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
 #'
 #' @return
 
-basins_barplot <- function(basin_scores, goal_code, uniform_width = FALSE, make_html = FALSE, save = FALSE){
+scores_barplot <- function(scores, basins_or_rgns = "subbasins", goal_code,
+                           uniform_width = FALSE, make_html = FALSE, save = FALSE){
+
+  if("dimension" %in% colnames(scores)){
+    scores <- scores %>%
+      filter(dimension == "score") %>%
+      select(-dimension)
+  }
+  if("goal" %in% colnames(scores)){
+    scores <- scores %>%
+      filter(goal == goal_code) %>%
+      select(-goal)
+  }
 
   ## apply bhi_theme, in this case the same as for flowerplot
   thm <- apply_bhi_theme(plot_type = "flowerplot")
 
   ## wrangle and join info to create plotting dataframe ----
-  basins_order <- readr::read_csv(file.path(here::here(), "spatial", "subbasins_ordered.csv"))
-  basin_areas <- readr::read_csv(file.path(here::here(), "spatial", "bhi_basin_country_lookup.csv")) %>%
-    group_by(Subbasin) %>%
-    summarise(area = sum(Area_km2, na.rm = FALSE))
+  if(basins_or_rgns == "subbasins"){
+
+    order_df <- tbl(bhi_db_con, "basins") %>%
+      select(name = subbasin, order) %>%
+      collect() %>%
+      mutate(order = as.factor(order))
+
+    areas_df <- tbl(bhi_db_con, "basins") %>%
+      select(name = subbasin, area_km2)
+
+    scores <- scores %>%
+      filter(region_id >= 500) %>%
+      collect() %>%
+      left_join(tbl(bhi_db_con, "basins") %>%
+                  select(region_id = subbasin_id, name = subbasin) %>%
+                  collect(),
+                by = "region_id") %>%
+      select(name, score)
+
+    # scores <- scores %>%
+    #   filter(dimension == "score" & goal == goal_code) %>%
+    #   filter(region_id < 100 & region_id != 0) %>%
+    #   left_join(tbl(bhi_db_con, "regions") %>%
+    #               select(region_id, subbasin, area_km2),
+    #             by = "region_id") %>%
+    #   select(-goal, -dimension, -region_id) %>%
+    #   collect() %>%
+    #   group_by(subbasin) %>%
+    #   summarize(value = weighted.mean(score, area_km2, na.rm = TRUE)) %>%
+    #   select(name = subbasin, score = value)
+
+  } else {
+    order_df <- tbl(bhi_db_con, "regions") %>%
+      select(name = region_id, order) %>%
+      collect() %>%
+      mutate(order = as.factor(order))
+
+    areas_df <- tbl(bhi_db_con, "regions") %>%
+      select(name = region_id, area_km2)
+
+    scores <- scores %>%
+      filter(region_id < 100 & region_id != 0) %>%
+      rename(name = region_id) %>%
+      collect() %>%
+      left_join(tbl(bhi_db_con, "regions") %>%
+                  select(name = region_id, region_name) %>%
+                  collect(), by = "name")
+  }
 
   ## use uniform_width argument to define whether bars are uniform or scaled by a function of area
   if(uniform_width){
-    basin_weights <- basin_areas %>%
+    weights <- areas_df %>%
       mutate(weight = 1) %>%
-      select(-area)
+      select(-area_km2) %>%
+      collect()
   } else {
-    basin_weights <- basin_areas %>%
+    weights <- areas_df %>%
       ## scaling proportional to area results in some very thin bars
       ## can try different functions...
-      # mutate(weight = area) %>%
-      mutate(weight = area^0.6)
+      mutate(weight = area_km2^0.6) %>% # mutate(weight = area)
+      collect()
   }
 
-  plot_df <- basin_scores %>%
-    # mutate(score = basin_mean) %>%
-    dplyr::filter(goal == goal_code) %>%
-    dplyr::left_join(basin_weights, by = "Subbasin") %>%
-    rename(subbasin = Subbasin) %>%
-    dplyr::left_join(basins_order, by = "subbasin") %>%
-    dplyr::mutate(subbasin = as.factor(subbasin),
+  plot_df <- scores %>%
+    dplyr::left_join(weights, by = "name") %>%
+    dplyr::left_join(order_df, by = "name") %>%
+    dplyr::mutate(Name = as.factor(region_name),
                   score_unrounded = score,
-                  score = round(score, 2),
-                  area = paste(round(area), "km2")) %>%
+                  Score = round(score, 2),
+                  Area = paste(round(area_km2), "km2")) %>%
     # dplyr::mutate(order = max(order) - order) %>%
     dplyr::arrange(order) %>%
     dplyr::mutate(pos = sum(weight) - (cumsum(weight) - 0.5 * weight)) %>%
     dplyr::mutate(pos_end = sum(weight)) %>%
-    dplyr::mutate(plotNAs = ifelse(is.na(score), 100, NA)) %>% # for displaying NAs
-    dplyr::select(order, subbasin, weight, area, score_unrounded, score, pos, pos_end, plotNAs)
+    dplyr::mutate(plotNAs = ifelse(is.na(score_unrounded), 100, NA)) %>% # for displaying NAs
+    dplyr::select(order, Name, weight, Area,
+                  score_unrounded, Score,
+                  pos, pos_end, plotNAs)
 
 
   ## create plot ----
-  plot_obj <- ggplot(plot_df,
-                     aes(x = pos, y = score_unrounded,
-                         Subbasin = subbasin, Score = score, Area = area,
-                         width = weight, fill = score_unrounded)) +
+  if(basins_or_rgns == "subbasins"){
+    plot_obj <- ggplot(plot_df,
+                       aes(x = pos, y = score_unrounded,
+                           Subbasin = Name, Score = Score, Area = Area,
+                           width = weight, fill = score_unrounded))
+  } else {
+    plot_obj <- ggplot(plot_df,
+                       aes(x = pos, y = score_unrounded,
+                           Region = Name, Score = Score, Area = Area,
+                           width = weight, fill = score_unrounded))
+  }
+  plot_obj <- plot_obj +
     geom_bar(aes(y = 100),
              stat = "identity",
              size = 0.2,
@@ -497,11 +555,14 @@ basins_barplot <- function(basin_scores, goal_code, uniform_width = FALSE, make_
     #   geom_text(aes(label = subbasin),
     #             family = "Helvetica",
     #             size = 3) # geom_text_repel not supported in ggplotly yet...
-    plot_obj <- plotly::ggplotly(plot_obj,  tooltip = c("Subbasin", "Score", "Area"))
+    if(basins_or_rgns == "subbasins"){
+      plot_obj <- plotly::ggplotly(plot_obj,  tooltip = c("Subbasin", "Score", "Area"))
+    } else { plot_obj <- plotly::ggplotly(plot_obj,  tooltip = c("Region", "Score", "Area")) }
+
   } else {
     plot_obj <- plot_obj +
       ggrepel::geom_text_repel(
-        aes(label = subbasin),
+        aes(label = Name),
         family = "Helvetica",
         size = 3, angle = 0, direction = "x",
         segment.alpha = 0.1, segment.size = 0.1, box.padding = 0.8,
