@@ -3,6 +3,7 @@ sessionInfo() # check what packages are loaded/attached
 library(dplyr)
 library(tidyr)
 library(readr)
+library(stringr)
 library(ggplot2)
 
 ## sourcing data.R because 'compare_yrs_data' function and others are written there
@@ -11,13 +12,13 @@ args(compare_yrs_data) # reminder of what arguements to include for the function
 
 ## read in datasets to compare
 data1_full <- readr::read_csv(file.path(
-  "/Volumes/BHI_share/BHI 1.0", "Goals and Metadata", 
+  "/Volumes/BHI_share/BHI 1.0", "Goals and Metadata",
   "9-Clean Waters", "contaminants",
-  "downloaded from ICES", "ContaminantsBiota_PCB", 
+  "downloaded from ICES", "ContaminantsBiota_PCB",
   "ContaminantsBiota20158241335bpsj33sqwrom5dcuk5cxoqvi.csv"
 ))
 data2_full <- readr::read_csv(file.path(
-    "/Volumes/BHI_share/BHI 2.0", "Goals", "CW", "CON", 
+    "/Volumes/BHI_share/BHI 2.0", "Goals", "CW", "CON",
     "ContaminantsBiota_PCBs", "ContaminantsBiota_PCBs.csv"
 )) # parsing errors seem to all be from column specifications selected by default...
 
@@ -25,7 +26,7 @@ data2_full <- readr::read_csv(file.path(
 ## look at some basic info about the data
 names(data1_full)
 names(data2_full) # check column names of each
-setdiff(names(data1_full), names(data2_full)) 
+setdiff(names(data1_full), names(data2_full))
 setdiff(names(data2_full), names(data1_full)) # no differences
 
 unique(data1_full$PARAM)
@@ -35,8 +36,8 @@ setdiff(unique(data1_full$PARAM), unique(data2_full$PARAM)) # params in data1 (o
 setdiff(unique(data2_full$PARAM), unique(data1_full$PARAM)) # but new data has also some additional ones
 
 keys <- "tblParamID"
-length(data1$tblParamID)
-length(unique(data1$tblParamID)) # length and unique length are same, ie each row has distinct tblParamID
+length(data1_full$tblParamID)
+length(unique(data1_full$tblParamID)) # length and unique length are same, ie each row has distinct tblParamID
 
 
 ## define p to simplify filtering, change value in square brackets to test different params
@@ -44,12 +45,12 @@ intersect(data1_full$PARAM, data2_full$PARAM)
 p <- intersect(data1_full$PARAM, data2_full$PARAM)[5]
 
 ## subset/filter data to compare
-data1 <- filter(data1_full, PARAM == p) %>% 
-  select("DATE", "MYEAR", "Latitude", "Longitude", "PARAM", "PARGROUP", 
+data1 <- filter(data1_full, PARAM == p) %>%
+  select("DATE", "MYEAR", "Latitude", "Longitude", "PARAM", "PARGROUP",
          "Species", "MATRX", "tblParamID", "MUNIT", "Value")
 
-data2 <- filter(data2_full, PARAM == p) %>% 
-  select("DATE", "MYEAR", "Latitude", "Longitude", "PARAM", "PARGROUP", 
+data2 <- filter(data2_full, PARAM == p) %>%
+  select("DATE", "MYEAR", "Latitude", "Longitude", "PARAM", "PARGROUP",
          "Species", "MATRX", "tblParamID", "MUNIT", "Value")
 
 summary(data1)
