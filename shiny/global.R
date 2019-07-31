@@ -4,15 +4,12 @@ source(file.path(here::here(), "R", "flowerplot.R"))
 source(file.path(here::here(), "R", "maps.R"))
 library(shiny)
 library(shinydashboard)
+library(shinyjs)
 library(pool)
-# library(highcharter)
-# library(here)
-# library(readr)
-# library(tidyr)
-# library(stringr)
+library(highcharter)
 
 ## Functions
-
+-
 #' ui function to expand and contract subitems in menu sidebar
 #' from convertMenuItem https://github.com/OHI-Northeast/ne-dashboard/tree/master/functions
 #'
