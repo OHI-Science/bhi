@@ -22,7 +22,11 @@ map_ui <- function(id,
 
   ## selecting layout
   if(missing(select_type) == TRUE){ # output without selection
-    items <- leafletOutput(ns("plot"), height = 450)
+    items <- splitLayout(cellWidths = c("30%", "70%"),
+                         plotlyOutput(ns("barplot"), height  = 480),
+                         leafletOutput(ns("plot"), height = 480),
+                         cellArgs = list(style = "padding: 10px")
+    )
   } else {
 
     if(select_type == "radio"){ # selection type
@@ -45,16 +49,24 @@ map_ui <- function(id,
 
     ## chart layout
     if(select_location == "above"){
-      items <- list(select, leafletOutput(ns("plot"), height = 480))
+      items <- list(select, splitLayout(cellWidths = c("30%", "70%"),
+                                        plotlyOutput(ns("barplot"), height  = 480),
+                                        leafletOutput(ns("plot"), height = 480),
+                                        cellArgs = list(style = "padding: 10px")))
 
     } else if(select_location == "below"){
-      items <- list(leafletOutput(ns("plot"), height  = 480), select)
+      items <- list(splitLayout(cellWidths = c("30%", "70%"),
+                                plotlyOutput(ns("barplot"), height  = 480),
+                                leafletOutput(ns("plot"), height = 480),
+                                cellArgs = list(style = "padding: 10px")), select)
     }
   }
 
   ## put together in box and return box
-  box_content <- list(h4(title_text), p(sub_title_text), items, p(source_text))
-  tagList(box(box_content))
+  tagList(box(collapsible = TRUE,
+              title = title_text,
+              list(p(sub_title_text), items, p(source_text)),
+              width = 7))
 }
 
 
@@ -65,6 +77,7 @@ card_map <- function(input,
                      session,
                      data,
                      field,
+                     goal_code,
                      filter_field = NULL,
                      display_field = NULL,
                      legend_title = NA,
@@ -72,16 +85,33 @@ card_map <- function(input,
                      popup_add_field = NA,
                      popup_add_field_title = NA){
 
-  data_shp <- sf::st_read("/Volumes/BHI_share/Shapefiles/BHI_shapefile", "BHI_shapefile")
+  shp <- sf::st_read("/Volumes/BHI_share/Shapefiles/BHI_shapefile", "BHI_shapefile") %>%
+    dplyr::mutate(Subbasin = as.character(Subbasin)) %>%
+    dplyr::mutate(Subbasin = ifelse(Subbasin == "Bothian Sea", "Bothnian Sea", Subbasin)) # NEED TO FIX THIS TYPO!!!!!!!!
+  scores_csv <- tbl(bhi_db_con, "scores2015") %>%
+    filter(dimension == "score") %>%
+    collect()
+
+  result <- leaflet_map(scores_csv, goal_code, dim = "score", year = 2014,
+                        basin_or_rgns = "regions", shp, simplify_level = 1,
+                        include_legend = TRUE)
+
+  leaflet_map <- result[[1]]
+  data_shp <- result[[2]]
 
   output$plot <- renderLeaflet({
     ## get popup
     popup_text <- paste("<h5><strong>", popup_title, "</strong>", data_shp[[field]], "</h5>",
                         "<h5><strong>", popup_add_field_title, "</strong>", data_shp[[popup_add_field]], "</h5>", sep = " ")
-    ## create the map
-    leaflet_map(scores_csv, goal_code, dim = "score", year = 2014,
-                basin_or_rgns = "regions", shp = data_shp, lookup_tab = rgn_lookup, simplify_level = 1,
-                include_legend = TRUE)
+    ## call map!
+    leaflet_map
+  })
+
+  output$barplot <- renderPlotly({
+    scores_barplot(scores_csv,
+                   basins_or_rgns = "regions",
+                   goal_code,
+                   make_html = TRUE)
   })
 
 
