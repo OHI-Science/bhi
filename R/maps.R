@@ -17,12 +17,13 @@ library(sf)
 #' must have an attribute column with subbasin full names
 #' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
 #' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
-#' @param basin_lookup
 #' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
-#' @param dim
-#' @param simplified
+#' @param dim the dimension the object/plot should represent,
+#' typically 'score' but could be any one of the scores.csv 'dimension' column elements e.g. 'trend' or 'pressure'
+#' @param year the scenario year to filter the data to, by default the current assessment yearr
+#' @param simplify_level number of times rmapshaper::ms_simplify function should be used on the shapefile, to simplify polygons for display
 #'
-#' @return
+#' @return sf obj with subbasin-aggregated goal scores
 
 make_subbasin_sf <- function(subbasins_shp, scores_csv,
                              goal_code = "all", dim = "score", year = assess_year,
@@ -100,17 +101,19 @@ make_subbasin_sf <- function(subbasins_shp, scores_csv,
   return(mapping_data_sp)
 }
 
-#' make bhi-reginos sf obj joined with goal scores
+#' make bhi-regiomns sf obj joined with goal scores
 #'
-#' @param bhi_rgns_shp
-#' @param scores_csv
-#' @param rgn_lookup
-#' @param goal_code
-#' @param dim
-#' @param year
-#' @param simplify_level
+#' @param bhi_rgns_shp a shapefile of the BHI regions, read into R as a sf (simple features) object
+#' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
+#' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
+#' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
+#' @param dim the dimension the object/plot should represent,
+#' typically 'score' but could be any one of the scores.csv 'dimension' column elements e.g. 'trend' or 'pressure'
+#' @param year the scenario year to filter the data to, by default the current assessment yearr
+#' @param simplify_level number of times rmapshaper::ms_simplify function should be used on the shapefile,
+#' to simplify polygons for display
 #'
-#' @return
+#' @return bhi-regions sf obj joined with goal scores
 
 make_rgn_sf <- function(bhi_rgns_shp, scores_csv,
                         goal_code = "all", dim = "score", year = assess_year,
@@ -175,15 +178,18 @@ make_rgn_sf <- function(bhi_rgns_shp, scores_csv,
 #' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
 #' @param basins_or_rgns
 #' @param shp
-#' @param scores_csv
-#' @param dim
-#' @param year
-#' @param simplify_level
+#' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
+#' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
+#' @param dim the dimension the object/plot should represent,
+#' typically 'score' but could be any one of the scores.csv 'dimension' column elements e.g. 'trend' or 'pressure'
+#' @param year the scenario year to filter the data to, by default the current assessment yearr
+#' @param simplify_level number of times rmapshaper::ms_simplify function should be used on the shapefile,
+#'  to simplify polygons for display
 #' @param legend boolean indicating whether or not to include plot legend
 #' @param labels boolean indicating whether to include labels-- either subbasin or BHI region names
 #' @param scalebar boolean indicating whether or not to include a scalebar
 #' @param northarrow boolean indicating whether or not to include a northarrow
-#' @param save_map
+#' @param save_map either a directory in which to save the map, or if TRUE will save to a default location
 #'
 #' @return returns map created, a ggplot object
 
@@ -325,17 +331,20 @@ map_general <- function(mapping_data_sp, goal_code, basins_or_rgns = "subbasins"
 
 #' create leaflet map
 #'
-#' @param scores_csv
-#' @param goal_code
-#' @param dim
-#' @param year
+#' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
+#' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
+#' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
+#' @param dim the dimension the object/plot should represent,
+#' typically 'score' but could be any one of the scores.csv 'dimension' column elements e.g. 'trend' or 'pressure'
+#' @param year the scenario year to filter the data to, by default the current assessment yearr
 #' @param basin_or_rgns
 #' @param shp
-#' @param simplify_level
-#' @param include_legend
-#' @param legend_title
+#' @param simplify_level number of times rmapshaper::ms_simplify function should be used on the shapefile,
+#' to simplify polygons for display
+#' @param include_legend boolean indicating whether or not to include plot legend
+#' @param legend_title text to be used as the legend title
 #'
-#' @return
+#' @return leaflet map with BHI goal scores by BHI region or Subbasins
 
 leaflet_map <- function(scores_csv, goal_code, dim = "score", year = assess_year, basin_or_rgns = "subbasins",
                         shp, simplify_level = 1, include_legend = TRUE, legend_title = NA){
@@ -379,5 +388,5 @@ leaflet_map <- function(scores_csv, goal_code, dim = "score", year = assess_year
       stroke = TRUE, opacity = 0.5, weight = 2, fillOpacity = 0.6, smoothFactor = 0.5,
       color = thm$cols$map_polygon_border1, fillColor = ~pal(score))
 
-  return(leaflet_map)
+  return(list(leaflet_map, data_sf = plotting_sf))
 }
