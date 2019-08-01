@@ -1,6 +1,7 @@
 ## Libraries
 source(file.path(here::here(), "R", "common.R"))
 library(ggplot2)
+library(plotly)
 library(ggrepel)
 library(ggthemes)
 library(htmlwidgets)
@@ -340,7 +341,6 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
       x ~ icontext(ifelse(x < formatting_df[, g], "circle-arrow-down", "circle-arrow-up"), round(x, digits = 2)))
   }
 
-
   ## create the table ----
   tab <- formattable(table_df, align = c("l", rep("c", ncol(table_df)-1)), list(
     `Subbasin` = formatter("span", style = ~ style(color = "grey")),
@@ -389,7 +389,8 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
 #' create a barplot with subbasin scores, arranged vertically approximately north-to-south
 #' intended to present side-by-side with map, to show distances from reference points/room for improvement
 #'
-#' @param basin_scores scores.csv aggregated by subbasin i.e. area-weighted means per goal
+#' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
+#' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
 #' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
 #' @param uniform_width if TRUE all subbasin bars will be the same width, otherwise a function of area
 #' @param make_html if TRUE, will create an hmtl/plottly version rather than ggplot to use e.g. for the website or shiny app
@@ -397,9 +398,10 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
 #'
 #' @return
 
-scores_barplot <- function(scores, basins_or_rgns = "subbasins", goal_code,
+scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code,
                            uniform_width = FALSE, make_html = FALSE, save = FALSE){
 
+  scores <- scores_csv
   if("dimension" %in% colnames(scores)){
     scores <- scores %>%
       filter(dimension == "score") %>%
@@ -433,7 +435,6 @@ scores_barplot <- function(scores, basins_or_rgns = "subbasins", goal_code,
                   collect(),
                 by = "region_id") %>%
       select(name, score)
-
     # scores <- scores %>%
     #   filter(dimension == "score" & goal == goal_code) %>%
     #   filter(region_id < 100 & region_id != 0) %>%
@@ -496,18 +497,11 @@ scores_barplot <- function(scores, basins_or_rgns = "subbasins", goal_code,
 
 
   ## create plot ----
-  if(basins_or_rgns == "subbasins"){
-    plot_obj <- ggplot(plot_df,
-                       aes(x = pos, y = score_unrounded,
-                           Subbasin = Name, Score = Score, Area = Area,
-                           width = weight, fill = score_unrounded))
-  } else {
-    plot_obj <- ggplot(plot_df,
-                       aes(x = pos, y = score_unrounded,
-                           Region = Name, Score = Score, Area = Area,
-                           width = weight, fill = score_unrounded))
-  }
-  plot_obj <- plot_obj +
+  plot_obj <- ggplot(plot_df,
+                     aes(x = pos, y = score_unrounded,
+                         text =  sprintf("%s:\n%s", str_replace(Name, ", ", "\n"), Score),
+                         # Name = Name, Score = Score, Area = Area,
+                         width = weight, fill = score_unrounded)) +
     geom_bar(aes(y = 100),
              stat = "identity",
              size = 0.2,
@@ -555,9 +549,7 @@ scores_barplot <- function(scores, basins_or_rgns = "subbasins", goal_code,
     #   geom_text(aes(label = subbasin),
     #             family = "Helvetica",
     #             size = 3) # geom_text_repel not supported in ggplotly yet...
-    if(basins_or_rgns == "subbasins"){
-      plot_obj <- plotly::ggplotly(plot_obj,  tooltip = c("Subbasin", "Score", "Area"))
-    } else { plot_obj <- plotly::ggplotly(plot_obj,  tooltip = c("Region", "Score", "Area")) }
+    plot_obj <- plotly::ggplotly(plot_obj, tooltip = "text") # c("Name", "Score", "Area"))
 
   } else {
     plot_obj <- plot_obj +
