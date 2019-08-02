@@ -78,6 +78,16 @@ make_subbasin_sf <- function(subbasins_shp, scores_csv,
       select(Name, goal_code, dimension, simplified)
   }
 
+  ## simplify the polygons for plotting
+  if(simplify_level >= 1){
+    subbasins_shp <- rmapshaper::ms_simplify(input = subbasins_shp) %>%
+      sf::st_as_sf()
+  }
+  if(simplify_level == 2){
+    subbasins_shp <- rmapshaper::ms_simplify(input = subbasins_shp) %>%
+      sf::st_as_sf()
+  }
+
   ## join with spatial information from subbasin shapfile
   mapping_data_sp <- subbasins_shp %>%
     dplyr::mutate(Name = as.character(Name)) %>%
@@ -86,16 +96,6 @@ make_subbasin_sf <- function(subbasins_shp, scores_csv,
       "Aland Sea", Name)) %>%
     dplyr::left_join(mapping_data, by = "Name") %>%
     sf::st_transform(crs = 4326)
-
-  ## simplify the polygons for plotting
-  if(simplify_level >= 1){
-    mapping_data_sp <- rmapshaper::ms_simplify(input = mapping_data_sp) %>%
-      sf::st_as_sf()
-  }
-  if(simplify_level == 2){
-    mapping_data_sp <- rmapshaper::ms_simplify(input = mapping_data_sp) %>%
-      sf::st_as_sf()
-  }
 
   return(mapping_data_sp)
 }
@@ -149,20 +149,20 @@ make_rgn_sf <- function(bhi_rgns_shp, scores_csv,
       select(Name, goal_code, dimension, simplified)
   }
 
+  ## simplify the polygons for plotting
+  if(simplify_level >= 1){
+    bhi_rgns_shp <- rmapshaper::ms_simplify(input = bhi_rgns_shp) %>%
+      sf::st_as_sf()
+  }
+  if(simplify_level == 2){
+    bhi_rgns_shp <- rmapshaper::ms_simplify(input = bhi_rgns_shp) %>%
+      sf::st_as_sf()
+  }
+
   ## join with spatial information from subbasin shapfile
   mapping_data_sp <- bhi_rgns_shp %>%
     dplyr::mutate(Name = sprintf("%s, %s", Subbasin, rgn_nam)) %>%
     dplyr::left_join(mapping_data, by = "Name")
-
-  ## simplify the polygons for plotting
-  if(simplify_level >= 1){
-    mapping_data_sp <- rmapshaper::ms_simplify(input = mapping_data_sp) %>%
-      sf::st_as_sf()
-  }
-  if(simplify_level == 2){
-    mapping_data_sp <- rmapshaper::ms_simplify(input = mapping_data_sp) %>%
-      sf::st_as_sf()
-  }
 
   return(mapping_data_sp)
 }
@@ -192,52 +192,42 @@ make_rgn_sf <- function(bhi_rgns_shp, scores_csv,
 #'
 #' @return returns map created, a ggplot object
 
-map_general <- function(mapping_data_sp, goal_code, basins_or_rgns = "subbasins",
-                        shp = NULL, scores_csv = NULL, dim = "score", year = assess_year, simplify_level = 1,
+map_general <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp = NULL,
+                        shp = NULL, scores_csv = NULL, simplify_level = 1,
+                        dim = "score", year = assess_year,
                         legend = TRUE, labels = FALSE, scalebar = FALSE, northarrow = FALSE,
-                        save_map = FALSE){
+                        save_map = FALSE, calc_sf = FALSE){
 
   ## data checks, wrangling ----
-  if(!exists(deparse(substitute(mapping_data_sp))) & (is.null(shp)|is.null(scores_csv))){
-    stop("missing spatial information: must provide sf with goal scores,
-         or raw shapefile and scores.csv")
+  bhi_goals <- collect(tbl(bhi_db_con, "scores2015"))$goal %>% unique()
+  if(length(goal_code) > 1|!goal_code %in% bhi_goals){
+    stop(sprintf("goal must be one of: %s", paste(bhi_goals, collapse = ", ")))
   }
 
-  ## create or recreate goals sf object if needed
-  if(!exists(deparse(substitute(mapping_data_sp)))){
-    if(basins_or_rgns == "subbasins"){
-      mapping_data_sp <- make_subbasin_sf(
-        shp, scores_csv,
-        goal_code, dim, year, simplify_level
-      )
-    } else {
-      mapping_data_sp <- make_rgn_sf(
-        shp, scores_csv, rgn_lookup,
-        goal_code, dim, year, simplify_level
-      )
-    }
+  if(is.null(mapping_data_sp)){calc_sf <- TRUE}
+
+  if(!calc_sf){
+    chk1 <- !goal_code %in% colnames(mapping_data_sp)
+    chk2 <- basins_or_rgns == "subbasins" & any(str_detect(mapping_data_sp$Name, ","))
+    chk3 <- mapping_data_sp$dimension[1] != dim
+    chk4 <- mapping_data_sp$simplified[1] != simplify_level
+    if(chk1|chk2|chk3|chk4){calc_sf <- TRUE}
   }
 
-  ## some checks
-  chk1 <- !goal_code %in% colnames(mapping_data_sp)
-  chk2 <- mapping_data_sp$dimension[1] != dim
-  chk3 <- mapping_data_sp$simplified[1] != simplify_level
-
-  if(chk1|chk2|chk3){
+  if(calc_sf){
     if(is.null(shp)|is.null(scores_csv)){
       stop("missing spatial information: must provide sf with goal scores,
            or raw shapefile and scores.csv")
     }
     if(basins_or_rgns == "subbasins"){
       mapping_data_sp <- make_subbasin_sf(
-        shp, scores_csv,
-        "all", dim, year, simplify_level
-      )
+        shp, scores_csv, goal_code = "all", dim, year,
+        simplify_level)
     } else {
+      message("creating leaflet map for BHI regions rather than subbasins")
       mapping_data_sp <- make_rgn_sf(
-        shp, scores_csv, rgn_lookup,
-        "all", dim, year, simplify_level
-      )
+        shp, scores_csv, goal_code = "all", dim, year,
+        simplify_level)
     }
   }
 
@@ -336,7 +326,7 @@ map_general <- function(mapping_data_sp, goal_code, basins_or_rgns = "subbasins"
 #' @param dim the dimension the object/plot should represent,
 #' typically 'score' but could be any one of the scores.csv 'dimension' column elements e.g. 'trend' or 'pressure'
 #' @param year the scenario year to filter the data to, by default the current assessment yearr
-#' @param basin_or_rgns
+#' @param basins_or_rgns
 #' @param shp
 #' @param simplify_level number of times rmapshaper::ms_simplify function should be used on the shapefile,
 #' to simplify polygons for display
@@ -345,45 +335,78 @@ map_general <- function(mapping_data_sp, goal_code, basins_or_rgns = "subbasins"
 #'
 #' @return leaflet map with BHI goal scores by BHI region or Subbasins
 
-leaflet_map <- function(scores_csv, goal_code, dim = "score", year = assess_year, basin_or_rgns = "subbasins",
-                        shp, simplify_level = 1, include_legend = TRUE, legend_title = NA, calc_sf = FALSE){
+leaflet_map <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp = NULL,
+                        shp = NULL, scores_csv = NULL, simplify_level = 1,
+                        dim = "score", year = assess_year,
+                        include_legend = TRUE, legend_title = NA, calc_sf = FALSE){
 
-  ## wrangle for plotting ----
-  if(!exists("leaflet_fun_result")){
-    calc_sf <- TRUE
-  } else {
-    if(leaflet_fun_result$info$goal != goal_code){
-      calc_sf <- TRUE
-    }
+
+  ## check and wrangle for plotting ----
+  bhi_goals <- collect(tbl(bhi_db_con, "scores2015"))$goal %>% unique()
+  if(length(goal_code) > 1|!goal_code %in% bhi_goals){
+    stop(sprintf("goal must be one of: %s", paste(bhi_goals, collapse = ", ")))
   }
+
+  if(is.null(mapping_data_sp)){
+    if(exists("leaflet_fun_result")){
+      leaflet_plotting_sf0 <- leaflet_fun_result$data_sf
+    } else {calc_sf <- TRUE}
+  } else {leaflet_plotting_sf0 <- mapping_data_sp}
+
+  if(!calc_sf){
+    chk1 <- !goal_code %in% colnames(leaflet_plotting_sf0)
+    chk2 <- basins_or_rgns == "subbasins" & any(str_detect(leaflet_plotting_sf0$Name, ","))
+    chk3 <- leaflet_plotting_sf0$dimension[1] != dim
+    chk4 <- leaflet_plotting_sf0$simplified[1] != simplify_level
+    if(chk1|chk2|chk3|chk4){calc_sf <- TRUE}
+  }
+
   if(calc_sf){
-    if(basin_or_rgns == "subbasins"){
-      leaflet_plotting_sf <- make_subbasin_sf(
-        shp, scores_csv, goal_code, dim, year,
-        simplify_level) %>%
-        rename(score = goal_code)
+    if(is.null(shp)|is.null(scores_csv)){
+      stop("missing spatial information: must provide sf with goal scores,
+           or raw shapefile and scores.csv")
+    }
+
+    if(basins_or_rgns == "subbasins"){
+      leaflet_plotting_sf0 <- make_subbasin_sf(
+        shp, scores_csv, goal_code = "all", dim, year,
+        simplify_level)
     } else {
       message("creating leaflet map for BHI regions rather than subbasins")
-      leaflet_plotting_sf <- make_rgn_sf(
-        shp, scores_csv, goal_code, dim, year,
-        simplify_level) %>%
-        rename(score = goal_code)
+      leaflet_plotting_sf0 <- make_rgn_sf(
+        shp, scores_csv, goal_code = "all", dim, year,
+        simplify_level)
     }
   }
+  leaflet_plotting_sf <- leaflet_plotting_sf0 %>%
+    rename(score = goal_code)
+
 
   ## apply theme to get standardized elements, colors, palettes ----
   thm <- apply_bhi_theme()
 
   ## create asymmetric color ranges for legend, with same ranges as in 'map_general' function above
-  rc1 <- colorRampPalette(colors = thm$palettes$divergent_red_blue[1:2], space = "Lab")(15)
-  rc2 <- colorRampPalette(colors = thm$palettes$divergent_red_blue[2:3], space = "Lab")(25)
-  rc3 <- colorRampPalette(colors = thm$palettes$divergent_red_blue[3:4], space = "Lab")(20)
-  rc4 <- colorRampPalette(colors = thm$palettes$divergent_red_blue[4:5], space = "Lab")(15)
-  rc5 <- colorRampPalette(colors = thm$palettes$divergent_red_blue[5:6], space = "Lab")(25)
+  rc1 <- colorRampPalette(
+    colors = thm$palettes$divergent_red_blue[1:2],
+    space = "Lab")(15)
+  rc2 <- colorRampPalette(
+    colors = thm$palettes$divergent_red_blue[2:3],
+    space = "Lab")(25)
+  rc3 <- colorRampPalette(
+    colors = thm$palettes$divergent_red_blue[3:4],
+    space = "Lab")(20)
+  rc4 <- colorRampPalette(
+    colors = thm$palettes$divergent_red_blue[4:5],
+    space = "Lab")(15)
+  rc5 <- colorRampPalette(
+    colors = thm$palettes$divergent_red_blue[5:6],
+    space = "Lab")(25)
+
 
   pal <- colorNumeric(palette = c(rc1, rc2, rc3, rc4, rc5),
                       domain = c(0, 100),
                       na.color = thm$cols$map_background1)
+
 
   ## create leaflet map ----
   leaflet_map <- leaflet::leaflet(data = leaflet_plotting_sf) %>%
@@ -404,8 +427,10 @@ leaflet_map <- function(scores_csv, goal_code, dim = "score", year = assess_year
 
   leaflet_fun_result <<- list(
     map = leaflet_map,
-    data_sf = leaflet_plotting_sf,
-    info = list(goal = goal_code, created = Sys.time())
+    data_sf = leaflet_plotting_sf0,
+    info = list(goal = goal_code,
+                basins_or_rgns = basins_or_rgns,
+                created = Sys.time())
   )
 
   return(leaflet_fun_result)
