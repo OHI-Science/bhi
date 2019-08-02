@@ -3,21 +3,32 @@ function(input, output, session){
   ## WELCOME ----
 
   ## flowerplot
-  output$flowerplot <- renderPlot({
-    plot_obj <- make_flower_plot(readr::read_csv(paste0(here::here(), "-1.0-archive/baltic2015/scores.csv")) %>%
-                       filter(dimension == "score"),
-                     rgn_id = 0, plot_year = 2014, include_ranges = TRUE)
-    plot_obj
+  output$flowerplot <- renderImage({
+    plot_obj <- make_flower_plot(
+      tbl(bhi_db_con, "scores2015") %>%
+        filter(dimension == "score") %>%
+        collect(),
+      rgn_id = 0, plot_year = 2014,
+      include_ranges = TRUE, labels = "arc") %>%
+
+      image_trim() %>%
+      image_scale("x350") %>%
+      image_border("white", "20x20")
+
+    tmpfile <- plot_obj %>%
+      image_write(tempfile(fileext = "jpg"), format = "jpg")
+    list(src = tmpfile, contentType = "image/jpeg")
   })
 
   # overall index scores map
   callModule(card_map, "overall_baltic_map",
              data = overall_baltic_map,
              field = "scores",
+             goal_code = "Index",
              legend_title = "Regions Scores",
              popup_title = "Score:",
-             popup_add_field = "rgn_name",
-             popup_add_field_title = "")
+             popup_add_field = "Name",
+             popup_add_field_title = "Region:")
 
 
   ## AO ----
