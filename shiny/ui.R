@@ -66,11 +66,12 @@ dashboardPage(
               fluidRow(box(h3("How healthy are our oceans?"), "MORE INFO, BORROW FROM GITHUB README OR WEBSITE?", width = 12)),
 
               fluidRow(
-
                 ## flowerplot
-                tagList(box(list(h4("Baltic Sea Scores, 2014"),
-                                 p("Flowerplot with ranges, for entire Baltic Sea by BHI regions. Goal-averages."),
-                                 imageOutput("flowerplot")))),
+                box(collapsible = TRUE,
+                    title = "Baltic Sea Scores, 2014",
+                    list(# h4("Baltic Sea Scores, 2014"),
+                         p("Flowerplot with ranges, for entire Baltic Sea by BHI regions. Goal-averages."),
+                         imageOutput("flowerplot", width = "20%")), width = 5),
 
                 ## map of overall scores, all goals and aggregated to subbasins
                 map_ui(id = "overall_baltic_map",
