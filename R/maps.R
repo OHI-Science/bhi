@@ -29,6 +29,12 @@ make_subbasin_sf <- function(subbasins_shp, scores_csv,
                              goal_code = "all", dim = "score", year = assess_year,
                              simplify_level = 1){
 
+  ## raster::select conflict w dplyr...
+  if("raster" %in% (.packages())){
+    detach("package:raster",  unload = TRUE)
+    library(tidyverse)
+  }
+
   ## subbasins_shp <- sf::st_read("/Volumes/BHI_share/Shapefiles/HELCOM_subbasins_holasbasins", "HELCOM_subbasins_holasbasins")
   if("year" %in% colnames(scores_csv)){
     scores_csv <- scores_csv %>%
@@ -62,31 +68,24 @@ make_subbasin_sf <- function(subbasins_shp, scores_csv,
   ## filter and spread data by goal
   mapping_data <- subbasin_data %>%
     dplyr::filter(dimension == dim) %>%
-    dplyr::select(score, goal, subbasin) %>%
+    dplyr::select(score, goal, Name = subbasin) %>%
     tidyr::spread(key = goal, value = score) %>%
-    dplyr::filter(!is.na(subbasin)) %>%
+    dplyr::filter(!is.na(Name)) %>%
     dplyr::mutate(dimension = dim, simplified = simplify_level)
 
   if(goal_code != "all" & goal_code %in% colnames(mapping_data)){
     mapping_data <- mapping_data %>%
-      select(subbasin, goal_code, dimension, simplified)
+      select(Name, goal_code, dimension, simplified)
   }
 
   ## join with spatial information from subbasin shapfile
   mapping_data_sp <- subbasins_shp %>%
-    select(-Name) %>%
-    dplyr::left_join(tbl(bhi_db_con, "basins") %>%
-                       select(HELCOM_ID = helcom_id, subbasin) %>%
-                       collect() %>%
-                       mutate(HELCOM_ID = as.factor(HELCOM_ID)),
-                     by = "HELCOM_ID") %>%
-    dplyr::left_join(mapping_data, by = "subbasin") %>%
-    dplyr::rename(Name = subbasin) %>%
+    dplyr::mutate(Name = as.character(Name)) %>%
+    dplyr::mutate(Name = ifelse(
+      Name == "Åland Sea",
+      "Aland Sea", Name)) %>%
+    dplyr::left_join(mapping_data, by = "Name") %>%
     sf::st_transform(crs = 4326)
-  if("Name" %in% colnames(mapping_data_sp)){
-    mapping_data_sp <- mapping_data_sp %>%
-      mutate(Name = ifelse(Name == "Åland Sea", "Aland Sea", Name))
-  }
 
   ## simplify the polygons for plotting
   if(simplify_level >= 1){
@@ -347,34 +346,49 @@ map_general <- function(mapping_data_sp, goal_code, basins_or_rgns = "subbasins"
 #' @return leaflet map with BHI goal scores by BHI region or Subbasins
 
 leaflet_map <- function(scores_csv, goal_code, dim = "score", year = assess_year, basin_or_rgns = "subbasins",
-                        shp, simplify_level = 1, include_legend = TRUE, legend_title = NA){
+                        shp, simplify_level = 1, include_legend = TRUE, legend_title = NA, calc_sf = FALSE){
 
   ## wrangle for plotting ----
-  if(basin_or_rgns == "subbasins"){
-    plotting_sf <- make_subbasin_sf(
-      shp, scores_csv, goal_code, dim, year,
-      simplify_level) %>%
-      rename(score = goal_code)
+  if(!exists("leaflet_fun_result")){
+    calc_sf <- TRUE
   } else {
-    message("creating leaflet map for BHI regions rather than subbasins")
-    plotting_sf <- make_rgn_sf(
-      shp, scores_csv, goal_code, dim, year,
-      simplify_level) %>%
-      rename(score = goal_code)
+    if(leaflet_fun_result$info$goal != goal_code){
+      calc_sf <- TRUE
+    }
+  }
+  if(calc_sf){
+    if(basin_or_rgns == "subbasins"){
+      leaflet_plotting_sf <- make_subbasin_sf(
+        shp, scores_csv, goal_code, dim, year,
+        simplify_level) %>%
+        rename(score = goal_code)
+    } else {
+      message("creating leaflet map for BHI regions rather than subbasins")
+      leaflet_plotting_sf <- make_rgn_sf(
+        shp, scores_csv, goal_code, dim, year,
+        simplify_level) %>%
+        rename(score = goal_code)
+    }
   }
 
   ## apply theme to get standardized elements, colors, palettes ----
-  ## still need to edit color palette...
-  ## https://stackoverflow.com/questions/49126405/how-to-set-up-asymmetrical-color-gradient-for-a-numerical-variable-in-leaflet-in
   thm <- apply_bhi_theme()
-  pal <- colorNumeric(palette = thm$palettes$divergent_red_blue,
+
+  ## create asymmetric color ranges for legend, with same ranges as in 'map_general' function above
+  rc1 <- colorRampPalette(colors = thm$palettes$divergent_red_blue[1:2], space = "Lab")(15)
+  rc2 <- colorRampPalette(colors = thm$palettes$divergent_red_blue[2:3], space = "Lab")(25)
+  rc3 <- colorRampPalette(colors = thm$palettes$divergent_red_blue[3:4], space = "Lab")(20)
+  rc4 <- colorRampPalette(colors = thm$palettes$divergent_red_blue[4:5], space = "Lab")(15)
+  rc5 <- colorRampPalette(colors = thm$palettes$divergent_red_blue[5:6], space = "Lab")(25)
+
+  pal <- colorNumeric(palette = c(rc1, rc2, rc3, rc4, rc5),
                       domain = c(0, 100),
                       na.color = thm$cols$map_background1)
 
   ## create leaflet map ----
-  leaflet_map <- leaflet::leaflet(data = plotting_sf) %>%
+  leaflet_map <- leaflet::leaflet(data = leaflet_plotting_sf) %>%
     addProviderTiles(providers$CartoDB.Positron) %>% # "Stamen.TonerLite"
-    setView(19, 60.1, zoom = 4)
+    setView(18, 59, zoom = 5)
 
   if(include_legend){
     leaflet_map <- leaflet_map %>%
@@ -384,9 +398,15 @@ leaflet_map <- function(scores_csv, goal_code, dim = "score", year = assess_year
 
   leaflet_map <- leaflet_map %>%
     addPolygons(
-      layerId = ~BHI_ID,
+      layerId = ~Name,
       stroke = TRUE, opacity = 0.5, weight = 2, fillOpacity = 0.6, smoothFactor = 0.5,
       color = thm$cols$map_polygon_border1, fillColor = ~pal(score))
 
-  return(list(leaflet_map, data_sf = plotting_sf))
+  leaflet_fun_result <<- list(
+    map = leaflet_map,
+    data_sf = leaflet_plotting_sf,
+    info = list(goal = goal_code, created = Sys.time())
+  )
+
+  return(leaflet_fun_result)
 }
