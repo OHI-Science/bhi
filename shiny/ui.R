@@ -15,7 +15,7 @@ dashboardPage(
       menuItem("WELCOME", tabName = "welcome"), # badgeLabel = "draft"
 
       convertMenuItem(
-        menuItem("EXPLORE THE GOALS", tabName = "explore", startExpanded = TRUE,
+        menuItem("EXPLORE THE GOALS", tabName = "explore", startExpanded = FALSE,
                  ## AO Artisanal Fishing Opportunity
                  menuSubItem("Artisanal Fishing Opportunity", tabName = "ao", icon = icon("fish")), # icon = icon("anchor")
                  ## BD Biodiversity
@@ -71,7 +71,7 @@ dashboardPage(
                     title = "Baltic Sea Scores, 2014",
                     list(# h4("Baltic Sea Scores, 2014"),
                          p("Flowerplot with ranges, for entire Baltic Sea by BHI regions. Goal-averages."),
-                         imageOutput("flowerplot", width = "20%")), width = 5),
+                         imageOutput("flowerplot", width = "20%")), width = 5, height  = 480),
 
                 ## map of overall scores, all goals and aggregated to subbasins
                 map_ui(id = "overall_baltic_map",
