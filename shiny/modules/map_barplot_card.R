@@ -7,7 +7,7 @@
 
 ## map card ui function ----
 
-map_ui <- function(id,
+map_barplot_ui <- function(id,
                    title_text = NULL,
                    sub_title_text = NULL,
                    select_type = c(NULL, "radio", "drop_down", "checkboxes"),
@@ -22,7 +22,11 @@ map_ui <- function(id,
 
   ## selecting layout
   if(missing(select_type) == TRUE){ # output without selection
-    items <- leafletOutput(ns("plot"), height = 480)
+    items <- splitLayout(cellWidths = c("30%", "70%"),
+                         plotlyOutput(ns("barplot"), height  = 480),
+                         leafletOutput(ns("plot"), height = 480),
+                         cellArgs = list(style = "padding: 10px")
+    )
   } else {
 
     if(select_type == "radio"){ # selection type
@@ -45,10 +49,16 @@ map_ui <- function(id,
 
     ## chart layout
     if(select_location == "above"){
-      items <- list(select, leafletOutput(ns("plot"), height = 480))
+      items <- list(select, splitLayout(cellWidths = c("30%", "70%"),
+                                        plotlyOutput(ns("barplot"), height  = 480),
+                                        leafletOutput(ns("plot"), height = 480),
+                                        cellArgs = list(style = "padding: 10px")))
 
     } else if(select_location == "below"){
-      items <- list(leafletOutput(ns("plot"), height = 480), select)
+      items <- list(splitLayout(cellWidths = c("30%", "70%"),
+                                plotlyOutput(ns("barplot"), height  = 480),
+                                leafletOutput(ns("plot"), height = 480),
+                                cellArgs = list(style = "padding: 10px")), select)
     }
   }
 
@@ -62,18 +72,18 @@ map_ui <- function(id,
 
 ## map card server function ----
 
-card_map <- function(input,
-                     output,
-                     session,
-                     data,
-                     field,
-                     goal_code,
-                     filter_field = NULL,
-                     display_field = NULL,
-                     legend_title = NA,
-                     popup_title = NA,
-                     popup_add_field = NA,
-                     popup_add_field_title = NA){
+card_map__barplot <- function(input,
+                              output,
+                              session,
+                              data,
+                              field,
+                              goal_code,
+                              filter_field = NULL,
+                              display_field = NULL,
+                              legend_title = NA,
+                              popup_title = NA,
+                              popup_add_field = NA,
+                              popup_add_field_title = NA){
 
   # shp <- sf::st_read("/Volumes/BHI_share/Shapefiles/BHI_shapefile", "BHI_shapefile") %>%
   #   dplyr::mutate(Subbasin = as.character(Subbasin)) %>%
@@ -92,6 +102,13 @@ card_map <- function(input,
                         "<h5><strong>", popup_add_field_title, "</strong>", result$data_sf[[popup_add_field]], "</h5>", sep = " ") # get popup
 
     result$map # call map!
+  })
+
+  output$barplot <- renderPlotly({
+    scores_barplot(scores_csv,
+                   basins_or_rgns = "subbasins", # basin_or_rgns = "regions"
+                   goal_code,
+                   make_html = TRUE)
   })
 
 
