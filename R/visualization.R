@@ -435,17 +435,6 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code,
                   collect(),
                 by = "region_id") %>%
       select(name, score)
-    # scores <- scores %>%
-    #   filter(dimension == "score" & goal == goal_code) %>%
-    #   filter(region_id < 100 & region_id != 0) %>%
-    #   left_join(tbl(bhi_db_con, "regions") %>%
-    #               select(region_id, subbasin, area_km2),
-    #             by = "region_id") %>%
-    #   select(-goal, -dimension, -region_id) %>%
-    #   collect() %>%
-    #   group_by(subbasin) %>%
-    #   summarize(value = weighted.mean(score, area_km2, na.rm = TRUE)) %>%
-    #   select(name = subbasin, score = value)
 
   } else {
     order_df <- tbl(bhi_db_con, "regions") %>%
@@ -479,14 +468,24 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code,
       collect()
   }
 
-  plot_df <- scores %>%
-    dplyr::left_join(weights, by = "name") %>%
-    dplyr::left_join(order_df, by = "name") %>%
-    dplyr::mutate(Name = as.factor(region_name),
-                  score_unrounded = score,
-                  Score = round(score, 2),
-                  Area = paste(round(area_km2), "km2")) %>%
-    # dplyr::mutate(order = max(order) - order) %>%
+  if(basins_or_rgns == "subbasins"){
+    plot_df <- scores %>%
+      dplyr::left_join(weights, by = "name") %>%
+      dplyr::left_join(order_df, by = "name") %>%
+      dplyr::mutate(Name = name,
+                    score_unrounded = score,
+                    Score = round(score, 2),
+                    Area = paste(round(area_km2), "km2"))
+  } else {
+    plot_df <- scores %>%
+      dplyr::left_join(weights, by = "name") %>%
+      dplyr::left_join(order_df, by = "name") %>%
+      dplyr::mutate(Name = as.factor(region_name),
+                    score_unrounded = score,
+                    Score = round(score, 2),
+                    Area = paste(round(area_km2), "km2"))
+  }
+  plot_df <- plot_df %>%
     dplyr::arrange(order) %>%
     dplyr::mutate(pos = sum(weight) - (cumsum(weight) - 0.5 * weight)) %>%
     dplyr::mutate(pos_end = sum(weight)) %>%
