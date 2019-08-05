@@ -5,13 +5,14 @@ source(file.path(here::here(), "R", "maps.R"))
 library(shiny)
 library(shinydashboard)
 library(shinyjs)
+library(shinyWidgets)
 library(pool)
 library(highcharter)
 
 ## Functions
 
 #' ui function to expand and contract subitems in menu sidebar
-#' from convertMenuItem https://github.com/OHI-Northeast/ne-dashboard/tree/master/functions
+#' from convertMenuItem by Jamie Afflerbach https://github.com/OHI-Northeast/ne-dashboard/tree/master/functions
 #'
 #' @param mi menu item
 #' @param tabName
