@@ -57,6 +57,8 @@ dashboardPage(
       tags$link(rel = "stylesheet", type = "text/css", href = "style.css")),
     tags$script(HTML("$('body').addClass('fixed');")), # lock side and top bars
 
+
+
     ## Sidebar Pages/Tabs
     tabItems(
 
@@ -67,11 +69,16 @@ dashboardPage(
 
               fluidRow(
                 ## flowerplot
-                box(collapsible = TRUE,
-                    title = "Baltic Sea Scores, 2014",
-                    list(# h4("Baltic Sea Scores, 2014"),
-                         p("Flowerplot with ranges, for entire Baltic Sea by BHI regions. Goal-averages."),
-                         imageOutput("flowerplot", width = "20%")), width = 5, height  = 480),
+                # box(collapsible = TRUE,
+                #     title = "Baltic Sea Scores, 2014",
+                #     list(# h4("Baltic Sea Scores, 2014"),
+                #          p("Flowerplot with ranges, for entire Baltic Sea by BHI regions. Goal-averages."),
+                #          highchartOutput("flowerplot")),
+                #     setBackgroundImage(src = "/Users/eleanorecampbell/Desktop/GitHub/bhi/baltic/temp/flowerplot_baltic_sea.png"),
+                #     width = 5, height  = 500),
+                flower_ui(id = "overall_baltic_flowerplot",
+                          title_text = "Baltic Sea Scores, 2014",
+                          sub_title_text = "Flowerplot with ranges, for entire Baltic Sea by BHI regions. Goal-averages."),
 
                 ## map of overall scores, all goals and aggregated to subbasins
                 map_ui(id = "overall_baltic_map",
