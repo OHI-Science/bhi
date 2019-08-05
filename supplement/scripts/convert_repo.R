@@ -1,3 +1,21 @@
+#' single to sequential multiyear repo
+#'
+#' converts single-year assessment repo for sequential multiyear assessments
+#' i.e. to update framework for a second Baltic Sea assessment
+#'
+#' @param new_repo filepath to a standard starter/template repo, as created by OHI team;
+#' this will be come the new expanded repo
+#' @param archive_filepath filepath to the original/archived repository
+#' @param original_funs_dir directory of original goal-functions as individual scripts
+#' @param new_funs_dir directory of new goal-functions (able to accomodate multiple years;
+#' using e.g. ohicore::AlignDataYears rather than SelectLayersData) as individual scripts
+#' @param scenario_yrs the years for which 'scenarios' are to be calculated;
+#' includes typically the assessment year and any back-calculated years
+#' @param dummy_data_yr a 'placeholder' to include in the raw input while in order to test conversion;
+#' to be replaced with real years during subsequent data prep and assessment!
+#'
+#' @return list of outputs including: updated_layers, track_layers_added table, intermediate pressure and resilience matrices
+
 convert_repo <- function(new_repo, archive_filepath,
                          original_funs_dir, new_funs_dir,
                          scenario_yrs = 2015:2018, dummy_data_yr = 2014){
