@@ -21,7 +21,8 @@ library(sf)
 #' @param dim the dimension the object/plot should represent,
 #' typically 'score' but could be any one of the scores.csv 'dimension' column elements e.g. 'trend' or 'pressure'
 #' @param year the scenario year to filter the data to, by default the current assessment yearr
-#' @param simplify_level number of times rmapshaper::ms_simplify function should be used on the shapefile, to simplify polygons for display
+#' @param simplify_level number of times rmapshaper::ms_simplify function should be used on the shapefile,
+#' to simplify polygons for display
 #'
 #' @return sf obj with subbasin-aggregated goal scores
 
@@ -34,8 +35,6 @@ make_subbasin_sf <- function(subbasins_shp, scores_csv,
     detach("package:raster",  unload = TRUE)
     library(tidyverse)
   }
-
-  ## subbasins_shp <- sf::st_read("/Volumes/BHI_share/Shapefiles/HELCOM_subbasins_holasbasins", "HELCOM_subbasins_holasbasins")
   if("year" %in% colnames(scores_csv)){
     scores_csv <- scores_csv %>%
       dplyr::filter(year == year) %>%
@@ -102,7 +101,7 @@ make_subbasin_sf <- function(subbasins_shp, scores_csv,
 
 #' make bhi-regiomns sf obj joined with goal scores
 #'
-#' @param bhi_rgns_shp a shapefile of the BHI regions, read into R as a sf (simple features) object
+#' @param bhi_rgns_shp a shapefile of the BHI regions, as a sf (simple features) object
 #' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
 #' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
 #' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
@@ -121,7 +120,6 @@ make_rgn_sf <- function(bhi_rgns_shp, scores_csv,
   # bhi_rgns_shp <- sf::st_read("/Volumes/BHI_share/Shapefiles/BHI_shapefile", "BHI_shapefile") %>%
   #   dplyr::mutate(Subbasin = as.character(Subbasin)) %>%
   #   dplyr::mutate(Subbasin = ifelse(Subbasin == "Bothian Sea", "Bothnian Sea", Subbasin)) # NEED TO FIX THIS TYPO!!!!!!!!
-
 
   rgn_lookup <- tbl(bhi_db_con, "regions") %>%
     select(region_id, Name = region_name) %>%
@@ -173,22 +171,23 @@ make_rgn_sf <- function(bhi_rgns_shp, scores_csv,
 #' a general function used to create maps by subbasin or by BHI region
 #' calls apply_bhi_theme function defined in common.R for standardized plotting elements e.g. colors and palettes
 #'
-#' @param mapping_data_sp an sf object associating goal scores with spatial polygons/geometries
 #' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
-#' @param basins_or_rgns
-#' @param shp
+#' @param basins_or_rgns one of 'subbasins' or 'regions' to indicate which spatial units should be represented
+#' @param mapping_data_sp  sf object associating scores with spatial polygons, i.e. having goal score and geometries information
+#' @param shp spatial features object with geometry of either subbasins or BHI regions depending on specified spatial unit
 #' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
 #' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
+#' @param simplify_level number of times rmapshaper::ms_simplify function should be used on the shapefile,
+#'  to simplify polygons for display
 #' @param dim the dimension the object/plot should represent,
 #' typically 'score' but could be any one of the scores.csv 'dimension' column elements e.g. 'trend' or 'pressure'
 #' @param year the scenario year to filter the data to, by default the current assessment yearr
-#' @param simplify_level number of times rmapshaper::ms_simplify function should be used on the shapefile,
-#'  to simplify polygons for display
 #' @param legend boolean indicating whether or not to include plot legend
 #' @param labels boolean indicating whether to include labels-- either subbasin or BHI region names
 #' @param scalebar boolean indicating whether or not to include a scalebar
 #' @param northarrow boolean indicating whether or not to include a northarrow
 #' @param save_map either a directory in which to save the map, or if TRUE will save to a default location
+#' @param calc_sf boolean indicating whether to (re)calculate mapping sf object
 #'
 #' @return returns map created, a ggplot object
 
@@ -320,25 +319,31 @@ map_general <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp
 
 #' create leaflet map
 #'
+#' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
+#' @param basins_or_rgns one of 'subbasins' or 'regions' to indicate which spatial units should be represented
+#' @param mapping_data_sp  sf object associating scores with spatial polygons, i.e. having goal score and geometries information
+#' @param shp simple features object with spatial units to be mapped;
+#' must be provided along with scores_csv if ´mapping_data_sp´ is not
 #' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
 #' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
-#' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
-#' @param dim the dimension the object/plot should represent,
-#' typically 'score' but could be any one of the scores.csv 'dimension' column elements e.g. 'trend' or 'pressure'
-#' @param year the scenario year to filter the data to, by default the current assessment yearr
-#' @param basins_or_rgns
-#' @param shp
 #' @param simplify_level number of times rmapshaper::ms_simplify function should be used on the shapefile,
 #' to simplify polygons for display
+#' @param dim the dimension the object/plot should represent,
+#' typically 'score' but could be any one of the scores.csv 'dimension' column elements e.g. 'trend' or 'pressure'
+#' @param year the scenario year to filter the data to, by default the current assessment year
+#' @param overlay_mpas boolean indicating whether to overlay MPAs on the goal scores map
 #' @param include_legend boolean indicating whether or not to include plot legend
 #' @param legend_title text to be used as the legend title
+#' @param calc_sf boolean indicating whether to (re)calculate mapping sf object
 #'
 #' @return leaflet map with BHI goal scores by BHI region or Subbasins
 
 leaflet_map <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp = NULL,
                         shp = NULL, scores_csv = NULL, simplify_level = 1,
                         dim = "score", year = assess_year,
-                        include_legend = TRUE, legend_title = NA, calc_sf = FALSE){
+                        # overlay_mpas = FALSE,
+                        include_legend = TRUE, legend_title = NA,
+                        calc_sf = FALSE){
 
 
   ## check and wrangle for plotting ----
@@ -349,13 +354,16 @@ leaflet_map <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp
 
   if(is.null(mapping_data_sp)){
     if(exists("leaflet_fun_result")){
-      leaflet_plotting_sf0 <- leaflet_fun_result$data_sf
-    } else {calc_sf <- TRUE}
+      if(leaflet_fun_result$info$basins_or_rgns == basins_or_rgns){
+        leaflet_plotting_sf0 <- leaflet_fun_result$data_sf
+      } else {calc_sf <- TRUE}
+    }
   } else {leaflet_plotting_sf0 <- mapping_data_sp}
 
   if(!calc_sf){
     chk1 <- !goal_code %in% colnames(leaflet_plotting_sf0)
-    chk2 <- basins_or_rgns == "subbasins" & any(str_detect(leaflet_plotting_sf0$Name, ","))
+    chk2 <- basins_or_rgns == "subbasins" & any(str_detect(leaflet_plotting_sf0$Name, ","))|
+      basins_or_rgns != "subbasins" & !any(str_detect(leaflet_plotting_sf0$Name, ","))
     chk3 <- leaflet_plotting_sf0$dimension[1] != dim
     chk4 <- leaflet_plotting_sf0$simplified[1] != simplify_level
     if(chk1|chk2|chk3|chk4){calc_sf <- TRUE}
@@ -424,6 +432,14 @@ leaflet_map <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp
       layerId = ~Name,
       stroke = TRUE, opacity = 0.5, weight = 2, fillOpacity = 0.6, smoothFactor = 0.5,
       color = thm$cols$map_polygon_border1, fillColor = ~pal(score))
+
+  # if(overlay_mpas){
+  #   leaflet_map <- leaflet_map %>%
+  #     addPolygons(data = ,
+  #                 layerId =  ~Name,
+  #                 stroke = TRUE, weight = 2, fillOpacity = 0.95, smoothFactor = 0.5,
+  #                 fillColor = NA)
+  # }
 
   leaflet_fun_result <<- list(
     map = leaflet_map,
