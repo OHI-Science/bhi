@@ -548,7 +548,7 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code,
     #   geom_text(aes(label = subbasin),
     #             family = "Helvetica",
     #             size = 3) # geom_text_repel not supported in ggplotly yet...
-    plot_obj <- plotly::ggplotly(plot_obj, tooltip = "text") # c("Name", "Score", "Area"))
+    plot_obj <- suppressWarnings(plotly::ggplotly(plot_obj, tooltip = "text"))
 
   } else {
     plot_obj <- plot_obj +
