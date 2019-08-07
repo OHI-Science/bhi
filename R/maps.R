@@ -353,11 +353,11 @@ leaflet_map <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp
   }
 
   if(is.null(mapping_data_sp)){
-    if(exists("leaflet_fun_result")){
+    if(exists("leaflet_fun_result", where = .GlobalEnv)){
       if(leaflet_fun_result$info$basins_or_rgns == basins_or_rgns){
         leaflet_plotting_sf0 <- leaflet_fun_result$data_sf
       } else {calc_sf <- TRUE}
-    }
+    } else {calc_sf <- TRUE}
   } else {leaflet_plotting_sf0 <- mapping_data_sp}
 
   if(!calc_sf){
