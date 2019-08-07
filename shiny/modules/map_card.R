@@ -1,8 +1,8 @@
 #' map card module
 #'
 #' this script contains two functions:
-#' \code{map_ui} generates the user interface for each card
-#' \code{card_map} generates the plot shown in a card
+#' \code{mapCardUI} generates the user interface for each card
+#' \code{mapCard} generates the plot shown in a card
 #' from https://github.com/OHI-Northeast/ne-dashboard/blob/master/modules/map_card.R
 
 ## map card ui function ----
@@ -16,7 +16,7 @@ mapCardUI <- function(id,
                       selected = NULL){
 
 
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
   ## selection layout
   if(missing(select_type) == TRUE){ # without selection
@@ -65,6 +65,7 @@ mapCard <- function(input,
 
   ## render and return the leaflet map etc
   output$plot <- renderLeaflet({
+    d <- dimension_selected()
 
     ## scores data from bhi database
     scores_csv <- tbl(bhi_db_con, "scores2015") %>%
@@ -84,13 +85,19 @@ mapCard <- function(input,
     }
 
     result <- leaflet_map(goal_code, spatial_unit_selected(), mapping_data_sp = NULL,
-                          shp = shp, scores_csv, simplify_level = 1, dim = d, year = 2014,
+                          shp = shp, scores_csv, simplify_level = 1, dim = dimension_selected(), year = 2014,
                           include_legend = TRUE, legend_title)
 
     popup_text <- paste("<h5><strong>", popup_title, "</strong>",
                         result$data_sf[[goal_code]], "</h5>",
                         "<h5><strong>", popup_add_field_title, "</strong>",
                         result$data_sf[[popup_add_field]], "</h5>", sep = " ")
-    result$map
+
+    result$map %>%
+      addPolygons(
+        popup = popup_text,
+        fillOpacity = 0,
+        stroke = FALSE
+      )
   })
 }
