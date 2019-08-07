@@ -7,6 +7,7 @@ function(input, output, session){
 
   ## flowerplot
   callModule(flowerplotCard, "baltic_flowerplot",
+             flower_id = "baltic_flowerplot",
              dimension = "score",
              region_id = 0)
 
@@ -18,7 +19,7 @@ function(input, output, session){
              legend_title = "Regions Scores",
              popup_title = "Score:",
              popup_add_field = "Name",
-             popup_add_field_title = "Basin:")
+             popup_add_field_title = "Name:")
 
 
   # callModule(map_barplot_card, "index_map",

@@ -1,8 +1,8 @@
 #' flowerplot card module
 #'
 #' this script contains two functions:
-#' \code{flower_ui} generates the user interface for each flowerplot card
-#' \code{card_flower} generates the flowerplot shown in a card
+#' \code{flowerplotCardUI} generates the user interface for each flowerplot card
+#' \code{flowerplotCard} generates the flowerplot shown in a card
 
 ## flowerplot card ui function ----
 flowerplotCardUI <- function(id,
@@ -10,7 +10,7 @@ flowerplotCardUI <- function(id,
                              sub_title_text = NULL){
 
   ## make namespace for the id-specific object
-  ns <- NS(id)
+  ns <- shiny::NS(id)
 
   ## put together in box and return box
   tagList(box(collapsible = TRUE,
@@ -24,24 +24,14 @@ flowerplotCardUI <- function(id,
 flowerplotCard <- function(input,
                            output,
                            session,
+                           flower_id,
                            dimension,
                            region_id){
 
   rgn_id <- region_id
   dim <- dimension
 
-  df <- tbl(bhi_db_con, "scores2015") %>%
-    collect() %>%
-    filter(region_id == rgn_id, dimension == dim, goal != "Index") %>%
-    select(goal, y = score) %>%
-    mutate(color = "#00000000") %>%
-    mutate(goal = as.factor(goal)) %>%
-    left_join(tbl(bhi_db_con, "plot_conf") %>%
-                select(goal, order_hierarchy, weight) %>%
-                collect(), by = "goal") %>%
-    filter(!goal %in% c()) %>%
-    arrange(order_hierarchy)
-
+  ## make flowerplot
   plot_obj <- make_flower_plot(
     tbl(bhi_db_con, "scores2015") %>%
       filter(dimension == "score") %>%
@@ -53,25 +43,42 @@ flowerplotCard <- function(input,
     image_scale("x350") %>%
     image_border("white", "20x20")
 
-  tmploc <- file.path("./www", ns("tmp.png"))
+  tmploc <- file.path("./www", paste0(flower_id, "tmp.png"))
   image_write(plot_obj, tmploc)
 
+
+  ## config dataframe for interactive/popups...
+  df <- tbl(bhi_db_con, "scores2015") %>%
+    collect() %>%
+    filter(region_id == rgn_id, dimension == dim, goal != "Index") %>%
+    select(goal, y = score) %>%
+    left_join(tbl(bhi_db_con, "plot_conf") %>%
+                select(goal,  parent, order_htmlplot) %>%
+                collect(), by = "goal") %>%
+    mutate(color = "#00000000")
+  df2 <- filter(df, is.na(parent), !goal %in% df$parent)
+  df <- arrange(rbind(filter(df, !goal %in% df$parent), df2, df2), order_htmlplot)
+
+  ## render and return full flowerplot
   output$flowerplot <- renderHighchart({
 
     highchart() %>%
       hc_chart(type = "column", polar = TRUE, plotBackgroundImage = basename(tmploc)) %>%
-      hc_xAxis(categories = "goal") %>%
+      hc_xAxis(categories = df$goal) %>%
+      hc_yAxis("min" = -50, max = 100) %>%
+      hc_pane(startAngle = 15) %>%
       hc_plotOptions(
         series = list(
           cursor = "pointer",
+          pointWidth = 0.3,
           point = list(
             events = list(
-              click = JS( "function () { location.href = 'https://github.com/OHI-Science/bhi-prep/tree/master/prep/' + this.options.key; }")
+              click = JS("function(){ location.href = 'https://github.com/OHI-Science/bhi-prep/tree/master/prep/' + this.options.key; }")
             )))) %>%
       hc_add_series(data = df,
                     type = "column",
-                    mapping = hcaes(name = goal, key = goal, color = color),
-                    name = "Score",
+                    mapping = hcaes(key = goal, color = color),
+                    name = "",
                     showInLegend = FALSE) %>%
       hc_add_theme(hc_theme_null())})
 
