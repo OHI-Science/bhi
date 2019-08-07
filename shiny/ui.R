@@ -64,7 +64,10 @@ dashboardPage(
       ## COMPARE/SUMMARIZE
       menuItem("COMPARE & SUMMARIZE", tabName = "summaries", startExpanded = FALSE,
                menuSubItem("Likely Future versus Present", tabName = "futures"),
-               menuSubItem("Pressures", tabName = "pressures"),
+               menuSubItem("Pressures", tabName = "pressures")),
+
+      ## VIEW OPTIONS, SELECT INPUTS
+      menuItem("VIEW OPTIONS", tabName = "summaries", startExpanded = FALSE,
                selectInput("spatial_unit", "Spatial Units",
                            choices = c(`Subbasins` = "subbasins", `BHI Regions` = "regions"),
                            selected = "subbasins"),
