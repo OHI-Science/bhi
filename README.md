@@ -20,7 +20,7 @@ Our region of focus is the [Baltic Sea](https://www.google.se/maps/place/Baltic+
 
 <br/>
 
-![](supplement/figures/BHI_regions_plot.png)  
+![](supplement/web/BHI_regions_plot.png)  
 
 <br/>
 
