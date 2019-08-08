@@ -321,7 +321,8 @@ map_general <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp
 #'
 #' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
 #' @param basins_or_rgns one of 'subbasins' or 'regions' to indicate which spatial units should be represented
-#' @param mapping_data_sp  sf object associating scores with spatial polygons, i.e. having goal score and geometries information
+#' @param mapping_data_sp  sf object associating scores with spatial polygons,
+#' i.e. having goal score and geometries information
 #' @param shp simple features object with spatial units to be mapped;
 #' must be provided along with scores_csv if ´mapping_data_sp´ is not
 #' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
@@ -354,11 +355,15 @@ leaflet_map <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp
 
   if(is.null(mapping_data_sp)){
     if(exists("leaflet_fun_result", where = .GlobalEnv)){
-      if(leaflet_fun_result$info$basins_or_rgns == basins_or_rgns){
+      if(leaflet_fun_result$info$basins_or_rgns == basins_or_rgns &
+         leaflet_fun_result$info$dimension ==  dim){
         leaflet_plotting_sf0 <- leaflet_fun_result$data_sf
       } else {calc_sf <- TRUE}
     } else {calc_sf <- TRUE}
-  } else {leaflet_plotting_sf0 <- mapping_data_sp}
+  } else {
+    leaflet_plotting_sf0 <- mapping_data_sp
+    calc_sf <- FALSE
+  }
 
   if(!calc_sf){
     chk1 <- !goal_code %in% colnames(leaflet_plotting_sf0)
@@ -410,10 +415,11 @@ leaflet_map <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp
     colors = thm$palettes$divergent_red_blue[5:6],
     space = "Lab")(25)
 
-
-  pal <- colorNumeric(palette = c(rc1, rc2, rc3, rc4, rc5),
-                      domain = c(0, 100),
-                      na.color = thm$cols$map_background1)
+  pal <- colorNumeric(
+    palette = c(rc1, rc2, rc3, rc4, rc5),
+    domain = c(0, 100),
+    na.color = thm$cols$map_background1
+  )
 
 
   ## create leaflet map ----
@@ -437,7 +443,7 @@ leaflet_map <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp
   #   leaflet_map <- leaflet_map %>%
   #     addPolygons(data = ,
   #                 layerId =  ~Name,
-  #                 stroke = TRUE, weight = 2, fillOpacity = 0.95, smoothFactor = 0.5,
+  #                 stroke = TRUE, weight = 1, fillOpacity = 0, smoothFactor = 0.5,
   #                 fillColor = NA)
   # }
 
@@ -445,6 +451,7 @@ leaflet_map <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp
     map = leaflet_map,
     data_sf = leaflet_plotting_sf0,
     info = list(goal = goal_code,
+                dimension = dim,
                 basins_or_rgns = basins_or_rgns,
                 created = Sys.time())
   )

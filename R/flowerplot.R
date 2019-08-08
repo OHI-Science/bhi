@@ -1,5 +1,5 @@
 ## Libraries
-source(file.path(here::here(), "R", "common.R"))
+source(file.path(here::here(), "R", "setup.R"))
 library(ggplot2)
 library(ggthemes)
 library(grDevices)
@@ -22,6 +22,7 @@ library(webshot) # webshot::install_phantomjs()
 #'
 #' @param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R),
 #' filtered to region
+#' @param rgns vector of bhi region ids by which to filter scores data and for which to create flowerplots
 #' @param plot_year year by which to filter region score input dataframe;
 #' defaults to current year or maximum year in score data input
 #' @param dim the dimension the flowerplot petals should represent (typically OHI 'score')
@@ -35,6 +36,7 @@ library(webshot) # webshot::install_phantomjs()
 #' (creating the legend takes time so avoid if possible)
 #' @param labels one of "none", "regular", "curved"
 #' @param center_val a boolean indicating whether the region average value should be included in the center of the flower plot
+#' @param include_ranges whether range bars should be calculated and displayed on plot, only for area-weighted averages ie region id = 0
 #' @param critical_value value at which a light red line should drawn overlying the plot,
 #' to indicate a 'critical point' of some kind...
 #' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string,
@@ -43,7 +45,7 @@ library(webshot) # webshot::install_phantomjs()
 #' @return result is a flower plot; if curved labels or legend table are included,
 #' the resulting class is magick-image, otherwise the result is a ggplot object
 
-make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "score",
+make_flower_plot <- function(rgn_scores, rgns = NA, plot_year = NA, dim = "score",
                              color_pal = NA, color_by = "goal", gradient = FALSE, legend_tab = FALSE, update_legend = FALSE,
                              labels = "none", center_val = TRUE, include_ranges = FALSE, critical_value = 0, save = NA){
 
@@ -84,12 +86,12 @@ make_flower_plot <- function(rgn_scores, rgn_id = NA, plot_year = NA, dim = "sco
       scores_range = list(range(score, na.rm = TRUE) %>% round(digits = 1))
     ) %>%
     ungroup()
-  if(!is.na(rgn_id)){
-    if(rgn_id != 0){
+  if(!is.na(rgns)){
+    if(!any(rgns == 0)){
       rgn_scores_summary <- rgn_scores_summary %>%
         select(-scores_range)
     }
-    rgn_scores <- dplyr::filter(rgn_scores, region_id == rgn_id)
+    rgn_scores <- dplyr::filter(rgn_scores, region_id %in% rgns)
     unique_rgn <- unique(rgn_scores$region_id)
   }
   if(length(unlist(rgn_scores_summary$missing_rgn)) != 0 & isTRUE(include_ranges)){

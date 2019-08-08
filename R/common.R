@@ -1,48 +1,23 @@
 ## Libraries
-library(here)
-library(readr)
-library(dplyr)
-library(tidyr)
-library(stringr)
+source(file.path(here::here(), "R", "setup.R"))
 
-## General
-assess_year <- 2019 # CHANGE BHI ASSESSMENT YEAR HERE!
-projstringCRS <- raster::crs("+proj=longlat +datum=WGS84 +no_defs") # spatial data use lat/long coords on WGS84
-filesep <- .Platform$file.sep
-
-bhi_repo_loc <- "https://github.com/OHI-Science/bhi"
-bhiprep_repo_loc <- "https://github.com/OHI-Science/bhi-prep/prep"
-bhi_repo_raw <- "https://raw.githubusercontent.com/OHI-Science/bhi"
-bhiprep_repo_raw <- "https://raw.githubusercontent.com/OHI-Science/bhi-prep"
-bhi_api <- "https://api.github.com/repos/OHI-Science/bhi/git/trees/master?recursive=1"
-bhiprep_api <- "https://api.github.com/repos/OHI-Science/bhi-prep/git/trees/master?recursive=1"
-
-
-## Connections and Directories
-bhi_db_file <- "/Users/eleanorecampbell/Desktop/bhi-config.sqlite" # for now...
-bhi_db_con <- DBI::dbConnect(RSQLite::SQLite(), bhi_db_file)
-
-
-dir_bhi <- here::here()
-dir_assess <- file.path(dir_bhi, "baltic"); dir_baltic <- file.path(dir_bhi, "baltic") # CHANGE BHI ASSESSMENT DIRECTORY HERE!
-dir_spatial <- file.path(dir_bhi, "spatial") # spatial folder of bhi repo
-dir_prep <- file.path("..", "bhi-prep") # only works if assessment and prep repos are in same main (github) directory...
-dir_B <- file.path(c("Darwin" = "/Volumes/BHI_share", # "Windows" = ?
-           "Linux" = "/home/shares/ohi")[[ Sys.info()[["sysname"]] ]], "BHI 2.0") # CHANGE MAIN AUX BHI DIRECTORY HERE!
-if(Sys.info()[["sysname"]] != "Linux" & !file.exists(dir_B)){ # warning if BHI internal, shared directory doesn't exist
-  paste("The BHI directory dir_share set in R/common.R does not exist.",
-        sprintf("Do you need to mount the BHI server: %s?", dir_B))
-}
 
 ## Functions
 
-funsR_goals_list <- function(functionsR_path = NULL, funs_text = NULL){
-  if(is.null(functionsR_path) & is.null(funs_text)){
+#' list functions.R goals
+#'
+#' @param functionsR_path location of functions.R to extract goal from
+#' @param functionsR_text list of funcitons.R lines read eg using scan (if functionsR_path is not provided)
+#'
+#' @return goal codes character vector for goals having functions defined in functions.R
+
+funsR_goals_list <- function(functionsR_path = NULL, functionsR_text = NULL){
+  if(is.null(functionsR_path) & is.null(functionsR_text)){
     stop("must provide path to functions.R, or its contents as a character vector")
   }
   if(!is.null(functionsR_path)){
     txt <- scan(file = functionsR_path, what = "character", sep = "\n")
-  } else {txt <- funs_text}
+  } else {txt <- functionsR_text}
   breaks_str <- "^[A-Z]{2,3}\\s<-\\sfunction\\(|^[A-Z]{2,3}\\s=\\sfunction\\("
   funs_goals <- stringr::str_extract(grep(breaks_str, txt, value = TRUE), "^[A-Z]{2,3}")
   return(funs_goals)
@@ -53,17 +28,20 @@ funsR_goals_list <- function(functionsR_path = NULL, funs_text = NULL){
 #'
 #' @param functionsR_path location of functions.R to extract goal from
 #' @param goal_code the two or three letter code indicating the goal or subgoal
+#' @param functionsR_text list of funcitons.R lines read eg using scan (if functionsR_path is not provided)
+#' @param comments a boolean indicating whether to include in the result commented lines of the function
 #'
 #' @return lines of the goal function as a character vector
-goal_function <- function(functionsR_path = NULL, funs_text = NULL, goal_code, comments = FALSE){
+
+goal_function <- function(functionsR_path = NULL, functionsR_text = NULL, goal_code, comments = FALSE){
   goal_code <- stringr::str_to_upper(goal_code)
 
-  if(is.null(functionsR_path) & is.null(funs_text)){
+  if(is.null(functionsR_path) & is.null(functionsR_text)){
     stop("must provide path to functions.R, or its contents as a character vector")
   }
   if(!is.null(functionsR_path)){
     txt <- scan(file = functionsR_path, what = "character", sep = "\n")
-  } else {txt <- funs_text}
+  } else {txt <- functionsR_text}
   breaks_str <- "^[A-Z]{2,3}\\s<-\\sfunction\\(|^[A-Z]{2,3}\\s=\\sfunction\\("
   funs_breaks <- grep(breaks_str, txt)
   funs_goals <- stringr::str_extract(grep(breaks_str, txt, value = TRUE), "^[A-Z]{2,3}")
@@ -90,10 +68,11 @@ goal_function <- function(functionsR_path = NULL, funs_text = NULL, goal_code, c
 #' @param goal_code the two or three letter code indicating the goal or subgoal
 #'
 #' @return character vector naming layers
-goal_layers <- function(functionsR, goal_code = "all"){
+
+goal_layers <- function(functionsR_path, goal_code = "all"){
 
   goal_code <- stringr::str_to_upper(goal_code) %>% unlist()
-  if(goal_code != "ALL" & any(!goal_code %in% funsR_goals_list(functionsR))){
+  if(goal_code != "ALL" & any(!goal_code %in% funsR_goals_list(functionsR_path))){
     print("note: no function found for some of the given goals")
   }
   if(stringr::str_to_upper(goal_code) == "ALL"){
@@ -102,7 +81,7 @@ goal_layers <- function(functionsR, goal_code = "all"){
   } else {
     txt <- vector()
     for(gc in goal_code){
-      txt <- c(txt, goal_function(functionsR, goal_code = gc, comments = FALSE))
+      txt <- c(txt, goal_function(functionsR_path, goal_code = gc, comments = FALSE))
     }
   }
 
@@ -121,9 +100,12 @@ goal_layers <- function(functionsR, goal_code = "all"){
 }
 
 
-#' create dataframe with names of the prepared layers within bhi-prep layers folder on github
+#' prepared layers in bhi-prep github
 #'
-#' @return creates
+#' @param github_api_url github api url from which to extract list of layers at location prep/layers/filename
+#'
+#' @return dataframe with names of the prepared layers within bhi-prep layers folder on github
+
 bhiprep_github_layers <- function(github_api_url = bhiprep_api){
   req <- httr::GET(github_api_url)
   stop_for_status(req)
@@ -138,10 +120,13 @@ bhiprep_github_layers <- function(github_api_url = bhiprep_api){
 #'
 #' @param tab1 the table to compare to (what we hope table 2 looks like)
 #' @param tab2 the table to -within some specified columns- check for missing/extra rows with respect to some 'key' variable
-#' @param check_cols the columns to look for differences within; essentially taking tab1 %>% select(check_cols) to compare tab2 against
 #' @param key_row_var the variable for groupings of interest e.g. by which you would join or maybe gather the data
+#' @param check_cols the columns to look for differences within; essentially taking tab1 %>% select(check_cols) to compare tab2 against
+#' @param check_for_nas character vector of column names to check for NAs
 #'
-#' @return
+#' @return a boolean indicating if differences were found, list of checks results including scan for NAs,
+#' comparisons ie missing or extra unique values within key columns
+
 compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_nas = NA){
 
   ## setup, load tables, get key variable info
@@ -206,18 +191,22 @@ compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_
 }
 
 
-#' quickly filter score data
+#' filter score data
 #'
-#' @param score_data dataframe of OHI score data with goal, dimension, region_id, year and score columns e.g. output of ohicore::CalculateAll
+#' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
+#' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
 #' @param dims the dimensions to extract score data for
 #' @param goals the goals to extract score data for
 #' @param rgns the regions to extract score data for
-#' @param years the years to extract score data for
+#' @param scenario_yrs the years in scores_csv for which to extract score data
 #'
 #' @return a dataframe of OHI scores filtered by the given conditions
-filter_score_data <- function(score_data, dims = "all", goals = "all", rgns = NA, years = NA){
 
-  filter_scores <- score_data
+filter_score_data <- function(scores_csv, dims = "all", goals = "all", rgns = NA, scenario_yrs = NA){
+
+  filter_scores <- scores_csv
+  years <- scenario_yrs
+
   if(dims != "all"){
     filter_scores <- filter_scores %>%
       dplyr::filter(dimension %in% unlist(dims))
@@ -253,7 +242,6 @@ filter_score_data <- function(score_data, dims = "all", goals = "all", rgns = NA
   if(!is.na(years) & !("year" %in% names(filter_scores))){
     print("there is no year column in the scores data table provided")
   }
-
   ## checking completeness
   chk1a <- identical(
     names(filter_scores),
@@ -287,138 +275,3 @@ filter_score_data <- function(score_data, dims = "all", goals = "all", rgns = NA
 
   return(list(filter_scores, summary_tab))
 }
-
-
-#' customize and create standard theme for plots and maps
-#'
-#' a function to create a standardized theme for plots, updates ggtheme...
-#'
-#' @param plot_type if applying theme for a specific type of plot,
-#' specify here (options: flowerplot, trends_barplot, ...)
-#'
-#' @return no return value, simply updates the ggplot theme where called
-
-apply_bhi_theme <- function(plot_type = NA){
-
-  ## plot elements ----
-  elmts <- list(
-    text_size = 9,
-    title_rel_size = 1.25,
-    grid_major = 0.25,
-    axis_weight = 0.5,
-    legend_pos = "right",
-    legend_colour = NA,
-    legend_fill = NA)
-
-  ## plot colors ----
-  cols <- list(
-    light_grey1 = "grey95",
-    light_grey2 = "grey90",
-    med_grey1 = "grey80",
-    med_grey2 = "grey50",
-    med_grey3 = "grey52",
-    dark_grey1 = "grey30",
-    dark_grey2 = "grey20",
-    dark_grey3 = "grey22",
-    accent_bright = "maroon",
-    map_background1 = "#fcfcfd",
-    map_background2 = "#f0e7d6",
-    map_background3 = "aliceblue",
-    map_polygon_border1 = "#acb9b6",
-    map_polygon_border2 = "#b2996c",
-    web_font_light1 = "#f0fcdf",
-    web_font_light2 = "#f3ffe3",
-    web_font_light3 = "#8db1a8",
-    web_font <- "#516275",
-    web_banner = "#1c3548",
-    web_banner_light = "#006687",
-    web_sidebar_dark = "#111b19")
-
-  ## color palettes ----
-  palettes <- list(
-
-    ## continuous color palettes
-    reds = grDevices::colorRampPalette(
-      c("#A50026","#D73027","#F46D43","#FDAE61", "#ffdcd8"))(50),
-    purples = grDevices::colorRampPalette(
-      c("#EEDFFF","#C093F7","#9E5AF0","#822BEA"))(50),
-    blues = grDevices::colorRampPalette(
-      c("#E0F3F8","#ABD9E9","#74ADD1","#4575B4","#313695"))(50),
-
-    divergent_red_blue = c("#8c031a", "#cc0033", "#fff78a", "#f6ffb3", "#009999", "#0278a7"),
-
-    ## discrete color palettes
-    goals_pal = tibble::tibble(
-      goal = c("MAR","FIS","FP","CW","CON","EUT","TRA",
-               "SP","LSP","ICO","LE","ECO","LIV",
-               "AO","TR","CS","NP", "BD"),
-      color = c("#549dad","#4ead9d","#53b3ac","#89b181","#60a777","#7ead6d","#9aad7e",
-                "#97a4ba","#9fb3d4","#7c96b4","#9a97ba","#7d7ca3","#9990b4",
-                "#e2de9a","#b6859a","#d0a6a1","#ccb4be","#88b1a6")),
-
-    dims_pal = tibble::tibble(
-      dimension =  c("present state", "likely future", "trend", "pressures", "resilience", "status"),
-      color = c("#a0bbd0e8", "#ead19cf0", "#de8b5fe8", "#b13a23db", "#63945ade", "#9483afed"))
-
-
-  ) # end define color palettes
-
-
-  ## region names lookup table ----
-  rgn_name_lookup <- rbind(
-    readr::read_csv(file.path(dir_spatial, "regions_lookup_complete_wide.csv"),
-                    col_types = cols()) %>%
-      dplyr::select(region_id, eez_name, subbasin_name),
-    data.frame(region_id = 0, eez_name = "", subbasin_name = "Baltic Sea")) %>%
-    dplyr::mutate(plot_title = ifelse(region_id != 0, paste0(subbasin_name, ", ", eez_name), subbasin_name)) %>%
-    rowwise() %>%
-    dplyr::mutate(name = paste(
-      plot_title %>%
-        stringr::str_to_lower() %>%
-        stringr::str_extract_all("[a-z]+") %>%
-        unlist(),
-      collapse = "_")) %>%
-    ungroup()
-
-  ## theme updates based on plot type ----
-  theme_update(
-    text = element_text(family = "Helvetica", color = cols$dark_grey3, size = elmts$text_size),
-    plot.title = element_text(size = ggplot2::rel(elmts$title_rel_size), hjust = 0.5, face = "bold")
-  )
-  if(!is.na(plot_type)){
-    if(plot_type == "flowerplot"){
-      theme_update(
-        axis.ticks = element_blank(),
-        panel.border = element_blank(),
-        panel.background = element_rect(fill = "transparent", color = NA),
-        plot.background = element_rect(fill = "transparent", color = NA),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_blank(),
-        legend.key = element_rect(colour = elmts$legend_colour, fill = elmts$legend_fill),
-        legend.position = elmts$legend_pos,
-        axis.line = element_blank(),
-        axis.text.y = element_blank()
-      )
-    }
-  }
-  return(list(elmts = elmts, cols = cols, palettes = palettes, rgn_name_lookup = rgn_name_lookup))
-}
-
-#' extract BHI theme as hex codes or original colornames
-#'
-#' @param ... character names of BHI  colors, as defined in the apply_bhi_theme function
-#'
-#' @return if no args given returns named character vector of BHI colors,
-#' otherwise color code for the named color
-
-get_bhi_cols <- function(...){
-  colors <- c(...)
-  thm <- apply_bhi_theme()
-
-  if(is.null(colors)){
-    return(unlist(thm$cols))
-  }
-  unlist(thm$cols)[colors]
-}
-
-
