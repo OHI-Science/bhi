@@ -82,3 +82,11 @@ regions <- tbl(bhi_db_con, "helcom_ids") %>%
 copy_to(con, regions, "regions", temporary = FALSE, indexes = list("region_id"), overwrite = TRUE)
 
 
+dim_descriptions <-  readr::read_csv(file.path(here::here(), "supplement/tables/dimension_descriptions.csv")) %>%
+  select(dimension, description)
+
+copy_to(bhi_db_con, dim_descriptions, "dim_descriptions", temporary = FALSE, indexes = list("dimension"))
+
+
+
+
