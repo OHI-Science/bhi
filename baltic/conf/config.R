@@ -59,15 +59,6 @@ default_trend = 0
 
 ## extra descriptions not covered by goals.description or layers.description
 index_description <- "The overall Index represents the weighted average of all goal scores."
-
-loc <- file.path(dir_bhi, "supplement", "tables")
-dims_tab <- read_csv(file.path(loc, "dimension_descriptions.csv"))
-
-dimension_descriptions <- c(
-  "score" = dims_tab$description[1],
-  "status" = dims_tab$description[2],
-  "future" = dims_tab$description[3],
-  "trend" = dims_tab$description[4],
-  "pressures" = dims_tab$description[5],
-  "resilience" = dims_tab$description[6]
-  )
+dims_tab <- tbl(bhi_db_con, "dim_descriptions") %>% collect()
+dimension_descriptions <- dims_tab$description
+names(dimension_descriptions) <- dims_tab$dimension
