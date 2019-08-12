@@ -27,6 +27,9 @@ bhi_db_file <- "/Users/eleanorecampbell/Desktop/bhi-config.sqlite" # for now...
 bhi_db_con <- DBI::dbConnect(RSQLite::SQLite(), bhi_db_file)
 
 dir_assess <- file.path(here::here(), "baltic"); dir_baltic <- file.path(dir_bhi, "baltic") # CHANGE BHI ASSESSMENT DIRECTORY HERE!
+dir_prep <- file.path(dirname(here::here()), "bhi-prep", "prep")
+dir_test <- file.path(dir_assess, "testing")
+
 dir_B <- file.path(c("Darwin" = "/Volumes/BHI_share", # "Windows" = ?
                      "Linux" = "/home/shares/ohi")[[ Sys.info()[["sysname"]] ]], "BHI 2.0") # CHANGE MAIN AUX BHI DIRECTORY HERE!
 if(Sys.info()[["sysname"]] != "Linux" & !file.exists(dir_B)){ # warning if BHI internal, shared directory doesn't exist
