@@ -17,7 +17,7 @@
 **Functions in `management.R`**
 
 The functions written and documented in `R/management.R` were designed to make maintenance easier. 
-For example, `bhiRfun_readme` looks at the roxygen documentation in a script and creates a formatted chunk of text about the contents to paste into a readme, so it is possible to look up functions' locations and their use just by refering to the main readme. 
+For example, `Rfun_readme` looks at the roxygen documentation in a script and creates a formatted chunk of text about the contents to paste into a readme, so it is possible to look up functions' locations and their use just by refering to the main readme. 
 
 See `R/README.md` for more details.
 
