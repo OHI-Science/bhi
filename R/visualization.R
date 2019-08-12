@@ -1,5 +1,5 @@
 ## Libraries
-source(file.path(here::here(), "R", "common.R"))
+source(file.path(here::here(), "R", "setup.R"))
 library(ggplot2)
 library(plotly)
 library(ggrepel)
@@ -50,7 +50,6 @@ make_rgn_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, 
     }
   }
 
-  initial_theme <- theme_get()
   thm <- apply_bhi_theme("trends_barplot")
   if(is.na(color_pal)){
     color_pal <- c(thm$bhi_palettes$reds, thm$bhi_palettes$blues)
@@ -65,9 +64,11 @@ make_rgn_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, 
     na.omit()
   rgn_scores$goals_reordered <- factor(
     rgn_scores$goal,
-    levels = c("TR", "LSP","ICO","SP","NP",
-               "LIV","ECO","LE","MAR","FIS","FP","CS",
-               "TRA","EUT","CON","CW","BD","AO"))
+    levels = c(
+      "TR", "LSP","ICO","SP","NP",
+      "LIV","ECO","LE","MAR","FIS","FP","CS",
+      "TRA","EUT","CON","CW","BD","AO")
+    )
 
   if(nrow(rgn_scores) == 0){
     message(sprintf("no trend data, plot for region_id %s will be empty...", unique_rgn))
@@ -126,9 +127,9 @@ make_rgn_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, 
                       height = h, width = w, units = "in", dpi = d)
     }
   }
-  theme_set(initial_theme)
   return(invisible(trends_barplot))
 }
+
 
 #' create trends barplot by goal
 #'
@@ -391,20 +392,22 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
 #'
 #' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
 #' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
+#' @param basins_or_rgns one of 'subbasins' or 'regions' to indicate which spatial units should be represented
 #' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
+#' @param dim the dimension the flowerplot petals should represent (typically OHI 'score')
 #' @param uniform_width if TRUE all subbasin bars will be the same width, otherwise a function of area
 #' @param make_html if TRUE, will create an hmtl/plottly version rather than ggplot to use e.g. for the website or shiny app
 #' @param save can be either a directory in which to save the plot, or if TRUE will save to a default location
 #'
 #' @return
 
-scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code,
+scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code, dim = "score",
                            uniform_width = FALSE, make_html = FALSE, save = FALSE){
 
   scores <- scores_csv
   if("dimension" %in% colnames(scores)){
     scores <- scores %>%
-      filter(dimension == "score") %>%
+      filter(dimension == dim) %>%
       select(-dimension)
   }
   if("goal" %in% colnames(scores)){
@@ -548,7 +551,7 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code,
     #   geom_text(aes(label = subbasin),
     #             family = "Helvetica",
     #             size = 3) # geom_text_repel not supported in ggplotly yet...
-    plot_obj <- suppressWarnings(plotly::ggplotly(plot_obj, tooltip = "text"))
+    plot_obj <- plotly::ggplotly(plot_obj, tooltip = "text")
 
   } else {
     plot_obj <- plot_obj +
@@ -584,7 +587,92 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code,
                       height = 5, width = 3, units = "in", dpi = 400)
     }
   }
-
   return(invisible(plot_obj))
 }
+
+
+#' timeseries plot using highchart spline
+#'
+#' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns, e.g. output of ohicore::CalculateAll typically from calculate_scores.R
+#' @param basins_or_rgns one of 'subbasins' or 'regions' to indicate which spatial units should be represented
+#' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
+#' @param dim the dimension the object/plot should represent, typically 'score' but could be any one of the scores.csv 'dimension' column elements e.g. 'trend' or 'pressure'
+#'
+#' @return
+
+ts_highchart <- function(scores_csv, basins_or_rgns = "subbasins", goal_code, dim = "score"){
+
+  ## checks and wrangling
+  if(!"year" %in% colnames(scores_csv)){
+    stop("no year column in given scores_csv")
+  }
+
+  scores <- scores_csv %>%
+    filter(dimension == dim, goal == goal_code) %>%
+    left_join(rgn_name_lookup, by = "region_id")
+
+  if(basins_or_rgns == "subbasins"){
+    scores <- scores %>%
+      filter(region_id %in% subbasin_ids_vec)
+  } else {
+    scores <- scores %>%
+      filter(region_id  %in% rgn_ids_vec)
+  }
+  scores <- scores %>%
+    select(year, name = plot_title, score) %>%
+    spread(key = name, value = score) # names become colnames
+
+  nyrs <- length(unique(scores$year))
+
+  if(nyrs == 1){
+    stop("only one year of scores, cannot create meaningful time series plot")
+  }
+
+
+  ## color options for plot
+  optn <- list(
+    marker = list(enabled = FALSE),
+    fillColor = list(
+      linearGradient = list(x1 = 0, y1 = 0, x2 = 0, y2 = 1),
+      stops = list(list(1, "transparent"))
+    )
+  )
+
+  ## create the plot
+  ts_hc_plot <- highchart() %>%
+    hc_legend(layout = "vertical",
+              align = "left",
+              verticalAlign = "top") %>%
+    hc_xAxis(categories = scores$year)
+
+  for(r in colnames(scores)[-1]){ # colnames are regions/basins, without year
+
+    ## scale numbers based on range of data within c(0, 100)
+    r_y1 <- max(scores[[r]])/100
+    r_y2 = min(scores[[r]])/100
+
+    ts_hc_plot <- ts_hc_plot %>%
+      hc_add_series(data = scores[[r]], name = r,
+                    type = "area", # "areaspline"
+                    showInLegend = FALSE,
+                    marker = optn$marker,
+                    fillColor = optn$fillColor,
+                    color = list(
+                      linearGradient = list(x1 = 0, y1 = r_y1, x2 = 0, y2 = r_y2),
+                      stops = list(
+                        list(0, "#8c031a"),
+                        list(.15, "#8c031a"),
+                        list(.40, "#cc0033"),
+                        list(.60, "#fff78a"),
+                        list(.75, "#f6ffb3"),
+                        list(.90, "#009999"),
+                        list(1.00, "#0278a7")
+                      )
+                    )
+                  )
+  }
+  ts_hc_plot %>%
+    hc_add_theme(hc_theme_null())
+}
+
 
