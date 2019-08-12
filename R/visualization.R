@@ -24,12 +24,12 @@ library(formattable)
 #' that will map to trend values in the barplots
 #' @param plot_year year by which to filter region score input dataframe
 #' @param include_legend boolean indicating if legend should be included or not
-#' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string,
+#' @param save_obj the plot will not be saved if 'save_obj' is FALSE or NA, will be saved to file.path(save_obj) if a string,
 #' or to "reports/figures" directory if TRUE
 #'
 #' @return
 
-make_rgn_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, include_legend = FALSE, save = NA){
+make_rgn_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, include_legend = FALSE, save_obj = NA){
 
   ## checks, filtering, wrangling ----
   if(!"year" %in% names(rgn_scores)){
@@ -116,16 +116,19 @@ make_rgn_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, 
   }
 
   ## saving plots ----
-  if(isFALSE(save)){save <- NA}
-  if(isTRUE(save)){
-    save <- file.path(dir_assess, "reports", "figures")
-  }
-  if(!is.na(save)){
-    save_loc <- file.path(save, paste0("trendbarplot_", name, ".png"))
-    if(!file.exists(save)){ message("that save location is not valid") } else {
-      ggplot2::ggsave(filename = save_loc, plot = trends_barplot, device = "png",
-                      height = h, width = w, units = "in", dpi = d)
+  save_loc <- NULL
+  if(is.character(save_obj)){
+    if(file.exists(save_obj)){
+      save_loc <- file.path(save_obj, paste0("trendbarplot_", name, ".png"))
     }
+  }
+  if(isTRUE(save_obj)){
+    save_loc <- file.path(dir_assess, "reports", "figures",
+                          paste0("trendbarplot_", name, ".png"))
+  }
+  if(!is.null(save_loc)){
+    ggplot2::ggsave(filename = save_loc, plot = trends_barplot, device = "png",
+                      height = h, width = w, units = "in", dpi = d)
   }
   return(invisible(trends_barplot))
 }
@@ -136,35 +139,35 @@ make_rgn_trends_barplot <- function(rgn_scores, color_pal = NA, plot_year = NA, 
 #' requires a dataframe of OHI scores filtered to the region of interest
 #' reads in information from supplement/tables/
 #'
-#' @param scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R)
+#' @param scores_csv scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R)
 #' @param plot_year year by which to filter region score input dataframe
 #' @param by the spatial unit by which to aggregate and plot; one of region, subbasin, or eez
 #' @param color_pal a continuous color palette, ideally diverging,
 #' that will map to trend values in the barplots
 #' @param include_legend boolean indicating if legend should be included or not
-#' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string,
+#' @param save_obj the plot will not be saved if 'save_obj' is FALSE or NA, will be saved to file.path(save_obj) if a string,
 #' or to "reports/figures" directory if TRUE
 #'
 #' @return
 
-trends_barplots_by_goal <- function(scores, plot_year = NA, by = NA,
-                                    color_pal = NA, include_legend = FALSE, save = NA){
+trends_barplots_by_goal <- function(scores_csv, plot_year = NA, by = NA,
+                                    color_pal = NA, include_legend = FALSE, save_obj = NA){
 
   ## checks, filtering, wrangling ----
-  if(!"year" %in% names(scores)){
+  if(!"year" %in% names(scores_csv)){
     if(is.na(plot_year)){
       plot_year <- substring(date(), 21, 24)
-      message("scores doesn't have a year column; assuming data is for current year\n")
+      message("scores_csv doesn't have a year column; assuming data is for current year\n")
     } else {
-      message(paste("scores doesn't have a year column; assuming data is for given plot_year", plot_year,"\n"))
+      message(paste("scores_csv doesn't have a year column; assuming data is for given plot_year", plot_year,"\n"))
     }
-    scores$year <- plot_year
+    scores_csv$year <- plot_year
   } else {
-    if(!plot_year %in% unique(scores$year)){
-      message("no data for given plot_year in the scores input")
+    if(!plot_year %in% unique(scores_csv$year)){
+      message("no data for given plot_year in the scores_csv input")
     }
-    if(is.na(plot_year) | !plot_year %in% unique(scores$year)){
-      plot_year <- max(scores$year)
+    if(is.na(plot_year) | !plot_year %in% unique(scores_csv$year)){
+      plot_year <- max(scores_csv$year)
       message(paste("plotting using most recent year in the input data:", plot_year,"\n"))
     }
   }
@@ -174,11 +177,11 @@ trends_barplots_by_goal <- function(scores, plot_year = NA, by = NA,
     color_pal <- c(thm$bhi_palettes$reds, thm$bhi_palettes$blues)
   }
 
-  goal_subgoal_list <- unique(scores$goal)
+  goal_subgoal_list <- unique(scores_csv$goal)
   goal_names_titles <- readr::read_csv(file.path(dir_assess, "conf", "goals.csv"), col_types = cols()) %>%
     select(order_hierarchy, goal, name)
 
-  scores <- scores %>%
+  scores_csv <- scores_csv %>%
     dplyr::filter(year == plot_year) %>%
     dplyr::filter(dimension == "trend") %>%
     left_join(readr::read_csv(file.path(dir_spatial, "bhi_basin_country_lookup.csv"),
@@ -186,10 +189,12 @@ trends_barplots_by_goal <- function(scores, plot_year = NA, by = NA,
                 rename(region_id = BHI_ID, area_km2_rgn = Area_km2, subbasin = Subbasin) %>%
                 select(-HELCOM_ID), by = "region_id")
 
+  ## start looping over goals to create all trendplots by goal ----
   for(g in goal_subgoal_list){
 
-    goal_scores <- filter(scores, goal == g)
+    goal_scores <- filter(scores_csv, goal == g)
 
+    ## filter data by regions or subbasins ----
     if(!is.na(by)){
       by <- str_to_lower(by)
       if(by == "basin"|| by =="subbasin"){
@@ -250,21 +255,23 @@ trends_barplots_by_goal <- function(scores, plot_year = NA, by = NA,
 
 
       ## saving plots ----
-      if(isFALSE(save)){save <- NA}
-      if(isTRUE(save)){
-        save <- file.path(dir_assess, "reports", "figures")
-      }
-      if(!is.na(save)){
-        save_loc <- file.path(save, paste0(by, "s_trendbarplot_", str_to_lower(g), ".png"))
-        if(!file.exists(save)){ message("that save location is not valid") } else {
-          ggplot2::ggsave(filename = save_loc, plot = trends_barplot, device = "png",
-                          height = 5, width = 8.5, units = "in", dpi = 300)
+      save_loc <- NULL
+      if(is.character(save_obj)){
+        if(file.exists(save_obj)){
+          save_loc <- file.path(save_obj, sprintf("%s_trendbarplot_%s.png", by, str_to_lower(g)))
         }
+      }
+      if(isTRUE(save_obj)){
+        save_loc <- file.path(dir_assess, "reports", "figures",
+                              sprintf("%s_trendbarplot_%s.png", by, str_to_lower(g)))
+      }
+      if(!is.null(save_loc)){
+        ggplot2::ggsave(filename = save_loc, plot = trends_barplot, device = "png",
+                        height = 5, width = 8.5, units = "in", dpi = 300)
       }
     }
   }
-
-  return(invisible(trends_barplot))
+  return(invisible(trends_barplot)) # will return only the last plot created
 }
 
 
@@ -279,13 +286,13 @@ trends_barplots_by_goal <- function(scores, plot_year = NA, by = NA,
 #' defaults to current year or maximum year in score data input
 #' @param dim the dimension the flowerplot petals should represent (typically OHI 'score')
 #' @param thresholds two element vector with thresholds values indicating where colors and up/down arrows should switch
-#' @param save the plot will not be saved if 'save' is FALSE or NA, will be saved to file.path(save) if a string,
+#' @param save_obj the plot will not be saved if 'save_obj' is FALSE or NA, will be saved to file.path(save_obj) if a string,
 #' or to "reports/figures" directory if TRUE
 #'
 #' @return result is a formattable table, saved only if save location is specified as TRUE or a filepath
 
 future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
-                              thresholds = c(-0.1, 0.1), include_vals, save = NA){
+                              thresholds = c(-0.1, 0.1), include_vals, save_obj = NA){
 
   ## wrangle scores with basin info into form for table ----
   dim_df <- filter_score_data(rgn_scores, dims = dim, years = plot_year)[[1]] %>%
@@ -369,16 +376,21 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
 
   ## save table ----
   ## must have phantomjs installed- can do this with webshot::install_phantomjs()
-  if(isFALSE(save)){ save <- NA }
-  if(isTRUE(save)){
-    save <- file.path(dir_assess, "reports", "figures", paste0(dim, "s_table", ".png"))
+  save_loc <- NULL
+  if(is.character(save_obj)){
+    if(file.exists(save_obj)){
+      save_loc <- file.path(save_obj, sprintf("%s_table.png", dim))
+    }
   }
-  if(!is.na(save)){
-    save_loc <- save
-    path <- htmltools::html_print(as.htmlwidget(tab, width = "100%", height = NULL),
+  if(isTRUE(save_obj)){
+   save_loc <- file.path(dir_assess, "reports", "figures", sprintf("%s_table.png", dim))
+  }
+  if(!is.null(save_loc)){
+    path <- htmltools::html_print(as.htmlwidget(tab, width = "200%", height = NULL),
                                   background = "white", viewer = NULL)
+
     url <- paste0("file:///", gsub("\\\\", "/", normalizePath(path)))
-    webshot::webshot(url, file = save, selector = ".formattable_widget", delay = 0.2)
+    webshot::webshot(url, file = save_obj, selector = ".formattable_widget", delay = 0.5)
   }
 
   return(tab)
@@ -397,12 +409,12 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
 #' @param dim the dimension the flowerplot petals should represent (typically OHI 'score')
 #' @param uniform_width if TRUE all subbasin bars will be the same width, otherwise a function of area
 #' @param make_html if TRUE, will create an hmtl/plottly version rather than ggplot to use e.g. for the website or shiny app
-#' @param save can be either a directory in which to save the plot, or if TRUE will save to a default location
+#' @param save_obj can be either a directory in which to save the plot, or if TRUE will save to a default location
 #'
 #' @return
 
 scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code, dim = "score",
-                           uniform_width = FALSE, make_html = FALSE, save = FALSE){
+                           uniform_width = FALSE, make_html = FALSE, save_obj = FALSE){
 
   scores <- scores_csv
   if("dimension" %in% colnames(scores)){
@@ -565,12 +577,12 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code, 
 
   ## saving plots ----
   save_loc <- NULL
-  if(is.character(save)){
-    if(file.exists(save)){
-      save_loc <- file.path(save, paste0("barplot_", goal_code, ".png"))
+  if(is.character(save_obj)){
+    if(file.exists(save_obj)){
+      save_loc <- file.path(save_obj, paste0("barplot_", goal_code, ".png"))
     }
   }
-  if(isTRUE(save)){
+  if(isTRUE(save_obj)){
     if("plotly" %in% class(plot_obj)){
       save_loc <- file.path(dir_assess, "reports", "widgets",
                             paste0("barplot_", goal_code, ".png"))
