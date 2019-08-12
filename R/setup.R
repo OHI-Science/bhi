@@ -9,6 +9,8 @@ library(httr)
 
 ## General ----
 assess_year <- 2019 # CHANGE BHI ASSESSMENT YEAR HERE!
+rgn_ids_vec <- 1:42
+subbasin_ids_vec <- 501:517
 # projstringCRS <- raster::crs("+proj=longlat +datum=WGS84 +no_defs") # spatial data use lat/long coords on WGS84
 # filesep <- .Platform$file.sep
 
@@ -45,6 +47,36 @@ if(Sys.info()[["sysname"]] != "Linux" & !file.exists(dir_B)){ # warning if BHI i
 
 apply_bhi_theme <- function(plot_type = NA){
 
+
+  ## color palettes ----
+  palettes <- list(
+
+    ## continuous color palettes
+    reds = grDevices::colorRampPalette(
+      c("#A50026","#D73027","#F46D43","#FDAE61", "#ffdcd8"))(50),
+    purples = grDevices::colorRampPalette(
+      c("#EEDFFF","#C093F7","#9E5AF0","#822BEA"))(50),
+    blues = grDevices::colorRampPalette(
+      c("#E0F3F8","#ABD9E9","#74ADD1","#4575B4","#313695"))(50),
+
+    divergent_red_blue = c("#8c031a", "#cc0033", "#fff78a", "#f6ffb3", "#009999", "#0278a7"),
+
+    ## discrete color palettes
+    dims_pal = tibble::tibble(
+      dimension =  c("present state", "likely future", "trend", "pressures", "resilience", "status"),
+      color = c("#a0bbd0e8", "#ead19cf0", "#de8b5fe8", "#b13a23db", "#63945ade", "#9483afed")),
+
+    goals_pal = tibble::tibble(
+      goal = c("MAR","FIS","FP","CW","CON","EUT","TRA",
+               "SP","LSP","ICO","LE","ECO","LIV",
+               "AO","TR","CS","NP", "BD"),
+      color = c("#549dad","#4ead9d","#53b3ac","#89b181","#60a777","#7ead6d","#9aad7e",
+                "#97a4ba","#9fb3d4","#7c96b4","#9a97ba","#7d7ca3","#9990b4",
+                "#e2de9a","#b6859a","#d0a6a1","#ccb4be","#88b1a6"))
+
+  ) # end define color palettes
+
+
   ## plot elements ----
   elmts <- list(
     text_size = 9,
@@ -79,42 +111,17 @@ apply_bhi_theme <- function(plot_type = NA){
     web_banner_light = "#006687",
     web_sidebar_dark = "#111b19")
 
-  ## color palettes ----
-  palettes <- list(
-
-    ## continuous color palettes
-    reds = grDevices::colorRampPalette(
-      c("#A50026","#D73027","#F46D43","#FDAE61", "#ffdcd8"))(50),
-    purples = grDevices::colorRampPalette(
-      c("#EEDFFF","#C093F7","#9E5AF0","#822BEA"))(50),
-    blues = grDevices::colorRampPalette(
-      c("#E0F3F8","#ABD9E9","#74ADD1","#4575B4","#313695"))(50),
-
-    divergent_red_blue = c("#8c031a", "#cc0033", "#fff78a", "#f6ffb3", "#009999", "#0278a7"),
-
-    ## discrete color palettes
-    goals_pal = tibble::tibble(
-      goal = c("MAR","FIS","FP","CW","CON","EUT","TRA",
-               "SP","LSP","ICO","LE","ECO","LIV",
-               "AO","TR","CS","NP", "BD"),
-      color = c("#549dad","#4ead9d","#53b3ac","#89b181","#60a777","#7ead6d","#9aad7e",
-                "#97a4ba","#9fb3d4","#7c96b4","#9a97ba","#7d7ca3","#9990b4",
-                "#e2de9a","#b6859a","#d0a6a1","#ccb4be","#88b1a6")),
-
-    dims_pal = tibble::tibble(
-      dimension =  c("present state", "likely future", "trend", "pressures", "resilience", "status"),
-      color = c("#a0bbd0e8", "#ead19cf0", "#de8b5fe8", "#b13a23db", "#63945ade", "#9483afed"))
-
-
-  ) # end define color palettes
-
 
   ## region names lookup table ----
   rgn_name_lookup <- rbind(
     tbl(bhi_db_con, "regions") %>%
-      dplyr::select(region_id, eez, subbasin, plot_title = region_name) %>%
+      dplyr::select(region_id, subbasin, plot_title = region_name) %>%
       dplyr::collect(),
-    data.frame(region_id = 0, eez = "Baltic", subbasin = "Baltic Sea", plot_title = "Baltic Sea")) %>%
+    tbl(bhi_db_con, "basins") %>%
+      dplyr::select(region_id = subbasin_id, subbasin) %>%
+      dplyr::collect() %>%
+      mutate(plot_title = subbasin),
+    data.frame(region_id = 0, subbasin = "Baltic", plot_title = "Baltic Sea")) %>%
     rowwise() %>%
     dplyr::mutate(name = paste(
       plot_title %>%
@@ -148,6 +155,8 @@ apply_bhi_theme <- function(plot_type = NA){
       theme_update()
     }
   }
-  return(list(elmts = elmts, cols = cols, palettes = palettes,
+  return(list(elmts = elmts,
+              cols = cols,
+              palettes = palettes,
               rgn_name_lookup = rgn_name_lookup))
 }
