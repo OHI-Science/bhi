@@ -385,16 +385,27 @@ update_goalsRmd_links <- function(dir, version_year){
 #' the objective of this function is to facilitate consistent use of parameter names throughout the BHI repositories
 #' relevant roxygen documentation can be automatically filled in using this function and the supplemental 'params_index.md' document
 #'
-#' @param params_index
-#' @param script_name the name of the script with functions you want readme documentation for
-#' @param script_function
+#' @param script_name the name of the script with functions you want to create documentation for
+#' @param params_index a character string giving the file path to this document
+#' @param script_function specific functions to create documentation for, if not for entire script
 #'
 
-fill_oxygendoc_param <- function(params_index, script_name, script_function = NA){
+fill_oxygendoc_param <- function(script_name, params_index = NA, script_function = NA){
 
-  param_txt <- readLines(file.path(here::here(), "supplement", "documents", "params_index.md")) %>%
-    grep(pattern = "\\*.*", value = TRUE)
-
+  if(is.na(params_index)){
+    param_txt <- readLines(file.path(here::here(), "supplement", "documents", "params_index.md")) %>%
+      grep(pattern = "\\*.*", value = TRUE)
+  } else {
+    if(file.exists(params_index)){
+      param_txt <- readLines(params_index) %>%
+        grep(pattern = "\\*.*", value = TRUE)
+    } else {
+      if(!class(params_index) == "list"){
+        stop("cannot interpret params_index input, must be filepath to document or character list")
+      }
+      param_txt <- params_index
+    }
+  }
   fun_path <- file.path(here::here(), "R", script_name)
   script_txt <- readLines(fun_path)
 
@@ -406,6 +417,9 @@ fill_oxygendoc_param <- function(params_index, script_name, script_function = NA
   if(!is.na(script_function)){
     start_fun <- grep(pattern = sprintf("^%s\\s<-\\sfunction\\(|^%s\\s=\\sfunction\\(",
                                         script_function, script_function), x = script_txt)
+    if(length(start_fun) == 0){
+      stop(sprintf("given function '%s' not contained in '%s' script", script_function, script_name))
+    }
     breaks_fun <- c(0, grep(pattern = "^[A-Za-z0-9_]+\\s<-\\sfunction\\(|^[A-Za-z0-9_]+\\s=\\sfunction\\(", x = script_txt))
     count <- grep(x = breaks_fun, pattern = start_fun)
     params <- params[params %in% breaks_fun[count-1]:breaks_fun[count]]
@@ -415,11 +429,24 @@ fill_oxygendoc_param <- function(params_index, script_name, script_function = NA
   ## and replace rows of function within script with the updated info
   script_txt_updated <- script_txt
   for(p in params){
-    param_match <- paste0("\\*{2}", str_extract(script_txt[p], pattern = "[A-Za-z0-9_]+$"))
-    script_txt_updated[p] <- grep(pattern = param_match, x = param_txt, value = TRUE)
+    param_match <- paste0("^\\*{2}", str_extract(script_txt[p], pattern = "[A-Za-z0-9_]+$"))
+    replace_formated <- grep(pattern = param_match, x = param_txt, value = TRUE) %>%
+      str_replace_all(pattern = "^\\*{2}", replacement = "#' @param ") %>%
+      str_replace_all(pattern = "\\*{2}\\s--", replacement = "")
+
+    script_txt_updated[p] <- ifelse(
+      length(replace_formated) == 0,
+      script_txt[p],
+      replace_formated
+    )
+    if(length(replace_formated) == 0){
+      message(sprintf("no parameter definition found for '%s' in given param_index",
+                      str_extract(script_txt[p], pattern = "[A-Za-z0-9_]+$")))
+    }
   }
 
   ## write the updated script in the original location
-  writeLines(txt_updated, func_path)
+  script_name_updated <- paste0(str_extract(script_name, pattern = "[A-Za-z0-9]+"), "_docupdate.R")
+  writeLines(script_txt_updated, file.path(here::here(), "R", script_name_updated))
 }
 
