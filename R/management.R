@@ -16,14 +16,14 @@ library(httr)
 #'
 #' written to generate readme content for functions in bhi/R scripts, but could be used elsewhere...
 #'
-#' @param bhiR_dir file path to the directory containing the script of interest
+#' @param dir_R file path to the directory containing the script of interest
 #' @param script_name the name of the script with functions you want readme documentation for
 #'
 #' @return text for readme content is returned in the console, but output is also configured as a character vector
 
-bhiRfun_readme <- function(bhiR_dir, script_name){
+bhiRfun_readme <- function(dir_R, script_name){
 
-  funs_text <- scan(file = file.path(bhiR_dir, script_name), what = "character", sep = "\n")
+  funs_text <- scan(file = file.path(dir_R, script_name), what = "character", sep = "\n")
 
   funs_names <- funs_text %>%
     grep(pattern = "^[a-z_]+.*function.*", value = TRUE) %>%
@@ -327,13 +327,13 @@ readme_status <- function(folder_filepath, type_objects, temp_filepath){
 #' confirm layers in layers.csv have corresponding entries in layers_metadata.csv
 #'
 #' @param layers_csv layers.csv dataframe
-#' @param layers_metadata layers_metadata.csv dataframe
+#' @param lyr_metadata layers_metadata.csv dataframe
 #'
 #' @return
 
-layerscsv_metadata_exists <- function(layers_csv, layers_metadata){
+layerscsv_metadata_exists <- function(layers_csv, lyr_metadata){
 
-  compare_tabs(tab1 = layers_csv, tab2 = layers_metadata, key_row_var = "layer")
+  compare_tabs(tab1 = layers_csv, tab2 = lyr_metadata, key_row_var = "layer")
 
   chk <- "a boolean, true if correct matching exists"
   return(chk)
