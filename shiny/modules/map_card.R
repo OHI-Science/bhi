@@ -47,7 +47,7 @@ mapCardUI <- function(id,
   tagList(box(collapsible = TRUE,
               title = title_text,
               list(p(sub_title_text), items, p(source_text)),
-              width = 7))
+              width = 5))
 }
 
 
@@ -58,41 +58,59 @@ mapCard <- function(input,
                     goal_code,
                     dimension_selected,
                     spatial_unit_selected,
+                    year_selected,
                     legend_title = NA,
                     popup_title = NA,
                     popup_add_field = NA,
                     popup_add_field_title = NA){
 
+
   ## render and return the leaflet map etc
   output$plot <- renderLeaflet({
-    d <- dimension_selected()
 
-    ## scores data from bhi database
-    scores_csv <- tbl(bhi_db_con, "scores2015") %>%
-      filter(dimension == d) %>%
-      collect()
+    ## scores data
+    scores_csv <- full_scores_csv %>%
+      filter(dimension == dimension_selected())
 
-    ## for now, read in shp data...
+    ## shp data...
     if(spatial_unit_selected() == "subbasins"){
-      shp <- sf::st_read("/Volumes/BHI_share/Shapefiles/HELCOM_subbasins_holasbasins",
-                         "HELCOM_subbasins_holasbasins")
+      shp <- subbasins_shp
+    } else { shp <- rgns_shp }
+
+    ## create leaflet map
+    if(dimension_selected() == "score"){
+      if(spatial_unit_selected() == "subbasins"){
+        result <- leaflet_map(
+          goal_code, spatial_unit_selected(),
+          mapping_data_sp = mapping_scores_subbasin,
+          shp = NULL, scores_csv = NULL, simplify_level = 1,
+          dim = dimension_selected(), year = assess_year,
+          include_legend = TRUE, legend_title)
+
+      } else {
+        result <- leaflet_map(
+          goal_code, spatial_unit_selected(),
+          mapping_data_sp = mapping_scores_rgn,
+          shp = NULL, scores_csv = NULL, simplify_level = 1,
+          dim = dimension_selected(), year = assess_year,
+          include_legend = TRUE, legend_title)
+
+      }
     } else {
-      shp <- sf::st_read("/Volumes/BHI_share/Shapefiles/BHI_shapefile",
-                         "BHI_shapefile") %>%
-        dplyr::mutate(Subbasin = as.character(Subbasin)) %>%
-        dplyr::mutate(Subbasin = ifelse(Subbasin == "Bothian Sea",
-                                        "Bothnian Sea", Subbasin)) # NEED TO FIX THIS TYPO!!!!!!!!
+      result <- leaflet_map(
+        goal_code, spatial_unit_selected(), mapping_data_sp = NULL,
+        shp = shp, scores_csv, simplify_level = 1, dim = dimension_selected(), year = assess_year,
+        include_legend = TRUE, legend_title)
     }
 
-    result <- leaflet_map(goal_code, spatial_unit_selected(), mapping_data_sp = NULL,
-                          shp = shp, scores_csv, simplify_level = 1, dim = dimension_selected(), year = 2014,
-                          include_legend = TRUE, legend_title)
-
+    ## create popup text
     popup_text <- paste("<h5><strong>", popup_title, "</strong>",
                         result$data_sf[[goal_code]], "</h5>",
                         "<h5><strong>", popup_add_field_title, "</strong>",
                         result$data_sf[[popup_add_field]], "</h5>", sep = " ")
 
+
+    ## return leaflet map with popup added
     result$map %>%
       addPolygons(
         popup = popup_text,
