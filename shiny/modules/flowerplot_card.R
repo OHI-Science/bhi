@@ -15,9 +15,8 @@ flowerplotCardUI <- function(id,
   ## put together in box and return box
   tagList(box(collapsible = TRUE,
               title = title_text,
-              list(p(sub_title_text), highchartOutput(ns("flowerplot"))),
-              width = 5))
-
+              list(p(sub_title_text), highchartOutput(ns("flowerplot"), height = 350)),
+              width = 4))
 }
 
 ## flowerplot card server function ----
@@ -41,9 +40,9 @@ flowerplotCard <- function(input,
 
     image_trim() %>%
     image_scale("x350") %>%
-    image_border("white", "20x20")
+    image_border("white", "10x10")
 
-  tmploc <- file.path("./www", paste0(flower_id, "tmp.png"))
+  tmploc <- file.path("./www", paste0(flower_id, "_tmp.png"))
   image_write(plot_obj, tmploc)
 
 
@@ -57,20 +56,24 @@ flowerplotCard <- function(input,
                 collect(), by = "goal") %>%
     mutate(color = "#00000000")
   df2 <- filter(df, is.na(parent), !goal %in% df$parent)
-  df <- arrange(rbind(filter(df, !goal %in% df$parent), df2, df2), order_htmlplot)
+  df <- arrange(rbind(filter(df, !goal %in% df$parent), df2), order_htmlplot)
 
   ## render and return full flowerplot
   output$flowerplot <- renderHighchart({
 
     highchart() %>%
-      hc_chart(type = "column", polar = TRUE, plotBackgroundImage = basename(tmploc)) %>%
+      hc_chart(type = "column",
+               polar = TRUE,
+               # height or width so doesn't stretch?!
+               plotBackgroundImage = basename(tmploc),
+               width = 400) %>%
       hc_xAxis(categories = df$goal) %>%
-      hc_yAxis("min" = -50, max = 100) %>%
-      hc_pane(startAngle = 15) %>%
+      hc_yAxis("min" = -100, max = 100) %>%
+      hc_pane(startAngle = 10) %>%
       hc_plotOptions(
         series = list(
           cursor = "pointer",
-          pointWidth = 0.3,
+          pointWidth = 0.35,
           point = list(
             events = list(
               click = JS("function(){ location.href = 'https://github.com/OHI-Science/bhi-prep/tree/master/prep/' + this.options.key; }")
