@@ -1,13 +1,8 @@
 ## Libraries
-source(file.path(here::here(), "R", "common.R"))
-library(sf)
-library(rgdal)
+source(file.path(here::here(), "R", "setup.R"))
 library(tidytext)
-library(dbplyr)
-library(DBI)
-library(odbc)
+library(sf)
 library(config)
-library(httr)
 
 
 ## Functions
@@ -21,7 +16,7 @@ library(httr)
 #'
 #' @return text for readme content is returned in the console, but output is also configured as a character vector
 
-bhiRfun_readme <- function(dir_R, script_name){
+Rfun_readme <- function(dir_R, script_name){
 
   funs_text <- scan(file = file.path(dir_R, script_name), what = "character", sep = "\n")
 
