@@ -15,20 +15,17 @@ flowerplotCardUI <- function(id,
   ## put together in box and return box
   tagList(box(collapsible = TRUE,
               title = title_text,
-              list(p(sub_title_text), highchartOutput(ns("flowerplot"), height = 350)),
-              width = 4))
+              list(p(sub_title_text), highchartOutput(ns("flowerplot"), height = 480)),
+              width = 5))
 }
 
 ## flowerplot card server function ----
-flowerplotCard <- function(input,
-                           output,
-                           session,
-                           flower_id,
-                           dimension,
-                           region_id){
+flowerplotCard <- function(input, output, session, flower_id, dimension, region_id){
+
 
   rgn_id <- region_id
   dim <- dimension
+
 
   ## make flowerplot
   plot_obj <- make_flower_plot(
