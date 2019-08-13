@@ -9,6 +9,9 @@ library(shinyWidgets)
 library(pool)
 library(highcharter)
 
+## Apply Theme
+thm <- apply_bhi_theme()
+
 
 ## Functions ----
 
@@ -45,13 +48,13 @@ convertMenuItem <- function(mi, tabName){
 #'
 #' @return
 
-text_links <- function(title = NULL, url = NULL, box_width = 4) {
+text_links <- function(title = NULL, url = NULL, box_width = 4){
 
   box(class = "text_link_button",
-      h3(strong(a(title, href = url, target = "_blank"))),
+      h4(a(title, href = url, target = "_blank")),
       width = box_width,
-      status = "warning",
-      solidHeader = FALSE)
+      status = "info",
+      solidHeader = TRUE)
 }
 
 
