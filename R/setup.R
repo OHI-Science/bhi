@@ -90,6 +90,12 @@ apply_bhi_theme <- function(plot_type = NA){
     legend_colour = NA,
     legend_fill = NA)
 
+  icons <- list(FP = "utensils", MAR = "anchor", FIS = "fish", AO = "ship",
+                CW = "burn", CON = "flask", EUT = "vial", TRA = "eraser",
+                SP = "monument", LSP = "map-marked", ICO = "kiwi-bird", BD = "dna",
+                LE = "landmark", ECO = "money-bill", LIV = "dharmachakra",
+                TR = "suitcase", CS = "seedling", NP = "mortar-pestle")
+
   ## plot colors ----
   cols <- list(
     light_grey1 = "grey95",
@@ -159,6 +165,7 @@ apply_bhi_theme <- function(plot_type = NA){
     }
   }
   return(list(elmts = elmts,
+              icons = icons,
               cols = cols,
               palettes = palettes,
               rgn_name_lookup = rgn_name_lookup))
