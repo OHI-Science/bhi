@@ -284,7 +284,7 @@ trends_barplots_by_goal <- function(scores_csv, plot_year = NA, by = NA,
 #' filtered to region
 #' @param plot_year year by which to filter region score input dataframe;
 #' defaults to current year or maximum year in score data input
-#' @param dim the dimension the flowerplot petals should represent (typically OHI 'score')
+#' @param dim the dimension the table should present (typically OHI 'score')
 #' @param thresholds two element vector with thresholds values indicating where colors and up/down arrows should switch
 #' @param save_obj the plot will not be saved if 'save_obj' is FALSE or NA, will be saved to file.path(save_obj) if a string,
 #' or to "reports/figures" directory if TRUE
@@ -406,7 +406,7 @@ future_dims_table <- function(rgn_scores, plot_year = NA, dim = "trend",
 #' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
 #' @param basins_or_rgns one of 'subbasins' or 'regions' to indicate which spatial units should be represented
 #' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
-#' @param dim the dimension the flowerplot petals should represent (typically OHI 'score')
+#' @param dim the dimension the barplot should represent (typically OHI 'score')
 #' @param uniform_width if TRUE all subbasin bars will be the same width, otherwise a function of area
 #' @param make_html if TRUE, will create an hmtl/plottly version rather than ggplot to use e.g. for the website or shiny app
 #' @param save_obj can be either a directory in which to save the plot, or if TRUE will save to a default location
