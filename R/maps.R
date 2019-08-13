@@ -342,7 +342,7 @@ map_general <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp
 leaflet_map <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp = NULL,
                         shp = NULL, scores_csv = NULL, simplify_level = 1,
                         dim = "score", year = assess_year,
-                        # overlay_mpas = FALSE,
+                        # overlay_mpas = FALSE, overlay_raster_data = FALSE,
                         include_legend = TRUE, legend_title = NA,
                         calc_sf = FALSE){
 
@@ -439,14 +439,24 @@ leaflet_map <- function(goal_code, basins_or_rgns = "subbasins", mapping_data_sp
       stroke = TRUE, opacity = 0.5, weight = 2, fillOpacity = 0.6, smoothFactor = 0.5,
       color = thm$cols$map_polygon_border1, fillColor = ~pal(score))
 
+  ## overlay different layers ----
   # if(overlay_mpas){
   #   leaflet_map <- leaflet_map %>%
   #     addPolygons(data = ,
-  #                 layerId =  ~Name,
+  #                 layerId = ~Name,
   #                 stroke = TRUE, weight = 1, fillOpacity = 0, smoothFactor = 0.5,
   #                 fillColor = NA)
   # }
 
+  # if(overlay_raster_data){
+  #   leaflet_map <- leaflet_map %>%
+  #     addPolygons(data = ,
+  #                 layerId = ~Name,
+  #                 stroke = TRUE, weight = 1, fillOpacity = 0, smoothFactor = 0.5,
+  #                 fillColor = NA)
+  # }
+
+  ## return list result to global env ----
   leaflet_fun_result <<- list(
     map = leaflet_map,
     data_sf = leaflet_plotting_sf0,
