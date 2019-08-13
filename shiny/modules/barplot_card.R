@@ -8,24 +8,22 @@
 barplotCardUI <- function(id,
                           title_text = NULL,
                           sub_title_text = NULL,
-                          source_text = NULL){
+                          source_text = NULL,
+                          box_width = 2){
 
   ns <- shiny::NS(id)
-  items <- plotlyOutput(ns("barplot"), height  = 480)
+  items <- plotlyOutput(ns("barplot"))
   tagList(box(collapsible = TRUE,
               title = title_text,
               list(p(sub_title_text), items, p(source_text)),
-              width = 3))
+              width = box_width))
 }
 
 
 ## map card server function ----
-barplotCard <- function(input,
-                        output,
-                        session,
-                        goal_code,
-                        dimension_selected,
-                        spatial_unit_selected){
+barplotCard <- function(input, output, session,
+                        goal_code, dimension_selected, spatial_unit_selected){
+
 
   output$barplot <- renderPlotly({
     ## scores data from bhi database

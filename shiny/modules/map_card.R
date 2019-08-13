@@ -9,6 +9,7 @@
 mapCardUI <- function(id,
                       title_text = NULL,
                       sub_title_text = NULL,
+                      box_width = 6,
                       source_text = NULL,
                       select_type = c(NULL, "radio", "drop_down", "checkboxes"),
                       select_choices = c(""),
@@ -47,7 +48,7 @@ mapCardUI <- function(id,
   tagList(box(collapsible = TRUE,
               title = title_text,
               list(p(sub_title_text), items, p(source_text)),
-              width = 5))
+              width = box_width))
 }
 
 
