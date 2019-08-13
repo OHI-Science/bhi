@@ -12,43 +12,61 @@ function(input, output, session){
              region_id = 0)
 
   ## overall index scores map
+  # callModule(mapBarplotCard, "index_map_barplot",
+  #            goal_code = "Index",
+  #            dimension_selected = dimension,
+  #            spatial_unit_selected = spatial_unit,
+  #            legend_title = "Scores",
+  #            popup_title = "Score:",
+  #            popup_add_field = "Name",
+  #            popup_add_field_title = "Name:")
+
+  callModule(barplotCard, "index_barplot",
+             goal_code = "Index",
+             dimension_selected = dimension,
+             spatial_unit_selected = spatial_unit)
+
   callModule(mapCard, "index_map",
              goal_code = "Index",
              dimension_selected = dimension,
              spatial_unit_selected = spatial_unit,
-             legend_title = "Regions Scores",
+             legend_title = "Scores",
              popup_title = "Score:",
              popup_add_field = "Name",
              popup_add_field_title = "Name:")
 
 
-  # callModule(map_barplot_card, "index_map",
-  #            field = "scores",
-  #            goal_code = "Index",
-  #            spatial_unit = basins_or_rgns,
-  #            legend_title = "Regions Scores",
-  #            popup_title = "Score:",
-  #            popup_add_field = "Name",
-  #            popup_add_field_title = "Basin:")
-
-
   ## AO ----
   ## Artisanal Opportunities
+  callModule(mapCard, "ao_map",
+             goal_code = "AO",
+             dimension_selected = dimension,
+             spatial_unit_selected = spatial_unit,
+             legend_title = "Scores",
+             popup_title = "Score:",
+             popup_add_field = "Name",
+             popup_add_field_title = "Name:")
+  callModule(barplotCard, "ao_barplot",
+             goal_code = "AO",
+             dimension_selected = dimension,
+             spatial_unit_selected = spatial_unit)
 
-
-
-  # callModule(card_map, "baltic_map_ao",
-  #            data = baltic_map_ao,
-  #            field = "scores",
-  #            goal_code = "AO",
-  #            legend_title = "Regions Scores",
-  #            popup_title = "Score:",
-  #            popup_add_field = "Name",
-  #            popup_add_field_title = "Basin:")
 
 
   ## BD ----
   ## Biodiversity
+  # callModule(mapCard, "bd_map",
+  #            goal_code = "BD",
+  #            dimension_selected = dimension,
+  #            spatial_unit_selected = spatial_unit,
+  #            legend_title = "Scores",
+  #            popup_title = "Score:",
+  #            popup_add_field = "Name",
+  #            popup_add_field_title = "Name:")
+  # callModule(barplotCard, "bd_barplot",
+  #            goal_code = "BD",
+  #            dimension_selected = dimension,
+  #            spatial_unit_selected = spatial_unit)
 
 
   ## CS ----
@@ -105,6 +123,18 @@ function(input, output, session){
 
   ## LSP ----
   ## Lasting Special Places
+  # callModule(mapCard, "lsp_map",
+  #            goal_code = "LSP",
+  #            dimension_selected = dimension,
+  #            spatial_unit_selected = spatial_unit,
+  #            legend_title = "Scores",
+  #            popup_title = "Score:",
+  #            popup_add_field = "Name",
+  #            popup_add_field_title = "Name:")
+  callModule(barplotCard, "lsp_barplot",
+             goal_code = "LSP",
+             dimension_selected = dimension,
+             spatial_unit_selected = spatial_unit)
 
 
   ## NP ----
