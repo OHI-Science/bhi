@@ -47,7 +47,9 @@ mapCardUI <- function(id,
   ## put together in box and return box
   tagList(box(collapsible = TRUE,
               title = title_text,
-              list(p(sub_title_text), items, p(source_text)),
+              list(p(sub_title_text),
+                   addSpinner(items, spin = "rotating-plane", color = "#d7e5e8"),
+                   p(source_text)),
               width = box_width))
 }
 
