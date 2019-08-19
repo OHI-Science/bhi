@@ -6,13 +6,12 @@ library(shiny)
 library(shinydashboard)
 library(shinyjs)
 library(shinyWidgets)
-library(shinycssloaders)
 library(pool)
 library(highcharter)
 
+setwd(file.path(here::here(), "shiny"))
 gh_prep <- "https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep"
 gh_layers <- "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
-
 thm <- apply_bhi_theme()
 
 
@@ -54,10 +53,11 @@ convertMenuItem <- function(mi, tabName){
 text_links <- function(title = NULL, url = NULL, box_width = 12){
 
   box(class = "text_link_button",
-      h4(a(title, href = url, target = "_blank")),
+      h4(a(paste("\n", title), href = url, target = "_blank")),
       width = box_width,
-      height = 90,
-      status = "info",
+      # height = 90,
+      background = "light-blue",
+      status = "primary",
       solidHeader = TRUE)
 }
 
