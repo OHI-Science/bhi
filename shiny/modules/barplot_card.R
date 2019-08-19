@@ -9,10 +9,10 @@ barplotCardUI <- function(id,
                           title_text = NULL,
                           sub_title_text = NULL,
                           source_text = NULL,
-                          box_width = 2){
+                          box_width = 12){
 
   ns <- shiny::NS(id)
-  items <- plotlyOutput(ns("barplot"))
+  items <- plotlyOutput(ns("barplot"), height = 490)
   tagList(box(collapsible = TRUE,
               title = title_text,
               list(p(sub_title_text), items, p(source_text)),
