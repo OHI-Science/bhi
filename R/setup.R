@@ -26,7 +26,7 @@ bhiprep_api <- "https://api.github.com/repos/OHI-Science/bhi-prep/git/trees/mast
 bhi_db_file <- "/Users/eleanorecampbell/Desktop/bhi-config.sqlite" # for now...
 bhi_db_con <- DBI::dbConnect(RSQLite::SQLite(), bhi_db_file)
 
-dir_assess <- file.path(here::here(), "baltic"); dir_baltic <- file.path(dir_bhi, "baltic") # CHANGE BHI ASSESSMENT DIRECTORY HERE!
+dir_assess <- file.path(here::here(), "baltic"); dir_baltic <- file.path(here::here(), "baltic") # CHANGE BHI ASSESSMENT DIRECTORY HERE!
 dir_prep <- file.path(dirname(here::here()), "bhi-prep", "prep")
 dir_test <- file.path(dir_assess, "testing")
 
