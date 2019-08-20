@@ -1,4 +1,4 @@
-## Libraries Etc ----
+## Libraries ----
 source(file.path(here::here(), "R", "visualization.R"))
 source(file.path(here::here(), "R", "flowerplot.R"))
 source(file.path(here::here(), "R", "maps.R"))
@@ -68,7 +68,7 @@ text_links <- function(title = NULL, url = NULL, box_width = 12){
 #'
 #' @return no returned object; prints helpful info in console
 
-make_selectRgn_menu <- function(rgn_tab_con = bhi_db_con){
+make_rgn_menu <- function(rgn_tab_con = bhi_db_con){
 
   rgn <- tbl(rgn_tab_con, "regions") %>%
     select(region_id, subbasin, region_name) %>%
@@ -82,6 +82,94 @@ make_selectRgn_menu <- function(rgn_tab_con = bhi_db_con){
   for(s in unique(rgn$subbasin)){
     cat(filter(rgn, subbasin  == s)$print_col, sep = ", \n")
   }
+}
+
+#' print in console ui and server and print in console
+#'
+#' helper/timesaver function, could maybe be a module but thats another layer of complexity...
+#'
+#' @param goal_code the goal for which to input information /create code chunk
+#' @param goal_code_templatize the goal to use as a template
+#' @param ui_server one of either ui or server, whichever code is to be generated for
+#'
+#' @return
+
+templatize_goalpage <- function(goal_code, goal_code_templatize, ui_server){
+
+  if(ui_server  ==  "ui"){
+    ## ui template, read then parse to goal to copy/templatize
+    templatetxt <- scan(file.path(getwd(), "ui.R"),
+                        what = "character",
+                        sep = "\n")
+    breaks <- templatetxt %>% grep(pattern = "##\\s>>\\s[a-z]{2,3}\\s----")
+    breakstart <- templatetxt %>% grep(pattern = sprintf("## >> %s ----", str_to_lower(goal_code_templatize)))
+    breakend <- min(breaks[which(breaks > breakstart)]) - 1
+    templatetxt <- templatetxt[breakstart:breakend]
+
+  } else if(ui_server  ==  "server"){
+    ## server template, read then parse to goal to copy/templatize
+    templatetxt <- scan(file.path(getwd(), "server.R"),
+                        what = "character",
+                        sep = "\n")
+    breaks <- templatetxt %>% grep(pattern = "##\\s[A-Z]{2,3}\\s----")
+    breakstart <- templatetxt %>%
+      grep(
+        pattern = sprintf(
+          "##\\s%s\\s----",
+          str_to_upper(goal_code_templatize)
+        )
+      )
+    breakend <- min(breaks[which(breaks > breakstart)]) - 1
+    templatetxt <- templatetxt[breakstart:breakend]
+
+  } else {
+    message("ui_server argument must be one of 'ui' or 'server'")
+  }
+
+  ## replacement info
+  goalinfo <- tbl(bhi_db_con, "plot_conf") %>%
+    select(name, goal, parent) %>%
+    collect() %>%
+    filter(goal %in% c(str_to_upper(goal_code), str_to_upper(goal_code_templatize)))
+
+  ## inject info for new goal
+  txt <- templatetxt
+  for(p in c("\"%s\"", " %s ", "\"%s_", " %s_")){
+    pttn <- sprintf(p, str_to_lower(goal_code_templatize))
+    repl <- sprintf(p, str_to_lower(goal_code)) # print(paste(pttn, "-->", repl))
+    txt <- str_replace_all(txt, pattern = pttn, replacement = repl)
+  }
+  for(p in c("\"%s\"", " %s ", "\"%s ", " %s\"", "/%s/", "%s\\)")){
+    pttn <- sprintf(p, str_to_upper(goal_code_templatize))
+    repl <- sprintf(p, str_to_upper(goal_code)) # print(paste(pttn, "-->", repl))
+    txt <- str_replace_all(txt, pattern = pttn, replacement = repl)
+  }
+  # if(any(!is.na(goalinfo$parent))){"?"}
+  for(p in c("\"%s\"", " %s ", "%s ", " %s", "\"%s ", " %s\"", "/%s/", "%s\\)")){
+    pttn <- sprintf(p, filter(goalinfo, goal == goal_code_templatize)$name)
+    repl <- sprintf(p, filter(goalinfo, goal == goal_code)$name) # print(paste(pttn, "-->", repl))
+    txt <- str_replace_all(txt , pattern = pttn, replacement = repl)
+  }
+  #biodiversity --> #artisanal-fishing-opportunities
+
+  txt <- txt %>%
+    str_replace_all(
+      pattern = sprintf(
+        "#%s",
+        filter(goalinfo, goal == goal_code_templatize)$name %>%
+          str_to_lower() %>%
+          str_replace_all(pattern = " ", replacement = "-")
+      ),
+      replacement = sprintf(
+        "#%s",
+        filter(goalinfo, goal == goal_code)$name %>%
+          str_to_lower() %>%
+          str_replace_all(pattern = " ", replacement = "-")
+      )) %>%
+    str_replace_all(pattern = "p\\(\"[A-Za-z0-9 ]+\"\\)", replacement = "p(\"\")")
+
+  ## print result in console
+  cat(txt, sep = "\n")
 }
 
 
