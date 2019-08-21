@@ -6,12 +6,14 @@ function(input, output, session){
   ## WELCOME ----
 
   ## flowerplot
-  # callModule(flowerplotCard, "baltic_flowerplot",
-  #            flower_id = "baltic_flowerplot",
-  #            dimension = "score",
-  #            region_id = 0) # region_id_selected = flower_rgn
-  callModule(flowerplotRgnCard, "baltic_flowerplot",
-             region_id_selected = flower_rgn) # region_id_selected = flower_rgn
+  eventReactive(
+    eventExpr = input$flower_rgn,
+    valueExpr = callModule(flowerplotCard, "baltic_flowerplot",
+                           dimension = "score",
+                           region_id = 0) # region_id_selected = flower_rgn
+  )
+  # callModule(flowerplotRgnCard, "baltic_flowerplot",
+  #            region_id_selected = reactive(input$flower_rgn)) # region_id_selected = flower_rgn
 
   ## overall index scores map
   # callModule(mapBarplotCard, "index_map_barplot",
@@ -326,6 +328,41 @@ function(input, output, session){
 
 
   ## COMPARE ----
+  output$pressure_ts <- renderPlotly({
 
+    press_var <- input$press_var
+
+    # press_dat <- tbl(bhi_db_con, "pressures") %>%
+    press_dat <- tbl(bhi_db_con, "for_now_press_data") %>% # just a few layers for now...
+      select(region_id, year, press_var) %>%
+      collect() %>%
+      left_join(
+        select(thm$rgn_name_lookup, region_id, plot_title),
+        by = "region_id") %>%
+      rename(Name = plot_title, Pressure = press_var, Year = year)
+
+    if(spatial_unit() == "subbasins"){
+      press_dat <- press_dat %>%
+        filter(region_id %in% subbasin_ids_vec)
+    } else {
+      press_dat <- press_dat %>%
+        filter(region_id %in% rgn_ids_vec)
+    }
+    if(nrow(press_dat) == 0){
+      stop("no pressure data...")
+    } else {
+
+      plot_obj <- ggplot2::ggplot(
+        data = press_dat,
+        aes(x = Year, y = Pressure,
+          color = Name,
+          text =  sprintf("%s:\n%s", str_replace(Name, ", ", "\n"), Pressure)
+        )
+      )
+
+      plot_obj <- plot_obj + geom_line() + theme_bw() + theme(legend.position = "none")
+      plotly::ggplotly(plot_obj, tooltip = "text")
+    }
+  })
 
 }

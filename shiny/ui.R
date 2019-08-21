@@ -127,132 +127,132 @@ dashboardPage(
         tabName = "summaries",
         startExpanded = FALSE,
 
+        ## input year ----
         # sliderInput("view_year", "Year",
         #             min = min(full_scores_csv$year), max = max(full_scores_csv$year),
         #             value = assess_year, step = 1),
         sliderInput("view_year", "Year", 2012, 2019, 2014, step = 1, sep = ""),
 
-        div(
-          id = "large",
-          selectInput(
-            "flower_rgn",
-            "Flowerplot Region",
-            list(
-              `Baltic Sea` = 0,
+        ## input region ----
+        selectInput(
+          "flower_rgn",
+          "Flowerplot Region",
+          list(
+            `Baltic Sea` = 0,
 
-              `Aland Sea` = c(
-                `Aland Sea` = 514,
-                `Aland Sea, Sweden` = 35,
-                `Aland Sea, Finland` = 36
-              ),
+            `Aland Sea` = c(
+              `Aland Sea` = 514,
+              `Aland Sea, Sweden` = 35,
+              `Aland Sea, Finland` = 36
+            ),
 
-              `Arkona Basin` = c(
-                `Arkona Basin` = 506,
-                `Arkona Basin, Sweden` = 11,
-                `Arkona Basin, Denmark` = 12,
-                `Arkona Basin, Germany` = 13
-              ),
+            `Arkona Basin` = c(
+              `Arkona Basin` = 506,
+              `Arkona Basin, Sweden` = 11,
+              `Arkona Basin, Denmark` = 12,
+              `Arkona Basin, Germany` = 13
+            ),
 
-              `Bay of Mecklenburg` = c(
-                `Bay of Mecklenburg` = 505,
-                `Bay of Mecklenburg, Denmark` = 9,
-                `Bay of Mecklenburg, Germany` = 10
-              ),
+            `Bay of Mecklenburg` = c(
+              `Bay of Mecklenburg` = 505,
+              `Bay of Mecklenburg, Denmark` = 9,
+              `Bay of Mecklenburg, Germany` = 10
+            ),
 
-              `Bornholm Basin` = c(
-                `Bornholm Basin` = 507,
-                `Bornholm Basin, Sweden` = 14,
-                `Bornholm Basin, Denmark` = 15,
-                `Bornholm Basin, Germany` = 16,
-                `Bornholm Basin, Poland` = 17
-              ),
+            `Bornholm Basin` = c(
+              `Bornholm Basin` = 507,
+              `Bornholm Basin, Sweden` = 14,
+              `Bornholm Basin, Denmark` = 15,
+              `Bornholm Basin, Germany` = 16,
+              `Bornholm Basin, Poland` = 17
+            ),
 
-              `Bothnian Bay` = c(
-                `Bothnian Bay` = 517,
-                `Bothnian Bay, Sweden` = 41,
-                `Bothnian Bay, Finland` = 42
-              ),
+            `Bothnian Bay` = c(
+              `Bothnian Bay` = 517,
+              `Bothnian Bay, Sweden` = 41,
+              `Bothnian Bay, Finland` = 42
+            ),
 
-              `Bothnian Sea` = c(
-                `Bothnian Sea` = 515,
-                `Bothnian Sea, Sweden` = 37,
-                `Bothnian Sea, Finland` = 38
-              ),
+            `Bothnian Sea` = c(
+              `Bothnian Sea` = 515,
+              `Bothnian Sea, Sweden` = 37,
+              `Bothnian Sea, Finland` = 38
+            ),
 
-              `Eastern Gotland Basin` = c(
-                `Eastern Gotland Basin` = 509,
-                `Eastern Gotland Basin, Sweden` = 20,
-                `Eastern Gotland Basin, Poland` = 21,
-                `Eastern Gotland Basin, Russia` = 22,
-                `Eastern Gotland Basin, Lithuania` = 23,
-                `Eastern Gotland Basin, Latvia` = 24,
-                `Eastern Gotland Basin, Estonia` = 25
-              ),
+            `Eastern Gotland Basin` = c(
+              `Eastern Gotland Basin` = 509,
+              `Eastern Gotland Basin, Sweden` = 20,
+              `Eastern Gotland Basin, Poland` = 21,
+              `Eastern Gotland Basin, Russia` = 22,
+              `Eastern Gotland Basin, Lithuania` = 23,
+              `Eastern Gotland Basin, Latvia` = 24,
+              `Eastern Gotland Basin, Estonia` = 25
+            ),
 
-              `Gdansk Basin` = c(
-                `Gdansk Basin` = 508,
-                `Gdansk Basin, Poland` = 18,
-                `Gdansk Basin, Russia` = 19
-              ),
+            `Gdansk Basin` = c(
+              `Gdansk Basin` = 508,
+              `Gdansk Basin, Poland` = 18,
+              `Gdansk Basin, Russia` = 19
+            ),
 
-              `Great Belt` = c(
-                `Great Belt` = 502,
-                `Great Belt, Denmark` = 3,
-                `Great Belt, Germany` = 4
-              ),
+            `Great Belt` = c(
+              `Great Belt` = 502,
+              `Great Belt, Denmark` = 3,
+              `Great Belt, Germany` = 4
+            ),
 
-              `Gulf of Finland` = c(
-                `Gulf of Finland` = 513,
-                `Gulf of Finland, Finland` = 32,
-                `Gulf of Finland, Russia` = 33,
-                `Gulf of Finland, Estonia` = 34
-              ),
+            `Gulf of Finland` = c(
+              `Gulf of Finland` = 513,
+              `Gulf of Finland, Finland` = 32,
+              `Gulf of Finland, Russia` = 33,
+              `Gulf of Finland, Estonia` = 34
+            ),
 
-              `Gulf of Riga` = c(
-                `Gulf of Riga` = 511,
-                `Gulf of Riga, Latvia` = 27,
-                `Gulf of Riga, Estonia` = 28
-              ),
+            `Gulf of Riga` = c(
+              `Gulf of Riga` = 511,
+              `Gulf of Riga, Latvia` = 27,
+              `Gulf of Riga, Estonia` = 28
+            ),
 
-              `Kattegat` = c(
-                `Kattegat` = 501,
-                `Kattegat, Sweden` = 1,
-                `Kattegat, Denmark` = 2
-              ),
+            `Kattegat` = c(
+              `Kattegat` = 501,
+              `Kattegat, Sweden` = 1,
+              `Kattegat, Denmark` = 2
+            ),
 
-              `Kiel Bay` = c(
-                `Kiel Bay` = 504,
-                `Kiel Bay, Denmark` = 7,
-                `Kiel Bay, Germany` = 8
-              ),
+            `Kiel Bay` = c(
+              `Kiel Bay` = 504,
+              `Kiel Bay, Denmark` = 7,
+              `Kiel Bay, Germany` = 8
+            ),
 
-              `Northern Baltic Proper` = c(
-                `Northern Baltic Proper` = 500,
-                `Northern Baltic Proper, Sweden` = 29,
-                `Northern Baltic Proper, Finland` = 30,
-                `Northern Baltic Proper, Estonia` = 31
-              ),
+            `Northern Baltic Proper` = c(
+              `Northern Baltic Proper` = 500,
+              `Northern Baltic Proper, Sweden` = 29,
+              `Northern Baltic Proper, Finland` = 30,
+              `Northern Baltic Proper, Estonia` = 31
+            ),
 
-              `The Quark` = c(
-                `The Quark` = 516,
-                `The Quark, Sweden` = 39,
-                `The Quark, Finland` = 40
-              ),
+            `The Quark` = c(
+              `The Quark` = 516,
+              `The Quark, Sweden` = 39,
+              `The Quark, Finland` = 40
+            ),
 
-              `The Sound` = c(
-                `The Sound` = 503,
-                `The Sound, Sweden` = 5,
-                `The Sound, Denmark` = 6
-              ),
+            `The Sound` = c(
+              `The Sound` = 503,
+              `The Sound, Sweden` = 5,
+              `The Sound, Denmark` = 6
+            ),
 
-              `Western Gotland Basin` = c(
-                `Western Gotland Basin` = 510,
-                `Western Gotland Basin, Sweden` = 26
-              )
+            `Western Gotland Basin` = c(
+              `Western Gotland Basin` = 510,
+              `Western Gotland Basin, Sweden` = 26
             )
           )
         ),
 
+        ## input spatial unit ----
         selectInput(
           "spatial_unit",
           "Spatial Units",
@@ -261,6 +261,7 @@ dashboardPage(
           selected = "subbasins"
         ),
 
+        ## input dimension ----
         selectInput(
           "dimension",
           "Index Dimension",
@@ -386,16 +387,17 @@ dashboardPage(
         fluidRow(
 
           ## flowerplot
-          flowerplotRgnCardUI(
+          flowerplotCardUI( # flowerplotRgnCardUI(
             id = "baltic_flowerplot",
             title_text = "Flowerplot of Scores",
-            sub_title_text = "Select region under View Options to visualize region-specific scores"
+            sub_title_text = "Select region under View Options to visualize region-specific scores."
           ),
 
           ## map of overall scores, with barplot
           barplotCardUI(
             id = "index_barplot",
-            title_text = "",
+            title_text = "Proximity to Target",
+            sub_title_text = "",
             box_width = 2
           ),
           mapCardUI(
@@ -408,66 +410,80 @@ dashboardPage(
       ), # end welcome tab
 
       ## >> ao ----
-      ## Artisanal Opportunities
+      ## Artisanal Fishing Opportunity
       tabItem(
         tabName = "ao",
-
         ## header with scorebox and goal intro
         fluidRow(
           box(
-            h1("Artisanal Fishing Opportunities"),
-            width = 12
+            h1("Artisanal Fishing Opportunity"),
+            width = 9
           ),
-          box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
-            width = 12
-          )
-        ),
-
-        ## plots and maps and links
-        fluidRow(
-          barplotCardUI(
-            id = "ao_barplot",
-            title_text = "",
-            box_width = 3
-          ),
-          mapCardUI(
-            id = "ao_map",
-            title_text = "Artisanal Opportunity Scores",
-            sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
-          ),
-
           column(
             width = 3,
             infoBox(
               title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "AO")$score,
+              tags$p(filter(full_scores_csv, region_id == 0, goal == "AO", dimension == "score")$score,
                      style = "font-size: 225%; text-align:center; font-weight: lighter;"),
               icon = icon(thm$icons$AO),
               color = "yellow",
               fill = TRUE,
               width = 12
-            ),
+            )
+          ),
+          box(
+            p(""),
+            width = 12
+          )
+        ),
+        ## plots and maps and links
+        fluidRow(
+          barplotCardUI(
+            id = "ao_barplot",
+            title_text = "Artisanal Fishing Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bars represent proximity to target level of 100, weighted by region or basin (log-transformed) area.",
+            box_width = 3
+          ),
+          mapCardUI(
+            id = "ao_map",
+            title_text = "Spatial Patterns in Artisanal Fishing Opportunity Scores",
+            sub_title_text = "This map shows scores from the previous assessment (2014)",
+            box_width = 6,
+            ht = 555
+          ),
+          column(
+            width = 3,
             text_links(
               "AO DATA PREP",
               sprintf("%s/AO/ao_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
+              "MEANING OF THE GOAL",
               "http://ohi-science.org/goals/#artisanal-fishing-opportunities"
             ),
             text_links(
-              "SAVE CURRENT MAP",
+              "DATA FOR AO GOAL",
+              "https://github.com/OHI-Science/bhi-prep/tree/master/data/AO/v2019"
+            ),
+            text_links(
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
+            ),
+            text_links(
+              "SAVE MAP",
               "http://ohi-science.org/goals/#artisanal-fishing-opportunities"
             ),
             text_links(
-              "AO DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/AO/ao_data_database"
+              "DATA FOR AO GOAL",
+              "https://github.com/OHI-Science/bhi-prep/tree/master/data/AO/v2019"
             ),
             text_links(
-              "ACCESS DATA LAYERS",
-              gh_layers
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
+            ),
+            text_links(
+              "SAVE MAP",
+              "http://ohi-science.org/goals/#artisanal-fishing-opportunities"
             )
           )
         )
@@ -486,10 +502,9 @@ dashboardPage(
           ),
           column(
             width = 3,
-
             infoBox(
               title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "BD")$score,
+              tags$p(filter(full_scores_csv, region_id == 0, goal == "BD", dimension == "score")$score,
                      style = "font-size: 225%; text-align:center; font-weight: lighter;"),
               icon = icon(thm$icons$BD),
               color = "green",
@@ -507,14 +522,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "bd_barplot",
-            title_text = "",
+            title_text = "Biodiversity Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bars represent proximity to target level of 100, weighted by region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "bd_map",
-            title_text = "Biodiversity Scores",
+            title_text = "Spatial Patterns in Biodiversity Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -524,23 +541,31 @@ dashboardPage(
               sprintf("%s/SPP/spp_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
+              "MEANING OF THE GOAL",
               "http://ohi-science.org/goals/#biodiversity"
             ),
             text_links(
-              "ACCESS DATA",
+              "SAVE MAP",
+              "http://ohi-science.org/goals/#biodiversity"
+            ),
+            text_links(
+              "DATA FOR BD GOAL",
+              "https://github.com/OHI-Science/bhi-prep/tree/master/data/SPP/v2019"
+            ),
+            text_links(
+              "ACCESS DATA LAYERS",
               "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/SPP/spp_prep.md"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
+              "SAVE MAP",
               "http://ohi-science.org/goals/#biodiversity"
             ),
             text_links(
-              "DATA INPUTS",
+              "DATA FOR BD GOAL",
+              "https://github.com/OHI-Science/bhi-prep/tree/master/data/SPP/v2019"
+            ),
+            text_links(
+              "DATA FOR BD GOAL",
               "https://github.com/OHI-Science/bhi-prep/tree/master/data/SPP/v2019"
             )
           )
@@ -1753,12 +1778,32 @@ dashboardPage(
         tabName = "pressures",
         fluidRow(
           box(
-            h1("Pressures"),
+            h1("Pressures - Page Under Construction", style = "color:#9b363d"),
             width = 12
           ),
           box(
             p("SOMETHING ABOUT BHI PRESSURES, WITH TIME SERIES PLOTS"),
             width = 12
+          ),
+
+          ## pressures time series plot
+          box(
+            width = 9,
+            addSpinner(plotlyOutput("pressure_ts"), spin = "rotating-plane", color = "#d7e5e8")
+          ),
+          ## pressure time series plot select variable
+          box(
+            width = 3,
+
+            selectInput(
+              "press_var",
+              label = "Pressure Variable to Plot",
+              choices = c(`Eutrophication` = "eut_time_data",
+                          `Contaminants PCB` = "con_pcb_time_data",
+                          `Contaminants Dioxin` = "con_dioxin_time_data",
+                          `Anoxia Pressure` = "anoxia_press",
+                          `Nitrogen Load Tonnes` = "N_basin_tonnes")
+            )
           )
         )
       ), # end pressures tab item
