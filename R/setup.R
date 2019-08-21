@@ -75,7 +75,15 @@ apply_bhi_theme <- function(plot_type = NA){
                "AO","TR","CS","NP", "BD"),
       color = c("#549dad","#4ead9d","#53b3ac","#89b181","#60a777","#7ead6d","#9aad7e",
                 "#97a4ba","#9fb3d4","#7c96b4","#9a97ba","#7d7ca3","#9990b4",
-                "#e2de9a","#b6859a","#d0a6a1","#ccb4be","#88b1a6"))
+                "#e2de9a","#b6859a","#d0a6a1","#ccb4be","#88b1a6")),
+
+    goalpal_shiny = tibble::tibble(
+      goal = c("MAR","FIS","FP","CW","CON","EUT","TRA",
+               "SP","LSP","ICO","LE","ECO","LIV",
+               "AO","TR","CS","NP", "BD"),
+      color = c("aqua","aqua","aqua","olive","olive","olive","olive",
+                "blue","blue","blue","purple","purple","purple",
+                "yellow","red","orange","fuchsia","green"))
 
   ) # end define color palettes
 
