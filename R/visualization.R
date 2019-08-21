@@ -440,7 +440,8 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code, 
       mutate(order = as.factor(order))
 
     areas_df <- tbl(bhi_db_con, "basins") %>%
-      select(name = subbasin, area_km2)
+      select(name = subbasin, area_km2) %>%
+      collect()
 
     scores <- scores %>%
       filter(region_id >= 500) %>%
@@ -458,7 +459,8 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code, 
       mutate(order = as.factor(order))
 
     areas_df <- tbl(bhi_db_con, "regions") %>%
-      select(name = region_id, area_km2)
+      select(name = region_id, area_km2) %>%
+      collect()
 
     scores <- scores %>%
       filter(region_id < 100 & region_id != 0) %>%
@@ -479,8 +481,9 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code, 
     weights <- areas_df %>%
       ## scaling proportional to area results in some very thin bars
       ## can try different functions...
-      mutate(weight = area_km2^0.6) %>% # mutate(weight = area)
-      collect()
+      mutate(area_rescale = (area_km2-min(areas_df$area_km2))/diff(range(areas_df$area_km2)) + 1) %>%
+      mutate(weight = log(area_rescale) + 0.1) %>% # mutate(weight = area_km2 or area_km2^0.6)...
+      select(-area_rescale)
   }
 
   if(basins_or_rgns == "subbasins"){
@@ -516,24 +519,30 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code, 
                          text =  sprintf("%s:\n%s", str_replace(Name, ", ", "\n"), Score),
                          # Name = Name, Score = Score, Area = Area,
                          width = weight, fill = score_unrounded)) +
+
     geom_bar(aes(y = 100),
              stat = "identity",
              size = 0.2,
              color = "#acb9b6",
              alpha = 0.6,
              fill = "white") +
+
     geom_bar(stat = "identity",
              size = 0.2,
              color = "#acb9b6",
-             alpha = 0.85,
+             alpha = 0.8,
              show.legend = FALSE) +
-    scale_fill_gradientn(colours = c("#8c031a", "#cc0033", "#fff78a", "#f6ffb3", "#009999", "#0278a7"),
-                         breaks = c(15, 40, 60, 75, 90, 100),
-                         limits = c(0, 101),
-                         na.value = "black")
+
+    scale_fill_gradientn(
+      colours = c("#8c031a", "#cc0033", "#fff78a", "#f6ffb3", "#009999", "#0278a7"),
+      breaks = c(15, 40, 60, 75, 90, 100),
+      limits = c(0, 101),
+      na.value = "black"
+    )
 
   ## overlay light grey for NAs
   if(any(!is.na(plot_df$plotNAs))){
+
     plot_obj <- plot_obj +
       geom_bar(aes(y = plotNAs),
                stat = "identity",
@@ -543,29 +552,14 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code, 
   }
   ## some formatting
   plot_obj <- plot_obj +
-    geom_errorbar(aes(x = pos, ymin = 0, ymax = 0),
-                  size = 0.5,
-                  show.legend = NA,
-                  color = thm$cols$dark_grey3) +
-    geom_errorbar(aes(x = pos, ymin = 100, ymax = 100),
-                  size = 1,
-                  show.legend = NA,
-                  color = "black") +
-
+    geom_hline(aes(yintercept = 100), color = thm$cols$dark_grey3) +
+    geom_hline(aes(yintercept = 0), color = thm$cols$dark_grey3, size = 0.2) +
     labs(x = NULL, y = NULL) +
     coord_flip() +
-    theme_minimal() +
     theme(axis.text.y = element_blank())
 
   ## html plotly vs standard ggplot ----
-  if(make_html){
-    # plot_obj <- plot_obj +
-    #   geom_text(aes(label = subbasin),
-    #             family = "Helvetica",
-    #             size = 3) # geom_text_repel not supported in ggplotly yet...
-    plot_obj <- plotly::ggplotly(plot_obj, tooltip = "text")
-
-  } else {
+  if(!make_html){
     plot_obj <- plot_obj +
       ggrepel::geom_text_repel(
         aes(label = Name),
@@ -573,7 +567,8 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code, 
         size = 3, angle = 0, direction = "x",
         segment.alpha = 0.1, segment.size = 0.1, box.padding = 0.8,
         show.legend = FALSE)
-  }
+
+  } else {plot_obj <- plotly::ggplotly(plot_obj, tooltip = "text")}
 
   ## saving plots ----
   save_loc <- NULL
