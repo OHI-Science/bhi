@@ -88,5 +88,53 @@ dim_descriptions <-  readr::read_csv(file.path(here::here(), "supplement/tables/
 copy_to(bhi_db_con, dim_descriptions, "dim_descriptions", temporary = FALSE, indexes = list("dimension"))
 
 
+press_datasets_w_yr <- c(
+  "prep/pressures/atmos_contaminants/data_database/pcddf.csv",
+  "prep/pressures/wgi_social/data_database/wgi_combined_scores_by_country.csv",
+  "prep/pressures/climate_change/salinity_climatechange/sal_data_database/hind_sal_deep.csv",
+  "prep/pressures/climate_change/salinity_climatechange/sal_data_database/hind_sal_surf.csv",
+  "prep/pressures/climate_change/temperature_climatechange/temp_data_database/hind_sst.csv",
+  "prep/pressures/nutrient_load/nutrient_data_database/N_basin_load.csv",
+  "prep/pressures/nutrient_load/nutrient_data_database/P_basin_load.csv",
+  "prep/pressures/illegal_oil_discharge/oil_data_raw.csv",
+  "prep/pressures/open_sea_anoxia/anoxia_pressure_scores_all_rgns_yrs.csv",
+  "visualize/con_dioxin_time_data.csv",
+  "visualize/con_pcb_time_data.csv",
+  "visualize/eut_time_data.csv"
+)
+press_datasets_w_yr <- file.path("/Users/eleanorecampbell/Desktop/GitHub/bhi-1.0-archive/baltic2015", press_datasets_w_yr)
+
+for(i in press_datasets_w_yr){
+  tmp <- read.csv(i)
+  assign(basename(str_remove(i, ".csv")), tmp)
+  print(paste("loaded", basename(str_remove(i, ".csv"))))
+}
+
+pcddf <- pcddf %>%
+  # mutate(metric = str_replace_all(paste(unit, substance), " ", "")) %>%
+  select(-basin_abb, -data_type, -substance, -unit) %>%
+  rename(subbasin = basin_loading) %>%
+  # gather(key = year, value = value, c(-subbasin, -metric))
+  gather(key = year, value = value, c(-subbasin)) %>%
+  left_join(tbl(bhi_db_con, "basins") %>% select(subbasin, subbasin_id) %>% collect(), by = "subbasin") %>%
+  filter(!is.na(subbaasin)) # has misssing basins, need to split  eg baltic proper...
+
+
+for_now_press_dat <- eut_time_data %>%
+  select(region_id = rgn_id, year,  eut_time_data = value) %>%
+  left_join(con_pcb_time_data %>% select(region_id = rgn_id, year,  con_pcb_time_data = value), by = c("region_id",  "year")) %>%
+  left_join(con_dioxin_time_data %>% select(region_id = rgn_id, year,  con_dioxin_time_data = value), by = c("region_id",  "year")) %>%
+  left_join(anoxia_pressure_scores_all_rgns_yrs %>% select(region_id = rgn_id, year,  anoxia_press = pressure_score), by = c("region_id",  "year")) %>%
+  left_join(
+    N_basin_load %>%
+      left_join(tbl(bhi_db_con, "basins") %>%
+                  select(basin = subbasin, region_id = subbasin_id) %>%
+                  collect(),
+                by = "basin") %>%
+      filter(!is.na(region_id)) %>%
+      select(region_id, year, N_basin_tonnes = tonnes),
+    by = c("region_id",  "year"))
+
+copy_to(bhi_db_con, for_now_press_dat, "for_now_press_data", temporary = FALSE)
 
 
