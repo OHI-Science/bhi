@@ -6,11 +6,18 @@ function(input, output, session){
   ## WELCOME ----
 
   ## flowerplot
-  eventReactive(
-    eventExpr = input$flower_rgn,
-    valueExpr = callModule(flowerplotCard, "baltic_flowerplot",
-                           dimension = "score",
-                           region_id = 0) # region_id_selected = flower_rgn
+
+  values <- reactiveValues(flower_rgn = 30)
+
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+      values$flower_rgn <- input$flower_rgn
+
+      flower_rgn <- reactive(values$flower_rgn)
+      callModule(flowerplotCard, "baltic_flowerplot",
+                 dimension = "score",
+                 flower_rgn_selected = flower_rgn)
+    }, ignoreNULL = FALSE
   )
   # callModule(flowerplotRgnCard, "baltic_flowerplot",
   #            region_id_selected = reactive(input$flower_rgn)) # region_id_selected = flower_rgn

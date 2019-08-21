@@ -15,31 +15,33 @@ flowerplotCardUI <- function(id,
   ## put together in box and return box
   tagList(box(collapsible = TRUE,
               title = title_text,
-              list(p(sub_title_text), highchartOutput(ns("flowerplot"), height = 480)),
+              list(p(sub_title_text),
+                   addSpinner(highchartOutput(ns("flowerplot"), height = 480),
+                              spin = "rotating-plane", color = "#d7e5e8")),
               width = 5))
 }
 
 ## flowerplot card server function ----
-flowerplotCard <- function(input, output, session, flower_id, dimension, region_id){
+flowerplotCard <- function(input, output, session, dimension, flower_rgn_selected){
 
 
-  rgn_id <- region_id
+  rgn_id <- flower_rgn_selected()
   dim <- dimension
 
-
   ## make flowerplot
+  scorerange <- ifelse(rgn_id == 0, TRUE, FALSE)
   plot_obj <- make_flower_plot(
     tbl(bhi_db_con, "scores2015") %>%
       filter(dimension == "score") %>%
       collect(),
     rgn_id, plot_year = 2014,
-    include_ranges = TRUE, labels = "arc") %>%
+    include_ranges = scorerange, labels = "arc") %>%
 
     image_trim() %>%
     image_scale("x350") %>%
     image_border("white", "10x10")
 
-  tmploc <- file.path("./www", paste0(flower_id, "_tmp.png"))
+  tmploc <- file.path("./www", paste0("flower", "_tmp.png"))
   image_write(plot_obj, tmploc)
 
 

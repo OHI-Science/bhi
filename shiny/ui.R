@@ -375,7 +375,7 @@ dashboardPage(
           box(
             h3("How healthy are our oceans?"),
             p("The Baltic Health Index is a regional study under the global Ocean Health Index framework.
-              The aim is to initiate the development of a tool that can be used by decision-makers to guide management of the Baltic Sea region towards increased sustainability.
+              The aim is to continue the development of a tool that can be used by decision-makers to guide management of the Baltic Sea region towards increased sustainability.
               Oceans in general provide a diverse array of benefits to humans.
               Managing for such a broad range of benefits requires a method of measurement that is both comprehensive and quantitative.
               Establishing such a method was the motivation behind the development of the Ocean Health Index."),
@@ -441,7 +441,7 @@ dashboardPage(
           barplotCardUI(
             id = "ao_barplot",
             title_text = "Artisanal Fishing Goal Headway",
-            sub_title_text = "Environmental benefit versus work still to be done. Bars represent proximity to target level of 100, weighted by region or basin (log-transformed) area.",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
@@ -1778,7 +1778,7 @@ dashboardPage(
         tabName = "pressures",
         fluidRow(
           box(
-            h1("Pressures - Page Under Construction", style = "color:#9b363d"),
+            h1("Pressures (Page Under Construction)", style = "color:#9b363d"),
             width = 12
           ),
           box(
