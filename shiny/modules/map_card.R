@@ -10,6 +10,7 @@ mapCardUI <- function(id,
                       title_text = NULL,
                       sub_title_text = NULL,
                       box_width = 6,
+                      ht = 480,
                       source_text = NULL,
                       select_type = c(NULL, "radio", "drop_down", "checkboxes"),
                       select_choices = c(""),
@@ -21,7 +22,7 @@ mapCardUI <- function(id,
 
   ## selection layout
   if(missing(select_type) == TRUE){ # without selection
-    items <- leafletOutput(ns("plot"), height = 480)
+    items <- leafletOutput(ns("plot"), height = ht)
 
   } else {  # with selection
     if(select_type == "radio"){ # selection type
@@ -41,7 +42,7 @@ mapCardUI <- function(id,
                                    label = p(select_label),
                                    selected = selected)
     }
-    items <- list(select, leafletOutput(ns("plot"), height = 480))
+    items <- list(select, leafletOutput(ns("plot"), height = ht))
   }
 
   ## put together in box and return box
@@ -81,30 +82,10 @@ mapCard <- function(input,
     } else { shp <- rgns_shp }
 
     ## create leaflet map
-    if(dimension_selected() == "score"){
-      if(spatial_unit_selected() == "subbasins"){
-        result <- leaflet_map(
-          goal_code, spatial_unit_selected(),
-          mapping_data_sp = mapping_scores_subbasin,
-          shp = NULL, scores_csv = NULL, simplify_level = 1,
-          dim = dimension_selected(), year = assess_year,
-          include_legend = TRUE, legend_title)
-
-      } else {
-        result <- leaflet_map(
-          goal_code, spatial_unit_selected(),
-          mapping_data_sp = mapping_scores_rgn,
-          shp = NULL, scores_csv = NULL, simplify_level = 1,
-          dim = dimension_selected(), year = assess_year,
-          include_legend = TRUE, legend_title)
-
-      }
-    } else {
-      result <- leaflet_map(
-        goal_code, spatial_unit_selected(), mapping_data_sp = NULL,
-        shp = shp, scores_csv, simplify_level = 1, dim = dimension_selected(), year = assess_year,
-        include_legend = TRUE, legend_title)
-    }
+    result <- leaflet_map(
+      goal_code, spatial_unit_selected(), mapping_data_sp = NULL,
+      shp = shp, scores_csv, simplify_level = 1, dim = dimension_selected(), year = assess_year,
+      include_legend = TRUE, legend_title)
 
     ## create popup text
     popup_text <- paste("<h5><strong>", popup_title, "</strong>",
