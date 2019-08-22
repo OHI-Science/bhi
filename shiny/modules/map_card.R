@@ -44,6 +44,15 @@ mapCardUI <- function(id,
     }
     items <- list(select, leafletOutput(ns("plot"), height = ht))
   }
+  # items <- list(
+  #   select,
+  #   splitLayout(
+  #     cellWidths = c("30%", "70%"),
+  #     plotlyOutput(ns("barplot"), height  = 480),
+  #     leafletOutput(ns("map"), height = 480),
+  #     cellArgs = list(style = "padding: 10px")
+  #   )
+  # )
 
   ## put together in box and return box
   tagList(box(collapsible = TRUE,
