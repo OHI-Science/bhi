@@ -18,7 +18,7 @@ thm <- apply_bhi_theme()
 ## Functions ----
 
 source(file.path(here::here(), "shiny", "modules", "map_card.R"))
-source(file.path(here::here(), "shiny", "modules", "map_barplot_card.R"))
+source(file.path(here::here(), "shiny", "modules", "map_rgn_card.R"))
 source(file.path(here::here(), "shiny", "modules", "barplot_card.R"))
 source(file.path(here::here(), "shiny", "modules", "flowerplot_card.R"))
 
@@ -55,7 +55,7 @@ text_links <- function(title = NULL, url = NULL, box_width = 12){
   box(class = "text_link_button",
       h4(a(paste("\n", title), href = url, target = "_blank")),
       width = box_width,
-      # height = 90,
+      height = 65,
       background = "light-blue",
       status = "primary",
       solidHeader = TRUE)
@@ -81,6 +81,35 @@ make_rgn_menu <- function(rgn_tab_con = bhi_db_con){
   cat("\n\n")
   for(s in unique(rgn$subbasin)){
     cat(filter(rgn, subbasin  == s)$print_col, sep = ", \n")
+  }
+}
+
+#' layers scatterplot variables selection menu
+#'
+#' @param github_layers
+#'
+#' @return no returned object; prints helpful info in console
+
+make_lyrs_menu <- function(layers_dir){
+
+  lyrs <- list.files(layers_dir) %>%
+    grep(pattern = "_bhi2015.csv", value = TRUE) %>%
+    grep(pattern = "_trend", value = TRUE, invert = TRUE) %>%
+    grep(pattern = "_scores", value = TRUE, invert = TRUE) %>%
+    sort()
+
+  cat("\n\n")
+  for(f in lyrs){
+    cat(
+      sprintf(
+        "`%s` = \"%s\"",
+        lyrs %>%
+          str_remove(pattern  = "_bhi2015.csv+") %>%
+          str_to_upper(),
+        lyrs
+      ),
+      sep = ", \n"
+    )
   }
 }
 
@@ -189,15 +218,15 @@ subbasins_shp <- sf::st_read("/Volumes/BHI_share/Shapefiles/HELCOM_subbasins_hol
 # mpa_shp <- sf::st_read()
 
 ## shps combined with score information, only score dim and current assessment year
-message("calculating 'mapping_scores_subbasin' sf object...")
-mapping_scores_subbasin <- make_subbasin_sf(
-  subbasins_shp, full_scores_csv,
-  goal_code = "all", dim = "score", year = assess_year,
-  simplify_level = 1)
+# message("calculating 'mapping_scores_subbasin' sf object...")
+# mapping_scores_subbasin <- make_subbasin_sf(
+#   subbasins_shp, full_scores_csv,
+#   goal_code = "all", dim = "score", year = assess_year,
+#   simplify_level = 1)
 
-message("calculating 'mapping_scores_rgn' sf object...")
-mapping_scores_rgn <- make_rgn_sf(
-  rgns_shp, full_scores_csv,
-  goal_code = "all", dim = "score", year = assess_year,
-  simplify_level = 1)
+# message("calculating 'mapping_scores_rgn' sf object...")
+# mapping_scores_rgn <- make_rgn_sf(
+#   rgns_shp, full_scores_csv,
+#   goal_code = "all", dim = "score", year = assess_year,
+#   simplify_level = 1)
 

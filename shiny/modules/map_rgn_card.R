@@ -95,11 +95,22 @@ mapRgnCard <- function(input,
                         result$data_sf[[popup_add_field]], "</h5>", sep = " ")
 
     ## create selected-region overlay, based on spatial unit and flowerplot region
-    if(flower_rgn_selected() %in% subbasin_ids_vec){
+    if(flower_rgn_selected() %in% rgn_ids_vec){
+      if(spatial_unit_selected() == "regions"){
+        rgn_select <- select(result$data_sf, BHI_ID)
+      } else {
+        rgn_select <- select(rgns_shp,  BHI_ID)
+      }
 
-      if(spatial_unit_selected() != "subbasins"){
-        rgn_select <- select(subbasins_shp,  HELCOM_ID)
-      } else {rgn_select <- select(result$data_sf, HELCOM_ID)}
+      rgn_select <- filter(rgn_select, BHI_ID == flower_rgn_selected())
+      if(spatial_unit_selected() != "regions"){
+        rgn_select <- rmapshaper::ms_simplify(input = rgn_select) %>% sf::st_as_sf()
+      }
+
+    } else {
+      if(spatial_unit_selected() == "subbasins"){
+        rgn_select <- select(result$data_sf, HELCOM_ID)
+      } else {rgn_select <- select(subbasins_shp,  HELCOM_ID)}
 
       rgn_select <- rgn_select %>%
         left_join(
@@ -110,23 +121,7 @@ mapRgnCard <- function(input,
           by = "HELCOM_ID"
         ) %>%
         filter(BHI_ID == flower_rgn_selected())
-      # if(spatial_unit_selected() != "subbasins"){
-      #   rgn_select <- rmapshaper::ms_simplify(input = rgn_select) %>% sf::st_as_sf()
-      # }
-
-    } else {
-      if(spatial_unit_selected() != "regions"){
-        rgn_select <- select(rgns_shp,  BHI_ID)
-      } else {
-        rgn_select <- select(result$data_sf, BHI_ID)
-      }
-      rgn_select <- filter(rgn_select, BHI_ID == flower_rgn_selected())
-
-      # if(spatial_unit_selected() != "regions"){
-      #   rgn_select <- rmapshaper::ms_simplify(input = rgn_select) %>% sf::st_as_sf()
-      # }
     }
-
 
     ## return leaflet map with popup added
     result$map %>%

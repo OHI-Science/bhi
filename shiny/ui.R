@@ -377,8 +377,9 @@ dashboardPage(
             p("The Baltic Health Index is a regional study under the global Ocean Health Index framework.
               The aim is to continue the development of a tool that can be used by decision-makers to guide management of the Baltic Sea region towards increased sustainability.
               Oceans in general provide a diverse array of benefits to humans.
-              Managing for such a broad range of benefits requires a method of measurement that is both comprehensive and quantitative.
-              Establishing such a method was the motivation behind the development of the Ocean Health Index."),
+              Managing for such a broad range of benefits requires a method of measurement that is both comprehensive and quantitative;
+              establishing such a method was the motivation behind the Ocean Health Index.
+              We strive to use the best open source tools available, to make our ocean health metrics, results and underlying data easily accessible and transparent."),
             width = 12
           )
         ),
@@ -400,7 +401,7 @@ dashboardPage(
             sub_title_text = "",
             box_width = 2
           ),
-          mapCardUI(
+          mapRgnCardUI(
             id = "index_map",
             title_text = "Map of Index Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
@@ -432,7 +433,7 @@ dashboardPage(
             )
           ),
           box(
-            p(""),
+            p("SOMETHING ABOUT GOAL PHILOSOPHY AND STATUS/TRENDS"),
             width = 12
           )
         ),
@@ -446,7 +447,7 @@ dashboardPage(
           ),
           mapCardUI(
             id = "ao_map",
-            title_text = "Spatial Patterns in Artisanal Fishing Opportunity Scores",
+            title_text = "Map of Artisanal Fishing Opportunity Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
             box_width = 6,
             ht = 555
@@ -462,7 +463,7 @@ dashboardPage(
               "http://ohi-science.org/goals/#artisanal-fishing-opportunities"
             ),
             text_links(
-              "DATA FOR AO GOAL",
+              "GOAL DATA",
               "https://github.com/OHI-Science/bhi-prep/tree/master/data/AO/v2019"
             ),
             text_links(
@@ -470,19 +471,7 @@ dashboardPage(
               "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             ),
             text_links(
-              "SAVE MAP",
-              "http://ohi-science.org/goals/#artisanal-fishing-opportunities"
-            ),
-            text_links(
-              "DATA FOR AO GOAL",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/AO/v2019"
-            ),
-            text_links(
-              "ALL DATA LAYERS",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
-            ),
-            text_links(
-              "SAVE MAP",
+              "SAVE CURRENT MAP",
               "http://ohi-science.org/goals/#artisanal-fishing-opportunities"
             )
           )
@@ -523,12 +512,12 @@ dashboardPage(
           barplotCardUI(
             id = "bd_barplot",
             title_text = "Biodiversity Goal Headway",
-            sub_title_text = "Environmental benefit versus work still to be done. Bars represent proximity to target level of 100, weighted by region or basin (log-transformed) area.",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "bd_map",
-            title_text = "Spatial Patterns in Biodiversity Scores",
+            title_text = "Map of Biodiversity Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
             box_width = 6,
             ht = 555
@@ -680,14 +669,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "cw_barplot",
-            title_text = "",
+            title_text = "Clean Waters Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "cw_map",
-            title_text = "Clean Water Scores",
+            title_text = "Map of Clean Water Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -754,14 +745,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "con_barplot",
-            title_text = "",
+            title_text = "Contaminants Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "con_map",
-            title_text = "Contaminants Scores",
+            title_text = "Map of Contaminants Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -828,14 +821,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "eut_barplot",
-            title_text = "",
+            title_text = "Eutrophication Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "eut_map",
-            title_text = "Eutrophication Scores",
+            title_text = "Map of Eutrophication Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -902,14 +897,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "tra_barplot",
-            title_text = "",
+            title_text = "Trash Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "tra_map",
-            title_text = "Trash (Clean Water) Scores",
+            title_text = "Map of  Trash (Clean Water) Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -976,14 +973,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "fp_barplot",
-            title_text = "",
+            title_text = "Food Provision Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "fp_map",
-            title_text = "Food Provision Scores",
+            title_text = "Map of Food Provision Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -1050,14 +1049,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "fis_barplot",
-            title_text = "",
+            title_text = "Fisheries Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "fis_map",
-            title_text = "Wild-Caught Fisheries Scores",
+            title_text = "Map of Wild-Caught Fisheries Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -1124,14 +1125,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "mar_barplot",
-            title_text = "",
+            title_text = "Mariculture Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "mar_map",
-            title_text = "Mariculture Scores",
+            title_text = "Map of Mariculture Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht =  555
           ),
 
           column(
@@ -1198,14 +1201,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "le_barplot",
-            title_text = "",
+            title_text = "Livelihoods & Economies Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "le_map",
-            title_text = "Coastal Livelihoods & Economies Scores",
+            title_text = "Map of Coastal Livelihoods & Economies Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -1272,14 +1277,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "eco_barplot",
-            title_text = "",
+            title_text = "Economies Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "eco_map",
-            title_text = "Coastal Economies Scores",
+            title_text = "Map of Coastal Economies Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -1346,14 +1353,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "liv_barplot",
-            title_text = "",
+            title_text = "Livelihoods Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "liv_map",
-            title_text = "Coastal Livelihoods Scores",
+            title_text = "Map of Coastal Livelihoods Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -1420,14 +1429,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "sp_barplot",
-            title_text = "",
+            title_text = "Sense of Place Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "sp_map",
-            title_text = "Sense of Place Scores",
+            title_text = "Map of Sense of Place Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -1494,14 +1505,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "ico_barplot",
-            title_text = "",
+            title_text = "Iconic Species Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "ico_map",
-            title_text = "Iconic Species Scores",
+            title_text = "Map of Iconic Species Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -1568,14 +1581,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "lsp_barplot",
-            title_text = "",
+            title_text = "Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "lsp_map",
-            title_text = "Lasting Special Places Scores",
+            title_text = "Map of Lasting Special Places Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -1642,14 +1657,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "np_barplot",
-            title_text = "",
+            title_text = "Natural Products Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "np_map",
             title_text = "Natural Products Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -1716,14 +1733,16 @@ dashboardPage(
         fluidRow(
           barplotCardUI(
             id = "tr_barplot",
-            title_text = "",
+            title_text = "Tourism Goal Headway",
+            sub_title_text = "Environmental benefit versus work still to be done. Bar lengths represent proximity to target level of 100, widths are region or basin (log-transformed) area.",
             box_width = 3
           ),
           mapCardUI(
             id = "tr_map",
-            title_text = "Tourism Scores",
+            title_text = "Map of Tourism Scores",
             sub_title_text = "This map shows scores from the previous assessment (2014)",
-            box_width = 6
+            box_width = 6,
+            ht = 555
           ),
 
           column(
@@ -1826,16 +1845,169 @@ dashboardPage(
         tabName = "layers",
         fluidRow(
           box(
-            h1("Data Layers"),
+            h1("Data Layers (Page Under Construction)", style = "color:#9b363d"),
             width = 12
           ),
           box(
             p("SOMETHING ABOUT PROCESS OF GENERATING LAYERS, AND LAYER VS LAYER SCATTERPLOT"),
             width = 12
+          ),
+
+          ## scatterplot from selected layers
+          box(
+            width = 9,
+            plotOutput("layers_scatter")
+          ),
+          ## select variables for layers scatterplot ----
+          box(
+            width = 3,
+
+            selectInput(
+              "layerscatter_var_x",
+              label = "Select Layer X",
+              choices = c(
+                `AO_STOCK_SLOPE` = "ao_stock_slope_bhi2015.csv",
+                `AO_STOCK_STATUS` = "ao_stock_status_bhi2015.csv",
+                `BD_SPP_STATUS` = "bd_spp_status_bhi2015.csv",
+                `CC_SAL_DEEP` = "cc_sal_deep_bhi2015.csv",
+                `CC_SAL_SURF` = "cc_sal_surf_bhi2015.csv",
+                `CC_SST` = "cc_sst_bhi2015.csv",
+                `CS_STATUS` = "cs_status_bhi2015.csv",
+                `CW_CON_DIOXIN_STATUS` = "cw_con_dioxin_status_bhi2015.csv",
+                `CW_CON_ICES6_STATUS` = "cw_con_ices6_status_bhi2015.csv",
+                `CW_CON_PENALTY` = "cw_con_penalty_bhi2015.csv",
+                `CW_CON_PFOS_STATUS` = "cw_con_pfos_status_bhi2015.csv",
+                `CW_EUT_STATUS_SCORE` = "cw_eut_status_score_bhi2015.csv",
+                `CW_NUT_ANOXIA_STATUS` = "cw_nut_anoxia_status_bhi2015.csv",
+                `FIS_BBMSY` = "fis_bbmsy_bhi2015.csv",
+                `FIS_FFMSY` = "fis_ffmsy_bhi2015.csv",
+                `FIS_LANDINGS` = "fis_landings_bhi2015.csv",
+                `FP_OVER_HARVEST` = "fp_over_harvest_bhi2015.csv",
+                `FP_WILDCAUGHT_WEIGHT` = "fp_wildcaught_weight_bhi2015.csv",
+                `HAB_ANOXIA` = "hab_anoxia_bhi2015.csv",
+                `HAB_BOTTOM_TRAWL` = "hab_bottom_trawl_bhi2015.csv",
+                `HAB_COASTAL_POP` = "hab_coastal_pop_bhi2015.csv",
+                `HAB_ILLEGAL_OIL` = "hab_illegal_oil_bhi2015.csv",
+                `ICO_STATUS` = "ico_status_bhi2015.csv",
+                `LE_GDP_COUNTRY` = "le_gdp_country_bhi2015.csv",
+                `LE_GDP_REGION` = "le_gdp_region_bhi2015.csv",
+                `LIV_NATIONAL_EMPLOY` = "liv_national_employ_bhi2015.csv",
+                `LIV_REGIONAL_EMPLOY` = "liv_regional_employ_bhi2015.csv",
+                `LSP_STATUS_BY_RGN` = "lsp_status_by_rgn_bhi2015.csv",
+                `MAR_COASTALPOPN2005_INLAND25KM` = "mar_coastalpopn2005_inland25km_bhi2015.csv",
+                `MAR_HARVEST_SPECIES` = "mar_harvest_species_bhi2015.csv",
+                `MAR_HARVEST_TONNES` = "mar_harvest_tonnes_bhi2015.csv",
+                `MAR_SUSTAINABILITY_SCORE` = "mar_sustainability_score_bhi2015.csv",
+                `NP_BBMSY` = "np_bbmsy_bhi2015.csv",
+                `NP_FFMSY` = "np_ffmsy_bhi2015.csv",
+                `NP_LANDINGS` = "np_landings_bhi2015.csv",
+                `PO_ATMOS_PCB153` = "po_atmos_pcb153_bhi2015.csv",
+                `PO_ATMOS_PCDDF` = "po_atmos_pcddf_bhi2015.csv",
+                `PO_INVERSE_SECCHI` = "po_inverse_secchi_bhi2015.csv",
+                `PO_NLOAD` = "po_nload_bhi2015.csv",
+                `PO_PLOAD` = "po_pload_bhi2015.csv",
+                `PO_TRASH` = "po_trash_bhi2015.csv",
+                `RES_BIODIVERSITY` = "res_biodiversity_bhi2015.csv",
+                `RES_REG_BIRDS` = "res_reg_birds_bhi2015.csv",
+                `RES_REG_BSAP` = "res_reg_bsap_bhi2015.csv",
+                `RES_REG_BWD` = "res_reg_bwd_bhi2015.csv",
+                `RES_REG_CBD` = "res_reg_cbd_bhi2015.csv",
+                `RES_REG_CFP` = "res_reg_cfp_bhi2015.csv",
+                `RES_REG_CITES` = "res_reg_cites_bhi2015.csv",
+                `RES_REG_COP21` = "res_reg_cop21_bhi2015.csv",
+                `RES_REG_HD` = "res_reg_hd_bhi2015.csv",
+                `RES_REG_HELCOM` = "res_reg_helcom_bhi2015.csv",
+                `RES_REG_IED` = "res_reg_ied_bhi2015.csv",
+                `RES_REG_MSFD` = "res_reg_msfd_bhi2015.csv",
+                `RES_REG_MSPD` = "res_reg_mspd_bhi2015.csv",
+                `RES_REG_ND` = "res_reg_nd_bhi2015.csv",
+                `RES_REG_NEC` = "res_reg_nec_bhi2015.csv",
+                `RES_REG_POP` = "res_reg_pop_bhi2015.csv",
+                `RES_REG_REACH` = "res_reg_reach_bhi2015.csv",
+                `RES_REG_UWWTD` = "res_reg_uwwtd_bhi2015.csv",
+                `RES_REG_WFD` = "res_reg_wfd_bhi2015.csv",
+                `SP_INVASIVES` = "sp_invasives_bhi2015.csv",
+                `SPP_DIV_VULN` = "spp_div_vuln_bhi2015.csv",
+                `SS_WGI` = "ss_wgi_bhi2015.csv",
+                `TR_ACCOMMODATION_STAYS` = "tr_accommodation_stays_bhi2015.csv",
+                `WGI_ALL` = "wgi_all_bhi2015.csv"
+              )
+            ),
+            selectInput(
+              "layerscatter_var_y",
+              label = "Select Layer Y",
+              choices = c(
+                `AO_STOCK_SLOPE` = "ao_stock_slope_bhi2015.csv",
+                `AO_STOCK_STATUS` = "ao_stock_status_bhi2015.csv",
+                `BD_SPP_STATUS` = "bd_spp_status_bhi2015.csv",
+                `CC_SAL_DEEP` = "cc_sal_deep_bhi2015.csv",
+                `CC_SAL_SURF` = "cc_sal_surf_bhi2015.csv",
+                `CC_SST` = "cc_sst_bhi2015.csv",
+                `CS_STATUS` = "cs_status_bhi2015.csv",
+                `CW_CON_DIOXIN_STATUS` = "cw_con_dioxin_status_bhi2015.csv",
+                `CW_CON_ICES6_STATUS` = "cw_con_ices6_status_bhi2015.csv",
+                `CW_CON_PENALTY` = "cw_con_penalty_bhi2015.csv",
+                `CW_CON_PFOS_STATUS` = "cw_con_pfos_status_bhi2015.csv",
+                `CW_EUT_STATUS_SCORE` = "cw_eut_status_score_bhi2015.csv",
+                `CW_NUT_ANOXIA_STATUS` = "cw_nut_anoxia_status_bhi2015.csv",
+                `FIS_BBMSY` = "fis_bbmsy_bhi2015.csv",
+                `FIS_FFMSY` = "fis_ffmsy_bhi2015.csv",
+                `FIS_LANDINGS` = "fis_landings_bhi2015.csv",
+                `FP_OVER_HARVEST` = "fp_over_harvest_bhi2015.csv",
+                `FP_WILDCAUGHT_WEIGHT` = "fp_wildcaught_weight_bhi2015.csv",
+                `HAB_ANOXIA` = "hab_anoxia_bhi2015.csv",
+                `HAB_BOTTOM_TRAWL` = "hab_bottom_trawl_bhi2015.csv",
+                `HAB_COASTAL_POP` = "hab_coastal_pop_bhi2015.csv",
+                `HAB_ILLEGAL_OIL` = "hab_illegal_oil_bhi2015.csv",
+                `ICO_STATUS` = "ico_status_bhi2015.csv",
+                `LE_GDP_COUNTRY` = "le_gdp_country_bhi2015.csv",
+                `LE_GDP_REGION` = "le_gdp_region_bhi2015.csv",
+                `LIV_NATIONAL_EMPLOY` = "liv_national_employ_bhi2015.csv",
+                `LIV_REGIONAL_EMPLOY` = "liv_regional_employ_bhi2015.csv",
+                `LSP_STATUS_BY_RGN` = "lsp_status_by_rgn_bhi2015.csv",
+                `MAR_COASTALPOPN2005_INLAND25KM` = "mar_coastalpopn2005_inland25km_bhi2015.csv",
+                `MAR_HARVEST_SPECIES` = "mar_harvest_species_bhi2015.csv",
+                `MAR_HARVEST_TONNES` = "mar_harvest_tonnes_bhi2015.csv",
+                `MAR_SUSTAINABILITY_SCORE` = "mar_sustainability_score_bhi2015.csv",
+                `NP_BBMSY` = "np_bbmsy_bhi2015.csv",
+                `NP_FFMSY` = "np_ffmsy_bhi2015.csv",
+                `NP_LANDINGS` = "np_landings_bhi2015.csv",
+                `PO_ATMOS_PCB153` = "po_atmos_pcb153_bhi2015.csv",
+                `PO_ATMOS_PCDDF` = "po_atmos_pcddf_bhi2015.csv",
+                `PO_INVERSE_SECCHI` = "po_inverse_secchi_bhi2015.csv",
+                `PO_NLOAD` = "po_nload_bhi2015.csv",
+                `PO_PLOAD` = "po_pload_bhi2015.csv",
+                `PO_TRASH` = "po_trash_bhi2015.csv",
+                `RES_BIODIVERSITY` = "res_biodiversity_bhi2015.csv",
+                `RES_REG_BIRDS` = "res_reg_birds_bhi2015.csv",
+                `RES_REG_BSAP` = "res_reg_bsap_bhi2015.csv",
+                `RES_REG_BWD` = "res_reg_bwd_bhi2015.csv",
+                `RES_REG_CBD` = "res_reg_cbd_bhi2015.csv",
+                `RES_REG_CFP` = "res_reg_cfp_bhi2015.csv",
+                `RES_REG_CITES` = "res_reg_cites_bhi2015.csv",
+                `RES_REG_COP21` = "res_reg_cop21_bhi2015.csv",
+                `RES_REG_HD` = "res_reg_hd_bhi2015.csv",
+                `RES_REG_HELCOM` = "res_reg_helcom_bhi2015.csv",
+                `RES_REG_IED` = "res_reg_ied_bhi2015.csv",
+                `RES_REG_MSFD` = "res_reg_msfd_bhi2015.csv",
+                `RES_REG_MSPD` = "res_reg_mspd_bhi2015.csv",
+                `RES_REG_ND` = "res_reg_nd_bhi2015.csv",
+                `RES_REG_NEC` = "res_reg_nec_bhi2015.csv",
+                `RES_REG_POP` = "res_reg_pop_bhi2015.csv",
+                `RES_REG_REACH` = "res_reg_reach_bhi2015.csv",
+                `RES_REG_UWWTD` = "res_reg_uwwtd_bhi2015.csv",
+                `RES_REG_WFD` = "res_reg_wfd_bhi2015.csv",
+                `SP_INVASIVES` = "sp_invasives_bhi2015.csv",
+                `SPP_DIV_VULN` = "spp_div_vuln_bhi2015.csv",
+                `SS_WGI` = "ss_wgi_bhi2015.csv",
+                `TR_ACCOMMODATION_STAYS` = "tr_accommodation_stays_bhi2015.csv",
+                `WGI_ALL` = "wgi_all_bhi2015.csv"
+              )
+            )
           )
         )
       ) # end layers tab item
 
-    ) # end tabItems
+    ) # end tabItems ----
   ) # end dashboardBody
 ) # end dashboardPage

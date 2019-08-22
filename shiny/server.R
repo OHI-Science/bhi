@@ -19,11 +19,12 @@ function(input, output, session){
                  flower_rgn_selected = flower_rgn)
     }, ignoreNULL = FALSE
   )
-  # callModule(flowerplotRgnCard, "baltic_flowerplot",
-  #            region_id_selected = reactive(input$flower_rgn)) # region_id_selected = flower_rgn
 
-  ## overall index scores map
-  # callModule(mapBarplotCard, "index_map_barplot",
+  callModule(barplotCard, "index_barplot",
+             goal_code = "Index",
+             dimension_selected = dimension,
+             spatial_unit_selected = spatial_unit)
+  # callModule(mapCard, "index_map",
   #            goal_code = "Index",
   #            dimension_selected = dimension,
   #            spatial_unit_selected = spatial_unit,
@@ -31,25 +32,28 @@ function(input, output, session){
   #            popup_title = "Score:",
   #            popup_add_field = "Name",
   #            popup_add_field_title = "Name:")
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+      values$flower_rgn <- input$flower_rgn
 
-  callModule(barplotCard, "index_barplot",
-             goal_code = "Index",
-             dimension_selected = dimension,
-             spatial_unit_selected = spatial_unit)
-  callModule(mapCard, "index_map",
-             goal_code = "Index",
-             dimension_selected = dimension,
-             spatial_unit_selected = spatial_unit,
-             legend_title = "Scores",
-             popup_title = "Score:",
-             popup_add_field = "Name",
-             popup_add_field_title = "Name:")
+      flower_rgn <- reactive(values$flower_rgn)
+      callModule(mapRgnCard, "index_map",
+                 goal_code = "Index",
+                 dimension_selected = dimension,
+                 spatial_unit_selected = spatial_unit,
+                 flower_rgn_selected = flower_rgn,
+                 legend_title = "Scores",
+                 popup_title = "Score:",
+                 popup_add_field = "Name",
+                 popup_add_field_title = "Name:")
+    }, ignoreNULL = FALSE
+  )
 
 
   ## AO ----
   ## Artisanal Opportunities
   callModule(mapCard, "ao_map",
-             goal_code = "AO",
+             goal_code = "Index",
              dimension_selected = dimension,
              spatial_unit_selected = spatial_unit,
              legend_title = "Scores",
@@ -367,9 +371,34 @@ function(input, output, session){
         )
       )
 
-      plot_obj <- plot_obj + geom_line() + theme_bw() + theme(legend.position = "none")
+      plot_obj <- plot_obj +
+        geom_line() +
+        theme_bw() +
+        theme(legend.position = "none")
+
       plotly::ggplotly(plot_obj, tooltip = "text")
     }
+  })
+
+  output$layers_scatter <- renderPlot({
+
+    gh_lyrs <- "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/baltic2015/layers/"
+    dat_x <- readr::read_csv(paste0(gh_lyrs, input$layerscatter_var_x))
+    dat_y <- readr::read_csv(paste0(gh_lyrs, input$layerscatter_var_y))
+
+    x_name <- str_to_upper(str_remove(input$layerscatter_var_x, ".csv"))
+    y_name <- str_to_upper(str_remove(input$layerscatter_var_y, ".csv"))
+
+    df <- left_join(dat_x, dat_y, by = "rgn_id")
+    colnames(df) <- c("region_id", x_name, y_name)
+
+    ggplot(data  = df) +
+      geom_point(aes_string(x_name, y_name)) +
+      theme_minimal() +
+      theme(
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank()
+      )
   })
 
 }
