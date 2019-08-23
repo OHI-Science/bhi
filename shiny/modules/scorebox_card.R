@@ -29,12 +29,16 @@ scoreBox<- function(input,
           flower_rgn_selected() == 0,
           filter(scores, region_id == 0)$score,
           sprintf(
-            "%s | %s",
-            filter(scores, region_id == 0)$score,
-            filter(scores, region_id == flower_rgn_selected())$score
+            "%s  |  %s",
+            filter(scores, region_id == 0)$score %>% round(1),
+            filter(scores, region_id == flower_rgn_selected())$score %>% round(1)
           )
         ),
-        style = "font-size: 215%; text-align:center; font-weight: lighter;"
+        style = ifelse(
+          flower_rgn_selected() == 0,
+          "font-size: 260%; text-align:center; font-weight: lighter;",
+          "font-size: 230%; text-align:center; font-weight: lighter;"
+        )
         # style = ifelse(
         #   flower_rgn_selected() == 0,
         #   "font-size: 225%; text-align:center; font-weight: lighter;",

@@ -21,6 +21,7 @@ source(file.path(here::here(), "shiny", "modules", "map_card.R"))
 source(file.path(here::here(), "shiny", "modules", "map_rgn_card.R"))
 source(file.path(here::here(), "shiny", "modules", "barplot_card.R"))
 source(file.path(here::here(), "shiny", "modules", "flowerplot_card.R"))
+source(file.path(here::here(), "shiny", "modules", "scorebox_card.R"))
 
 #' expand contract menu sidebar subitems
 #'

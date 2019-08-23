@@ -7,7 +7,7 @@ function(input, output, session){
 
   ## flowerplot
 
-  values <- reactiveValues(flower_rgn = 30)
+  values <- reactiveValues(flower_rgn = 0)
 
   observeEvent(
     eventExpr = input$flower_rgn, {
@@ -52,8 +52,23 @@ function(input, output, session){
 
   ## AO ----
   ## Artisanal Opportunities
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "ao_infobox",
+        goal_code = "AO",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "ao_map",
-             goal_code = "Index",
+             goal_code = "AO",
              dimension_selected = dimension,
              spatial_unit_selected = spatial_unit,
              legend_title = "Scores",
@@ -68,6 +83,21 @@ function(input, output, session){
 
   ## BD ----
   ## Biodiversity
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "bd_infobox",
+        goal_code = "BD",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "bd_map",
              goal_code = "BD",
              dimension_selected = dimension,
@@ -84,6 +114,21 @@ function(input, output, session){
 
   ## CS ----
   ## Carbon Storage
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "cs_infobox",
+        goal_code = "CS",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "cs_map",
              goal_code = "CS",
              dimension_selected = dimension,
@@ -100,6 +145,21 @@ function(input, output, session){
 
   ## CW ----
   ## Clean Water
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "cw_infobox",
+        goal_code = "CW",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "cw_map",
              goal_code = "CW",
              dimension_selected = dimension,
@@ -116,6 +176,21 @@ function(input, output, session){
 
   ## CON ----
   ## Contaminants
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "con_infobox",
+        goal_code = "CON",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "con_map",
              goal_code = "CON",
              dimension_selected = dimension,
@@ -132,6 +207,21 @@ function(input, output, session){
 
   ## EUT ----
   ## Eutrophication
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "eut_infobox",
+        goal_code = "EUT",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "eut_map",
              goal_code = "EUT",
              dimension_selected = dimension,
@@ -148,6 +238,21 @@ function(input, output, session){
 
   ## TRA ----
   ## Trash
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "tra_infobox",
+        goal_code = "TRA",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "tra_map",
              goal_code = "TRA",
              dimension_selected = dimension,
@@ -164,6 +269,21 @@ function(input, output, session){
 
   ## FP ----
   ## Food Provision
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "fp_infobox",
+        goal_code = "FP",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "fp_map",
              goal_code = "FP",
              dimension_selected = dimension,
@@ -180,6 +300,21 @@ function(input, output, session){
 
   ## FIS ----
   ## Wild-Caught Fisheries
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "fis_infobox",
+        goal_code = "FIS",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "fis_map",
              goal_code = "FIS",
              dimension_selected = dimension,
@@ -196,6 +331,21 @@ function(input, output, session){
 
   ## MAR ----
   ## Mariculture
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "mar_infobox",
+        goal_code = "MAR",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "mar_map",
              goal_code = "MAR",
              dimension_selected = dimension,
@@ -212,6 +362,21 @@ function(input, output, session){
 
   ## LE ----
   ## Livelihoods & Economies
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "le_infobox",
+        goal_code = "LE",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "le_map",
              goal_code = "LE",
              dimension_selected = dimension,
@@ -228,6 +393,21 @@ function(input, output, session){
 
   ## ECO ----
   ## Economies
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "eco_infobox",
+        goal_code = "ECO",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "eco_map",
              goal_code = "ECO",
              dimension_selected = dimension,
@@ -244,6 +424,21 @@ function(input, output, session){
 
   ## LIV ----
   ## Livelihoods
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "liv_infobox",
+        goal_code = "LIV",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "liv_map",
              goal_code = "LIV",
              dimension_selected = dimension,
@@ -260,6 +455,21 @@ function(input, output, session){
 
   ## SP ----
   ## Sense of Place
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "sp_infobox",
+        goal_code = "SP",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "sp_map",
              goal_code = "SP",
              dimension_selected = dimension,
@@ -276,6 +486,21 @@ function(input, output, session){
 
   ## ICO ----
   ## Iconic Species
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "ico_infobox",
+        goal_code = "ICO",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "ico_map",
              goal_code = "ICO",
              dimension_selected = dimension,
@@ -292,6 +517,21 @@ function(input, output, session){
 
   ## LSP ----
   ## Lasting Special Places
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "lsp_infobox",
+        goal_code = "LSP",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "lsp_map",
              goal_code = "LSP",
              dimension_selected = dimension,
@@ -308,6 +548,21 @@ function(input, output, session){
 
   ## NP ----
   ## Natural Products
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "np_infobox",
+        goal_code = "NP",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "np_map",
              goal_code = "NP",
              dimension_selected = dimension,
@@ -324,6 +579,21 @@ function(input, output, session){
 
   ## TR ----
   ## Tourism
+  observeEvent(
+    eventExpr = input$flower_rgn, {
+
+      values$flower_rgn <- input$flower_rgn
+      flower_rgn <- reactive(values$flower_rgn)
+
+      callModule(
+        scoreBox,
+        "tr_infobox",
+        goal_code = "TR",
+        flower_rgn_selected = flower_rgn
+      )
+    },
+    ignoreNULL = FALSE
+  )
   callModule(mapCard, "tr_map",
              goal_code = "TR",
              dimension_selected = dimension,
@@ -400,5 +670,27 @@ function(input, output, session){
         axis.title.y = element_blank()
       )
   })
+
+  # values <- reactiveValues(
+  #   lyr_df = data.frame(
+  #     Value1 = 1:10,
+  #     Value2 = c("A", "B", "C", "D", "E"),
+  #     stringsAsFactors = FALSE,
+  #     row.names = 1:10
+  #   )
+  # )
+  #
+  # observeEvent(
+  #   eventExpr = input$layers_dt_vars, {
+  #
+  #     lyr_df <- data.frame()
+  #     for(l in ){
+  #       lyr_df
+  #     }
+  #
+  #     output$layers_datatab <- renderDataTable({lyr_df})
+  #
+  #   }, ignoreNULL = FALSE
+  # )
 
 }

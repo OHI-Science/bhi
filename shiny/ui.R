@@ -422,15 +422,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "AO", dimension == "score")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$AO),
-              color = "yellow",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "ao_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY AND STATUS/TRENDS"),
@@ -464,15 +456,11 @@ dashboardPage(
             ),
             text_links(
               "GOAL DATA",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/AO/v2019"
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/AO/ao_data_database"
             ),
             text_links(
               "ALL DATA LAYERS",
               "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#artisanal-fishing-opportunities"
             )
           )
         )
@@ -491,15 +479,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "BD", dimension == "score")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$BD),
-              color = "green",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "bd_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -534,28 +514,12 @@ dashboardPage(
               "http://ohi-science.org/goals/#biodiversity"
             ),
             text_links(
-              "SAVE MAP",
-              "http://ohi-science.org/goals/#biodiversity"
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/SPP/spatial_data_prep"
             ),
             text_links(
-              "DATA FOR BD GOAL",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/SPP/v2019"
-            ),
-            text_links(
-              "ACCESS DATA LAYERS",
+              "ALL DATA LAYERS",
               "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
-            ),
-            text_links(
-              "SAVE MAP",
-              "http://ohi-science.org/goals/#biodiversity"
-            ),
-            text_links(
-              "DATA FOR BD GOAL",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/SPP/v2019"
-            ),
-            text_links(
-              "DATA FOR BD GOAL",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/SPP/v2019"
             )
           )
         )
@@ -574,16 +538,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "CS")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$CS),
-              color = "orange",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "cs_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -612,24 +567,16 @@ dashboardPage(
               sprintf("%s/CS/cs_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
+              "MEANING OF THE GOAL",
               "http://ohi-science.org/goals/#carbon-storage"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CS/zostera_raster"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              sprintf("%s/CS/cs_prep.md", gh_prep)
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#carbon-storage"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/CS/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -648,16 +595,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "CW")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$CW),
-              color = "olive",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "cw_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -688,24 +626,12 @@ dashboardPage(
               "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CW"
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#clean-waters"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#clean-waters"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
-            ),
-            text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CW"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#clean-waters"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/CW/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -724,16 +650,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "CON")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$CON),
-              color = "olive",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "con_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -761,27 +678,19 @@ dashboardPage(
             width = 3,
             text_links(
               "CON DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CW"
+              sprintf("%s/CW/contaminants/contaminants_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#clean-waters"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#clean-waters"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CW/contaminants/contaminants_data_database"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CW"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#clean-waters"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/CW/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -800,16 +709,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "EUT")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$EUT),
-              color = "olive",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "eut_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -837,27 +737,19 @@ dashboardPage(
             width = 3,
             text_links(
               "EUT DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CW"
+              sprintf("%s/CW/eutrophication/eutrophication_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#clean-waters"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#clean-waters"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CW/eutrophication"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CW"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#clean-waters"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/CW/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -876,16 +768,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "TRA")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$TRA),
-              color = "olive",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "tra_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -913,27 +796,19 @@ dashboardPage(
             width = 3,
             text_links(
               "TRA DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CW"
+              sprintf("%s/CW/trash/tra_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#clean-waters"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#clean-waters"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CW/trash/raw"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/CW"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#clean-waters"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/CW/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -952,16 +827,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "FP")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$FP),
-              color = "aqua",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "fp_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -989,27 +855,15 @@ dashboardPage(
             width = 3,
             text_links(
               "FP DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/FP"
+              sprintf("%s/FP/fp_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#food-provision"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#food-provision"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
-            ),
-            text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/FP"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#food-provision"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/FP/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -1028,16 +882,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "FIS")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$FIS),
-              color = "aqua",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "fis_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -1065,27 +910,19 @@ dashboardPage(
             width = 3,
             text_links(
               "FIS DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/FP"
+              sprintf("%s/FIS/fis_np_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#food-provision"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#food-provision"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/FIS/raw"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/FP"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#food-provision"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/FP/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -1104,16 +941,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "MAR")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$MAR),
-              color = "aqua",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "mar_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -1141,27 +969,19 @@ dashboardPage(
             width = 3,
             text_links(
               "MAR DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/FP"
+              sprintf("%s/MAR/mar_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#food-provision"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#food-provision"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/MAR/mar_data_database"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/FP"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#food-provision"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/FP/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -1180,16 +1000,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "LE")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$LE),
-              color = "purple",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "le_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -1216,28 +1027,12 @@ dashboardPage(
           column(
             width = 3,
             text_links(
-              "LE DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/LE"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#livelihoods-and-economies"
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#livelihoods-and-economies"
-            ),
-            text_links(
-              "ACCESS DATA",
-              gh_layers
-            ),
-            text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/LE"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#livelihoods-and-economies"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/LE/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -1256,16 +1051,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "ECO")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$ECO),
-              color = "purple",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "eco_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -1293,27 +1079,19 @@ dashboardPage(
             width = 3,
             text_links(
               "ECO DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/LE"
+              sprintf("%s/ECO/eco_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#livelihoods-and-economies"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#livelihoods-and-economies"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/ECO/eco_data_database"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/LE"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#livelihoods-and-economies"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/LE/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -1332,16 +1110,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "LIV")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$LIV),
-              color = "purple",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "liv_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -1369,27 +1138,19 @@ dashboardPage(
             width = 3,
             text_links(
               "LIV DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/LE"
+              sprintf("%s/LIV/liv_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#livelihoods-and-economies"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#livelihoods-and-economies"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/LIV/liv_data_database"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/LE"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#livelihoods-and-economies"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/LE/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -1408,16 +1169,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "SP")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$SP),
-              color = "blue",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "sp_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -1444,28 +1196,12 @@ dashboardPage(
           column(
             width = 3,
             text_links(
-              "SP DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/SP"
-            ),
-            text_links(
-              "MEANING OF GOAL",
+              "MEANING OF THE GOAL",
               "http://ohi-science.org/goals/#sense-of-place"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
-            ),
-            text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/LE"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#sense-of-place"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/SP/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -1484,16 +1220,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "ICO")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$ICO),
-              color = "blue",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "ico_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -1521,27 +1248,19 @@ dashboardPage(
             width = 3,
             text_links(
               "ICO DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/SP"
+              sprintf("%s/ICO/ico_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
+              "MEANING OF THE GOAL",
               "http://ohi-science.org/goals/#sense-of-place"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/ICO/data_database"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/SP"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#sense-of-place"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/SP/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -1560,16 +1279,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "LSP")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$LSP),
-              color = "blue",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "lsp_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -1597,27 +1307,19 @@ dashboardPage(
             width = 3,
             text_links(
               "LSP DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/SP"
+              sprintf("%s/LSP/lsp_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
+              "MEANING OF THE GOAL",
               "http://ohi-science.org/goals/#sense-of-place"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/LSP/mpa_data_database"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/SP"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#sense-of-place"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/SP/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -1636,16 +1338,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "NP")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$NP),
-              color = "fuchsia",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "np_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -1673,27 +1366,15 @@ dashboardPage(
             width = 3,
             text_links(
               "NP DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/NP"
+              sprintf("%s/NP/np_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#natural-products"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#natural-products"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
-            ),
-            text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/NP"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#natural-products"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/NP/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
@@ -1712,16 +1393,7 @@ dashboardPage(
           ),
           column(
             width = 3,
-
-            infoBox(
-              title = "",
-              tags$p(filter(full_scores_csv, region_id == 0, goal == "TR")$score,
-                     style = "font-size: 225%; text-align:center; font-weight: lighter;"),
-              icon = icon(thm$icons$TR),
-              color = "red",
-              fill = TRUE,
-              width = 12
-            )
+            scoreBoxUI(id = "tr_infobox")
           ),
           box(
             p("SOMETHING ABOUT GOAL PHILOSOPHY"),
@@ -1749,35 +1421,27 @@ dashboardPage(
             width = 3,
             text_links(
               "TR DATA PREP",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/TR"
+              sprintf("%s/TR/tr_prep.md", gh_prep)
             ),
             text_links(
-              "MEANING OF GOAL",
-              "http://ohi-science.org/goals/#tourism-and-recreation"
+              "MEANING OF THE GOAL",
+              "https://ohi-science.org/goals/#tourism-and-recreation"
             ),
             text_links(
-              "ACCESS DATA",
-              gh_layers
+              "GOAL DATA",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/TR/tr_data_database"
             ),
             text_links(
-              "GET FILTERED VIEW",
-              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/prep/TR"
-            ),
-            text_links(
-              "SAVE CURRENT MAP",
-              "http://ohi-science.org/goals/#tourism-and-recreation"
-            ),
-            text_links(
-              "DATA INPUTS",
-              "https://github.com/OHI-Science/bhi-prep/tree/master/data/TR/v2019"
+              "ALL DATA LAYERS",
+              "https://github.com/OHI-Science/bhi-1.0-archive/tree/draft/baltic2015/layers"
             )
           )
         )
       ), # end TR tab item
 
-      ## >> compare and summarize ----
+      ## >> compare and summarize
 
-      ## futures tab
+      ## >> futures tab ----
       tabItem(
         tabName = "futures",
         fluidRow(
@@ -1810,7 +1474,7 @@ dashboardPage(
             width = 9,
             addSpinner(plotlyOutput("pressure_ts"), spin = "rotating-plane", color = "#d7e5e8")
           ),
-          ## pressure time series plot select variable
+          ## pressure time series plot select variable ----
           box(
             width = 3,
 
@@ -1825,7 +1489,7 @@ dashboardPage(
             )
           )
         )
-      ), # end pressures tab item
+      ), # end pressures tab item ----
       tabItem(
         tabName = "scenarios",
         fluidRow(
@@ -1840,7 +1504,7 @@ dashboardPage(
         )
       ), # end scenarios tab item
 
-      ## layers tab
+      ## >> layers tab ----
       tabItem(
         tabName = "layers",
         fluidRow(
@@ -2003,11 +1667,82 @@ dashboardPage(
                 `TR_ACCOMMODATION_STAYS` = "tr_accommodation_stays_bhi2015.csv",
                 `WGI_ALL` = "wgi_all_bhi2015.csv"
               )
+            ),
+            selectizeInput(
+              "layers_dt_vars",
+              label = "Data Table Variables",
+              choices = c(
+                # `AO_STOCK_SLOPE` = "ao_stock_slope_bhi2015.csv",
+                # `AO_STOCK_STATUS` = "ao_stock_status_bhi2015.csv",
+                # `BD_SPP_STATUS` = "bd_spp_status_bhi2015.csv",
+                `CC_SAL_DEEP` = "cc_sal_deep_bhi2015.csv",
+                `CC_SAL_SURF` = "cc_sal_surf_bhi2015.csv",
+                `CC_SST` = "cc_sst_bhi2015.csv",
+                `CS_STATUS` = "cs_status_bhi2015.csv",
+                `CW_CON_DIOXIN_STATUS` = "cw_con_dioxin_status_bhi2015.csv",
+                `CW_CON_ICES6_STATUS` = "cw_con_ices6_status_bhi2015.csv",
+                `CW_CON_PENALTY` = "cw_con_penalty_bhi2015.csv",
+                `CW_CON_PFOS_STATUS` = "cw_con_pfos_status_bhi2015.csv",
+                `CW_EUT_STATUS_SCORE` = "cw_eut_status_score_bhi2015.csv",
+                `CW_NUT_ANOXIA_STATUS` = "cw_nut_anoxia_status_bhi2015.csv"
+                # `FIS_BBMSY` = "fis_bbmsy_bhi2015.csv",
+                # `FIS_FFMSY` = "fis_ffmsy_bhi2015.csv",
+                # `FIS_LANDINGS` = "fis_landings_bhi2015.csv",
+                # `FP_OVER_HARVEST` = "fp_over_harvest_bhi2015.csv",
+                # `FP_WILDCAUGHT_WEIGHT` = "fp_wildcaught_weight_bhi2015.csv",
+                # `HAB_ANOXIA` = "hab_anoxia_bhi2015.csv",
+                # `HAB_BOTTOM_TRAWL` = "hab_bottom_trawl_bhi2015.csv",
+                # `HAB_COASTAL_POP` = "hab_coastal_pop_bhi2015.csv",
+                # `HAB_ILLEGAL_OIL` = "hab_illegal_oil_bhi2015.csv",
+                # `ICO_STATUS` = "ico_status_bhi2015.csv",
+                # `LE_GDP_COUNTRY` = "le_gdp_country_bhi2015.csv",
+                # `LE_GDP_REGION` = "le_gdp_region_bhi2015.csv",
+                # `LIV_NATIONAL_EMPLOY` = "liv_national_employ_bhi2015.csv",
+                # `LIV_REGIONAL_EMPLOY` = "liv_regional_employ_bhi2015.csv",
+                # `LSP_STATUS_BY_RGN` = "lsp_status_by_rgn_bhi2015.csv",
+                # `MAR_COASTALPOPN2005_INLAND25KM` = "mar_coastalpopn2005_inland25km_bhi2015.csv",
+                # `MAR_HARVEST_SPECIES` = "mar_harvest_species_bhi2015.csv",
+                # `MAR_HARVEST_TONNES` = "mar_harvest_tonnes_bhi2015.csv",
+                # `MAR_SUSTAINABILITY_SCORE` = "mar_sustainability_score_bhi2015.csv",
+                # `NP_BBMSY` = "np_bbmsy_bhi2015.csv",
+                # `NP_FFMSY` = "np_ffmsy_bhi2015.csv",
+                # `NP_LANDINGS` = "np_landings_bhi2015.csv",
+                # `PO_ATMOS_PCB153` = "po_atmos_pcb153_bhi2015.csv",
+                # `PO_ATMOS_PCDDF` = "po_atmos_pcddf_bhi2015.csv",
+                # `PO_INVERSE_SECCHI` = "po_inverse_secchi_bhi2015.csv",
+                # `PO_NLOAD` = "po_nload_bhi2015.csv",
+                # `PO_PLOAD` = "po_pload_bhi2015.csv",
+                # `PO_TRASH` = "po_trash_bhi2015.csv",
+                # `RES_BIODIVERSITY` = "res_biodiversity_bhi2015.csv",
+                # `RES_REG_BIRDS` = "res_reg_birds_bhi2015.csv",
+                # `RES_REG_BSAP` = "res_reg_bsap_bhi2015.csv",
+                # `RES_REG_BWD` = "res_reg_bwd_bhi2015.csv",
+                # `RES_REG_CBD` = "res_reg_cbd_bhi2015.csv",
+                # `RES_REG_CFP` = "res_reg_cfp_bhi2015.csv",
+                # `RES_REG_CITES` = "res_reg_cites_bhi2015.csv",
+                # `RES_REG_COP21` = "res_reg_cop21_bhi2015.csv",
+                # `RES_REG_HD` = "res_reg_hd_bhi2015.csv",
+                # `RES_REG_HELCOM` = "res_reg_helcom_bhi2015.csv",
+                # `RES_REG_IED` = "res_reg_ied_bhi2015.csv",
+                # `RES_REG_MSFD` = "res_reg_msfd_bhi2015.csv",
+                # `RES_REG_MSPD` = "res_reg_mspd_bhi2015.csv",
+                # `RES_REG_ND` = "res_reg_nd_bhi2015.csv",
+                # `RES_REG_NEC` = "res_reg_nec_bhi2015.csv",
+                # `RES_REG_POP` = "res_reg_pop_bhi2015.csv",
+                # `RES_REG_REACH` = "res_reg_reach_bhi2015.csv",
+                # `RES_REG_UWWTD` = "res_reg_uwwtd_bhi2015.csv",
+                # `RES_REG_WFD` = "res_reg_wfd_bhi2015.csv",
+                # `SP_INVASIVES` = "sp_invasives_bhi2015.csv",
+                # `SPP_DIV_VULN` = "spp_div_vuln_bhi2015.csv",
+                # `SS_WGI` = "ss_wgi_bhi2015.csv",
+                # `TR_ACCOMMODATION_STAYS` = "tr_accommodation_stays_bhi2015.csv",
+                # `WGI_ALL` = "wgi_all_bhi2015.csv"
+              )
             )
           )
         )
-      ) # end layers tab item
+      ) # end layers tab item ----
 
     ) # end tabItems ----
-  ) # end dashboardBody
-) # end dashboardPage
+  ) # end dashboardBody ----
+) # end dashboardPage ----
