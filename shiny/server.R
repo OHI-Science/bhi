@@ -609,6 +609,7 @@ function(input, output, session){
 
 
   ## COMPARE ----
+  ## PRESSURES
   output$pressure_ts <- renderPlotly({
 
     press_var <- input$press_var
@@ -650,6 +651,8 @@ function(input, output, session){
     }
   })
 
+  ## DATA LAYERS
+  ## scatter plot
   output$layers_scatter <- renderPlot({
 
     gh_lyrs <- "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/baltic2015/layers/"
@@ -671,26 +674,37 @@ function(input, output, session){
       )
   })
 
-  # values <- reactiveValues(
-  #   lyr_df = data.frame(
-  #     Value1 = 1:10,
-  #     Value2 = c("A", "B", "C", "D", "E"),
-  #     stringsAsFactors = FALSE,
-  #     row.names = 1:10
-  #   )
-  # )
-  #
-  # observeEvent(
-  #   eventExpr = input$layers_dt_vars, {
-  #
-  #     lyr_df <- data.frame()
-  #     for(l in ){
-  #       lyr_df
-  #     }
-  #
-  #     output$layers_datatab <- renderDataTable({lyr_df})
-  #
-  #   }, ignoreNULL = FALSE
-  # )
+  ## data layers from bhi-prep and make datatable
+  output$layers_datatab <- DT::renderDataTable({
+    gh_lyrs <- "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/baltic2015/layers/"
+    all_lyrs <- bhiprep_github_layers("https://api.github.com/repos/OHI-Science/bhi-1.0-archive/git/trees/draft?recursive=1") %>%  # a func defined in common.R
+      dplyr::mutate(fn = str_extract(., pattern = "/[a-z0-9_].*.csv")) %>%
+      dplyr::mutate(fn = str_remove(fn, pattern = "/layers/")) %>%
+      dplyr::filter(!str_detect(., pattern = "without_social")) %>%
+      dplyr::filter(!str_detect(fn, pattern = "gl2014")) %>%
+      dplyr::filter(!str_detect(fn, pattern = "trend")) %>%
+      dplyr::filter(!str_detect(fn, pattern = "slope")) %>%
+      dplyr::filter(!str_detect(fn, pattern = "status")) %>%
+      dplyr::filter(!str_detect(fn, pattern = "res_reg")) %>%
+      dplyr::filter(!is.na(fn))
+
+    lyrs_df <- readr::read_csv(paste0(gh_lyrs,  "/", all_lyrs$fn[1])) # 2 cols, one is 'rgn_id' but really should use while...
+    colnames(lyrs_df) <- c("rgn_id", str_remove(all_lyrs$fn[1], ".csv"))
+    for(l in all_lyrs$fn[-1]){
+      tmp <- readr::read_csv(paste0(gh_lyrs,  "/", l))
+      if(ncol(tmp) == 2 & "rgn_id" %in% colnames(tmp)){
+        colnames(tmp) <- c("rgn_id", str_remove(l, ".csv"))
+        lyrs_df <- dplyr::left_join(lyrs_df, tmp, by = "rgn_id") # c("region_id", "year")
+      }
+    }
+    datatable(
+      lyrs_df,
+      extensions = "Buttons",
+      options = list(
+        dom = "Bfrtip",
+        buttons = c("csv", "excel")
+      )
+    )
+  })
 
 }
