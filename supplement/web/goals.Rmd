@@ -10,7 +10,12 @@ source(file.path(here::here(), "R", "common.R"))
 
 ## this document links to the bhi-prep github repo, using 
 layers_web <- "http://ohi-science.org/bhi/data.html" # gh-pages branch...
-short_goal_web <- file.path(bhiprep_repo_raw, "conf", "goals") # bhiprep_repo_raw defined in common.R  
+# short_goal_web <- file.path(bhiprep_gh_raw, "conf", "goals") # bhiprep_gh_raw defined in setup.R  
+short_goal_web <- file.path(
+  "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive",
+  "draft/baltic2015", 
+  "conf", "web", "goals"
+)
 
 layers_csv <- readr::read_csv(file.path(dir_baltic, "layers.csv"))
 st0 <- layers_csv %>%
