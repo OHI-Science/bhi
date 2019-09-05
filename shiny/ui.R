@@ -286,6 +286,7 @@ dashboardPage(
     tags$script(HTML("$('body').addClass('fixed');")), # lock side and top bars
 
     ## color overrides ----
+    ## most of these apply to goal score boxes
     tags$style(
       type = "text/css",
       sprintf(
@@ -349,6 +350,7 @@ dashboardPage(
         "aqua",
         dplyr::filter(thm$palettes$goals_pal, goal == "FP")$color)
     ),
+    ## this overrides to make same as dashboard background color
     tags$style(
       type = "text/css",
       sprintf(
@@ -425,7 +427,8 @@ dashboardPage(
             scoreBoxUI(id = "ao_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY AND STATUS/TRENDS"),
+            h4(filter(goals_csv, goal == "AO")$short_def),
+            p(filter(goals_csv, goal == "AO")$description),
             width = 12
           )
         ),
@@ -482,7 +485,8 @@ dashboardPage(
             scoreBoxUI(id = "bd_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "BD")$short_def),
+            p(filter(goals_csv, goal == "BD")$description),
             width = 12
           )
         ),
@@ -541,7 +545,8 @@ dashboardPage(
             scoreBoxUI(id = "cs_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "CS")$short_def),
+            p(filter(goals_csv, goal == "CS")$description),
             width = 12
           )
         ),
@@ -598,7 +603,8 @@ dashboardPage(
             scoreBoxUI(id = "cw_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "CW")$short_def),
+            p(filter(goals_csv, goal == "CW")$description),
             width = 12
           )
         ),
@@ -653,7 +659,8 @@ dashboardPage(
             scoreBoxUI(id = "con_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "CON")$short_def),
+            p(filter(goals_csv, goal == "CON")$description),
             width = 12
           )
         ),
@@ -712,7 +719,8 @@ dashboardPage(
             scoreBoxUI(id = "eut_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "EUT")$short_def),
+            p(filter(goals_csv, goal == "EUT")$description),
             width = 12
           )
         ),
@@ -771,7 +779,8 @@ dashboardPage(
             scoreBoxUI(id = "tra_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "TRA")$short_def),
+            p(filter(goals_csv, goal == "TRA")$description),
             width = 12
           )
         ),
@@ -830,7 +839,8 @@ dashboardPage(
             scoreBoxUI(id = "fp_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "FP")$short_def),
+            p(filter(goals_csv, goal == "FP")$description),
             width = 12
           )
         ),
@@ -885,7 +895,8 @@ dashboardPage(
             scoreBoxUI(id = "fis_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "FIS")$short_def),
+            p(filter(goals_csv, goal == "FIS")$description),
             width = 12
           )
         ),
@@ -944,7 +955,8 @@ dashboardPage(
             scoreBoxUI(id = "mar_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "MAR")$short_def),
+            p(filter(goals_csv, goal == "MAR")$description),
             width = 12
           )
         ),
@@ -1003,7 +1015,8 @@ dashboardPage(
             scoreBoxUI(id = "le_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "LE")$short_def),
+            p(filter(goals_csv, goal == "LE")$description),
             width = 12
           )
         ),
@@ -1054,7 +1067,8 @@ dashboardPage(
             scoreBoxUI(id = "eco_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "ECO")$short_def),
+            p(filter(goals_csv, goal == "ECO")$description),
             width = 12
           )
         ),
@@ -1113,7 +1127,8 @@ dashboardPage(
             scoreBoxUI(id = "liv_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "LIV")$short_def),
+            p(filter(goals_csv, goal == "LIV")$description),
             width = 12
           )
         ),
@@ -1172,7 +1187,8 @@ dashboardPage(
             scoreBoxUI(id = "sp_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "SP")$short_def),
+            p(filter(goals_csv, goal == "SP")$description),
             width = 12
           )
         ),
@@ -1223,7 +1239,8 @@ dashboardPage(
             scoreBoxUI(id = "ico_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "ICO")$short_def),
+            p(filter(goals_csv, goal == "ICO")$description),
             width = 12
           )
         ),
@@ -1282,7 +1299,8 @@ dashboardPage(
             scoreBoxUI(id = "lsp_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "LSP")$short_def),
+            p(filter(goals_csv, goal == "LSP")$description),
             width = 12
           )
         ),
@@ -1341,7 +1359,8 @@ dashboardPage(
             scoreBoxUI(id = "np_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "NP")$short_def),
+            p(filter(goals_csv, goal == "NP")$description),
             width = 12
           )
         ),
@@ -1396,7 +1415,8 @@ dashboardPage(
             scoreBoxUI(id = "tr_infobox")
           ),
           box(
-            p("SOMETHING ABOUT GOAL PHILOSOPHY"),
+            h4(filter(goals_csv, goal == "TR")$short_def),
+            p(filter(goals_csv, goal == "TR")$description),
             width = 12
           )
         ),
@@ -1456,7 +1476,7 @@ dashboardPage(
         )
       ), # end futures tab item
 
-      ## pressures tab
+      ## >> pressures tab ----
       tabItem(
         tabName = "pressures",
         fluidRow(
@@ -1474,7 +1494,7 @@ dashboardPage(
             width = 9,
             addSpinner(plotlyOutput("pressure_ts"), spin = "rotating-plane", color = "#d7e5e8")
           ),
-          ## pressure time series plot select variable ----
+          ## pressure ts plot select var ----
           box(
             width = 3,
 
@@ -1490,6 +1510,7 @@ dashboardPage(
           )
         )
       ), # end pressures tab item ----
+      ## >> scenarios tab ----
       tabItem(
         tabName = "scenarios",
         fluidRow(
@@ -1522,7 +1543,7 @@ dashboardPage(
             width = 9,
             plotOutput("layers_scatter")
           ),
-          ## select variables for layers scatterplot ----
+          ## layers scatterplot select vars ----
           box(
             width = 3,
 
