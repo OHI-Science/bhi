@@ -138,3 +138,36 @@ for_now_press_dat <- eut_time_data %>%
 copy_to(bhi_db_con, for_now_press_dat, "for_now_press_data", temporary = FALSE)
 
 
+short_defs <- tibble(
+  goal = collect(tbl(bhi_db_con, "plot_conf"))$goal,
+  short_def = c(
+    "Seafood sustainably harvested primarily in human consumption",
+    "Harvest of sustainably caught wild seafood",
+    "Production of sustainable cultured seafood",
+    "Opportunity to engage in coastal non-recreational fishing",
+    "Sustainable harvest of natural products, such as shells, algae, and fish oil used for reasons other than food provision",
+    "Conservation status of natural habitats affording long-lasting carbon storage",
+    "Opportunity to enjoy coastal areas for recreation and tourism",
+    "Coastal and ocean-dependent livelihoods and productive coastal economies",
+    "Jobs and wages from marine-related sectors",
+    "Revenues from marine-related sectors",
+    "Protection of coastal and marine features that contribute to sense of cultural identity",
+    "Cultural, spiritual, or aesthetic connection to the environment afforded by iconic species",
+    "Geographic locations that hold particular value for aesthetic, spiritual, cultural, recreational or existence reasons, and assesses how well they are protected",
+    "Levels of pollution in marine areas",
+    "The degree to which marine areas are unpolluted by nutrients",
+    "The degree to which marine areas are unpolluted by trash",
+    "The degree to which marine areas are unpolluted by contaminants",
+    "The existence value of biodiversity measured through the conservation status of marine-associated species"
+  )
+)
+
+goals_defs <- tbl(bhi_db_con, "plot_conf") %>%
+  select(goal, parent, name, description) %>%
+  collect() %>%
+  left_join(short_defs, by = "goal")
+
+copy_to(bhi_db_con, goals_defs, "goals", temporary = FALSE)
+
+
+
