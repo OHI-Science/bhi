@@ -88,11 +88,12 @@ make_rgn_menu <- function(rgn_tab_con = bhi_db_con){
 
 #' layers scatterplot variables selection menu
 #'
-#' @param github_layers
+#' @param layers_dir directory containing the layers
+#' @param print boolean indicating whether to print copy-and-pasteable text in console
 #'
 #' @return no returned object; prints helpful info in console
 
-make_lyrs_menu <- function(layers_dir){
+make_lyrs_menu <- function(layers_dir, print = FALSE){
 
   lyrs <- list.files(layers_dir) %>%
     grep(pattern = "_bhi2015.csv", value = TRUE) %>%
@@ -105,17 +106,23 @@ make_lyrs_menu <- function(layers_dir){
     cat(
       sprintf(
         "`%s` = \"%s\"",
-        lyrs %>%
+        f %>%
           str_remove(pattern  = "_bhi2015.csv+") %>%
           str_to_upper(),
-        lyrs
+        f
       ),
       sep = ", \n"
     )
   }
+
+  vec <- lyrs
+  names(vec) <- lyrs %>%
+    str_remove(pattern  = "_bhi2015.csv+") %>%
+    str_to_upper()
+  return(vec)
 }
 
-#' print in console ui and server and print in console
+#' print in console goal-pages ui and server code
 #'
 #' helper/timesaver function, could maybe be a module but thats another layer of complexity...
 #'
@@ -206,8 +213,9 @@ templatize_goalpage <- function(goal_code, goal_code_templatize, ui_server){
 
 ## Shiny Global Data ----
 
-## full scores
+## full scores and goal definitions
 full_scores_csv <- tbl(bhi_db_con, "scores2015") %>% collect()
+goals_csv <- tbl(bhi_db_con, "goals") %>% collect()
 
 ## shapefiles: BHI regions, subbasins, MPAs
 rgns_shp <- sf::st_read("/Volumes/BHI_share/Shapefiles/BHI_shapefile",
