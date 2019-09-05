@@ -37,7 +37,7 @@ scoreBox<- function(input,
         style = ifelse(
           flower_rgn_selected() == 0,
           "font-size: 260%; text-align:center; font-weight: lighter;",
-          "font-size: 230%; text-align:center; font-weight: lighter;"
+          "font-size: 210%; text-align:center; font-weight: lighter;"
         )
         # style = ifelse(
         #   flower_rgn_selected() == 0,
