@@ -6,15 +6,17 @@ output:
     toc_float: true
 ---
 
-
-
 ```{r echo = FALSE}
+source("_site.R")
+
 ## timeline data, add row for each task/event
-timeline_data <- readr::read_csv("timeline.csv") %>% 
-  rename(content = task)
+timeline_data <- readr::read_csv(
+  "timeline.csv", 
+  col_types = list(col_double(), col_character(), col_date(), col_date())
+  ) %>% rename(content = task)
 
 ## design and embed timeline widget
-timeline_widget <- timevis(timeline_data) %>% 
+timeline_widget <- timevis(timeline_data) %>%
   centerItem(nrow(timeline_data))
 frameWidget(timeline_widget, width = "100%", height = "800")
 ```
