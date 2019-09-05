@@ -106,7 +106,7 @@ goal_layers <- function(functionsR_path, goal_code = "all"){
 #'
 #' @return dataframe with names of the prepared layers within bhi-prep layers folder on github
 
-bhiprep_github_layers <- function(github_api_url = bhiprep_api){
+bhiprep_github_layers <- function(github_api_url = bhiprep_gh_api){
   req <- httr::GET(github_api_url)
   stop_for_status(req)
   filelist <- unlist(lapply(content(req)$tree, "[", "path"), use.names = FALSE) %>%

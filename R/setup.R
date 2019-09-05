@@ -14,16 +14,38 @@ subbasin_ids_vec <- 501:517
 # projstringCRS <- raster::crs("+proj=longlat +datum=WGS84 +no_defs") # spatial data use lat/long coords on WGS84
 # filesep <- .Platform$file.sep
 
-bhi_repo_loc <- "https://github.com/OHI-Science/bhi"
-bhiprep_repo_loc <- "https://github.com/OHI-Science/bhi-prep/prep"
-bhi_repo_raw <- "https://raw.githubusercontent.com/OHI-Science/bhi"
-bhiprep_repo_raw <- "https://raw.githubusercontent.com/OHI-Science/bhi-prep"
-bhi_api <- "https://api.github.com/repos/OHI-Science/bhi/git/trees/master?recursive=1"
-bhiprep_api <- "https://api.github.com/repos/OHI-Science/bhi-prep/git/trees/master?recursive=1"
+bhi_gh <- "https://github.com/OHI-Science/bhi"
+bhiprep_gh <- "https://github.com/OHI-Science/bhi-prep"
+
+bhi_gh_raw <- stringr::str_replace(
+  bhi_gh,
+  pattern = "github.com",
+  replacement = "raw.githubusercontent.com"
+)
+bhiprep_gh_raw <- stringr::str_replace(
+  bhiprep_gh,
+  pattern = "github.com",
+  replacement = "raw.githubusercontent.com"
+)
+
+bhi_gh_api <- stringr::str_replace(
+  bhi_gh,
+  pattern = "github.com",
+  replacement = "api.github.com/repos"
+) %>% paste(
+  "git/trees/master?recursive=1", sep = "/"
+  )
+bhiprep_gh_api <- stringr::str_replace(
+  bhiprep_gh,
+  pattern = "github.com",
+  replacement = "api.github.com/repos"
+) %>% paste(
+  "git/trees/master?recursive=1", sep = "/"
+  )
 
 
 ## Connections and Directories ----
-bhi_db_file <- "/Users/eleanorecampbell/Desktop/bhi-config.sqlite" # for now...
+bhi_db_file <- "/Users/eleanorecampbell/Desktop/bhi-config.sqlite" # for now... depends on local path to sqlite db...
 bhi_db_con <- DBI::dbConnect(RSQLite::SQLite(), bhi_db_file)
 
 dir_assess <- file.path(here::here(), "baltic"); dir_baltic <- file.path(here::here(), "baltic") # CHANGE BHI ASSESSMENT DIRECTORY HERE!
@@ -108,6 +130,7 @@ apply_bhi_theme <- function(plot_type = NA){
   cols <- list(
     light_grey1 = "grey95",
     light_grey2 = "grey90",
+    light_greygreen = "#eef7f5",
     med_grey1 = "grey80",
     med_grey2 = "grey50",
     med_grey3 = "grey52",
