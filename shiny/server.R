@@ -24,14 +24,7 @@ function(input, output, session){
              goal_code = "Index",
              dimension_selected = dimension,
              spatial_unit_selected = spatial_unit)
-  # callModule(mapCard, "index_map",
-  #            goal_code = "Index",
-  #            dimension_selected = dimension,
-  #            spatial_unit_selected = spatial_unit,
-  #            legend_title = "Scores",
-  #            popup_title = "Score:",
-  #            popup_add_field = "Name",
-  #            popup_add_field_title = "Name:")
+
   observeEvent(
     eventExpr = input$flower_rgn, {
       values$flower_rgn <- input$flower_rgn
@@ -608,19 +601,47 @@ function(input, output, session){
              spatial_unit_selected = spatial_unit)
 
 
-  ## COMPARE ----
-  ## PRESSURES
+  ## COMPARE
+  ## PRESSURES ----
   output$pressure_ts <- renderPlotly({
 
     press_var <- input$press_var
 
     # press_dat <- tbl(bhi_db_con, "pressures") %>%
-    press_dat <- tbl(bhi_db_con, "for_now_press_data") %>% # just a few layers for now...
-      select(region_id, year, press_var) %>%
-      collect() %>%
-      left_join(
-        select(thm$rgn_name_lookup, region_id, plot_title),
-        by = "region_id") %>%
+    # press_dat <- tbl(bhi_db_con, "for_now_press_data") %>% # just a few layers for now...
+    #   select(region_id, year, press_var) %>%
+    #   collect() %>%
+    #   left_join(
+    #     select(thm$rgn_name_lookup, region_id, plot_title),
+    #     by = "region_id") %>%
+    #   rename(Name = plot_title, Pressure = press_var, Year = year)
+
+    gh_lyrs <- "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/baltic2015/layers/"
+    # all_lyrs <- bhiprep_github_layers()
+    all_lyrs <- bhiprep_github_layers("https://api.github.com/repos/OHI-Science/bhi-1.0-archive/git/trees/draft?recursive=1") %>%  # a func defined in common.R
+      dplyr::mutate(fn = str_extract(., pattern = "/[a-z0-9_].*.csv")) %>%
+      dplyr::mutate(fn = str_remove(fn, pattern = "/layers/")) %>%
+      dplyr::filter(!str_detect(., pattern = "without_social")) %>%
+      dplyr::filter(!str_detect(fn, pattern = "gl2014")) %>%
+      dplyr::filter(!str_detect(fn, pattern = "trend")) %>%
+      dplyr::filter(!str_detect(fn, pattern = "slope")) %>%
+      dplyr::filter(!str_detect(fn, pattern = "status")) %>%
+      dplyr::filter(!str_detect(fn, pattern = "res_reg")) %>%
+      dplyr::filter(!is.na(fn))
+
+    lyrs_df <- readr::read_csv(paste0(gh_lyrs,  "/", all_lyrs$fn[1])) # 2 cols, one is 'rgn_id' but really should use while...
+    colnames(lyrs_df) <- c("rgn_id", str_remove(all_lyrs$fn[1], ".csv"))
+    for(lyr in all_lyrs$fn[-1]){
+      tmp <- readr::read_csv(paste0(gh_lyrs,  "/", lyr))
+      if(ncol(tmp) == 2 & "rgn_id" %in% colnames(tmp)){
+        colnames(tmp) <- c("rgn_id", str_remove(lyr, ".csv"))
+        lyrs_df <- dplyr::left_join(lyrs_df, tmp, by = "rgn_id") # c("region_id", "year")
+      }
+    }
+
+    left_join(
+      select(thm$rgn_name_lookup, region_id, plot_title),
+      by = "region_id") %>%
       rename(Name = plot_title, Pressure = press_var, Year = year)
 
     if(spatial_unit() == "subbasins"){
@@ -651,7 +672,7 @@ function(input, output, session){
     }
   })
 
-  ## DATA LAYERS
+  ## DATA LAYERS ----
   ## scatter plot
   output$layers_scatter <- renderPlot({
 
@@ -674,9 +695,11 @@ function(input, output, session){
       )
   })
 
-  ## data layers from bhi-prep and make datatable
+  ## make datatable of data layers from bhi-prep
+  ## will eventually read from bhi-prep repo, and won't need all filters...
   output$layers_datatab <- DT::renderDataTable({
     gh_lyrs <- "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/baltic2015/layers/"
+    # all_lyrs <- bhiprep_github_layers()
     all_lyrs <- bhiprep_github_layers("https://api.github.com/repos/OHI-Science/bhi-1.0-archive/git/trees/draft?recursive=1") %>%  # a func defined in common.R
       dplyr::mutate(fn = str_extract(., pattern = "/[a-z0-9_].*.csv")) %>%
       dplyr::mutate(fn = str_remove(fn, pattern = "/layers/")) %>%
@@ -690,10 +713,10 @@ function(input, output, session){
 
     lyrs_df <- readr::read_csv(paste0(gh_lyrs,  "/", all_lyrs$fn[1])) # 2 cols, one is 'rgn_id' but really should use while...
     colnames(lyrs_df) <- c("rgn_id", str_remove(all_lyrs$fn[1], ".csv"))
-    for(l in all_lyrs$fn[-1]){
-      tmp <- readr::read_csv(paste0(gh_lyrs,  "/", l))
+    for(lyr in all_lyrs$fn[-1]){
+      tmp <- readr::read_csv(paste0(gh_lyrs,  "/", lyr))
       if(ncol(tmp) == 2 & "rgn_id" %in% colnames(tmp)){
-        colnames(tmp) <- c("rgn_id", str_remove(l, ".csv"))
+        colnames(tmp) <- c("rgn_id", str_remove(lyr, ".csv"))
         lyrs_df <- dplyr::left_join(lyrs_df, tmp, by = "rgn_id") # c("region_id", "year")
       }
     }
