@@ -111,13 +111,33 @@ make_flower_plot <- function(rgn_scores, rgns = NA, plot_year = NA, dim = "score
     w_fn <- NULL
   } else {
     wgts <- readr::read_csv(w_fn) %>%
-      dplyr::filter(year == plot_year)
+      dplyr::filter(year == plot_year) %>%
+      dplyr::select(-year)
     if(length(wgts$w_fis) != 0){
       mean_wgt <- mean(wgts$w_fis) # mean across regions within the year of interest
+
+      ## area weighted subbasin means
+      wgts_basin <- tbl(bhi_db_con, "regions") %>%
+        select(rgn_id = region_id, area_km2, subbasin) %>%
+        collect() %>%
+        left_join(wgts, by = "rgn_id") %>%
+        group_by(subbasin) %>%
+        summarize(w_fis = weighted.mean(w_fis, area_km2)) %>%
+        left_join(
+          tbl(bhi_db_con, "basins") %>%
+            select(subbasin, rgn_id = subbasin_id) %>%
+            collect(),
+          by = "subbasin"
+        ) %>%
+        ungroup() %>%
+        select(rgn_id, w_fis)
+
       wgts <- rbind(
         data.frame(rgn_id = 0, w_fis = mean_wgt),
-        dplyr::filter(wgts, rgn_id %in% unique_rgn) %>%
-          dplyr::select(-year))
+        dplyr::filter(wgts, rgn_id %in% unique_rgn),
+        wgts_basin
+      )
+
     } else {
       message(paste("fp_wildcaught_weight.csv doesn't have data for the plot_year:", plot_year))
       w_fn <- NULL
@@ -265,8 +285,8 @@ make_flower_plot <- function(rgn_scores, rgns = NA, plot_year = NA, dim = "score
                      size = 0.5, color = thm$cols$dark_grey3) +
         geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = critical_value, yend = critical_value),
                      size = 0.1, color = thm$cols$accent_bright) +
-        geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = 105, yend = 105),
-                     size = 3, color = thm$cols$light_grey1)
+        geom_segment(aes(x = min(plot_df$x), xend = max(plot_df$x_end), y = 109, yend = 109),
+                     size = 5, color = thm$cols$light_grey1)
 
     ## without a gradient ----
     } else {
@@ -294,8 +314,8 @@ make_flower_plot <- function(rgn_scores, rgns = NA, plot_year = NA, dim = "score
                       size = 0.5, show.legend = NA, color = thm$cols$dark_grey3) +
         geom_errorbar(aes(x = pos, ymin = critical_value, ymax = critical_value), # some kind of tipping-point line?
                       size = 0.25,show.legend = NA, color = thm$cols$accent_bright) +
-        geom_errorbar(aes(x = pos, ymin = 105, ymax = 105), # outer ring indicating room for even more progress?
-                      size = 3, show.legend = NA, color = thm$cols$light_grey1)
+        geom_errorbar(aes(x = pos, ymin = 109, ymax = 109), # outer ring indicating room for even more progress?
+                      size = 5, show.legend = NA, color = thm$cols$light_grey1)
     }
 
     ## general flowerplot elements ----
