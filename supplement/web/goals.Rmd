@@ -6,8 +6,6 @@ output:
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
-source(file.path(here::here(), "R", "common.R"))
-
 ## this document links to the bhi-prep github repo, using 
 layers_web <- "http://ohi-science.org/bhi/data.html" # gh-pages branch...
 # short_goal_web <- file.path(bhiprep_gh_raw, "conf", "goals") # bhiprep_gh_raw defined in setup.R  
