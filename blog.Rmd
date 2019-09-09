@@ -16,7 +16,7 @@ timeline_data <- readr::read_csv(
   ) %>% rename(content = task)
 
 ## design and embed timeline widget
-timeline_widget <- timevis(timeline_data) %>%
-  centerItem(nrow(timeline_data))
-frameWidget(timeline_widget, width = "100%", height = "800")
+# timeline_widget <- timevis(timeline_data) %>%
+#   centerItem(nrow(timeline_data))
+# frameWidget(timeline_widget, width = "100%", height = "800")
 ```
