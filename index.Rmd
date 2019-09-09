@@ -4,34 +4,34 @@ output:
     fig_width: 1
 ---
 
----
-
-<div class="page-lead" style="background-image:url(images/matt-hardy-6ArTTluciuA-unsplash-cropped.jpg)">
+<!-- <div class="page-lead" style="background-image:url(images/matt-hardy-6ArTTluciuA-unsplash-cropped2.png)"> -->
+<div class="page-lead" style="background-image:url(images/nathan-dumlao-0tykfPL2U7w-unsplash.jpg)">
 <div class="wrap page-lead-content">
-<br><br><br><br><br><br>
-<h3 style="color:lightgoldenrodyellow;line-height:160px">An Ocean Health Index assessment for the Baltic Sea . . . </h3>
+<br><br><br>
+<h2 style="background-color: #0d4353d4;color: #f3ffe1;line-height:60px;font-size: 280%;">  AN OCEAN HEALTH INDEX FOR THE BALTIC SEA </h2>
 </div>
 </div>
 
 ---
 
-# How healthy are our oceans?
+<h3 style="font-weight:bold"> Ocean Health Index </h3>
 
 The Ocean Health Index (OHI) measures and tracks the benefits and services that the ocean provides for people now and into the future. Determining ocean health requires an approach that integrates social, economic, and environmental information.
 
 The OHI does this by measuring progress towards widely held goals that represent key benefits and services provided by marine ecosystems. By analyzing these goals together we obtain a comprehensive picture of the state of the ecosystem.
 
----
-
-## Assessing ocean health in Baltic
-
-The Baltic Health Index is a regional study applying the OHI framework. The aim is to continue the development of an integrative and transparent tool that can be used by decision-makers to guide management of the Baltic Sea region towards increased sustainability.
-
-The OHI framework facilitates [transparent and repeatable assessments](https://www.nature.com/articles/s41559-017-0160) of ocean health over time, and can be integrated into ongoing policy initiatives to support sustainable ocean management. We will build from previous OHI assessments and [tailor the OHI framework](https://peerj.com/articles/1503/) to represent the cultural, social, and ecological characteristics and priorities of Baltic using the best available information and knowledge.
-
-We will use this website to share our work in progress, as well as the final results. See project GitHub repos [bhi-prep](https://github.com/OHI-Science/bhi-prep) and [bhi](https://github.com/OHI-Science/bhi) for code and documents detailing data collection, exploration and synthesis.
+The framework facilitates [transparent and repeatable assessments](https://www.nature.com/articles/s41559-017-0160) of ocean health over time, and can be integrated into ongoing policy initiatives to support sustainable ocean management.
 
 ---
 
-<img align="right" src="images/BHI_logos.jpg" width="350px">
-<img align="left" src="images/ohi_logo.png" width="120px">
+<h3 style="font-weight:bold">  Quantifying status of the Baltic Sea </h3>
+
+The Baltic Health Index (BHI) is a regional study applying the OHI framework, The aim is to provide an integrative and transparent tool to be used by decision-makers to guide management of the Baltic Sea towards increased sustainability.
+
+In a first iteration, the BHI was adapted from previous OHI assessments [tailoring the OHI framework](https://peerj.com/articles/1503/) to represent the cultural, social, and ecological characteristics and priorities of Baltic using the best available information and knowledge.
+
+A second iteraction will further develop models specific to the Baltic Sea, and implement more automized routines for data collection and  processing. See project GitHub repositories [bhi-prep](https://github.com/OHI-Science/bhi-prep) and [bhi](https://github.com/OHI-Science/bhi) for code and documents detailing data collection, exploration and synthesis.
+
+---
+<img align="right" src="images/BHI_logo_SRC.jpg" width="240px">
+<img align="left" src="images/ohi_logo.png" width="130px">
