@@ -20,12 +20,12 @@ study_area <- "Baltic"
 dir_gh <- "https://raw.githubusercontent.com/OHI-Science/bhi"
 dir_scenario_gh <- file.path(dir_gh, "master/baltic")
 dir_spatial_gh <- file.path(dir_gh, "master/spatial")
-dir_supplement_gh <- file.path(dir_gh, "blob/master/supplement/web")
+dir_supplement_gh <- file.path(dir_gh, "master/supplement/web")
 
 ## knitr options for all webpages
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
-# ## read in variables if they exist
+## read in variables if they exist
 # scores_csv <- file.path(dir_scenario_gh, "scores.csv")
 # layers_csv <- file.path(dir_scenario_gh, "layers.csv")
 # conf_csv <- file.path(dir_scenario_gh, "conf", "goals.csv")
@@ -45,20 +45,20 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 # to_copy <- c()
 #
 # for(f in to_copy){
-#   fp <- file.path(dir_scenario_gh, f)
-#
-#   ## if the url exists, save a copy
-#   if(RCurl::url.exists(fp)){
-#
-#     f_web <- readr::read_lines(fp)
-#     if(tools::file_ext(fp) == "Rmd"){
-#       f_local <- paste0("local_", basename(fp))
-#     } else {f_local <- basename(fp)}
-#
-#     readr::write_lines(f_web, path = f_local, append = FALSE)
-#     message(sprintf("saving %s", f_local))
-#
-#   } else {message(sprintf("%s does not exist", fp))}
+  fp <- file.path(dir_supplement_gh, "goals.Rmd")
+
+  ## if the url exists, save a copy
+  if(RCurl::url.exists(fp)){
+
+    f_web <- readr::read_lines(fp)
+    if(tools::file_ext(fp) == "Rmd"){
+      f_local <- paste0("local_", basename(fp))
+    } else {f_local <- basename(fp)}
+
+    readr::write_lines(f_web, path = f_local, append = FALSE)
+    message(sprintf("saving %s", f_local))
+
+  } else {message(sprintf("%s does not exist", fp))}
 # }
 #
 #

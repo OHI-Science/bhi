@@ -1,0 +1,528 @@
+---
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+source(file.path(here::here(), "R", "common.R"))
+
+## this document links to the bhi-prep github repo, using 
+layers_web <- "http://ohi-science.org/bhi/data.html" # gh-pages branch...
+# short_goal_web <- file.path(bhiprep_gh_raw, "conf", "goals") # bhiprep_gh_raw defined in setup.R  
+short_goal_web <- file.path(
+  "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive",
+  "draft/baltic2015", 
+  "conf", "web", "goals"
+)
+
+layers_csv <- readr::read_csv(file.path(dir_baltic, "layers.csv"))
+st0 <- layers_csv %>%
+  select(targets, name, layer, description) %>% 
+  mutate(web_name = str_to_lower(gsub(" ", "_", name))) %>% 
+  mutate(web_name = gsub("/", "", web_name)) %>% 
+  mutate(info = sprintf("[%s](%s#%s) (%s): %s", name, layers_web, web_name, layer, description))
+```
+
+
+## Food Provision: Fisheries
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "FIS.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/FIS/v2019/fis_np_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "FIS")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+
+---- 
+
+## Food Provision: Mariculture
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "MAR.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/MAR/v2019/mar_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "MAR")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+
+---- 
+
+## Artisanal Fishing Opportunity 
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "AO.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/AO/v2019/ao_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "AO")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+
+---- 
+
+## Natural Products
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "NP.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/NP/v2019/np_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "NP")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+
+---- 
+
+## Carbon Storage
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "CS.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/CS/v2019/cs_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "CS")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+---- 
+
+## Tourism & Recreation
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "TR.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/TR/v2019/tr_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "TR")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+---- 
+
+## Livelihoods & Economies: Livelihoods
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "LIV.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/LIV/v2019/liv_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "LIV")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+
+---- 
+
+## Livelihoods & Economies: Economies
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "ECO.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/ECO/v2019/eco_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "ECO")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+---- 
+
+## Sense of Place: Iconic Species
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "ICO.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/masterNA.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "ICO")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+
+---- 
+
+## Sense of Place: Lasting Special Places
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "LSP.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/LSP/v2019/lsp_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "LSP")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+
+---- 
+
+## Clean Waters: Eutrophication
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "EUT.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/CW/eutrophication/v2019/eutrophication_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "EUT")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+
+---- 
+
+## Clean Waters: Trash
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "TRA.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/CW/trash/v2019/tra_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "TRA")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+
+---- 
+
+## Clean Waters: Contaminants
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "CON.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/CW/contaminants/v2019/contaminants_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "CON")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+
+---- 
+
+## Biodiversity
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_goal_web, "BD.Rmd"), tmp) 
+```
+ 
+```{r, child = tmp, echo = FALSE, results = "asis"} 
+``` 
+
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/SPP/v2019/spp_prep.rmd)  
+
+### Data used in model
+
+**Status & trend**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "BD")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Pressure**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "pressures")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
+**Resilience**
+```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
+st <- filter(st0, targets %in% "resilience")
+cat(paste(st$info, collapse = "\n\n"))
+``` 
+
