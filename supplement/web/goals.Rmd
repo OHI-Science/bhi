@@ -15,7 +15,10 @@ short_goal_web <- file.path(
   "conf", "web", "goals"
 )
 
-layers_csv <- readr::read_csv(file.path(dir_baltic, "layers.csv"))
+layers_csv <- readr::read_csv(file.path(
+  "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/",
+  "baltic2015",
+  "layers.csv")) # need to read from github so works in eg  ghpages branch
 st0 <- layers_csv %>%
   select(targets, name, layer, description) %>% 
   mutate(web_name = str_to_lower(gsub(" ", "_", name))) %>% 
