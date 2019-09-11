@@ -6,14 +6,16 @@ output:
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+source(file.path(here::here(), "R", "setup.R"))
+short_goal_web <- file.path(bhiprep_gh_raw, "master", "ref", "goal_summaries") # bhiprep_gh_raw defined in setup.R
+# short_goal_web <- file.path(
+#   "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive",
+#   "draft/baltic2015", 
+#   "conf", "web", "goals"
+# )
+
 ## this document links to the bhi-prep github repo, using 
-layers_web <- "http://ohi-science.org/bhi/data.html" # gh-pages branch...
-# short_goal_web <- file.path(bhiprep_gh_raw, "conf", "goals") # bhiprep_gh_raw defined in setup.R  
-short_goal_web <- file.path(
-  "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive",
-  "draft/baltic2015", 
-  "conf", "web", "goals"
-)
+layers_web <- "http://ohi-science.org/bhi/layers.html" # gh-pages branch...
 
 layers_csv <- readr::read_csv(file.path(
   "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/",
@@ -21,13 +23,43 @@ layers_csv <- readr::read_csv(file.path(
   "layers.csv")) # need to read from github so works in eg  ghpages branch
 st0 <- layers_csv %>%
   select(targets, name, layer, description) %>% 
-  mutate(web_name = str_to_lower(gsub(" ", "_", name))) %>% 
-  mutate(web_name = gsub("/", "", web_name)) %>% 
-  mutate(info = sprintf("[%s](%s#%s) (%s): %s", name, layers_web, web_name, layer, description))
+  filter(name != "proxy_layer") %>% 
+  mutate(description = ifelse(is.na(description), "See goal description above or data prep documents for more information.", description)) %>% 
+  
+  mutate(description = str_remove_all(description, pattern = "\\n\\n\\n\\n-")) %>% 
+  mutate(
+    name_abbrev = name %>% 
+      str_replace_all(pattern = "\\(", replacement = "openparentheses ") %>% 
+      str_replace_all(pattern = "\\.", replacement = " periodpunctuation") %>% 
+      str_replace_all(pattern = "to be used", replacement = "tobeused") %>% 
+      str_replace_all(pattern = "based on|based upon", replacement = "basedon")
+  ) %>%
+  rowwise() %>% 
+  mutate(
+    name_abbrev = ifelse(
+      str_length(name) < 35,
+      name,
+      str_split(
+        name_abbrev,
+        pattern = paste0("\\s", 
+          intersect(
+             c("openparentheses", "periodpunctuation", ",", "basedon", "tobeused", "as", "of"),
+            str_split(name_abbrev, pattern = " ") %>% unlist())[1], "\\s"
+        )
+      )[[1]][1]
+    )
+  ) %>%
+  mutate(
+    web_name = str_to_lower(gsub(" ", "_", name_abbrev)) %>% 
+      gsub(pattern = "/", replacement = "")
+  ) %>% 
+  
+  mutate(info = sprintf("[%s](%s#%s) (%s): %s", name_abbrev, layers_web, web_name, layer, description))
 ```
 
 
 ## Food Provision: Fisheries
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -43,18 +75,21 @@ download.file(file.path(short_goal_web, "FIS.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "FIS")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -64,6 +99,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Food Provision: Mariculture
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -79,18 +115,21 @@ download.file(file.path(short_goal_web, "MAR.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "MAR")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -100,6 +139,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Artisanal Fishing Opportunity 
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -116,18 +156,21 @@ download.file(file.path(short_goal_web, "AO.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "AO")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -137,6 +180,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Natural Products
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -153,18 +197,21 @@ download.file(file.path(short_goal_web, "NP.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "NP")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -174,6 +221,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Carbon Storage
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -189,18 +237,21 @@ download.file(file.path(short_goal_web, "CS.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "CS")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -209,6 +260,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Tourism & Recreation
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -224,18 +276,21 @@ download.file(file.path(short_goal_web, "TR.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "TR")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -244,6 +299,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Livelihoods & Economies: Livelihoods
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -259,18 +315,21 @@ download.file(file.path(short_goal_web, "LIV.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "LIV")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -280,6 +339,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Livelihoods & Economies: Economies
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -295,18 +355,21 @@ download.file(file.path(short_goal_web, "ECO.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "ECO")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -315,6 +378,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Sense of Place: Iconic Species
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -330,18 +394,21 @@ download.file(file.path(short_goal_web, "ICO.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "ICO")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -351,6 +418,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Sense of Place: Lasting Special Places
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -366,18 +434,21 @@ download.file(file.path(short_goal_web, "LSP.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "LSP")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -387,6 +458,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Clean Waters: Eutrophication
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -402,18 +474,21 @@ download.file(file.path(short_goal_web, "EUT.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "EUT")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -423,6 +498,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Clean Waters: Trash
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -438,18 +514,21 @@ download.file(file.path(short_goal_web, "TRA.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "TRA")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -459,6 +538,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Clean Waters: Contaminants
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -474,18 +554,21 @@ download.file(file.path(short_goal_web, "CON.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "CON")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
@@ -495,6 +578,7 @@ cat(paste(st$info, collapse = "\n\n"))
 ---- 
 
 ## Biodiversity
+<br>
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -510,18 +594,21 @@ download.file(file.path(short_goal_web, "BD.Rmd"), tmp)
 ### Data used in model
 
 **Status & trend**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "BD")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Pressure**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "pressures")
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
+
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
 st <- filter(st0, targets %in% "resilience")
 cat(paste(st$info, collapse = "\n\n"))
