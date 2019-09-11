@@ -12,7 +12,7 @@ layer_region_labels <- "rgn_labels"
 layer_region_areas <- "rgn_area"
 
 ## spatial configuration, to be used by shiny app and future ohicore mapping functions that use leaflet
-geojson <- "spatial/regions_gcs_simple2x.geojson"
+geojson <- "supplement/web/regions_gcs_simple2x.geojson"
 
 
 ## pressures & resilience matrices ----
@@ -21,18 +21,6 @@ geojson <- "spatial/regions_gcs_simple2x.geojson"
 ## these describe how to weight contribution of each element in calculation of pressure and resilience dimensions
 resilience_element <- NULL # for BHI no goals have elements currently
 pressures_element <- NULL # for BHI no goals have elements currently
-
-# resilience_element = list("NP"  = "np_harvest_product_weight",
-#                           "CS"  = "element_wts_cs_km2_x_storage",      # populated in CS() in functions.R
-#                           "CP"  = "element_wts_cp_km2_x_protection",   # populated in CP() in functions.R
-#                           "HAB" = "element_wts_hab_pres_abs")          # populated in HAB() in functions.R
-#
-# pressures_element  = list('NP'  = 'np_harvest_product_weight',
-#                           'CS'  = 'element_wts_cs_km2_x_storage',      # populated in CS() in functions.R
-#                           'CP'  = 'element_wts_cp_km2_x_protection',   # populated in CS() in functions.R
-#                           'LIV' = 'le_sector_weight',
-#                           'ECO' = 'le_sector_weight',
-#                           'HAB' = 'element_wts_hab_pres_abs')          # populated in CS() in functions.R
 
 
 ## constants for dimensions' relative importance ----
