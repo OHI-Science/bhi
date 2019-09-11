@@ -48,7 +48,7 @@ bhiprep_gh_api <- stringr::str_replace(
 bhi_db_file <- "/Users/eleanorecampbell/Desktop/bhi-config.sqlite" # for now... depends on local path to sqlite db...
 bhi_db_con <- DBI::dbConnect(RSQLite::SQLite(), bhi_db_file)
 
-dir_assess <- file.path(here::here(), "baltic"); dir_baltic <- file.path(here::here(), "baltic") # CHANGE BHI ASSESSMENT DIRECTORY HERE!
+dir_assess <- file.path(here::here(), "baltic") # CHANGE BHI ASSESSMENT DIRECTORY HERE!
 dir_prep <- file.path(dirname(here::here()), "bhi-prep", "prep")
 dir_test <- file.path(dir_assess, "testing")
 
