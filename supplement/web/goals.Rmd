@@ -70,7 +70,7 @@ download.file(file.path(short_goal_web, "FIS.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/FIS/v2019/fis_np_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/FIS/fis_np_prep.md)  
 
 ### Data used in model
 
@@ -110,7 +110,7 @@ download.file(file.path(short_goal_web, "MAR.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/MAR/v2019/mar_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/MAR/mar_prep.md)  
 
 ### Data used in model
 
@@ -151,7 +151,7 @@ download.file(file.path(short_goal_web, "AO.Rmd"), tmp)
 ``` 
 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/AO/v2019/ao_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/AO/ao_prep.md)  
 
 ### Data used in model
 
@@ -192,7 +192,7 @@ download.file(file.path(short_goal_web, "NP.Rmd"), tmp)
 ``` 
 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/NP/v2019/np_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/NP/np_prep.md)  
 
 ### Data used in model
 
@@ -232,7 +232,7 @@ download.file(file.path(short_goal_web, "CS.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/CS/v2019/cs_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CS/cs_prep.md)  
 
 ### Data used in model
 
@@ -271,7 +271,7 @@ download.file(file.path(short_goal_web, "TR.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/TR/v2019/tr_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/TR/tr_prep.md)  
 
 ### Data used in model
 
@@ -310,7 +310,7 @@ download.file(file.path(short_goal_web, "LIV.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/LIV/v2019/liv_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/LIV/liv_prep.md)  
 
 ### Data used in model
 
@@ -350,7 +350,7 @@ download.file(file.path(short_goal_web, "ECO.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/ECO/v2019/eco_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/ECO/eco_prep.md)  
 
 ### Data used in model
 
@@ -389,7 +389,7 @@ download.file(file.path(short_goal_web, "ICO.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/masterNA.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/ICO/ico_prep.md)  
 
 ### Data used in model
 
@@ -429,7 +429,7 @@ download.file(file.path(short_goal_web, "LSP.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/LSP/v2019/lsp_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/LSP/lsp_prep.md)  
 
 ### Data used in model
 
@@ -469,7 +469,7 @@ download.file(file.path(short_goal_web, "EUT.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/CW/eutrophication/v2019/eutrophication_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/eutrophication/eutrophication_prep.md)  
 
 ### Data used in model
 
@@ -509,7 +509,7 @@ download.file(file.path(short_goal_web, "TRA.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/CW/trash/v2019/tra_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/trash/tra_prep.md)  
 
 ### Data used in model
 
@@ -549,7 +549,7 @@ download.file(file.path(short_goal_web, "CON.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/CW/contaminants/v2019/contaminants_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/contaminants/contaminants_prep.md)  
 
 ### Data used in model
 
@@ -589,7 +589,7 @@ download.file(file.path(short_goal_web, "BD.Rmd"), tmp)
 ```{r, child = tmp, echo = FALSE, results = "asis"} 
 ``` 
 
-[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-prep/blob/master/prep/SPP/v2019/spp_prep.rmd)  
+[**Full data preparation information and code**](https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/SPP/spp_prep.md)  
 
 ### Data used in model
 
