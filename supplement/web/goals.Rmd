@@ -55,6 +55,9 @@ st0 <- layers_csv %>%
   ) %>% 
   
   mutate(info = sprintf("[%s](%s#%s) (%s): %s", name_abbrev, layers_web, web_name, layer, description))
+
+prs_matrix <- readr::read_csv(file.path(dir_assess, "conf", "pressures_matrix.csv"))
+res_matrix <- readr::read_csv(file.path(dir_assess, "conf", "resilience_matrix.csv"))
 ```
 
 
@@ -84,14 +87,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%
+  filter(goal == "FIS") %>% 
+  select_if(function(x) {!all(is.na(x))}) %>% 
+  select(-goal) %>% names()
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%
+  filter(goal == "FIS") %>% 
+  select_if(function(x) {!all(is.na(x))}) %>% 
+  select(-goal) %>% names()
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -124,14 +137,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>% 
+  filter(goal == "MAR") %>%
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "MAR") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -165,14 +188,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%   
+  filter(goal == "AO") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "AO") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -206,14 +239,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%   
+  filter(goal == "NP") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "NP") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -246,14 +289,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%   
+  filter(goal == "CS") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "CS") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names() 
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -285,14 +338,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%   
+  filter(goal == "TR") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "TR") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -324,14 +387,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%   
+  filter(goal == "LIV") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "LIV") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -364,14 +437,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%   
+  filter(goal == "ECO") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "ECO") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -403,14 +486,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>% 
+  filter(goal == "ICO") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "ICO") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -443,14 +536,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%   
+  filter(goal == "LSP") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "LSP") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -483,14 +586,23 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%   filter(goal == "EUT") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "EUT") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -523,14 +635,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%   
+  filter(goal == "TRA") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "TRA") %>%   
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -563,14 +685,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%   
+  filter(goal == "CON") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "CON") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names() 
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
@@ -603,14 +735,24 @@ cat(paste(st$info, collapse = "\n\n"))
 **Pressure**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "pressures")
+prs_lyr <- prs_matrix %>%   
+  filter(goal == "BD") %>%  
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names() 
+
+st <- filter(st0, targets %in% "pressures", layer %in% prs_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
 **Resilience**
 
 ```{r, echo = FALSE, warning = FALSE, error = FALSE, results = "asis"}
-st <- filter(st0, targets %in% "resilience")
+res_lyr <- res_matrix %>%   
+  filter(goal == "BD") %>%    
+  select_if(function(x) {!all(is.na(x))}) %>%    
+  select(-goal) %>% names()  
+
+st <- filter(st0, targets %in% "resilience", layer %in% res_lyr)
 cat(paste(st$info, collapse = "\n\n"))
 ``` 
 
