@@ -7,8 +7,10 @@ output: html_document
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
-source(file.path(here::here(), "R", "testing.R")) # testing.R sources common.R which creates dir_baltic
-setwd(file.path(dir_baltic, "testing", "describe_test"))
+source(file.path(here::here(), "R", "reconfiguring.R"))
+source(file.path(here::here(), "R", "calculating.R"))
+
+setwd(file.path(dir_assess, "testing", "describe_test")) # change 'describe_test' to whatever the scenario is named...
 ```
 
 
@@ -31,17 +33,18 @@ Pretty detailed description of what this test is all about, what kinds of data w
 ### Run Calculations
 
 ```{r configuring test and calculating alternative scores}
-test_path <- getwd() # set working directory to testing subdirectory in setup code chunk
-prep_path <- sprintf("%s%s", bhi_baltic, "-prep/prep")
-test_layers <- file.path(bhi_baltic, "testing", "alt_layers.csv") # testing.R sources common.R which creates dir_baltic
+test_layers <- file.path(bhi_assess, "testing", "alt_layers.csv")
 
-configure_functions(bhi_baltic) # write functions to use into functions.R
-configure_layers(bhi_baltic, prep_path, test_path)
+configure_functions(bhi_assess) # write functions to use into functions.R
+configure_layers(bhi_assess, dir_prep, dir_test)
+
+copy_lyrs_from_bhiprep(
+  bhi_assess, 
+  paste(bhiprep_gh_raw, "master", sep = "/")
+)
 
 ## calculate scores...
-repo_loc <- paste0(prep_repo_raw, "/master")
-copy_lyrs_from_bhiprep(bhi_baltic, repo_loc)
-calculate_scores(bhi_baltic, c(2015, 2018), scores_path = getwd())
+calculate_scores(bhi_assess, c(2015, 2018), scores_path = getwd())
 ```
 
 ### Visualization and Exploration or Results
