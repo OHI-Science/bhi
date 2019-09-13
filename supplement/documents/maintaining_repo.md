@@ -8,6 +8,12 @@
 
 ### Supplementary Documents
 
+**Website Documents & Updating**
+
+Found under the `web` subdirectory of the supplement folder (master branch) are a few documents which are actually related to the website. When rebuilding the website, the `goals.Rmd` and `layers.Rmd` are copied over to become `local_goals.Rmd` and `local_layers.Rmd` of the gh-pages branch, and knitted together as children of the `goals` and `layers` webpages. Keeping these versions in the master branch ....makes no sense and needs to be reconsidered ....or maybe the original reason for this is just lost on me?
+
+
+
 ### Other Materials in Supplement Subdirectories
 
 ### Documentation of Testing and other Analyses
