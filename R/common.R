@@ -177,7 +177,7 @@ compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_
   for(i in check_cols){ # there's probably a better way with purrr or apply funs...
     e <- list()
     m <- list()
-    for(j in keys){ # from stops above check_cols incl. key_row_var must be in both tabs
+    for(j in keys %>% unlist()){ # from stops above check_cols incl. key_row_var must be in both tabs
       e[[j]] <- setdiff(unique(tab2df[tab2df[key_row_var] == j, i]),
                         unique(tab1df[tab1df[key_row_var] == j, i]))
       m[[j]] <- setdiff(unique(tab1df[tab1df[key_row_var] == j, i]),
@@ -186,8 +186,15 @@ compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_
     comparisons$extra[[i]] <- e
     comparisons$missing[[i]] <- m
   }
-  diffs_found <- ifelse(length(c(unlist(missing), unlist(extra))) > 0, TRUE, FALSE)
-  return(list(diffs_found, checks, chk_na, comparisons))
+  diffs_found <- ifelse(length(c(unlist(comparisons$missing), unlist(comparisons$extra))) > 0, TRUE, FALSE)
+  return(
+    list(
+      diffs_found = diffs_found,
+      checks = checks,
+      chk_na = chk_na,
+      comparisons = comparisons
+    )
+  )
 }
 
 
