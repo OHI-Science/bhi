@@ -26,7 +26,7 @@ The framework facilitates [transparent and repeatable assessments](https://www.n
 
 <h3 style="font-weight:bold">  Quantifying status of the Baltic Sea </h3>
 
-The Baltic Health Index (BHI) is a regional study applying the OHI framework, The aim is to provide an integrative and transparent tool to be used by decision-makers to guide management of the Baltic Sea towards increased sustainability.
+The Baltic Health Index (BHI) is a regional study applying the OHI framework. The aim is to provide an integrative and transparent tool to be used by decision-makers to guide management of the Baltic Sea towards increased sustainability.
 
 In a first iteration, the BHI was adapted from previous OHI assessments [tailoring the OHI framework](https://peerj.com/articles/1503/) to represent the cultural, social, and ecological characteristics and priorities of Baltic using the best available information and knowledge.
 
