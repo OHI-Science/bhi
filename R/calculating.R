@@ -13,7 +13,7 @@ library(ohicore)
 #'
 #' @return OHI scores
 
-calculate_scores <- function(dir_assess, scenario_yrs, scores_path = "."){
+calculate_scores <- function(dir_assess, scenario_yrs, scores_path = ".", write_scores = TRUE){
 
   currentwd <- getwd()
   setwd(dir_assess)
@@ -31,15 +31,18 @@ calculate_scores <- function(dir_assess, scenario_yrs, scores_path = "."){
     print(sprintf("For assessment year %s", yr))
     layers$data$scenario_year <- yr
     scores_scenario_year <- ohicore::CalculateAll(conf, layers) %>%
-      dplyr::mutate(year = yr)}) %>%
+      dplyr::mutate(year = yr)
+    }) %>%
     dplyr::bind_rows()
 
   ## write csv by default to 'dir_assess'
-  readr::write_csv(
-    scorelist,
-    sprintf("%s/scores.csv", scores_path),
-    na = ""
-  )
+  if(is.TRUE(write_scores)){
+    readr::write_csv(
+      scorelist,
+      sprintf("%s/scores.csv", scores_path),
+      na = ""
+    )
+  }
 
   setwd(currentwd)
   return(scorelist)
