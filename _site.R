@@ -1,3 +1,4 @@
+## Libraries ----
 ## load any libraries needed across website pages
 suppressPackageStartupMessages({
   library(readr)
@@ -6,24 +7,57 @@ suppressPackageStartupMessages({
   library(tidyr)
   library(stringr)
   library(knitr)
+  library(httr)
   library(timevis)
   library(widgetframe)
   library(geojsonio)
   library(leaflet)
 })
 
-## brewed vars
-key <- "bhi"
-study_area <- "Baltic"
 
-## github paths...
-dir_gh <- "https://raw.githubusercontent.com/OHI-Science/bhi"
-dir_scenario_gh <- file.path(dir_gh, "master/baltic")
-dir_spatial_gh <- file.path(dir_gh, "master/spatial")
-dir_supplement_gh <- file.path(dir_gh, "master/supplement/web")
+## General ----
 
 ## knitr options for all webpages
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+key <- "bhi"
+study_area <- "Baltic"
+
+assess_year <- 2019 # CHANGE BHI ASSESSMENT YEAR HERE!
+rgn_ids_vec <- 1:42
+subbasin_ids_vec <- 501:517
+# projstringCRS <- raster::crs("+proj=longlat +datum=WGS84 +no_defs") # spatial data use lat/long coords on WGS84
+# filesep <- .Platform$file.sep
+
+bhi_gh <- "https://github.com/OHI-Science/bhi"
+bhiprep_gh <- "https://github.com/OHI-Science/bhi-prep"
+
+bhi_gh_raw <- stringr::str_replace(
+  bhi_gh,
+  pattern = "github.com",
+  replacement = "raw.githubusercontent.com"
+)
+bhiprep_gh_raw <- stringr::str_replace(
+  bhiprep_gh,
+  pattern = "github.com",
+  replacement = "raw.githubusercontent.com"
+)
+
+bhi_gh_api <- stringr::str_replace(
+  bhi_gh,
+  pattern = "github.com",
+  replacement = "api.github.com/repos"
+) %>% paste(
+  "git/trees/master?recursive=1", sep = "/"
+)
+bhiprep_gh_api <- stringr::str_replace(
+  bhiprep_gh,
+  pattern = "github.com",
+  replacement = "api.github.com/repos"
+) %>% paste(
+  "git/trees/master?recursive=1", sep = "/"
+)
+
 
 ## read in variables if they exist
 # scores_csv <- file.path(dir_scenario_gh, "scores.csv")
