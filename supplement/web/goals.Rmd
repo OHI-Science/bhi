@@ -8,7 +8,11 @@ output:
 <!-- source(file.path(here::here(), "R", "setup.R")) # not in code chunk because doesnt exist in gh-pages branch but need these objects/funcs/libs -->
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
-short_goal_web <- file.path(bhiprep_gh_raw, "master", "ref", "goal_summaries") # bhiprep_gh_raw defined in setup.R
+if(file.exists(file.path(here::here(), "R", "setup.R"))){
+  source(file.path(here::here(), "R", "setup.R"))
+} else if(file.exists(file.path(here::here(), "_site.R"))){
+  source(file.path(here::here(), "_site.R"))
+}
 # short_goal_web <- file.path(
 #   "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive",
 #   "draft/baltic2015", 

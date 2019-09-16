@@ -9,7 +9,11 @@ output:
 <!-- keep this top  'setup' chunk with the line underneath but delete the rest if regenerating/updating from 'make_layer_summaries' script -->
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
-short_layer_web <- file.path(bhiprep_gh_raw, "master", "ref", "layer_summaries") # bhiprep_gh_raw defined in setup.R
+if(file.exists(file.path(here::here(), "R", "setup.R"))){
+  source(file.path(here::here(), "R", "setup.R"))
+} else if(file.exists(file.path(here::here(), "_site.R"))){
+  source(file.path(here::here(), "_site.R"))
+}
 ```
 
 ---
