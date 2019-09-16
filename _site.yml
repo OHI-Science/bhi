@@ -12,15 +12,15 @@ navbar:
       icon:  far fa-map
       href:  regions.html
   right:
-    - text: "Who Are We"
-      href:  who_we_are.html
-      icon:  fa-user-friends
+#    - text: "Who Are We"
+#      href:  who_we_are.html
+#      icon:  fa-user-friends
     - text: "FAQ"
       icon:  fa-question-circle-o
       href:  faq.html
     - text:  "GitHub"
       icon:  fa-github
-      href:  https://github.com/OHI-Science/bhi-prep
+      href:  https://github.com/OHI-Science/bhi
 output_dir: "."
 output:
   html_document:
