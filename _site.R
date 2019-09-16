@@ -79,7 +79,7 @@ bhiprep_gh_api <- stringr::str_replace(
 # to_copy <- c()
 #
 # for(f in to_copy){
-  fp <- file.path(dir_supplement_gh, "goals.Rmd")
+  fp <- file.path(bhi_gh_raw, "master", "supplement", "web", "goals.Rmd")
 
   ## if the url exists, save a copy
   if(RCurl::url.exists(fp)){
