@@ -33,7 +33,7 @@ new_funs_dir <- file.path(new_repo, "testing", "alt_functions", "multiyear_v2015
 #' @param dummy_data_yr a 'placeholder' to include in the raw input while in order to test conversion;
 #' to be replaced with real years during subsequent data prep and assessment!
 #'
-#' @return list of outputs including: updated_layers, track_layers_added table, intermediate pressure and resilience matrices
+#' @return list of outputs including: updated_layers, track_layers_configured
 
 convert_repo <- function(consider_goal,
                          new_repo, archive_filepath,
@@ -67,18 +67,26 @@ convert_repo <- function(consider_goal,
 
   ## pressure and resilience layers to copy over and add to layers.csv
   layers_most_recent <- read_csv(file.path(new_repo, "layers.csv"), col_types = cols())
-  layers_added <- read_csv(file.path(new_repo, "temp", "track_layers_added.csv"), col_types = cols())
+  layers_added <- read_csv(file.path(new_repo, "temp", "track_layers_configured.csv"), col_types = cols())
 
-  press_res_lyrs <- c(
-    goal_press %>%
+  if(length(goal_press$goal) == 0){
+    goal_press_select <- c()
+  } else {
+    goal_press_select <- goal_press %>%
       select_if(!is.na(.)) %>%
       select(-goal) %>%
-      names(),
-    goal_res %>%
+      names()
+  }
+  if(length(goal_res$goal) == 0){
+    goal_res_select <- c()
+  } else {
+    goal_res_select <- goal_res %>%
       select_if(!is.na(.)) %>%
       select(-goal) %>%
-      names())
-  cat("pressure and resilience layers associated with this goal:\n",
+      names()
+  }
+  press_res_lyrs <- c(goal_res_select, goal_press_select)
+  cat("pressure and resilience layers associated with this goal (not including subgoals):\n",
       paste(press_res_lyrs, collapse = "\n"),
       sep = "")
 
@@ -122,6 +130,7 @@ convert_repo <- function(consider_goal,
     sep = ""
   )
 
+  new_repo_goallayers <- press_res_lyrs
   press_res_lyrs <- setdiff(intersect(press_res_lyrs, layers_most_recent$layer), layers_added$layer)
 
   ## update 'pressure_categories' and 'resilience_categories' to match updated/intermediate matrices
@@ -153,11 +162,14 @@ convert_repo <- function(consider_goal,
          value = TRUE) %>%
     c(press_res_lyrs) # include pressure and resilience layers;
 
+  new_repo_goallayers <- union(new_repo_goallayers, goal_specific_layers)
+
   ## initial inventory of layers to remove from or add to scenario_data_years table
   conf <- ohicore::Conf("conf")
   current_conf_scen_data_yrs <- conf$scenario_data_years
 
   ## WORK LAYER BY LAYER ----
+
   for(consider_lyr_nm in goal_specific_layers){ # consider_lyr_nm = goal_specific_layers[3]
 
     cat(sprintf("incorporating and/or reviewing '%s' layer for '%s' goal\n\n", consider_lyr_nm, consider_goal))
@@ -233,11 +245,11 @@ convert_repo <- function(consider_goal,
         added_w_goal = str_to_upper(consider_goal)
       )
 
-      track_layers_added <- read_csv(
-        file.path(new_repo, "temp", "track_layers_added.csv"),
+      track_layers_configured <- read_csv(
+        file.path(new_repo, "temp", "track_layers_configured.csv"),
         col_types = cols()) %>%
         rbind(track_layers_entry) # track_layers_added %>% filter(added_w_goal == str_to_upper(consider_goal))
-      write_csv(track_layers_added, file.path(new_repo, "temp", "track_layers_added.csv"))
+      write_csv(track_layers_configured, file.path(new_repo, "temp", "track_layers_configured.csv"))
 
     }
 
@@ -292,6 +304,18 @@ convert_repo <- function(consider_goal,
   write_csv(int_resilience_mat, file.path(new_repo, "conf", "resilience_matrix.csv"))
   write_csv(updated_prs_categ, file.path(new_repo, "conf", "pressure_categories.csv"))
   write_csv(updated_res_categ, file.path(new_repo, "conf", "resilience_categories.csv"))
+
+  track_layers_configured <- read_csv(
+    file.path(new_repo, "temp", "track_layers_configured.csv"),
+    col_types = cols())
+
+  return(
+    list(
+      updated_layers = updated_layers,
+      track_layers_configured = track_layers_configured,
+      new_repo_goallayers = new_repo_goallayers
+    )
+  )
 }
 
 ## END FUNCTION
@@ -301,20 +325,22 @@ convert_repo <- function(consider_goal,
 
 ## WORK GOAL BY GOAL ----
 goals_completed <- c()
+list_goallayers <- list()
 for(consider_goal in goal_code_list_archive){
 
   ## goals layers and config ----
-  convert_repo(
+  result <- convert_repo(
     consider_goal,
     new_repo, archive_filepath,
     scenario_yrs = 2015:2018, dummy_data_yr = 2014
   )
   goals_completed = c(goals_completed, consider_goal)
+  list_goallayers[[consider_goal]] <- result$new_repo_goallayers
 
   ## transition goal function ----
   ## copy goal subscript to functions.R main script
 
-  ## in loop so can see if/where breaks...
+  ## in loop so can see if/where breaks, which goal...
 
   old_funs <- grep(
     list.files(original_funs_dir, full.names = TRUE) %>%
@@ -349,46 +375,93 @@ for(consider_goal in goal_code_list_archive){
   } else {
     stop(sprintf("new function for goal %s not found...", str_to_upper(consider_goal)))
   }
+
+
 }
+## check all goals were successfully converted
+goal_code_list_archive
+goals_completed
 
 
 ## FINAL STEPS ----
-## remove from layers folder, layer.csv, and scenario_data_years everything not used by functions.R
-## edit conf/config.R file as needed
-## review: pressure and resilience matrices and categories, scenario_data_years, track_layers_added.csv and layers.csv
-## run calculate scores to check result and compare to original scores
+
+## review: pressure and resilience matrices and categories
+## remove from pressure and resilience files goals not used (hab and cp for bhi)
+## then check by comparing archived tables with ones in new/configured repo
+pressure_mat <- read_csv(
+  file.path(new_repo, "conf", "pressures_matrix.csv"),
+  col_types = cols()
+) %>% filter(!goal %in% c("HAB", "CP"))
+write_csv(pressure_mat, file.path(new_repo, "conf", "pressures_matrix.csv"))
+
+resilience_mat <- read_csv(
+  file.path(new_repo, "conf", "resilience_matrix.csv"),
+  col_types = cols(.default = "c")
+) %>% filter(!goal %in% c("HAB", "CP"))
+write_csv(resilience_mat, file.path(new_repo, "conf", "resilience_matrix.csv"))
 
 prs_tab0 <- read_csv(file.path(archive_filepath, "conf", "pressures_matrix.csv"))
 chk_prs <- compare_tabs(
-  prs_tab0, int_pressure_mat, key_row_var = "goal",
+  prs_tab0,
+  pressure_mat,
+  key_row_var = "goal",
   check_cols = setdiff(names(prs_tab0), c("goal", "element", "element_name"))
 )
 res_tab0 <- read_csv(file.path(archive_filepath, "conf", "resilience_matrix.csv"))
 chk_res <- compare_tabs(
-  res_tab0, int_pressure_mat, key_row_var = "goal",
+  res_tab0,
+  resilience_mat,
+  key_row_var = "goal",
   check_cols = setdiff(names(res_tab0), c("goal", "element", "element_name"))
 )
+## chk_extra_key SPP ('BD' for BHI has only BD no subgoals HAB or SPP)
+chk_prs$checks
+chk_res$checks
 
+## remove extra rows and also columns filled with NAs
+pressure_mat <- pressure_mat %>%
+  filter(!goal %in% c("SPP")) %>%
+  select_if(function(x) {!all(is.na(x))})
+write_csv(pressure_mat, file.path(new_repo, "conf", "pressures_matrix.csv"))
+resilience_mat <- resilience_mat %>%
+  filter(!goal %in% c("SPP")) %>%
+  select_if(function(x) {!all(is.na(x))})
+write_csv(resilience_mat, file.path(new_repo, "conf", "resilience_matrix.csv"))
+
+
+## remove from layers folder, layer.csv, and scenario_data_years everything not used
+lyrs <- list_goallayers %>% unlist() %>% unique()
+lyrs_csv <- readr::read_csv(file.path(new_repo, "layers.csv"))
+## layers.csv
+lyrs_csv_final <- lyrs_csv %>%
+  filter(layer %in% lyrs) %>%
+  rbind(filter(lyrs_csv, str_detect(layer, "rgn_")))
+write_csv(lyrs_csv_final, file.path(new_repo, "layers.csv"))
+## layers folder
+remove_lyrs <- setdiff(list.files(file.path(new_repo, "layers")), lyrs_csv_final$filename)
+file.remove(file.path(new_repo, "layers", remove_lyrs))
+## scenario data years
+scendata_yrs_final <- readr::read_csv(file.path(new_repo, "conf", "scenario_data_years.csv")) %>%
+  filter(layer_name %in% lyrs_csv_final$layer)
+write_csv(scendata_yrs_final, file.path(new_repo, "conf", "scenario_data_years.csv"))
+
+
+## edit conf/config.R file as needed
+
+## run calculate scores to check result and compare to original scores
 ## full run-through with with layers and conf both from bhi repo
 ## then re-create conf object based on the current bhi/conf folder, so scenario_data_year field updates
 
-temp_dir <- file.path(base_path, "bhi", "baltic", "temp") # temp directory to sink and save error-checking tables to
-
-layers <- ohicore::Layers("layers.csv", "layers")
-conf <- ohicore::Conf("conf")
-ohicore::CheckLayers("layers.csv", "layers", flds_id=conf$config$layers_id_fields)
-scenario_yrs <- 2015
-
-scorelist <- lapply(scenario_yrs, function(yr){
-  layers$data$scenario_year <- yr # layers$data$scenario_year <- scenario_yrs[1]
-  scores_scenario_year <- ohicore::CalculateAll(conf, layers) %>%
-    dplyr::mutate(year = yr)}) %>% dplyr::bind_rows()
-
+temp_dir <- file.path(dir_assess, "temp") # to sink and save error-checking tables to
+scores_test <- calculate_scores(dir_assess, 2015, write_scores = FALSE)
 v2015scores <- read_csv(file.path(archive_filepath, "scores.csv")) %>% mutate(year = 2015)
-tmp <- compare_scores(scorelist, 2015,
-                      v2015scores, 2015,
-                      dim = c("status", "pressures", "resilience"),
-                      goal = c("FP", "FIS", "MAR")) ## what's causing differences???
+
+tmp <- compare_scores(
+  scorelist, 2015,
+  v2015scores, 2015,
+  dim = c("status", "pressures", "resilience"),
+  goal = c("FP", "FIS", "MAR")
+)
 ggplotly(tmp[[1]])
 tmp[[2]]
 

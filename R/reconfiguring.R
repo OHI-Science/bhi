@@ -148,7 +148,7 @@ configure_layers <- function(dir_assess, dir_prep, dir_test){
 #' after checking registration against layers object created by ohicore::Layers
 #' written originally/mostly for setting up bhi multiyear assessments repo from the archived repo...
 #'
-#' @param lyr_obj a layers object created with ohicore::Layers,
+#' @param layers_object a layers object created with ohicore::Layers,
 #' for the repo assessment folder to reconfigure, not the archived version
 #' @param lyr_file file path to where layer data file is located,
 #' including the name of the csv file itself to be incorporated into bhi layers object
@@ -270,11 +270,27 @@ configure_functions <- function(dir_assess, test_funs_list = NULL){
   }
 
   sink(file = functionsR_path, append = FALSE) # overwrite functions.R with first function
-  cat(scan(file = fun_scripts_lst[[1]][1], what = "character", sep = "\n"), sep = "\n")
+  cat(
+    scan(
+      file = fun_scripts_lst[[1]][1],
+      what = "character",
+      sep = "\n",
+      blank.lines.skip = FALSE
+    ),
+    sep = "\n"
+  )
 
   sink(file = functionsR_path, append = TRUE) # append subsequent functions
   for(i in fun_scripts_lst[[1]][-1]){
-    cat(scan(file = i, what = "character", sep = "\n"), sep = "\n")
+    cat(
+      scan(
+        file = i,
+        what = "character",
+        sep = "\n",
+        blank.lines.skip = FALSE
+      ),
+      sep = "\n"
+    )
   }
   closeAllConnections() # stop the sinking
 
@@ -306,11 +322,10 @@ configure_functions <- function(dir_assess, test_funs_list = NULL){
         is.na(preindex_function) & !is.na(index_fun),
         paste0(goal, index_fun),
         NA)) %>%
-    filter(!(is.na(preindex_function) & is.na(postindex_function)))
+    filter(!(is.na(preindex_function) & is.na(postindex_function))) %>%
+    select(-index_fun)
 
-
-
-
+  write_csv(int_goals_csv, file.path(dir_assess, "conf", "goals.csv"))
 }
 
 
