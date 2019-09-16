@@ -11,12 +11,12 @@ source("_site.R")
 
 Regions are the fundamental spatial units of analysis for the Ocean Health Index. Scores are calculated for each region individually and then combined (with an offshore area-weighted average) to produce scores for the entire Baltic Sea.  
 
-**There are 42 BHI regions in the Baltic Sea.**
+**There are 42 BHI regions in the Baltic Sea.** These were created by intersecting exclusive economnic zones (EEZs) with the Baltic Sea subbasins.
 
 ```{r, echo = FALSE}
 
 ## check config.R for spatial plotting variables/objects
-config <- readr::read_lines(file.path(dir_gh, "master/baltic/conf/config.R")) %>% 
+config <- readr::read_lines(file.path(bhi_gh_raw, "master/baltic/conf/config.R")) %>% 
   grep(pattern = "^#{1,2}\\s", value = TRUE, invert = TRUE) %>% 
   grep(pattern = "[a-zA-Z0-9].*", value = TRUE) %>% 
   str_replace_all(pattern = "\\\"", replacement = "'")
@@ -25,12 +25,15 @@ if(!any(str_detect(config, pattern = "geojson <- "))){
   stop(sprintf("missing geojson path variable at %s/conf/config.R", dir_scenario_gh))
 }
 
+"https://raw.githubusercontent.com/OHI-Science/bhi/master/supplement/web/regions_gcs_simple2x.geojson"
+
 ## read spatial
 geojson <- file.path(
-    dir_spatial_gh, 
+    bhi_gh_raw, 
+    "master",
     config %>% 
       grep(pattern = "geojson <- ", value = TRUE) %>% 
-      str_extract("[a-zA-Z0-9_]+.geojson"))
+      str_extract("[a-zA-Z0-9_/]+.geojson"))
 
 rgns <- geojsonio::geojson_read(geojson, what = "sp")
 if("rgn_nam" %in% names(rgns@data) & !"rgn_name" %in% names(rgns@data)){
@@ -41,13 +44,21 @@ if("rgn_nam" %in% names(rgns@data) & !"rgn_name" %in% names(rgns@data)){
 
 ```{r}
 ## create and render leaflet map
-leaflet() %>%
-  addProviderTiles("Stamen.TonerLite") %>%
+leaflet::leaflet(data = rgns) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  setView(18, 59, zoom = 5) %>%
   addPolygons(
-    data = rgns, 
     layerId = ~rgn_id,
     stroke = TRUE, opacity = 0.5, weight = 2, fillOpacity = 0.5, smoothFactor = 0.5,
     color = ~colorNumeric("royalblue3", rgns$rgn_id)(rgn_id)) %>%
+  addPolygons(
+    layerId = ~rgn_id,
+    popup = paste("<h5><strong>", "Region:", "</strong>",
+                  rgns@data$rgn_nam,"</h5>",
+                  "<h5><strong>", "Region BHI ID:", "</strong>", rgns@data$rgn_id, "</h5>"),
+    fillOpacity = 0,
+    stroke = FALSE
+  ) %>% 
   htmlwidgets::onRender("
   function(el, t) {
     var defaultStyle = {
