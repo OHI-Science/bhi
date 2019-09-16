@@ -6,7 +6,21 @@ output:
     toc_float: true
 ---
 
+<style>
+  .col2 {
+    columns: 2 200px;
+    -webkit-columns: 2 200px; /* chrome, safari */
+    -moz-columns: 2 200px;   /* firefox */
+  }
+</style>
+
 ---
 
-
 Stuff about data layers...
+
+---
+
+<!-- ```{r, child = "local_layers.Rmd"} -->
+
+<!-- ``` -->
+
