@@ -5,8 +5,9 @@ output:
     toc_float: true
 ---
 
+<!-- source(file.path(here::here(), "R", "setup.R")) # not in code chunk because doesnt exist in gh-pages branch but need these objects/funcs/libs -->
+
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
-source(file.path(here::here(), "R", "setup.R"))
 short_goal_web <- file.path(bhiprep_gh_raw, "master", "ref", "goal_summaries") # bhiprep_gh_raw defined in setup.R
 # short_goal_web <- file.path(
 #   "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive",
@@ -66,8 +67,12 @@ st0 <- layers_csv %>%
   
   mutate(info = sprintf("[%s](%s#%s) (%s): %s", name_abbrev, layers_web, web_name, layer, description))
 
-prs_matrix <- readr::read_csv(file.path(dir_assess, "conf", "pressures_matrix.csv"))
-res_matrix <- readr::read_csv(file.path(dir_assess, "conf", "resilience_matrix.csv"))
+prs_matrix <- readr::read_csv(file.path(
+  "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/",
+  "baltic2015/conf/pressures_matrix.csv"))
+res_matrix <- readr::read_csv(file.path(
+  "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/",
+  "baltic2015/conf/resilience_matrix.csv"))
 ```
 
 
