@@ -22,7 +22,6 @@ sp_invasives,ecological,alien_species
 cc_sal_surf,ecological,climate_change
 cc_sal_deep,ecological,climate_change
 cc_sst,ecological,climate_change
-fp_over_harvest,ecological,fishing_pressure
 hab_anoxia,ecological,habitat_destruction
 hab_illegal_oil,ecological,habitat_destruction
 hab_bottom_trawl,ecological,habitat_destruction
@@ -32,3 +31,4 @@ po_pload,ecological,pollution
 po_inverse_secchi,ecological,pollution
 po_trash,ecological,pollution
 ss_wgi,social,social
+fp_over_harvest,ecological,fishing_pressure
