@@ -5,10 +5,10 @@ output:
     toc_float: true
 ---
 
+<!-- source(file.path(here::here(), "R", "setup.R")) # not in code chunk because doesnt exist in gh-pages branch but need these objects/funcs/libs -->
 <!-- keep this top  'setup' chunk with the line underneath but delete the rest if regenerating/updating from 'make_layer_summaries' script -->
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
-source(file.path(here::here(), "R", "setup.R"))
 short_layer_web <- file.path(bhiprep_gh_raw, "master", "ref", "layer_summaries") # bhiprep_gh_raw defined in setup.R
 ```
 
