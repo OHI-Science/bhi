@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="css/extra.css" type="text/css" />
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 45px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h2 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h3 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h4 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h5 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h6 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BALTIC HEALTH INDEX</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="goals.html">
+    <span class="fas fa fas fa-tachometer-alt"></span>
+     
+    Goals
+  </a>
+</li>
+<li>
+  <a href="layers.html">
+    <span class="fa fa-database"></span>
+     
+    Data Layers
+  </a>
+</li>
+<li>
+  <a href="regions.html">
+    <span class="far fa far fa-map"></span>
+     
+    Regions
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="faq.html">
+    <span class="fa fa-question-circle-o"></span>
+     
+    FAQ
+  </a>
+</li>
+<li>
+  <a href="https://github.com/OHI-Science/bhi">
+    <span class="fa fa-github"></span>
+     
+    GitHub
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+
+</div>
+
+
+<!-- source(file.path(here::here(), "R", "setup.R")) # not in code chunk because doesnt exist in gh-pages branch but need these objects/funcs/libs -->
+<!-- keep this top  'setup' chunk with the line underneath but delete the rest if regenerating/updating from 'make_layer_summaries' script -->
+<hr />
+<!-- delete anything below hereif regenerating/updating from 'make_layer_summaries' script  -->
+<div id="slope-of-coastal-fish-stocks" class="section level3">
+<h3>Slope Of Coastal Fish Stocks</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/ao_stock_slope_bhi2015.csv">ao_stock_slope</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: AO</em><br />
+<br></p>
+<p>Mean slopes of all monitoring time series used for HELCOM core indicators for coastal fish populations<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/AO/ao_prep.md"><strong>AO prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="status-of-coastal-fish-stocks" class="section level3">
+<h3>Status Of Coastal Fish Stocks</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/ao_stock_status_bhi2015.csv">ao_stock_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: AO</em><br />
+<br></p>
+<p>HELCOM core indicators for coastal fish populations<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/AO/ao_prep.md"><strong>AO prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="bd-statusbased-on-species-biodiversity" class="section level3">
+<h3>Bd Statusbased On Species Biodiversity</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/bd_spp_status_bhi2015.csv">bd_spp_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: BD</em><br />
+<br></p>
+<p>HELCOM species distributions from HELCOM species checklists and threat level based upon IUCN red list criteria. Data sources: - <a href="http://www.helcom.fi/baltic-sea-trends/biodiversity/red-list-of-species">HELCOM</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/BD/bd_prep.md"><strong>BD prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="bd-trend-taken-from-ohi-global-2016-for-baltic-countries" class="section level3">
+<h3>Bd Trend Taken From Ohi-Global 2016 For Baltic Countries</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/bd_spp_trend_scores_bhi2015.csv">bd_spp_trend</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: BD</em><br />
+<br></p>
+<p>See goal description above or data prep documents for more information.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/BD/bd_prep.md"><strong>BD prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="current-deep-water-salinity" class="section level3">
+<h3>Current Deep Water Salinity</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cc_sal_deep_bhi2015.csv">cc_sal_deep</a><br />
+<em>Units: pressure score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Pressure</em><br />
+<em>Goal Targets: Pressures</em><br />
+<br></p>
+<p>Modelled annual deep water (depth differs by basin) salinity using the BALTSEM model, Future projections force by the ECHAM5 global climate model A1b scenario.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="current-surface-salinity-water-rescaled-between-historic-max-and-future-min" class="section level3">
+<h3>Current Surface Salinity Water Rescaled Between Historic Max And Future Min</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cc_sal_surf_bhi2015.csv">cc_sal_surf</a><br />
+<em>Units: pressure score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Pressure</em><br />
+<em>Goal Targets: Pressures</em><br />
+<br></p>
+<p>Modelled annual surface water (0-5 m) salinity using the BALTSEM model, Future projections force by the ECHAM5 global climate model A1b scenario.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="current-sea-surface-temperature" class="section level3">
+<h3>Current Sea Surface Temperature</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cc_sst_bhi2015.csv">cc_sst</a><br />
+<em>Units: pressure score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Pressure</em><br />
+<em>Goal Targets: Pressures</em><br />
+<br></p>
+<p>Modelled Jul-Aug SST using the BALTSEM model, Future projections force by the ECHAM5 global climate model A1b scenario.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="status-of-cs" class="section level3">
+<h3>Status Of Cs</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cs_status_bhi2015.csv">cs_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CS</em><br />
+<br></p>
+<p>Status of CS based on HELCOM Zostera spatial data &amp; carbon storage capacity<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CS/cs_prep.md"><strong>CS prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="coastal-human-population" class="section level3">
+<h3>Coastal Human Population</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_coastalpopn_trend_gl2014.csv">cw_coastalpopn_trend</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Coastal population, defined as the total population inland of 25 miles, extracted from Gridded Population of the World (GPW) Population Density Grid Future Estimates. Data sources: - Center for International Earth Science Information Network (CIESIN)/Columbia University</p>
+<ul>
+<li>CIESIN &amp; CIAT (Center for International Earth Science Information Network (CIESIN)/Columbia University, &amp; Centro Internacional de Agricultura Tropical (CIAT)) (2005). <strong>Gridded Population of the World, Version 3 (GPWv3): Population Density Grid, Future Estimates</strong>. Palisades, NY. <a href="http://sedac.ciesin.columbia.edu/data/set/gpw-v3-population-density-future-estimates">NASA Socioeconomic Data and Applications Center (SEDAC)</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></li>
+</ul>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="status-of-dioxin-and-dioxin-like-pcb-indicator" class="section level3">
+<h3>Status Of Dioxin And Dioxin-Like Pcb Indicator</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_con_dioxin_status_bhi2015.csv">cw_con_dioxin_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Status calculated only for most recent period (2009-2013) for each HOLAS basin and applied to all BHI regions<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="trend-of-dioxin-and-dioxin-like-pcb-indicator" class="section level3">
+<h3>Trend Of Dioxin And Dioxin-Like Pcb Indicator</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_con_dioxin_trend_bhi2015.csv">cw_con_dioxin_trend</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Trend calculated on basin time series (2004-2013) with each observation first transformed to a ?status? based on the human health threshold. Basin trends applied to BHI regions<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="status-of-ices6-con-indicatorbased-on-the-ices6-pcbs" class="section level3">
+<h3>Status Of Ices6 Con Indicatorbased On The Ices6 Pcbs</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_con_ices6_status_bhi2015.csv">cw_con_ices6_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Status calculated only for most recent period (2009-2013) for each HOLAS basin and applied to all BHI regions<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="trend-of-ices6-con-indicatorbased-on-the-ices6-pcbs" class="section level3">
+<h3>Trend Of Ices6 Con Indicatorbased On The Ices6 Pcbs</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_con_ices6_trend_bhi2015.csv">cw_con_ices6_trend</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Trend calculated on basin time series (2004-2013) with each observation first transformed to a ?status? based on the human health threshold. Basin trends applied to BHI regions<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="penalty-factor-for-con" class="section level3">
+<h3>Penalty Factor For Con</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_con_penalty_bhi2015.csv">cw_con_penalty</a><br />
+<em>Units: penalty factor</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Penalty factor for measuring only a percentage of identified toxins<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="status-of-pfos-contaminants-indicator" class="section level3">
+<h3>Status Of Pfos Contaminants Indicator</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_con_pfos_status_bhi2015.csv">cw_con_pfos_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Status calculated only for most recent period (2010-2014) for each HOLAS basin and applied to all BHI regions<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="trend-of-pfos-contaminants-indicator" class="section level3">
+<h3>Trend Of Pfos Contaminants Indicator</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_con_pfos_trend_bhi2015.csv">cw_con_pfos_trend</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Trend calculated on basin times series (2005-2015) for each HOLAS basin and applied to all BHI regions<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="status-of-eut" class="section level3">
+<h3>Status Of Eut</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_eut_status_score_bhi2015.csv">cw_eut_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Status of eutrophication subgoal based on DIN, DIP, Chla, Secchi, and anoxia data<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="trend-of-eut" class="section level3">
+<h3>Trend Of Eut</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_eut_trend_score_bhi2015.csv">cw_eut_trend</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Trend of eutrofication subgoal based on DIN, DIP, Chla, Secchi, and anoxia data<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="status-of-trash" class="section level3">
+<h3>Status Of Trash</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_trash_status_scores_bhi2015.csv">cw_tra_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Status of Trash<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="trend-of-trash" class="section level3">
+<h3>Trend Of Trash</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/cw_tra_trend_scores_bhi2015.csv">cw_tra_trend</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: CW</em><br />
+<br></p>
+<p>Trend of Trash based on status of 2010 and 2015<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/CW/cw_prep.md"><strong>CW prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="status-of-eco" class="section level3">
+<h3>Status Of Eco</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/eco_status_scores_bhi2015.csv">eco_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: ECO</em><br />
+<br></p>
+<p>Status of economics based on revenue from different blue sectors from EU’s Blue Growth Report<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/ECO/eco_prep.md"><strong>ECO prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="trend-of-eco" class="section level3">
+<h3>Trend Of Eco</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/eco_trend_scores_bhi2015.csv">eco_trend</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: ECO</em><br />
+<br></p>
+<p>Trend of economics based on GDP per capita in the BHI regions compared with country-level GDP per capita<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/ECO/eco_prep.md"><strong>ECO prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="bbmsy-by-stock-and-year" class="section level3">
+<h3>B/Bmsy By Stock And Year</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/fis_bbmsy_bhi2015.csv">fis_bbmsy</a><br />
+<em>Units: metric score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: FIS</em><br />
+<br></p>
+<p>ICES Bmsy. Data sources:<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/FIS/fis_prep.md"><strong>FIS prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="ffmsy-by-stock-and-year" class="section level3">
+<h3>F/Fmsy By Stock And Year</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/fis_ffmsy_bhi2015.csv">fis_ffmsy</a><br />
+<em>Units: metric score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: FIS</em><br />
+<br></p>
+<p>ICES Fmsy. Data sources:<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/FIS/fis_prep.md"><strong>FIS prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="landings-by-stock-and-year" class="section level3">
+<h3>Landings By Stock And Year</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/fis_landings_bhi2015.csv">fis_landings</a><br />
+<em>Units: metric tons</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: FIS</em><br />
+<br></p>
+<p>Annual Landings by ICES area and stock. Data sources: -ICES<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/FIS/fis_prep.md"><strong>FIS prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="fisheries-weighting-factor" class="section level3">
+<h3>Fisheries Weighting Factor</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/fp_wildcaught_weight_bhi2015.csv">fp_wildcaught_weight</a><br />
+<em>Units: value</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: FP</em><br />
+<br></p>
+<p>Proportion of wild caught fisheries yield to mariculture yield, based in ICES area landings used in FIS and mariculture production of rainbow trout used in MAR.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/FP/fp_prep.md"><strong>FP prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="bottom-oxygen-level-mg_l_1" class="section level3">
+<h3>Bottom Oxygen Level (Mg_l_1)</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/hab_anoxia_bhi2015.csv">hab_anoxia</a><br />
+<em>Units: pressure score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Pressure</em><br />
+<em>Goal Targets: Pressures</em><br />
+<br></p>
+<p>From <a href="http://www.pnas.org/content/111/15/5628.abstract">Carstensen et al. 2014</a>. Carstensen provided dbf files containing O2 (mg_L_1) for a series of years for the Baltic Proper and the Gulf of Finland. Other areas are not included in this study but at the present time have no anoxia problems - therefore they will recieve a pressure value of 0. Data scaled between 0 and 1.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="ico-spp-status" class="section level3">
+<h3>Ico Spp Status</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/ico_status_bhi2015.csv">ico_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: ICO</em><br />
+<br></p>
+<p>HELCOM species distributions and threat level based upon IUCN red list criteria. Data sources: - <a href="http://www.helcom.fi/baltic-sea-trends/biodiversity/red-list-of-species">HELCOM</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/ICO/ico_prep.md"><strong>ICO prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="national-per-capita-gdp" class="section level3">
+<h3>National Per Capita Gdp</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/le_gdp_country_bhi2015.csv">le_gdp_country</a><br />
+<em>Units: mio euro per capita</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: ECO</em><br />
+<br></p>
+<p>Gross Domestic Product (GDP) data (nominal values) from Eurostat. Data sources: - <a href="http://ec.europa.eu/eurostat/data/database?p_auth=sHLAepWT&amp;p_p_id=estatsearchportlet_WAR_estatsearchportlet&amp;p_p_lifecycle=1&amp;p_p_state=maximized&amp;p_p_mode=view&amp;_estatsearchportlet_WAR_estatsearchportlet_action=search&amp;text=nama_10_gdp">Eurostat</a></p>
+<p><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/ECO/eco_prep.md"><strong>ECO prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="per-capita-gdp-per-bhi-region" class="section level3">
+<h3>Per Capita Gdp Per Bhi Region</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/le_gdp_region_bhi2015.csv">le_gdp_region</a><br />
+<em>Units: mio euro per capita</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: ECO</em><br />
+<br></p>
+<p>Gross Domestic Product (GDP) data (nominal values) from Eurostat. Data sources: - <a href="http://ec.europa.eu/eurostat/data/database?p_auth=EgN81qAf&amp;p_p_id=estatsearchportlet_WAR_estatsearchportlet&amp;p_p_lifecycle=1&amp;p_p_state=maximized&amp;p_p_mode=view&amp;_estatsearchportlet_WAR_estatsearchportlet_action=search&amp;text=nama_10r_3gdp">Eurostat</a></p>
+<p><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/ECO/eco_prep.md"><strong>ECO prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="number-of-people-employed-nationally" class="section level3">
+<h3>Number Of People Employed Nationally</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/liv_national_employ_bhi2015.csv">liv_national_employ</a><br />
+<em>Units: number people employed</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: LIV</em><br />
+<br></p>
+<p>Employment percentage by eutS0 region from Eurostat. Data sources: - <a href="http://ec.europa.eu/eurostat/data/database?p_auth=BgwyNWIM&amp;p_p_id=estatsearchportlet_WAR_estatsearchportlet&amp;p_p_lifecycle=1&amp;p_p_state=maximized&amp;p_p_mode=view&amp;_estatsearchportlet_WAR_estatsearchportlet_action=search&amp;text=lfst_r_lfe2emprt">Eurostat database lfst_r_lfe2emprt</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/LIV/liv_prep.md"><strong>LIV prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="number-of-people-employed-in-each-bhi-region-25km-buffer" class="section level3">
+<h3>Number Of People Employed In Each Bhi Region 25km Buffer</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/liv_regional_employ_bhi2015.csv">liv_regional_employ</a><br />
+<em>Units: number people employed</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: LIV</em><br />
+<br></p>
+<p>Employment percentage by eutS2 region from Eurostat. Data sources: - <a href="http://ec.europa.eu/eurostat/data/database?p_auth=BgwyNWIM&amp;p_p_id=estatsearchportlet_WAR_estatsearchportlet&amp;p_p_lifecycle=1&amp;p_p_state=maximized&amp;p_p_mode=view&amp;_estatsearchportlet_WAR_estatsearchportlet_action=search&amp;text=lfst_r_lfe2emprt">Eurostat database lfst_r_lfe2emprt</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/LIV/liv_prep.md"><strong>LIV prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="status-of-livelihood" class="section level3">
+<h3>Status Of Livelihood</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/liv_status_scores_bhi2015.csv">liv_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: LIV</em><br />
+<br></p>
+<p>LIV status calculated in LIV data prep based on ratio of coastal/national employment rate.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/LIV/liv_prep.md"><strong>LIV prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="trend-of-livelihood" class="section level3">
+<h3>Trend Of Livelihood</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/liv_trend_score_bhi2015.csv">liv_trend</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: LIV</em><br />
+<br></p>
+<p>LIV trend calculated in data prep. Based on most recent five years’ status scores.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/LIV/liv_prep.md"><strong>LIV prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="status-scores-of-lsp" class="section level3">
+<h3>Status Scores Of Lsp</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/lsp_status_by_rgn_bhi2015.csv">lsp_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: LSP</em><br />
+<br></p>
+<p>Status calcluated<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/LSP/lsp_prep.md"><strong>LSP prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="trend-of-lsp" class="section level3">
+<h3>Trend Of Lsp</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/lsp_trend_bhi2015.csv">lsp_trend</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: LSP</em><br />
+<br></p>
+<p>See goal description above or data prep documents for more information.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/LSP/lsp_prep.md"><strong>LSP prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="coastal-population-inland-25-kilometers" class="section level3">
+<h3>Coastal Population Inland 25 Kilometers</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/mar_coastalpopn2005_inland25km_bhi2015.csv">mar_coastalpopn2005_inland25km</a><br />
+<em>Units: people</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: MAR</em><br />
+<br></p>
+<p>Coastal 25 km buffer population, from 2005. Source HYDE<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/MAR/mar_prep.md"><strong>MAR prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="mariculture-species-harvested" class="section level3">
+<h3>Mariculture Species Harvested</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/mar_harvest_species_bhi2015.csv">mar_harvest_species</a><br />
+<em>Units: species name</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: MAR</em><br />
+<br></p>
+<p>Mariculture species harvested, from national databases<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/MAR/mar_prep.md"><strong>MAR prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="mariculture-harvest" class="section level3">
+<h3>Mariculture Harvest</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/mar_harvest_tonnes_bhi2015.csv">mar_harvest_tonnes</a><br />
+<em>Units: tons</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: MAR</em><br />
+<br></p>
+<p>Mariculture harvest<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/MAR/mar_prep.md"><strong>MAR prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="mariculture-sustainability-score" class="section level3">
+<h3>Mariculture Sustainability Score</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/mar_sustainability_score_bhi2015.csv">mar_sustainability_score</a><br />
+<em>Units: sustainability</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: MAR</em><br />
+<br></p>
+<p>Mariculture sustainability and mariculture regulations indicated by the Mariculture Sustainability Index (MSI). Data sources: - Trujillo P. (2008). <strong>Using a mariculture sustainability index to rank countries performances</strong>. In: A comparative assessment of biodiversity, fisheries and aquaculture in 53 countries Exclusive Economic Zones, Alder J, Pauly D, editors. <em>Fisheries Centre Research Report</em>, vol. 16(7) p. 2856.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/MAR/mar_prep.md"><strong>MAR prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="bbmsy-by-stock-and-year-of-sprat" class="section level3">
+<h3>B/Bmsy By Stock And Year Of Sprat</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/np_bbmsy_bhi2015.csv">np_bbmsy</a><br />
+<em>Units: metric score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: NP</em><br />
+<br></p>
+<p>ICES Bmsy. Data sources:<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/NP/np_prep.md"><strong>NP prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="ffmsy-by-stock-and-year-of-sprat" class="section level3">
+<h3>F/Fmsy By Stock And Year Of Sprat</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/np_ffmsy_bhi2015.csv">np_ffmsy</a><br />
+<em>Units: metric score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: NP</em><br />
+<br></p>
+<p>ICES Fmsy. Data sources:<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/NP/np_prep.md"><strong>NP prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="landings-by-stock-and-year-of-sprat" class="section level3">
+<h3>Landings By Stock And Year Of Sprat</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/np_landings_bhi2015.csv">np_landings</a><br />
+<em>Units: metric tons</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: NP</em><br />
+<br></p>
+<p>Annual Landings by ICES area and stock. Data sources: -ICES<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/NP/np_prep.md"><strong>NP prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="atmospheric-deposition" class="section level3">
+<h3>Atmospheric Deposition</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/po_atmos_pcb153_bhi2015.csv">po_atmos_pcb153</a><br />
+<em>Units: pressure score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Pressure</em><br />
+<em>Goal Targets: Pressures</em><br />
+<br></p>
+<p>Atmospheric deposition of PCB-153 on the Baltic Sea . Data sources: - <a href="http://www.helcom.fi/baltic-sea-trends/environment-fact-sheets/hazardous-substances/atmospheric-deposition-of-pcb-153-on-the-baltic-sea/">HELCOM provides EMEP/MSC data for Baltic Sea basins</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="atmospheric-deposition-1" class="section level3">
+<h3>Atmospheric Deposition</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/po_atmos_pcddf_bhi2015.csv">po_atmos_pcddf</a><br />
+<em>Units: pressure score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Pressure</em><br />
+<em>Goal Targets: Pressures</em><br />
+<br></p>
+<p>Atmospheric deposition of PCDD/Fs on the Baltic Sea using scenarios with adjusted emissions. Data sources: - <a href="http://www.helcom.fi/baltic-sea-trends/environment-fact-sheets/hazardous-substances/atmospheric-deposition-of-pcdd-fs-on-the-baltic-sea/">HELCOM provides EMEP/MSC data for Baltic Sea basins</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="water-clarity-transparency-pressure" class="section level3">
+<h3>Water Clarity / Transparency Pressure</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/po_inverse_secchi_bhi2015.csv">po_inverse_secchi</a><br />
+<em>Units: pressure score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: pressures CW</em><br />
+<br></p>
+<p>Inverse of eut status obtained using secchi data.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="nitrogen-pollution" class="section level3">
+<h3>Nitrogen Pollution</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/po_nload_bhi2015.csv">po_nload</a><br />
+<em>Units: pressure score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Pressure</em><br />
+<em>Goal Targets: Pressures</em><br />
+<br></p>
+<p>nitrogen load including atmospheric and land-based sources from HELCOM data normalized to ceilings set by HELCOM for each of the seven large basins<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="phosphorus-pollution" class="section level3">
+<h3>Phosphorus Pollution</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/po_pload_bhi2015.csv">po_pload</a><br />
+<em>Units: pressure score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Pressure</em><br />
+<em>Goal Targets: Pressures</em><br />
+<br></p>
+<p>phosphorus load including atmospheric and land-based sources from HELCOM data normalized to ceilings set by HELCOM for each of the seven major basins<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="trash-pollution" class="section level3">
+<h3>Trash Pollution</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/po_trash_bhi2015.csv">po_trash</a><br />
+<em>Units: score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Pressure</em><br />
+<em>Goal Targets: Pressures</em><br />
+<br></p>
+<p>Density of trash from coastal land and sea (Ocean Conservancy). Data sources: - <a href="http://www.oceanconservancy.org/our-work/international-coastal-cleanup/2012-ocean-trash-index.html">Ocean Conservancy International Coastal Cleanup 2012</a></p>
+<p><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="directive-2009147ec" class="section level3">
+<h3>Directive 2009/147/Ec</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_birds_bhi2015.csv">res_reg_birds</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Directive 2009/147/EC of the European Parliament and of the Council of 30 November 2009 on the conservation of wild birds<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="helcom-2007.-helcom-baltic-sea-action-plan" class="section level3">
+<h3>Helcom 2007. Helcom Baltic Sea Action Plan</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_bsap_bhi2015.csv">res_reg_bsap</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>HELCOM 2007. HELCOM Baltic Sea Action Plan (BSAP). HELCOM Ministerial Meeting. Adopted in Krakow, Poland, 15 November 2007.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="directive-20067ec" class="section level3">
+<h3>Directive 2006/7/Ec</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_bwd_bhi2015.csv">res_reg_bwd</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Directive 2006/7/EC of the European Parliament and of the Council of 15 February 2006 concerning the management of bathing water quality and repealing the Directive 76/160/EC<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="convention-on-biodiversity" class="section level3">
+<h3>Convention On Biodiversity</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_cbd_bhi2015.csv">res_reg_cbd</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Convention on Biodiversity<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="regulation-13802013eu" class="section level3">
+<h3>Regulation 1380/2013/Eu</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_cfp_bhi2015.csv">res_reg_cfp</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Regulation 1380/2013/EU of the European Parliament and of the Council of 11 December 2013 on the Common Fisheries Policy, amending Council Regulations (EC) No 1954/2003 and (EC) No 1224/2009 and repealing Council Regulations (EC) No 2371/2002 and (EC) No<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="convention-on-international-trade-in-endangered-species" class="section level3">
+<h3>Convention On International Trade In Endangered Species</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_cites_bhi2015.csv">res_reg_cites</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Convention on International Trade in Endangered Species of Wild Fauna and Flora<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="paris-climate-agreement" class="section level3">
+<h3>Paris Climate Agreement</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_cop21_bhi2015.csv">res_reg_cop21</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Paris Climate Agreement<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="directive-199243ec" class="section level3">
+<h3>Directive 1992/43/Ec</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_hd_bhi2015.csv">res_reg_hd</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Directive 1992/43/EC of 21 May 1992 on the conservation of natural habitats and of wild fauna and flora<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="convention-on-the-protection" class="section level3">
+<h3>Convention On The Protection</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_helcom_bhi2015.csv">res_reg_helcom</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Convention on the Protection of the Marine Environment of the Baltic Sea Area 1992<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="directive-201075eu" class="section level3">
+<h3>Directive 2010/75/Eu</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_ied_bhi2015.csv">res_reg_ied</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Directive 2010/75/EU of the European Parliament and of the Council of 24 November 2010 on industrial emissions (integrated pollution prevention and control)<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="directive-200856ec" class="section level3">
+<h3>Directive 2008/56/Ec</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_msfd_bhi2015.csv">res_reg_msfd</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Directive 2008/56/EC of the European Parliament and of the Council of 17 June 2008 establishing a framework for community action in the field of marine environmental policy<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="directive-201489ec" class="section level3">
+<h3>Directive 2014/89/Ec</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_mspd_bhi2015.csv">res_reg_mspd</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Directive 2014/89/EC of the European Parliament and of the Council of 23 July 2014 establishing a framework for maritime spatial planning<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="council-directive-91676eec" class="section level3">
+<h3>Council Directive 91/676/Eec</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_nd_bhi2015.csv">res_reg_nd</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Council Directive 91/676/EEC of 12 December 1991 concerning the protection of waters against pollution caused by nitrates from agricultural sources<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="directive-199932ec" class="section level3">
+<h3>Directive 1999/32/Ec</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_nec_bhi2015.csv">res_reg_nec</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Directive 1999/32/EC of 26 April 1999 relating to a reduction in the sulphur content of certain liquid fuels and amending Directive 93/12/EEC<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="regulation-8502004ec" class="section level3">
+<h3>Regulation 850/2004/Ec</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_pop_bhi2015.csv">res_reg_pop</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Regulation 850/2004/EC of the European Parliament and of the Council of 29 April 2004 on persistent organic pollutants and amending Directive 79/117/EEC<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="regulation-19072006ec" class="section level3">
+<h3>Regulation 1907/2006/Ec</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_reach_bhi2015.csv">res_reg_reach</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Regulation 1907/2006/EC of the European Parliament and of the Council of 18 December 2006 concerning the Registration, Evaluation, Authorisation and Restriction of Chemicals (REACH), establishing a European Chemicals Agency, amending Directive 1999/45/EC<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="directive-1991271eec-council-directive" class="section level3">
+<h3>Directive 1991/271/Eec Council Directive</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_uwwtd_bhi2015.csv">res_reg_uwwtd</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Directive 1991/271/EEC Council Directive of 21 May 1991 concerning urban waste water treatment<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="directive-200060ec" class="section level3">
+<h3>Directive 2000/60/Ec</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/res_reg_wfd_bhi2015.csv">res_reg_wfd</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>Directive 2000/60/EC of the European Parliament and of the Council of 23 October 2000 establishing a framework for Community action in the field of water policy<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="region-area-of-total-eez-ocean" class="section level3">
+<h3>Region Area Of Total Eez Ocean</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/rgn_area_sc2014-area.csv">rgn_area</a><br />
+<em>Units: km^2</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: spatial</em><br />
+<br></p>
+<p>Area of Ocean Health Index regions based on exclusive economic zones (VLIZ 2012). Data sources: - <a href="http://www.marineregions.org/">VLIZ Maritime Boundaries Geodatabase, version 7</a></p>
+<p><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="region-area-1-km-inland" class="section level3">
+<h3>Region Area 1 Km Inland</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/rgn_area_inland1km_gl2014.csv">rgn_area_inland1km</a><br />
+<em>Units: km^2</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: spatial</em><br />
+<br></p>
+<p>inland area 1 km from shore.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="region-area-offshore-3nm" class="section level3">
+<h3>Region Area Offshore 3nm</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/rgn_area_offshore3nm_gl2014.csv">rgn_area_offshore3nm</a><br />
+<em>Units: km^2</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: spatial</em><br />
+<br></p>
+<p>Area of Ocean Health Index regions to 3nm (VLIZ 2012). Data sources: - <a href="http://www.marineregions.org/">VLIZ Maritime Boundaries Geodatabase, version 7</a></p>
+<p><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="georegion-labels-per-region-at-3-georegion-levels" class="section level3">
+<h3>Georegion Labels Per Region, At 3 Georegion Levels</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/rgn_georegion_labels_gl2014.csv">rgn_georegion_labels</a><br />
+<em>Units: label</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: spatial</em><br />
+<br></p>
+<p>Lookup table of Ocean Health Index regions and UN georegion names at 3 georegion levels. Data sources: - <a href="http://unstats.un.org/unsd/methods/m49/m49regin.htm">UN geographical region and composition</a></p>
+<p><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="georegion-ids-per-region-at-3-georegion-levels" class="section level3">
+<h3>Georegion Ids Per Region, At 3 Georegion Levels</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/rgn_georegions_gl2014.csv">rgn_georegions</a><br />
+<em>Units: georegion id</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: spatial</em><br />
+<br></p>
+<p>Lookup table of Ocean Health Index regions and UN georegion identifiers at 3 georegion levels. Data sources: - <a href="http://unstats.un.org/unsd/methods/m49/m49regin.htm">UN geographical region and composition</a></p>
+<p><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="regions-used-in-global-analysis-for-nature-2012-subset" class="section level3">
+<h3>Regions Used In Global Analysis For Nature 2012, Subset</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/rgn_global.csv">rgn_global</a><br />
+<em>Units: label</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: spatial</em><br />
+<br></p>
+<p>Regions used in global analysis for Nature 2012, subset of regions_labels by type=eez and not deleted or disputed.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="regions-by-type" class="section level3">
+<h3>Regions By Type</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/rgn_labels.csv">rgn_labels</a><br />
+<em>Units: label</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: spatial</em><br />
+<br></p>
+<p>Ocean Health Index regions by type (eez, subocean, unclaimed) and label<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="invasive-species-pressure-scores" class="section level3">
+<h3>Invasive Species Pressure Scores</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/sp_invasives_bhi2015.csv">sp_invasives</a><br />
+<em>Units: pressure score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Pressure</em><br />
+<em>Goal Targets: Pressures</em><br />
+<br></p>
+<p>Invasive species scores based on the number of invasive species introduction evenets in each country.<br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="weakness-of-governance-indicated-with-the-wgi" class="section level3">
+<h3>Weakness Of Governance Indicated With The Wgi</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/ss_wgi_bhi2015.csv">ss_wgi</a><br />
+<em>Units: pressure score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Pressure</em><br />
+<em>Goal Targets: Pressures</em><br />
+<br></p>
+<p>Inverse of World Governance Indicators (WGI) six combined scores. Data sources: - <a href="http://info.worldbank.org/governance/wgi">Worldwide Governance Indicators (WGI)</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+<div id="total-coastal-nights-in-accommodation-stays" class="section level3">
+<h3>Total Coastal Nights In Accommodation Stays</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/tr_accommodation_stays_bhi2015.csv">tr_accommodation_stays</a><br />
+<em>Units: per capita night stays</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: TR</em><br />
+<br></p>
+<p>Total coastal nights in accommodation stays. Data sources: - <a href="http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=tour_occ_nin2&amp;lang=en">tour_occ_nin2</a> and <a href="http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=tour_occ_nin2c&amp;lang=en">Eurostat coastal stays tour_occ_nin2c</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/TR/tr_prep.md"><strong>TR prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="tourism-and-recreation-status-scores" class="section level3">
+<h3>Tourism And Recreation Status Scores</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/tr_status_scores_bhi2015.csv">tr_status</a><br />
+<em>Units: status score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: TR</em><br />
+<br></p>
+<p>Status scores calculated based on <a href="https://webgate.ec.europa.eu/maritimeforum/node/3550">Study on Blue Growth, Maritime Policy and the EU Strategy for the Baltic Sea Region</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/TR/tr_prep.md"><strong>TR prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="tourism-and-recreation-trend-scores" class="section level3">
+<h3>Tourism And Recreation Trend Scores</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/tr_trend_scores_bhi2015.csv">tr_trend</a><br />
+<em>Units: trend score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Status and Trend</em><br />
+<em>Goal Targets: TR</em><br />
+<br></p>
+<p>Trend scores calculated based on <a href="https://webgate.ec.europa.eu/maritimeforum/node/3550">Study on Blue Growth, Maritime Policy and the EU Strategy for the Baltic Sea Region</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p>See <a href="https://github.com/OHI-Science/bhi-1.0-archive/blob/draft/baltic2015/prep/TR/tr_prep.md"><strong>TR prep documents</strong></a> for more information about data and methods.</p>
+<p><br></p>
+<hr />
+</div>
+<div id="strength-of-governance-indicated-with-the-wgi" class="section level3">
+<h3>Strength Of Governance Indicated With The Wgi</h3>
+<p><a href="https://github.com/OHI-Science/bhi/blob/master/baltic/layers/wgi_all_bhi2015.csv">wgi_all</a><br />
+<em>Units: resilience score</em><br />
+<em>Category:</em><br />
+<em>Subcategory:</em><br />
+<em>Index Dimension: Resilience</em><br />
+<em>Goal Targets: Resilience</em><br />
+<br></p>
+<p>World Governance Indicators (WGI) six combined scores. Data sources: - <a href="http://info.worldbank.org/governance/wgi">Worldwide Governance Indicators (WGI)</a><br />
+<em>Will add more text here as the layers are prepared for the BHI2.0</em></p>
+<p><br></p>
+<hr />
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -12,6 +12,7 @@ suppressPackageStartupMessages({
   library(widgetframe)
   library(geojsonio)
   library(leaflet)
+  library(formattable)
 })
 
 
@@ -76,10 +77,10 @@ bhiprep_gh_api <- stringr::str_replace(
 # }
 #
 # ## save local copies of Rmds to knit-child
-# to_copy <- c()
-#
-# for(f in to_copy){
-  fp <- file.path(bhi_gh_raw, "master", "supplement", "web", "goals.Rmd")
+to_copy <- c("goals.Rmd", "layers.Rmd")
+
+for(f in to_copy){
+  fp <- file.path(bhi_gh_raw, "master", "supplement", "web", f)
 
   ## if the url exists, save a copy
   if(RCurl::url.exists(fp)){
@@ -93,7 +94,7 @@ bhiprep_gh_api <- stringr::str_replace(
     message(sprintf("saving %s", f_local))
 
   } else {message(sprintf("%s does not exist", fp))}
-# }
+}
 #
 #
 # ## save local copy of bhi/supplement/web/goals.Rmd

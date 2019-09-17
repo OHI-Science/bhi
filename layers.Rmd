@@ -1,0 +1,46 @@
+---
+title: "Data Layers"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+<style>
+  .col2 {
+    columns: 2 200px;
+    -webkit-columns: 2 200px; /* chrome, safari */
+    -moz-columns: 2 200px;   /* firefox */
+  }
+</style>
+
+---
+
+The following data layers are used in Baltic Health Index global calculations for goal status, trend, pressures, and resilience. Learn how these layers were incorporated into goal calculations on the [goals page](goals.html).
+
+<br>
+
+#### LAYERS TABLE
+
+```{r, echo = FALSE}
+format_df <- as.data.frame(st0 %>% select(Description = info, Layer = name, Targets = targets))
+layers_widget_formattable = formattable(
+  format_df,
+  align = c("l", "r", "r"),
+  list(
+    `Targets` = color_tile('lightblue', 'white'),
+    `Layer` = formatter("span", style = ~ style(color = "#78abaf", font.weight = "300"))
+  )
+)
+layers_widget_formattable
+# DT::datatable(format_df)
+```
+
+<br>
+
+#### DETAILS ABOUT LAYERS
+
+```{r, child = "local_layers.Rmd"}
+
+```
+

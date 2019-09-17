@@ -9,9 +9,9 @@ output: html_document
 source("_site.R")
 ```
 
-Regions are the fundamental spatial units of analysis for the Ocean Health Index. Scores are calculated for each region individually and then combined (with an offshore area-weighted average) to produce scores for the entire Baltic Sea.  
+Regions are the fundamental spatial units of analysis for the Ocean Health Index. Scores are calculated for each region individually and then combined (with an offshore area-weighted average) to produce scores for the entire Baltic Sea.  **There are 42 BHI regions in the Baltic Sea,** created by intersecting exclusive economnic zones (EEZs) with the Baltic Sea subbasins.
 
-**There are 42 BHI regions in the Baltic Sea.** These were created by intersecting exclusive economnic zones (EEZs) with the Baltic Sea subbasins.
+<br>
 
 ```{r, echo = FALSE}
 
@@ -39,8 +39,9 @@ if("rgn_nam" %in% names(rgns@data) & !"rgn_name" %in% names(rgns@data)){
 }
 ```
 
+---
 
-```{r}
+```{r, out.width = '100%'}
 ## create and render leaflet map
 leaflet::leaflet(data = rgns) %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
@@ -48,7 +49,7 @@ leaflet::leaflet(data = rgns) %>%
   addPolygons(
     layerId = ~rgn_id,
     stroke = TRUE, opacity = 0.5, weight = 2, fillOpacity = 0.5, smoothFactor = 0.5,
-    color = ~colorNumeric("royalblue3", rgns$rgn_id)(rgn_id)) %>%
+    color = ~colorNumeric("#6fa0b4", rgns$rgn_id)(rgn_id)) %>%
   addPolygons(
     layerId = ~rgn_id,
     popup = paste("<h5><strong>", "Region:", "</strong>",
@@ -93,3 +94,4 @@ leaflet::leaflet(data = rgns) %>%
   }")
 ```
 
+---

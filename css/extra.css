@@ -36,3 +36,16 @@ body {
     position: fixed;
     float: right;
 }
+
+.tocify .tocify-item a, .tocify .list-group-item {
+    padding: 4px;
+}
+
+.tocify-header {
+    text-indent: 0px;
+}
+
+.list-group {
+    font-size: 10px;
+    font-weight: 500;
+}

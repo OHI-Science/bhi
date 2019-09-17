@@ -1,0 +1,1062 @@
+---
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+<!-- source(file.path(here::here(), "R", "setup.R")) # not in code chunk because doesnt exist in gh-pages branch but need these objects/funcs/libs -->
+<!-- keep this top  'setup' chunk with the line underneath but delete the rest if regenerating/updating from 'make_layer_summaries' script -->
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+if(file.exists(file.path(here::here(), "R", "setup.R"))){
+  source(file.path(here::here(), "R", "setup.R"))
+} else if(file.exists(file.path(here::here(), "_site.R"))){
+  source(file.path(here::here(), "_site.R"))
+}
+short_layer_web <- file.path(bhiprep_gh_raw, "master", "ref", "layer_summaries")
+```
+
+---
+
+<!-- delete anything below hereif regenerating/updating from 'make_layer_summaries' script  -->
+### Slope Of Coastal Fish Stocks
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "ao_stock_slope.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Status Of Coastal Fish Stocks
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "ao_stock_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Bd Statusbased On Species Biodiversity
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "bd_spp_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Bd Trend Taken From Ohi-Global 2016 For Baltic Countries
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "bd_spp_trend.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Current Deep Water Salinity
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cc_sal_deep.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Current Surface Salinity Water Rescaled Between Historic Max And Future Min
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cc_sal_surf.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Current Sea Surface Temperature
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cc_sst.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Status Of Cs
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cs_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Coastal Human Population
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_coastalpopn_trend.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Status Of Dioxin And Dioxin-Like Pcb Indicator
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_con_dioxin_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Trend  Of Dioxin And Dioxin-Like Pcb Indicator
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_con_dioxin_trend.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Status Of Ices6 Con Indicatorbased On The Ices6 Pcbs
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_con_ices6_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Trend Of Ices6 Con Indicatorbased On The Ices6 Pcbs
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_con_ices6_trend.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Penalty Factor For Con
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_con_penalty.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Status Of Pfos Contaminants Indicator
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_con_pfos_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Trend Of Pfos Contaminants Indicator
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_con_pfos_trend.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Status Of Eut
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_eut_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Trend Of Eut
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_eut_trend.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Status Of Trash
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_tra_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Trend Of Trash
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "cw_tra_trend.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Status Of Eco
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "eco_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Trend Of Eco
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "eco_trend.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### B/Bmsy By Stock And Year
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "fis_bbmsy.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### F/Fmsy By Stock And Year
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "fis_ffmsy.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Landings By Stock And Year
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "fis_landings.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Fisheries Weighting Factor
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "fp_wildcaught_weight.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Bottom Oxygen Level (Mg_l_1)
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "hab_anoxia.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Ico Spp Status
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "ico_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### National Per Capita Gdp
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "le_gdp_country.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Per Capita Gdp Per Bhi Region
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "le_gdp_region.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Number Of People Employed Nationally
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "liv_national_employ.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Number Of People Employed In Each Bhi Region 25km Buffer
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "liv_regional_employ.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Status Of Livelihood
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "liv_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Trend Of Livelihood
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "liv_trend.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Status Scores Of Lsp
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "lsp_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Trend Of Lsp
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "lsp_trend.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Coastal Population Inland 25 Kilometers
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "mar_coastalpopn2005_inland25km.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Mariculture Species Harvested
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "mar_harvest_species.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Mariculture Harvest
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "mar_harvest_tonnes.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Mariculture Sustainability Score
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "mar_sustainability_score.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### B/Bmsy By Stock And Year Of Sprat
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "np_bbmsy.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### F/Fmsy By Stock And Year Of Sprat
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "np_ffmsy.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Landings By Stock And Year Of Sprat
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "np_landings.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Atmospheric Deposition
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "po_atmos_pcb153.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Atmospheric Deposition
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "po_atmos_pcddf.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Water Clarity / Transparency Pressure
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "po_inverse_secchi.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Nitrogen Pollution
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "po_nload.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Phosphorus Pollution
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "po_pload.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Trash Pollution
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "po_trash.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Directive 2009/147/Ec
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_birds.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Helcom 2007. Helcom Baltic Sea Action Plan
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_bsap.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Directive 2006/7/Ec
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_bwd.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Convention On Biodiversity
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_cbd.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Regulation 1380/2013/Eu
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_cfp.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Convention On International Trade In Endangered Species
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_cites.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Paris Climate Agreement
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_cop21.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Directive 1992/43/Ec
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_hd.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Convention On The Protection
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_helcom.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Directive 2010/75/Eu
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_ied.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Directive 2008/56/Ec
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_msfd.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Directive 2014/89/Ec
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_mspd.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Council Directive 91/676/Eec
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_nd.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Directive 1999/32/Ec
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_nec.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Regulation 850/2004/Ec
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_pop.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Regulation 1907/2006/Ec
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_reach.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Directive 1991/271/Eec Council Directive
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_uwwtd.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Directive 2000/60/Ec
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "res_reg_wfd.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Region Area Of Total Eez Ocean
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "rgn_area.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Region Area 1 Km Inland
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "rgn_area_inland1km.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Region Area Offshore 3nm
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "rgn_area_offshore3nm.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Georegion Labels Per Region, At 3 Georegion Levels
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "rgn_georegion_labels.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Georegion Ids Per Region, At 3 Georegion Levels
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "rgn_georegions.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Regions Used In Global Analysis For Nature 2012, Subset
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "rgn_global.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Regions By Type
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "rgn_labels.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Invasive Species Pressure Scores
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "sp_invasives.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Weakness Of Governance Indicated With The Wgi
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "ss_wgi.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Total Coastal Nights In Accommodation Stays
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "tr_accommodation_stays.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Tourism And Recreation Status Scores
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "tr_status.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Tourism And Recreation Trend Scores
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "tr_trend.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
+### Strength Of Governance Indicated With The Wgi
+
+```{r, echo = FALSE, results = "hide"}
+tmp <- tempfile(fileext = "Rmd")
+on.exit(unlink(tmp))
+download.file(file.path(short_layer_web, "wgi_all.Rmd"), tmp)
+```
+
+```{r, child = tmp, echo = FALSE, results = "asis"}
+```
+
+---
+
