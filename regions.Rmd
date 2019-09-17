@@ -11,7 +11,6 @@ source("_site.R")
 
 Regions are the fundamental spatial units of analysis for the Ocean Health Index. Scores are calculated for each region individually and then combined (with an offshore area-weighted average) to produce scores for the entire Baltic Sea.  **There are 42 BHI regions in the Baltic Sea,** created by intersecting exclusive economnic zones (EEZs) with the Baltic Sea subbasins.
 
-<br>
 
 ```{r, echo = FALSE}
 
@@ -45,7 +44,7 @@ if("rgn_nam" %in% names(rgns@data) & !"rgn_name" %in% names(rgns@data)){
 ## create and render leaflet map
 leaflet::leaflet(data = rgns) %>%
   addProviderTiles(providers$CartoDB.Positron) %>%
-  setView(18, 59, zoom = 5) %>%
+  setView(18, 60, zoom = 5) %>%
   addPolygons(
     layerId = ~rgn_id,
     stroke = TRUE, opacity = 0.5, weight = 2, fillOpacity = 0.5, smoothFactor = 0.5,

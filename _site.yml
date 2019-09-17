@@ -3,15 +3,15 @@ navbar:
   type: inverse
   title: "BALTIC HEALTH INDEX"
   left:
+    - text: "Regions"
+      icon:  far fa-map
+      href:  regions.html
     - text: "Goals"
       icon:  fas fa-tachometer-alt
       href:  goals.html
     - text: "Data Layers"
       icon:  fa-database
       href:  layers.html
-    - text: "Regions"
-      icon:  far fa-map
-      href:  regions.html
   right:
 #    - text: "Who Are We"
 #      href:  who_we_are.html

@@ -37,6 +37,13 @@ body {
     float: right;
 }
 
+.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+    z-index: 2;
+    color: #ffffff;
+    background-color: #006687;
+    border-color: #80b6b0;
+}
+
 .tocify .tocify-item a, .tocify .list-group-item {
     padding: 4px;
 }
