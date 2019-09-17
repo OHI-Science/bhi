@@ -80,6 +80,9 @@ res_matrix <- readr::read_csv(file.path(
   "baltic2015/conf/resilience_matrix.csv"))
 ```
 
+<br>
+
+---
 
 ## Food Provision: Fisheries 
 
@@ -133,7 +136,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Food Provision: Mariculture
 <br>
@@ -186,7 +189,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Artisanal Fishing Opportunity 
 <br>
@@ -240,7 +243,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Natural Products
 <br>
@@ -294,7 +297,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Carbon Storage
 <br>
@@ -347,7 +350,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Tourism & Recreation
 <br>
@@ -400,7 +403,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Livelihoods & Economies: Livelihoods
 <br>
@@ -453,7 +456,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Livelihoods & Economies: Economies
 <br>
@@ -505,7 +508,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Sense of Place: Iconic Species
 <br>
@@ -558,7 +561,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Sense of Place: Lasting Special Places
 <br>
@@ -611,7 +614,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Clean Waters: Eutrophication
 <br>
@@ -663,7 +666,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Clean Waters: Trash
 <br>
@@ -716,7 +719,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+--- 
 
 ## Clean Waters: Contaminants
 <br>
@@ -769,7 +772,7 @@ cat(paste(st$info, collapse = "\n\n"))
 
 <br>
 
----- 
+---
 
 ## Biodiversity
 <br>
