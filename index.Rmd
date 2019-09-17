@@ -5,7 +5,8 @@ output:
 ---
 
 <!-- <div class="page-lead" style="background-image:url(images/matt-hardy-6ArTTluciuA-unsplash-cropped2.png)"> -->
-<div class="page-lead" style="background-image:url(images/nathan-dumlao-0tykfPL2U7w-unsplash.jpg)">
+<!-- <div class="page-lead" style="background-image:url(images/nathan-dumlao-0tykfPL2U7w-unsplash.jpg)"> -->
+<div class="page-lead" style="background-image:url(images/yogesh-gosavi-lC90ji6ig18-unsplash.jpg)">
 <div class="wrap page-lead-content">
 <br><br><br>
 <h2 style="background-color: #0d4353d4;color: #f3ffe1;line-height:60px;font-size: 280%;">  AN OCEAN HEALTH INDEX FOR THE BALTIC SEA </h2>
