@@ -13,7 +13,7 @@ if(file.exists(file.path(here::here(), "R", "setup.R"))){
 } else if(file.exists(file.path(here::here(), "_site.R"))){
   source(file.path(here::here(), "_site.R"))
 }
-short_goal_web <- file.path(bhiprep_gh_raw, "master", "ref", "goal_summaries")
+short_goal_web <- file.path(bhiprep_gh_raw, "master", "supplement", "goal_summaries")
 # short_goal_web <- file.path(
 #   "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive",
 #   "draft/baltic2015", 
@@ -23,14 +23,14 @@ short_goal_web <- file.path(bhiprep_gh_raw, "master", "ref", "goal_summaries")
 ## this document links to the bhi-prep github repo, using 
 layers_web <- "http://ohi-science.org/bhi/layers.html" # gh-pages branch...
 
-layers_csv <- readr::read_csv(file.path(
-  "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/",
-  "baltic2015",
-  "layers.csv")) # need to read from github so works in eg  ghpages branch
 # layers_csv <- readr::read_csv(file.path(
-#   "https://raw.githubusercontent.com/OHI-Science/bhi/master",
-#   basename(dir_assess),
-#   "layers.csv"))
+#   "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/",
+#   "baltic2015",
+#   "layers.csv")) # need to read from github so works in eg  ghpages branch
+layers_csv <- readr::read_csv(file.path(
+  "https://raw.githubusercontent.com/OHI-Science/bhi/master",
+  basename(dir_assess),
+  "layers.csv"))
 st0 <- layers_csv %>%
   select(targets, name, layer, description) %>% 
   filter(name != "proxy_layer") %>% 
@@ -64,7 +64,7 @@ st0 <- layers_csv %>%
   mutate(
     name_abbrev = name_abbrev %>% 
       str_replace_all(pattern = " periodpunctuation", replacement = "\\.") %>% 
-      str_replace_all(pattern = " basedon", replacement = "based on")) %>%
+      str_replace_all(pattern = " basedon", replacement = " based on")) %>%
   mutate(
     web_name = str_to_lower(gsub(" ", "_", name_abbrev)) %>% 
       gsub(pattern = "/", replacement = "")
@@ -73,11 +73,11 @@ st0 <- layers_csv %>%
   mutate(info = sprintf("[%s](%s#%s) (%s): %s", name_abbrev, layers_web, web_name, layer, description))
 
 prs_matrix <- readr::read_csv(file.path(
-  "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/",
-  "baltic2015/conf/pressures_matrix.csv"))
+  "https://raw.githubusercontent.com/OHI-Science/bhi/master",
+  basename(dir_assess), "conf/pressures_matrix.csv"))
 res_matrix <- readr::read_csv(file.path(
-  "https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/",
-  "baltic2015/conf/resilience_matrix.csv"))
+  "https://raw.githubusercontent.com/OHI-Science/bhi/master",
+  basename(dir_assess), "conf/resilience_matrix.csv"))
 ```
 
 <br>

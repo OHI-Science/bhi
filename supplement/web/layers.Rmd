@@ -20,6 +20,7 @@ short_layer_web <- file.path(bhiprep_gh_raw, "master", "ref", "layer_summaries")
 ---
 
 <!-- delete anything below hereif regenerating/updating from 'make_layer_summaries' script  -->
+
 ### Slope Of Coastal Fish Stocks
 
 ```{r, echo = FALSE, results = "hide"}
@@ -46,7 +47,7 @@ download.file(file.path(short_layer_web, "ao_stock_status.Rmd"), tmp)
 
 ---
 
-### Bd Statusbased On Species Biodiversity
+### Bd Status Based On Species Biodiversity
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -163,7 +164,7 @@ download.file(file.path(short_layer_web, "cw_con_dioxin_trend.Rmd"), tmp)
 
 ---
 
-### Status Of Ices6 Con Indicatorbased On The Ices6 Pcbs
+### Status Of Ices6 Con Indicator Based On The Ices6 Pcbs
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
@@ -176,7 +177,7 @@ download.file(file.path(short_layer_web, "cw_con_ices6_status.Rmd"), tmp)
 
 ---
 
-### Trend Of Ices6 Con Indicatorbased On The Ices6 Pcbs
+### Trend Of Ices6 Con Indicator Based On The Ices6 Pcbs
 
 ```{r, echo = FALSE, results = "hide"}
 tmp <- tempfile(fileext = "Rmd")
