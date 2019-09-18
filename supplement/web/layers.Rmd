@@ -14,7 +14,7 @@ if(file.exists(file.path(here::here(), "R", "setup.R"))){
 } else if(file.exists(file.path(here::here(), "_site.R"))){
   source(file.path(here::here(), "_site.R"))
 }
-short_layer_web <- file.path(bhiprep_gh_raw, "master", "ref", "layer_summaries")
+short_layer_web <- file.path(bhiprep_gh_raw, "master", "supplement", "layer_summaries")
 ```
 
 ---
