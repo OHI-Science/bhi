@@ -25,6 +25,7 @@ key <- "bhi"
 study_area <- "Baltic"
 
 assess_year <- 2019 # CHANGE BHI ASSESSMENT YEAR HERE!
+dir_assess <- "baltic" # SET BHI ASSESSMENT FOLDER HERE!
 rgn_ids_vec <- 1:42
 subbasin_ids_vec <- 501:517
 # projstringCRS <- raster::crs("+proj=longlat +datum=WGS84 +no_defs") # spatial data use lat/long coords on WGS84
@@ -60,7 +61,7 @@ bhiprep_gh_api <- stringr::str_replace(
 )
 
 
-## read in variables if they exist
+# ## read in variables if they exist
 # scores_csv <- file.path(dir_scenario_gh, "scores.csv")
 # layers_csv <- file.path(dir_scenario_gh, "layers.csv")
 # conf_csv <- file.path(dir_scenario_gh, "conf", "goals.csv")
@@ -75,8 +76,9 @@ bhiprep_gh_api <- stringr::str_replace(
 #   weight <- readr::read_csv(conf_csv) %>%
 #     select(goal, weight)
 # }
-#
-# ## save local copies of Rmds to knit-child
+
+
+## save local copies of Rmds to knit-child
 to_copy <- c("goals.Rmd", "layers.Rmd")
 
 for(f in to_copy){
@@ -95,15 +97,3 @@ for(f in to_copy){
 
   } else {message(sprintf("%s does not exist", fp))}
 }
-#
-#
-# ## save local copy of bhi/supplement/web/goals.Rmd
-# local_goals <- "https://github.com/OHI-Science/bhi/blob/master/supplement/web/goals.Rmd"
-#
-#
-# conf_goals_rmd <- file.path(dir_scenario_gh, "conf", "goals.Rmd")
-#
-# if(RCurl::url.exists(conf_goals_rmd)){
-#   conf_goals <- readr::read_lines(conf_goals_rmd)
-#   readr::write_lines(conf_goals, path = "conf_goals.Rmd", append = FALSE)
-# }
