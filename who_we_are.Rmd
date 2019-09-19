@@ -26,7 +26,7 @@ The Baltic Health Index formally started in 2015 and preliminary scores were com
 <h3 style="font-weight: 500; display: inline;"> Lead Scientist: </h3> 
 <h3 style="font-weight: 300; display: inline;"> Thorsten Blenckner </h3>
 <br>
-[Thorsten Blenckner](https://www.stockholmresilience.org/contact-us/staff/2008-06-16-blenckner.html) leads the BHI project...
+[Thorsten Blenckner](https://www.stockholmresilience.org/contact-us/staff/2008-06-16-blenckner.html), quantitative marine ecologist with interests in ecosystem-based management and modeling pressures (e.g. overfishing, salinity, climate, alien species) which trigger regime shifts of the Baltic Sea ecosystem, has led the BHI project since its beginning in 2014.
 
 thorsten.blenckner@su.se
 </p>
@@ -42,13 +42,13 @@ thorsten.blenckner@su.se
 <!-- ### **Data Analyst/Scientific Programmer**: Ellie Campbell -->
 
 
-<img src="images/ellie_campbell.jpg" style="float: right; width: 22%; margin: 0px 6px; border: #0d435399 1px solid;" />
+<img src="images/eleanore_campbell.jpg" style="float: right; width: 22%; margin: 0px 6px; border: #0d435399 1px solid;" />
 <div style="width: 74%;">
 <p>
 <h3 style="font-weight: 500; display: inline;"> Data Analyst/Scientific Programmer: </h3> 
 <h3 style="font-weight: 300; display: inline;"> Ellie Campbell </h3>
 <br>
-[Ellie Campbell](https://www.stockholmresilience.org/contact-us/staff/2019-09-03-campbell.html) joined the team in January 2019 to begin work on the second BHI assessment. As a data analyst and scientific programmer, she writes code to tailor the Ocean Health Index (OHI) framework to the Baltic Sea, manage datasets behind the models, and support investigation of patterns or interactions. Previously she worked on the global OHI 2018 assessment as a fellow at the National Center for Ecological Analysis and Synthesis (NCEAS).
+[Ellie Campbell](https://www.stockholmresilience.org/contact-us/staff/2019-09-03-campbell.html) joined the team in January 2019 to begin work on the second BHI assessment. As a data analyst and scientific programmer, she writes code to tailor the Ocean Health Index (OHI) framework to the Baltic Sea, manage datasets behind the models, and support investigation of patterns or interactions.
 
 eleanore.campbell@su.se
 </p>
@@ -69,7 +69,7 @@ eleanore.campbell@su.se
 <h3 style="font-weight: 500; display: inline;"> Marine Food Webs/Dynamics Scientist: </h3> 
 <h3 style="font-weight: 300; display: inline;"> Susa Niiranen </h3>
 <br>
-[Susa Niiranen](https://www.stockholmresilience.org/contact-us/staff/2010-02-02-niiranen.html) contributes XYZ to the BHI project...
+[Susa Niiranen](https://www.stockholmresilience.org/contact-us/staff/2010-02-02-niiranen.html) contributes expertise in multiple interacting drivers, marine modeling and cross-scale dynamics to the BHI project.
 
 susa.niiranen@su.se
 </p>
@@ -79,7 +79,5 @@ susa.niiranen@su.se
 </div>
 
 <div style="clear:both;"></div>
-
----
 
 ---
