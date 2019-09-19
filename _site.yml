@@ -4,18 +4,18 @@ navbar:
   title: "BALTIC HEALTH INDEX"
   left:
     - text: "Regions"
-      icon:  far fa-map
+      icon:  fas fa-map
       href:  regions.html
     - text: "Goals"
       icon:  fas fa-tachometer-alt
       href:  goals.html
     - text: "Data Layers"
-      icon:  fa-database
+      icon:  fas fa-server
       href:  layers.html
   right:
-#    - text: "Who Are We"
-#      href:  who_we_are.html
-#      icon:  fa-user-friends
+    - text: "Who Are We"
+      href:  who_we_are.html
+      icon:  fa-user-friends
     - text: "FAQ"
       icon:  fa-question-circle-o
       href:  faq.html
