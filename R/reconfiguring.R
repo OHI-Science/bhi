@@ -348,22 +348,30 @@ configure_functions <- function(dir_assess, test_funs_list = NULL){
 copy_lyrs_from_bhiprep <- function(dir_assess, copy_layers = list("all"), repo_loc = NULL){
 
   if(is.null(repo_loc)){
-    repo_loc <- paste0(prep_repo_raw, "/master") # raw bhi-prep github repo url, prep_repo_raw from common.R
+    repo_loc <- paste(bhiprep_gh_raw, "master", sep = "/") # raw bhi-prep github repo url, bhiprep_gh_raw from setup.R
   }
   if(unlist(copy_layers) == "all"){
     print("copying over all layers from bhi-prep repository 'layers' folder")
     print("note: will overwrite layers in bhi repo 'layers' folder with bhi-prep versions from github, of same name")
-    filelist <- bhiprep_github_layers(github_api_url = bhi_prep_api) # function and bhiprep_api defined in common.R
+    filelist <- bhiprep_github_layers(github_api_url = bhiprep_gh_api)
+    ## bhiprep_api defined in setup.R, function in common.R
   } else {
     filelist <- data.frame(V1 = unlist(copy_layers))
   }
   for(i in 1:length(filelist$V1)){
     tmp <- filelist[i,1] %>% as.character()
+
     if(stringr::str_length(tmp) != 0){
       url <- sprintf("%s/%s", repo_loc, tmp)
-      name_of_layer <- tmp %>% stringr::str_extract("[a-z0-9_]+.csv$")
-      httr::GET(url, write_disk(sprintf("%s/layers/%s", dir_assess, name_of_layer),
-                                overwrite = TRUE))
+      name_of_layer <- stringr::str_extract(tmp, "[a-z0-9_]+.csv$")
+
+      httr::GET(
+        url,
+        write_disk(
+          sprintf("%s/layers/%s", dir_assess, name_of_layer),
+          overwrite = TRUE
+        )
+      )
     }
   }
 }

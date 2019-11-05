@@ -110,7 +110,7 @@ bhiprep_github_layers <- function(github_api_url = bhiprep_gh_api){
   req <- httr::GET(github_api_url)
   stop_for_status(req)
   filelist <- unlist(lapply(content(req)$tree, "[", "path"), use.names = FALSE) %>%
-    grep(pattern = "layers/.*.csv", value = TRUE) %>%
+    grep(pattern = sprintf("layers/v%s/.*.csv", assess_year), value = TRUE) %>%
     as.data.frame()
   return(filelist)
 }

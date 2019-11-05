@@ -1,0 +1,28 @@
+---
+title: "Scenario Description"
+output: html_document
+---
+
+**Name of this RMarkdown file will match the name of the folder it is in, dedicated to a single specific scenario**
+
+
+### Summary of the Analysis
+
+Synopsis of the *Description of the Analysis* and *Summary of Results* sections below.
+
+### Rationale
+
+Reasons we decided it was worthwhile to do this analysis.
+
+### Description of the Analysis: Simulated Data or Alternative Model Specifications
+
+Pretty detailed description of what this test is all about, what kinds of data we're going to test and why. Any variations in parameters, summary of alternate data preparation, links to documentation of alternative data prep, and visualiations. Can refer to data prep documents if that's where these decisions were made and documented.
+
+```{r example of some test we did in data prep}
+
+```
+
+### Visualization and Exploration of Results
+
+### Summary of Results
+
