@@ -6,175 +6,37 @@ library(tibble)
 
 ## Functions
 
-#' update `alt_layers.csv` to include additional versions of layers created
-#'
-#' @param dir_assess file path to assessment folder within bhi repo
-#' @param dir_prep file path to the prep folder within bhi-prep repo
-#' @param assess_year assessment year i.e. the year for/during which the assessment is being conducted
-#'
-#' @return
-
-update_alt_layers <- function(dir_assess = dir_assess, dir_prep = dir_prep, assess_year){
-
-  print("if creating an entirely new layer not just a different version, it's necessary to have added it to layers.csv")
-  lyrscsv <- readr::read_csv(file.path(dir_assess, "layers.csv"))
-
-  alt_layers <- readr::read_csv(file.path(dir_assess, "testing", "alt_layers.csv"))
-  if(dim(alt_layers)[2] == 1 & stringr::str_detect(names(alt_layers), ";")){
-    alt_layers <- readr::read_delim(file.path(dir_assess, "testing", "alt_layers.csv"), delim = ";")
-  }
-  if(dim(alt_layers)[2] == 1){
-    stop(print("double check that alt_layers.csv is delimited with commas or semicolons"))
-  }
-  layer_names <- lyrscsv$layer %>% unique() %>% as.list()
-
-  ## identify new layers (in the bhi-prep repo) to add to the full 'alt_layers.csv' table
-  add_alt_layers <- list.files(dir_prep, recursive = TRUE) %>%
-    grep(pattern = file.path(sprintf(".*v%s", assess_year), "output", "[a-z0-9_]+.csv$"),
-         value = TRUE) %>% # gets things of form v2019/output/goal_layer_final.csv
-    stringr::str_remove("prep") %>%
-    enframe(name = NULL) %>% # makes into a tibble
-    dplyr::mutate(filename = basename(as.character(value)),
-                  goal = stringr::str_extract(value, pattern = "[a-zA-Z]+"),
-                  use = NA,
-                  layer_names = list(layer_names),
-                  subfolder = stringr::str_extract(value, pattern = "(\\w+ ?){1}/v2") %>% # ...but beyond year 2999?
-                    stringr::str_remove("/v2")) %>%
-
-    dplyr::rowwise() %>%
-    dplyr::mutate(match_found = list(stringr::str_match(filename, as.character(layer_names) %>%
-                                                          stringr::str_remove_all("\"")))) %>%
-    dplyr::mutate(layer = match_found %>%
-             lapply(function(x){ x[!is.na(x)] }) %>%
-             unlist(),
-           subfolder = ifelse(subfolder == goal, NA, subfolder)) %>%
-    ungroup() %>%
-
-    dplyr::select(layer, filename, use, goal, subfolder) %>%
-    dplyr::filter(!filename %in% alt_layers$filename)
-
-  ## rowbind new layer versions to the 'alt_layers_full_table.csv' and save updated table
-  alt_layers_full_table <- alt_layers %>% rbind(add_alt_layers)
-  readr::write_csv(alt_layers_full_table,
-                   sprintf("%s/testing/%s", dir_assess, "alt_layers_full_table.csv"))
-}
-
-
-#' configure layers for testing
-#'
-#' copies the versions of layers we want to use for testing (as specified in the 'testing/alt_layers.csv') into `bhi-prep/prep/layers`
-#' next layers are copied to the layers folder in the assessment repo (bhi/baltic)
-#' compares the specified layers to the layers named in \code{functions.R} to confirm all layers needed given the models, will be copied to 'layers'
-#' automatically writes the name of copied file into 'filename' column of 'layers.csv'
-#'
-#' @param dir_assess filepath specifying the assessment main folder containing 'conf' and 'testing' folders
-#' @param dir_prep bhi-prep filepath specifying the main folder containing goal/pressure/resilience subfolders
-#' @param dir_test filepath to subfolder of 'testing' that contains everything for a sigle analysis; any outputs are saved to/read from here
-#'
-#' @return a table comparing layers required by \code{functions.R} to those specified in alt_layers_full_table.csv; revises 'layers.csv' and contents of 'layers' folder
-
-configure_layers <- function(dir_assess, dir_prep, dir_test){
-
-  test_layers_path <- file.path(dir_assess, "testing", "alt_layers.csv")
-  functionsR_path <- file.path(dir_assess, "conf", "functions.R")
-
-  print("this function assumes you've already made sure alt_layers.csv is up to date!")
-  use_layers <- readr::read_delim(test_layers_path, delim = ";") %>%
-    dplyr::filter(use == "YES")
-
-  ## extract names of layers specified in functions.R (i.e. which do functions.R require)
-  ## then, compare layers required by functions.R to the layers specified in table
-  ## save compare layers table to testing folder for review/reference
-  functionsR_layers <- goal_layers(functionsR_path, goal_code = "all")
-
-  check_layers_table <- tibble::tibble(layer = functionsR_layers, fun_layer = "YES") %>%
-    dplyr::full_join(use_layers, by = "layer") %>%
-    dplyr::mutate(required = ifelse(is.na(fun_layer) == TRUE, "not required", "required")) %>%
-    dplyr::mutate(specified = ifelse(is.na(filename) == TRUE, "specify version", "exists")) %>%
-    dplyr::group_by(layer) %>%
-    dplyr::add_tally() %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(multiple = ifelse(n > 1, "overspecified", "unique")) %>%
-    dplyr::select(-fun_layer, -use, -n)
-  readr::write_csv(check_layers_table, file.path(test_path, "test_layers_used.csv"))
-
-  ## checks: stop if error, don't proceed to layer-copying step...
-  one_to_one <- ifelse(length(unique(check_layers_table$multiple)) > 1, FALSE, TRUE)
-  onto <- ifelse(length(unique(check_layers_table$specified)) > 1, FALSE, TRUE)
-  if(!one_to_one){
-    stop("instances found where multiple files are specified for a single layer")
-  }
-  if(!onto){
-    stop("instances found where no files are specified for a layer")
-  }
-
-  ## copy over the layer versions for calculations
-  use_layers <- check_layers_table %>%
-    dplyr::filter(required == "required") %>%
-    dplyr::mutate(
-      path = ifelse(specified == "specify version", NA,
-                    ifelse(is.na(subfolder),
-                           file.path(goal, layer, filename),
-                           file.path(goal, subfolder, layer, filename))
-      )
-    )
-  # continue <- readline(prompt = sprintf("overwrite current contents of '%s/layers' (continue: yes/no)? ", dir_prep))
-  # stopifnot(continue == "yes")
-
-  ## copy layers to 'layers' folder, and write version into 'filename' column of 'layers.csv'
-  for(i in 1:nrow(use_layers)){
-    use_layer_path <- sprintf("%s/%s", dir_prep, use_layers$paths[i]) # the layer file to copy is located here
-    put_layer_path <- sprintf("%s/layers/%s", dir_prep, use_layers$filename[i]) # where to put copied layer
-    file.copy(use_layer_path, put_layer_path, overwrite = TRUE)
-
-    ## regex notes: layer must be left of filename col, and filename is assumed to be 5-50 alphanumeric char
-    tmp <- scan(sprintf("%s/layers.csv", dir_assess), what = "character", sep = "\n") %>%
-      stringr::str_replace(pattern = sprintf("%s\\\",\\\"\\S{5,50}.csv", use_layers$layer[i]),
-                           sprintf("%s\\\",\\\"%s", use_layers$layer[i], use_layers$filename[i])) %>%
-      stringr::str_split(",(?!\\s+)", simplify = TRUE) %>%
-      as.data.frame()
-    colnames(tmp) <- c(scan(sprintf("%s/layers.csv", dir_assess), what = "character", sep = ",")[1:26])
-    write.csv(tmp[-1,], sprintf("%s/layers.csv", dir_assess), row.names = FALSE)
-
-    print(sprintf("copied %s to layers folder", use_layers$filename[i]))
-  }
-  return(check_layers_table) # return so can visually inspect
-}
-
-
 #' update rows in layers.csv for a given layer
 #'
 #' registers a specified file to the given layer,
 #' after checking registration against layers object created by ohicore::Layers
 #' written originally/mostly for setting up bhi multiyear assessments repo from the archived repo...
 #'
-#' @param layers_object a layers object created with ohicore::Layers,
+#' @param layers_obj a layers object created with ohicore::Layers,
 #' for the repo assessment folder to reconfigure, not the archived version
 #' @param lyr_file file path to where layer data file is located,
 #' including the name of the csv file itself to be incorporated into bhi layers object
 #' @param lyr_name single character string with name of the layer (not the filename) to be associated with the layer data file
 #' @param dir_assess file path to assessment folder within bhi repo
-#' @param lyr_metadata_path file path to lyr_metadata.csv that contains info corresponding to lyr_file;
+#' @param lyr_meta file path to lyr_metadata.csv that contains info corresponding to lyr_file;
 #' should have layer, name, description, units, and targets fields
-#' @param update_with a dataframe or tibble with at least one row,
+#' @param update_w a dataframe or tibble with at least one row,
 #' with the information to be added to layers.csv for the layer
 #' @param write if TRUE then the function will automatically overwrite layers.csv and write lyr_file to the 'layers' folder
 #'
 #' @return updated layers.csv table is first output, the second output is the contents of the layer file specified by lyr_file arg
 
-layerscsv_edit <- function(layers_object, lyr_file, lyr_name,
-                           dir_assess, lyr_metadata_path, update_with = NULL,
-                           write = FALSE){
+layerscsv_edit <- function(layers_obj, lyr_file, lyr_name, dir_assess, lyr_meta, update_w = NULL, write = FALSE){
 
   lyr_file_data <- readr::read_csv(lyr_file, col_types = cols())
   lyr_file_name <- basename(lyr_file)
 
   ## using the layers object, check if layer is already registerd with the specified layer file
-  chk1 <- lyr_file_name %in% layers_object$meta$filename
-  chk2 <- lyr_name %in% layers_object$meta$layer
+  chk1 <- lyr_file_name %in% layers_obj$meta$filename
+  chk2 <- lyr_name %in% layers_obj$meta$layer
   if(chk1 & chk2){
-    chk3a <- which(layers_object$meta$filename == lyr_file_name)
-    chk3b <- which(layers_object$meta$layer == lyr_name)
+    chk3a <- which(layers_obj$meta$filename == lyr_file_name)
+    chk3b <- which(layers_obj$meta$layer == lyr_name)
     chk3 <- chk3a == chk3b
   } else { chk3 <- FALSE }
 
@@ -186,24 +48,24 @@ layerscsv_edit <- function(layers_object, lyr_file, lyr_name,
 
     layers_csv <- readr::read_csv(
       file.path(dir_assess, "layers.csv"),
-      col_types = cols()) # matches w layers_object 'meta' slot contents
+      col_types = cols()) # matches w layers_obj 'meta' slot contents
     lyr_metadata_csv <- readr::read_csv(
-      file.path(lyr_metadata_path),
+      file.path(lyr_meta),
       col_types = cols(.default = "c")) %>%
       dplyr::select(-data_source, -gapfill_file)
 
-    ## create or extract 'update_with' information for layer, i.e. row entry for layer.csv
-    if(is.null(update_with)){
+    ## create or extract 'update with' information for layer, i.e. row entry for layer.csv
+    if(is.null(update_w)){
 
       ## need to generate information to fill layers.csv row
-      update_with <- data.frame(array(NA, dim = c(1, ncol(layers_csv))))
-      colnames(update_with) <- names(layers_csv)
-      update_with[1, "layer"] <- lyr_name
-      update_with[1, "filename"] <- lyr_file_name
+      update_w <- data.frame(array(NA, dim = c(1, ncol(layers_csv))))
+      colnames(update_w) <- names(layers_csv)
+      update_w[1, "layer"] <- lyr_name
+      update_w[1, "filename"] <- lyr_file_name
 
       ## add other layer information if it exists in the lyr_metadata.csv
       if(lyr_name %in% lyr_metadata_csv$layer){
-        update_with <- update_with %>%
+        update_w <- update_w %>%
           dplyr::select(-name, -description, -units, -targets) %>%
           dplyr::left_join(lyr_metadata_csv, by = "layer") %>%
           dplyr::select(names(layers_csv)) # original column ordering
@@ -211,10 +73,10 @@ layerscsv_edit <- function(layers_object, lyr_file, lyr_name,
         message("check layers.csv and lyr_metadata.csv: some critical information must be entered manually")
       }
     } else {
-      update_with <- update_with %>%
+      update_w <- update_w %>%
         dplyr::filter(grepl(sprintf("^%s.*", lyr_name), layer))
     }
-    updated_tab <- update_with %>%
+    updated_tab <- update_w %>%
       rbind(layers_csv %>%
               dplyr::filter(!grepl(sprintf("^%s.*", lyr_name), layer)) %>%
               dplyr::mutate(clip_n_ship_disag = NA,
