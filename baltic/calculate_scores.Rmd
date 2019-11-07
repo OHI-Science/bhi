@@ -68,3 +68,10 @@ Run this chunk to calculate and save scores as `scores` object and as `scores.cs
 source(file.path(here::here(), "R", "calculating.R"))
 calculate_scores(dir_assess, scenario_years)
 ```
+
+---
+
+#### Session Info
+
+**devtools::session_info() at time scores were calculated.**
+
