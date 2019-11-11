@@ -1,0 +1,263 @@
+---
+title: "Recalculating FIS scores with Updated data"
+output: html_document
+---
+
+
+## Compare version 2015 vs 2019 FIS data
+
+**Using the original functions.R file and same Pressures/Resilinece Layers**
+
+```{r recalculating with same function, echo=FALSE, include=FALSE}
+## recalculating BHI scores using everything from 2015 assessment except revised Fisheries data
+## replacement datasets for fis_bbmsy, fis_ffmsy, fis_landings
+
+dir <- file.path(here::here(), "baltic2015")
+
+## use 2015 layers and layers.csv to calculate scores
+file.copy(file.path(dir, "compare", "layers2015.csv"), file.path(dir, "layers.csv"), overwrite = TRUE)
+file.copy(file.path(dir, "compare", "functions2015.R"), file.path(dir, "conf", "functions.R"), overwrite = TRUE)
+source(file.path(here::here(), "baltic2015", "calculate_scores.R"))
+scores2015 <- read.csv(file.path(here::here(), "baltic2015", "scores.csv"))
+
+## compare to the archived version to confirm it's the same
+# scores2015_archive <- read.csv(file.path("../baltic2015/scores.csv"))
+# compare_scores <- cores2015 %>%
+#   left_join(scores2015_archive, by = c("goal", "dimension", "region_id")) %>%
+#   mutate(diffs = score.x-score.y)
+# summary(compare_scores$diffs)
+
+## now substitute new FIS goal layers from 2019 data prep
+new_fis_lyrs <- c("fis_ffmsy_bhi2019.csv", "fis_bbmsy_bhi2019.csv", "fis_landings_bhi2019.csv")
+file.exists(file.path(here::here(), "baltic2015", "layers", new_fis_lyrs))
+
+lyrs_csv_fis2019 <- read_csv(file.path(here::here(), "baltic2015", "layers.csv")) %>%
+  mutate(filename = ifelse(
+    layer == "fis_bbmsy", "fis_bbmsy_bhi2019.csv",
+    ifelse(
+      layer == "fis_ffmsy", "fis_ffmsy_bhi2019.csv",
+      ifelse(
+        layer == "fis_landings", "fis_landings_bhi2019.csv", filename
+      )
+    )
+  ))
+write_csv(lyrs_csv_fis2019, file.path(here::here(), "baltic2015", "layers.csv"))
+source(file.path(here::here(), "baltic2015", "calculate_scores.R"))
+scores_w_fis2019 <- read.csv(file.path(here::here(), "baltic2015", "scores.csv"))
+
+compare_scores <- scores_w_fis2019 %>%
+  rename(score2019 = score) %>%
+  left_join(
+    rename(scores2015, score2015 = score),
+    by = c("goal", "dimension", "region_id")
+    ) %>%
+  mutate(diffs = score2015-score2019)
+
+summary(compare_scores$diffs)
+## but differences only in FIS, FP, and Index as expected
+summary(filter(compare_scores, !goal %in% c("FIS", "FP", "Index"))$diffs)
+
+## some plots to visualize how new data shifted scores
+## old minus revised scores so positive diffs mean revised scores are lower:
+# summary(filter(compare_scores, goal == "FIS")$diffs)
+
+compareFP <- filter(compare_scores, goal %in% c("FIS", "FP", "Index"), region_id %in% 1:42)
+hist <- ggplot(filter(compareFP, dimension %in% c("status", "future", "score"))) +
+  geom_histogram(aes(diffs)) +
+  facet_grid(vars(goal), vars(dimension)) +
+  labs(x = "score differences (2015 scores minus scores revised with 2018 data, for yr 2014)") +
+  theme_bw()
+
+trends_plot <- ggplot(filter(compare_scores, goal == "FIS", dimension == "trend")) + 
+  geom_ribbon(aes(x = region_id, ymin = score2019, ymax = score2015), alpha = 0.1) +
+  geom_point(aes(region_id, score2015), color = "mediumorchid", size = 0.8) +
+  geom_point(aes(region_id, score2019), color = "darkslategrey", size = 0.8) +
+  labs(x = "region id", y = "trend scores with 2015 (purple) and 2019 (green) FIS data") +
+  theme_bw()
+
+compare_plot <- ggplot(filter(compareFP, dimension %in% c("status", "future", "score"))) +
+  geom_point(aes(score2015, score2019, color = region_id), alpha = 0.6, size = 1.5) +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_grid(vars(goal), vars(dimension)) +
+  labs(x = "scores calculated with old dataset", y = "scores calculated with updated FIS data") +
+  theme_bw()
+# compare_plot
+# plotly::ggplotly(compare_plot)
+
+```
+
+<br>
+
+Table with the results, just `status` dimension for FIS goal
+
+```{r view result}
+DT::datatable(
+  filter(compare_scores, goal == "FIS", dimension == "status", region_id %in% 1:42), 
+  class = 'cell-border stripe', 
+  options = list(pageLength = 42)
+)
+```
+
+## Histograms
+
+```{r, warning=FALSE, message=FALSE}
+hist
+trends_plot
+```
+
+
+### Scores calculated with 2015 vs 2019 FIS datasets 
+
+**(F/FMSY, B/BMSY, Landings)**
+
+```{r}
+plotly::ggplotly(compare_plot)
+```
+
+<br>
+
+## Compare 2015 vs 2019 data using updated `FIS` function
+
+```{r recalculating with slightly revised FIS functions, include=FALSE}
+# file.copy(file.path(dir, "functions", "functions2019_constantPenalty.R"), file.path(dir, "conf", "functions.R"), overwrite = TRUE) 
+file.copy(file.path(dir, "compare", "functions2019.R"), file.path(dir, "conf", "functions.R"), overwrite = TRUE)
+cod_penalty_lyr <- data.frame(
+  targets = "FIS", layer = "fis_cod_penalty", name = "Cod Condition Penalty Factor", 
+  description = "Proportion of Cod 20-40cm with Fultons K less than 0.8", 
+  fld_value = "penalty", units = "proportion", 
+  filename = "fis_cod_penalty_bhi2019.csv", clip_n_ship_disag = NA, clip_n_ship_disag_description = NA, 
+  layer_gl = NA, path_in = NA, rgns_in = NA, fld_id_num = "rgn_id", fld_id_chr = NA, 
+  fld_category = NA, fld_year = NA, fld_val_num = "penalty_factor", fld_val_chr = NA, 
+  file_exists = NA, year_min = NA, year_max = NA, 
+  val_min = NA, val_max = NA, val_0to1 = NA, flds_unused = NA, 
+  flds_missing = NA, rows_duplicated = NA, num_ids_unique = NA, data_na = NA
+)
+lyrs_csv_fis2019_penalize <- rbind(lyrs_csv_fis2019, cod_penalty_lyr)
+
+## recalculate scores with updated function and version 2015 (origial) FIS data
+lyrs_csv_fis2015_penalize <- rbind(read_csv(file.path(dir, "compare", "layers2015.csv")), cod_penalty_lyr)
+write_csv(lyrs_csv_fis2015_penalize, file.path(here::here(), "baltic2015", "layers.csv"))
+source(file.path(here::here(), "baltic2015", "calculate_scores.R"))
+scores2015_reviseFun <- read.csv(file.path(here::here(), "baltic2015", "scores.csv"))
+
+## recalculate scores with updated function and version 2019 (revised) FIS data
+write_csv(lyrs_csv_fis2019_penalize, file.path(here::here(), "baltic2015", "layers.csv"))
+source(file.path(here::here(), "baltic2015", "calculate_scores.R"))
+scores_fis2019_reviseFun <- read.csv(file.path(here::here(), "baltic2015", "scores.csv"))
+
+compare_final <- scores_fis2019_reviseFun %>%
+  rename(score2019 = score) %>%
+  left_join(
+    rename(scores2015_reviseFun, score2015 = score),
+    by = c("goal", "dimension", "region_id")
+    ) %>%
+  mutate(diffs = score2015-score2019) %>% 
+  filter(
+    goal %in% c("FIS", "FP", "Index"),
+    dimension %in% c("status", "future", "score", "trend"), 
+    region_id %in% 1:42
+  )
+
+compare_compare <- compare_final %>% 
+  rename(
+    score2019_newFUN = score2019, 
+    score2015_newFUN = score2015, 
+    diffs_newFUN = diffs
+  ) %>% 
+  left_join(
+    compare_scores,
+    by = c("goal", "dimension", "region_id")
+  ) %>% 
+  mutate(diffs2 = diffs_newFUN-diffs)
+# hist(compare_compare$diffs2)
+compareFUNS_plot <- ggplot(
+  compare_compare %>% 
+    select(region_id, diffs_newFUN, diffs) %>% 
+    rename(
+      `differences with new FIS fun` = diffs_newFUN,
+      `differences with v2015 FIS fun` = diffs
+    ) %>% 
+    gather("tst", "diff", -region_id)) + 
+  geom_histogram(aes(diff), binwidth = 1) + 
+  facet_grid(vars(tst))
+
+compareFP_final <- filter(compare_final, goal %in% c("FIS", "FP", "Index"), region_id %in% 1:42)
+compare_plot_final <- ggplot(compareFP_final %>% filter(dimension %in% c("status", "future", "score"))) +
+  geom_point(aes(score2015, score2019, color = region_id), alpha = 0.6, size = 1.5) +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_grid(vars(goal), vars(dimension)) +
+  labs(x = "scores calculated with old dataset", y = "scores calculated with updated FIS data") +
+  theme_bw()
+
+hist_final <- ggplot(filter(compareFP_final, dimension %in% c("status", "future", "score"))) +
+  geom_histogram(aes(diffs)) +
+  facet_grid(vars(goal), vars(dimension)) +
+  labs(x = "score differences (2015 scores minus scores revised with 2018 data, for yr 2014)") +
+  theme_bw()
+
+trends_plot_final <- ggplot(filter(compare_final, goal == "FIS", dimension == "trend")) + 
+  geom_ribbon(aes(x = region_id, ymin = score2019, ymax = score2015), alpha = 0.1) +
+  geom_point(aes(region_id, score2015), color = "mediumorchid", size = 0.8) +
+  geom_point(aes(region_id, score2019), color = "darkslategrey", size = 0.8) +
+  labs(x = "region id", y = "trend scores with 2015 (purple) and 2019 (green) FIS data") +
+  theme_bw()
+```
+
+Plot comparing score results with v2015 vs v2019 `FIS` datasets
+
+Looks about the same as above...
+
+```{r comparisons plots ver2015 data vs ver2019}
+plotly::ggplotly(compare_plot_final)
+```
+
+**Histograms show distributions of differences between scores calculated using version 2015 and v2019 data** 
+
+The histograms are quite similar; changes in the `FIS` score calculation function generally result in much smaller differences than the underlying FIS datasets.
+
+```{r differences with functions vs data changes}
+compareFUNS_plot
+```
+
+**Data Table**
+```{r datatable for final comparison}
+DT::datatable(
+  filter(compare_final, dimension == "status", goal == "FIS"), 
+  class = 'cell-border stripe', 
+  options = list(pageLength = 42)
+)
+```
+
+
+```{r more plots to match first section, warning=FALSE, message=FALSE}
+hist_final
+trends_plot_final
+```
+
+
+### Do these differences make sense?
+
+Regions 11, 12, 13, 16 recieve better scores with 2019 data because of inclusion of Eastern cod (which despite poor condition, is high scoring because of decent B/BMSY and F/FMSY)
+
+Regions 3, 4, 7-10, (ICES subdivision 22) contain only scores for Western not Eastern cod stock. The same goes for BHI 5&6 The Sound ie ICES 23, but `her_3a22` for some reason is missing from `ffmsy` data for 5 and 6 for year 2014, resulting in higher scores for these 2 regions.
+
+In BHI Regions 37-42 scores decreased with the 2019 data, because in the 2019 version of the prepared data, Eastern cod are not included. Herring in those regions have biomass much above the MSY value, and though mortality is also well above 1, BHI penalizes for underfishing-- something to consider when setting the F and B score parameters, though these parameters need to work for all stocks...
+
+
+```{r reasons for differences, eval=FALSE, include=FALSE}
+lapply(
+  list("fis_bbmsy_bhi2019.csv", "fis_bbmsy_bhi2015.csv", 
+    "fis_ffmsy_bhi2019.csv", "fis_ffmsy_bhi2015.csv", 
+    "fis_landings_bhi2019.csv", "fis_landings_bhi2015.csv"
+  ), function(x){
+    View(read_csv(file.path(dir, "layers", unlist(x))), title = str_extract(unlist(x), "[a-z0-9_]+"))
+    assign(
+      str_extract(unlist(x), "[a-z0-9_]+"), 
+      read_csv(file.path(dir, "layers", unlist(x))), 
+      envir = .GlobalEnv    
+    )
+  }
+)
+```
+
+<br>

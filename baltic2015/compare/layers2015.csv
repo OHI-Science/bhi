@@ -1,0 +1,198 @@
+"targets","layer","name","description","fld_value","units","filename","clip_n_ship_disag","clip_n_ship_disag_description","layer_gl","path_in","rgns_in","fld_id_num","fld_id_chr","fld_category","fld_year","fld_val_num","fld_val_chr","file_exists","year_min","year_max","val_min","val_max","val_0to1","flds_unused","flds_missing","rows_duplicated","num_ids_unique","data_na"
+"AO","ao_stock_status","status of coastal fish stocks","HELCOM core indicators for coastal fish populations","score","status score","ao_stock_status_bhi2015.csv","equal","global management effectiveness scores were applied equally to all regions.","ao_access","~/github/ohi-global/eez2014/layers/ao_access.csv","global","rgn_id",,"dimension",,"score",,TRUE,,,20,100,FALSE,,,,42,FALSE
+"AO","ao_stock_slope","slope of coastal fish stocks to be used for trend","Mean slopes of all monitoring time series used for HELCOM core indicators for coastal fish populations","score","trend score","ao_stock_slope_bhi2015.csv","equal","global purchasing power parity information was applied equally to all regions.","ao_need","~/github/ohi-global/eez2014/layers/ao_need.csv","global","rgn_id",,"dimension",,"score",,TRUE,,,-0.08,0.17,FALSE,,,,42,FALSE
+"CS","cs_status","status of CS","Status of CS based on HELCOM Zostera spatial data & carbon storage capacity ","score","status score","cs_status_bhi2015.csv","","","","","","rgn_id",,"dimension",,"score",,TRUE,,,0,95,FALSE,,,,42,FALSE
+"CW","cw_coastalpopn_trend","Coastal human population as a proxy for trend in trash","Coastal population, defined as the total population inland of 25 miles, extracted from Gridded Population of the World (GPW) Population Density Grid Future Estimates.
+
+
+
+Data sources:
+
+
+
+- Center for International Earth Science Information Network (CIESIN)/Columbia University
+
+- CIESIN & CIAT (Center for International Earth Science Information Network (CIESIN)/Columbia University, & Centro Internacional de Agricultura Tropical (CIAT)) (2005). **Gridded Population of the World, Version 3 (GPWv3): Population Density Grid, Future Estimates**. Palisades, NY. [NASA Socioeconomic Data and Applications Center (SEDAC)](http://sedac.ciesin.columbia.edu/data/set/gpw-v3-population-density-future-estimates)","trend","trend score","cw_coastalpopn_trend_gl2014.csv","equal","global trends were applied equally to all regions.","cw_coastalpopn_trend","~/github/ohi-global/eez2014/layers/cw_coastalpopn_trend.csv","global","rgn_id",,,,"trend",,TRUE,,,-0.127109,0.00634518,FALSE,,,,42,FALSE
+"CW","cw_eut_status","Status of EUT ","Status of eutrophication subgoal based on DIN, DIP, Chla, Secchi, and anoxia data","score","status score","cw_eut_status_score_bhi2015.csv","","","","","","rgn_id",,,,"score",,TRUE,,,30.1,88.822419794841,FALSE,,,,42,FALSE
+"CW","cw_eut_trend","Trend of EUT","Trend of eutrofication subgoal based on DIN, DIP, Chla, Secchi, and anoxia data","score","trend score","cw_eut_trend_score_bhi2015.csv","","","","","","rgn_id",,,,"score",,TRUE,,,-0.6,0.33,FALSE,,,,42,FALSE
+"CW","cw_con_dioxin_status","Status of dioxin and dioxin-like PCB indicator. HELCOM and EU human health threshold used.","Status calculated only for most recent period (2009-2013) for each HOLAS basin and applied to all BHI regions","score","status score","cw_con_dioxin_status_bhi2015.csv","","","","","","rgn_id",,"dimension",,"score",,TRUE,,,100,100,FALSE,,,,42,FALSE
+"CW","cw_con_dioxin_trend","Trend  of dioxin and dioxin-like PCB indicator.  HELCOM and EU human health threshold used.","Trend calculated on basin time series (2004-2013) with each observation first transformed to a ?status? based on the human health threshold. Basin trends applied to BHI regions","score","trend score","cw_con_dioxin_trend_bhi2015.csv","","","","","","rgn_id",,"dimension",,"score",,TRUE,,,-3.63033133015008e-16,0.0200956875108194,FALSE,,,,42,FALSE
+"CW","cw_con_ices6_status","Status of ICES6 con indicator based on the ICES6 pcbs. HELCOM and EU human health threshold used","Status calculated only for most recent period (2009-2013) for each HOLAS basin and applied to all BHI regions","score","status score","cw_con_ices6_status_bhi2015.csv","","","","","","rgn_id",,"dimension",,"score",,TRUE,,,100,100,FALSE,,,,42,FALSE
+"CW","cw_con_ices6_trend","Trend of ICES6 con indicator based on the ICES6 pcbs. HELCOM and EU human health threshold used","Trend calculated on basin time series (2004-2013) with each observation first transformed to a ?status? based on the human health threshold. Basin trends applied to BHI regions","score","trend score","cw_con_ices6_trend_bhi2015.csv","","","","","","rgn_id",,"dimension",,"score",,TRUE,,,-5.08818012209995e-16,4.96506830649455e-16,FALSE,,,,42,FALSE
+"CW","cw_con_pfos_status","Status of PFOS contaminants indicator. HELCOM human health threshold.","Status calculated only for most recent period (2010-2014) for each HOLAS basin and applied to all BHI regions","score","status score","cw_con_pfos_status_bhi2015.csv","","","","","","rgn_id",,"dimension",,"score",,TRUE,,,100,100,FALSE,,,,42,FALSE
+"CW","cw_con_pfos_trend","Trend of PFOS contaminants indicator. HELCOM human health threshold.","Trend calculated on basin times series (2005-2015) for each HOLAS basin and applied to all BHI regions","score","trend score","cw_con_pfos_trend_bhi2015.csv","","","","","","rgn_id",,"dimension",,"score",,TRUE,,,-6.46933186603485e-16,6.61596863607591e-16,FALSE,,,,42,FALSE
+"CW","cw_con_penalty","Penalty factor for CON","Penalty factor for measuring only a percentage of identified toxins ","penalty_factor","penalty factor","cw_con_penalty_bhi2015.csv","","","","","","rgn_id",,,,"penalty_factor",,TRUE,,,0.058823529,0.176470588,TRUE,,,,42,FALSE
+"CW","cw_tra_status","Status of Trash","Status of Trash","score","status score ","cw_trash_status_scores_bhi2015.csv","","","","","","rgn_id",,,,"score",,TRUE,,,0,95.8430617013585,FALSE,,,,42,FALSE
+"CW","cw_tra_trend","Trend of Trash","Trend of Trash based on status of 2010 and 2015","score","trend score","cw_tra_trend_scores_bhi2015.csv","","","","","","rgn_id",,,,"score",,TRUE,,,-0.1,0,FALSE,,,,42,FALSE
+"FIS","fis_bbmsy","B/Bmsy by stock and year","ICES Bmsy.  Data sources: ","score","metric score","fis_bbmsy_bhi2015.csv","equal","global b_bmsy information was applied equally to all regions.","","~/github/ohi-global/eez2014/layers/fis_b_bmsy.csv","global","rgn_id",,"stock","year","score",,TRUE,1966,2014,0.353802083,7.290975057,FALSE,,,,42,FALSE
+"FIS","fis_ffmsy","F/Fmsy by stock and year","ICES  Fmsy.  Data sources: ","score","metric score","fis_ffmsy_bhi2015.csv","equal","global b_bmsy information was applied equally to all regions.","","~/github/ohi-global/eez2014/layers/fis_b_bmsy.csv","global","rgn_id",,"stock","year","score",,TRUE,1966,2014,0.3,4.830769231,FALSE,,,,42,FALSE
+"FIS","fis_landings","Landings by stock and year","Annual Landings by ICES area and stock.  Data sources:  -ICES","landings","metric tons","fis_landings_bhi2015.csv","equal","global mean catch information was applied equally to all regions.","","~/github/ohi-global/eez2014/layers/fis_meancatch.csv","global","rgn_id",,"stock","year","landings",,TRUE,1994,2014,7093,218260,FALSE,,,,42,FALSE
+"ICO","ico_status","ICO spp status based upon fish and mammals redlist threat level from HELCOM","HELCOM species distributions and threat level based upon IUCN red list criteria.  Data sources:  - [HELCOM](http://www.helcom.fi/baltic-sea-trends/biodiversity/red-list-of-species) ","score","status score","ico_status_bhi2015.csv","","","","","","rgn_id",,,,"score",,TRUE,,,0.716666666666667,0.757142857142857,TRUE,,,,42,FALSE
+"ECO","le_gdp_region","Per capita GDP per BHI region","Gross Domestic Product (GDP) data (nominal values) from Eurostat.
+
+
+
+Data sources:
+
+
+
+- [Eurostat](http://ec.europa.eu/eurostat/data/database?p_auth=EgN81qAf&p_p_id=estatsearchportlet_WAR_estatsearchportlet&p_p_lifecycle=1&p_p_state=maximized&p_p_mode=view&_estatsearchportlet_WAR_estatsearchportlet_action=search&text=nama_10r_3gdp)
+
+","bhi_gdp_per_capita","mio euro per capita","le_gdp_region_bhi2015.csv","population_inland25km","global GDP data were applied to each region after weighting by each region's coastal population.","le_gdp","~/github/ohi-global/eez2014/layers/le_gdp.csv","global","rgn_id",,,"year","bhi_gdp_per_capita",,TRUE,2000,2013,0.00475980069096757,0.143484434291847,TRUE,,,,42,FALSE
+"ECO","le_gdp_country","national per capita GDP","Gross Domestic Product (GDP) data (nominal values) from Eurostat.
+
+
+
+Data sources:
+
+
+
+- [Eurostat](http://ec.europa.eu/eurostat/data/database?p_auth=sHLAepWT&p_p_id=estatsearchportlet_WAR_estatsearchportlet&p_p_lifecycle=1&p_p_state=maximized&p_p_mode=view&_estatsearchportlet_WAR_estatsearchportlet_action=search&text=nama_10_gdp)
+
+","gdp_per_cap_2005","mio euro per capita","le_gdp_country_bhi2015.csv","equal","global unemployment percentages were applied equally to each region. ","le_nat_gdp","~/github/ohi-global/eez2014/layers/le_unemployment.csv","global","rgn_id",,,"year","gdp_per_cap_2005",,TRUE,2000,2013,0.00195442199906911,0.0483556924390815,TRUE,,,,42,FALSE
+"ECO","eco_status","Status of eco ","Status of economics based on revenue from different blue sectors from EU's Blue Growth Report","score","status score ","eco_status_scores_bhi2015.csv","","","","","","rgn_id",,,,"score",,TRUE,,,86.1667231722184,86.1667231722184,FALSE,,,,42,FALSE
+"ECO","eco_trend","Trend of eco ","Trend of economics based on GDP per capita in the BHI regions compared with country-level GDP per capita","score","trend score","eco_trend_scores_bhi2015.csv","","","","","","rgn_id",,,,"score",,TRUE,,,-0.163973431734317,0.0447315175097276,FALSE,,,,42,FALSE
+"LIV","liv_regional_employ","Number of people employed in each BHI region 25km buffer based on eutS2 employment rates","Employment percentage by eutS2 region from Eurostat.
+
+
+
+Data sources:
+
+
+
+- [Eurostat database lfst_r_lfe2emprt](http://ec.europa.eu/eurostat/data/database?p_auth=BgwyNWIM&p_p_id=estatsearchportlet_WAR_estatsearchportlet&p_p_lifecycle=1&p_p_state=maximized&p_p_mode=view&_estatsearchportlet_WAR_estatsearchportlet_action=search&text=lfst_r_lfe2emprt)  ","bhi_employ_rate","number people employed","liv_regional_employ_bhi2015.csv","","","","","","rgn_id",,,"year","bhi_employ_rate",,TRUE,2000,2014,46.8728462680099,79.5,FALSE,,,,42,FALSE
+"LIV","liv_national_employ","Number of people employed nationally based on national employment rates","Employment percentage by eutS0 region from Eurostat.
+
+
+
+Data sources:
+
+
+
+- [Eurostat database lfst_r_lfe2emprt](http://ec.europa.eu/eurostat/data/database?p_auth=BgwyNWIM&p_p_id=estatsearchportlet_WAR_estatsearchportlet&p_p_lifecycle=1&p_p_state=maximized&p_p_mode=view&_estatsearchportlet_WAR_estatsearchportlet_action=search&text=lfst_r_lfe2emprt)  ","employ_pop","number people employed","liv_national_employ_bhi2015.csv","","","","","","rgn_id",,,"year","employ_pop",,TRUE,2000,2014,823463.1,70965000,FALSE,,,,42,FALSE
+"LIV","liv_status","Status of Livelihood","LIV status calculated in LIV data prep based on ratio of coastal/national employment rate. ","score","status score","liv_status_scores_bhi2015.csv","","","","","","rgn_id",,"country","year","score",,TRUE,2012,2012,91.1267605633803,99.8701298701299,FALSE,,,,42,FALSE
+"LIV","liv_trend","Trend of Livelihood ","LIV trend calculated in data prep. Based on most recent five years' status scores. ","score","trend score","liv_trend_score_bhi2015.csv","","","","","","rgn_id",,"dimension",,"score",,TRUE,,,0,0,TRUE,,,,42,FALSE
+"LSP","lsp_status","Status scores of LSP","Status calcluated ","score","status score","lsp_status_by_rgn_bhi2015.csv","","","","","","rgn_id",,,,"score",,TRUE,,,8.9,100,FALSE,,,,42,FALSE
+"LSP","lsp_trend","Trend of LSP ","","score","trend score","lsp_trend_bhi2015.csv","","","","","","rgn_id",,,,"score",,TRUE,,,0,0.1,TRUE,,,,42,FALSE
+"MAR","mar_coastalpopn2005_inland25km","Coastal population inland 25 kilometers","Coastal 25 km buffer population, from 2005. Source HYDE","popsum","people","mar_coastalpopn2005_inland25km_bhi2015.csv","","","","~/github/bhi/baltic2015/layers/mar_coastalpopn2005_inland25km_bhi2015.csv","","rgn_id",,,,"popsum",,TRUE,,,4102,5145329,FALSE,,,,42,FALSE
+"MAR","mar_harvest_species","Mariculture species harvested","Mariculture species harvested, from national databases","species","species name","mar_harvest_species_bhi2015.csv","","","","~/github/bhi/baltic2015/layers/mar_harvest_species_bhi2015.csv","",,,"species_code",,,"species",TRUE,,,,,FALSE,,,,42,
+"MAR","mar_sustainability_score","Mariculture sustainability score","Mariculture sustainability and mariculture regulations indicated by the Mariculture Sustainability Index (MSI).  Data sources:  - Trujillo P. (2008). **Using a mariculture sustainability index to rank countries performances**. In: A comparative assessment of biodiversity, fisheries and aquaculture in 53 countries Exclusive Economic Zones, Alder J, Pauly D, editors. _Fisheries Centre Research Report_, vol. 16(7) p. 2856.","sust_coeff","sustainability","mar_sustainability_score_bhi2015.csv","","","","~/github/bhi/baltic2015/layers/mar_sustainability_score_bhi2015.csv","","rgn_id",,"species",,"sust_coeff",,TRUE,,,0.53,0.53,TRUE,,,,42,FALSE
+"MAR","mar_harvest_tonnes","Mariculture harvest","Mariculture harvest","tonnes","tons","mar_harvest_tonnes_bhi2015.csv","","","","~/github/bhi/baltic2015/layers/mar_harvest_tonnes_bhi2015.csv","","rgn_id",,"species_code","year","tonnes",,TRUE,2005,2014,0,8172.25,FALSE,,,,42,FALSE
+"NP","np_bbmsy","B/Bmsy by stock and year of Sprat","ICES Bmsy.  Data sources: ","score","metric score","np_bbmsy_bhi2015.csv","equal","global b_bmsy information was applied equally to all regions.","","~/github/ohi-global/eez2014/layers/fis_b_bmsy.csv","global","rgn_id",,"stock","year","score",,TRUE,1974,2014,0.470175439,3.340350877,FALSE,,,,42,FALSE
+"NP","np_ffmsy","F/Fmsy by stock and year of Sprat","ICES  Fmsy.  Data sources: ","score","metric score","np_ffmsy_bhi2015.csv","equal","global b_bmsy information was applied equally to all regions.","","~/github/ohi-global/eez2014/layers/fis_b_bmsy.csv","global","rgn_id",,"stock","year","score",,TRUE,1974,2014,0.419230769,1.876923077,FALSE,,,,42,FALSE
+"NP","np_landings","Landings by stock and year of Sprat","Annual Landings by ICES area and stock.  Data sources:  -ICES","landings","metric tons","np_landings_bhi2015.csv","equal","global mean catch information was applied equally to all regions.","","~/github/ohi-global/eez2014/layers/fis_meancatch.csv","global","rgn_id",,"stock","year","landings",,TRUE,1994,2014,231000,529000,FALSE,,,,42,FALSE
+"BD","bd_spp_status","BD status based on species biodiversity. Based on geometric mean of taxa group status.","HELCOM species distributions from HELCOM species checklists and threat level based upon IUCN red list criteria.  Data sources:  - [HELCOM](http://www.helcom.fi/baltic-sea-trends/biodiversity/red-list-of-species) ","score","status score","bd_spp_status_bhi2015.csv","","","","","global","rgn_id",,"dimension",,"score",,TRUE,,,0.681016048318722,0.820195681989893,TRUE,,,,42,FALSE
+"BD","bd_spp_trend","BD trend taken from OHI-Global 2016 for Baltic countries","","score","trend score","bd_spp_trend_scores_bhi2015.csv","","","","","","rgn_id",,,,"score",,TRUE,,,-0.21,0,FALSE,,,,42,FALSE
+"TR","tr_accommodation_stays","Total coastal nights in accommodation stays","Total coastal nights in accommodation stays.  Data sources:  - [tour_occ_nin2](http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=tour_occ_nin2&lang=en)  and [Eurostat coastal stays tour_occ_nin2c](http://appsso.eurostat.ec.europa.eu/nui/show.do?dataset=tour_occ_nin2c&lang=en)  ","bhi_coastal_stays_per_cap","per capita night stays","tr_accommodation_stays_bhi2015.csv","","","tr_accommodation_stays","","","rgn_id",,,"year","bhi_coastal_stays_per_cap",,TRUE,2000,2014,0.904136878788489,26.912586783512,FALSE,,,,42,FALSE
+"TR","tr_status","Tourism and Recreation status scores","Status scores calculated based on [Study on Blue Growth, Maritime Policy and the EU Strategy for the Baltic Sea Region](https://webgate.ec.europa.eu/maritimeforum/node/3550)","score","status score","tr_status_scores_bhi2015.csv","","","","","","rgn_id",,"dimension",,"score",,TRUE,,,80.4435155677395,80.4435155677395,FALSE,,,,42,FALSE
+"TR","tr_trend","Tourism and Recreation trend scores","Trend scores calculated based on [Study on Blue Growth, Maritime Policy and the EU Strategy for the Baltic Sea Region](https://webgate.ec.europa.eu/maritimeforum/node/3550)","score","trend score","tr_trend_scores_bhi2015.csv","","","","","","rgn_id",,"dimension",,"score",,TRUE,,,-0.1672375,0.09169375,FALSE,,,,42,FALSE
+"pressures","cc_sal_surf","Current surface salinity water rescaled between historic max and future min","Modelled annual surface water (0-5 m) salinity using the BALTSEM model, Future projections force by the ECHAM5 global climate model A1b scenario.","pressure_score","pressure score","cc_sal_surf_bhi2015.csv","","","cc_sal_surf","","","rgn_id",,,,"pressure_score",,TRUE,,,0.281267598558708,0.549229002826415,TRUE,,,,42,FALSE
+"pressures","cc_sal_deep","Current deep water salinity (depth varies by basin) rescaled between historic max and future min","Modelled annual deep water (depth differs by basin) salinity using the BALTSEM model, Future projections force by the ECHAM5 global climate model A1b scenario.","pressure_score","pressure score","cc_sal_deep_bhi2015.csv","","","cc_sal_deep","","","rgn_id",,,,"pressure_score",,TRUE,,,0.215116378484745,0.569310158570043,TRUE,,,,42,FALSE
+"pressures","cc_sst","Current sea surface temperature (SST) rescaled to between historic min and future max","Modelled Jul-Aug SST using the BALTSEM model, Future projections force by the ECHAM5 global climate model A1b scenario.","pressure_score","pressure score","cc_sst_bhi2015.csv","raster | equal","","cc_sst","~/github/ohi-global/eez2014/layers/cc_sst.csv","global","rgn_id",,,,"pressure_score",,TRUE,,,0.736574138579726,1,TRUE,,,,42,FALSE
+"pressures","po_nload","nitrogen pollution","nitrogen load including atmospheric and land-based sources from HELCOM data normalized to ceilings set by HELCOM for each of the seven large basins","pressure_score","pressure score","po_nload_bhi2015.csv","","","po_nload","~/github/ohi-global/eez2014/layers/nload.csv","global","rgn_id",,,,"pressure_score",,TRUE,,,0,0.630195442519416,TRUE,,,,42,FALSE
+"pressures","ss_wgi","Weakness of governance indicated with the WGI","Inverse of World Governance Indicators (WGI) six combined scores.
+
+
+
+Data sources:
+
+
+
+- [Worldwide Governance Indicators (WGI)](http://info.worldbank.org/governance/wgi)","pressure_score","pressure score","ss_wgi_bhi2015.csv","equal","global pressures data were applied equally to all regions.","ss_wgi","~/github/ohi-global/eez2014/layers/ss_wgi.csv","global","rgn_id",,,,"pressure_score",,TRUE,,,0.130868634,0.641981176,TRUE,,,,42,FALSE
+"pressures","po_atmos_pcb153","Atmospheric deposition of PCB 153 to the Baltic Sea","Atmospheric deposition of PCB-153 on the Baltic Sea .    Data sources:    - [HELCOM provides EMEP/MSC data for Baltic Sea basins](http://www.helcom.fi/baltic-sea-trends/environment-fact-sheets/hazardous-substances/atmospheric-deposition-of-pcb-153-on-the-baltic-sea/)","pressure_score","pressure score","po_atmos_pcb153_bhi2015.csv","","","","","","rgn_id",,,,"pressure_score",,TRUE,,,0.014218009478673,0.274881516587678,TRUE,,,,42,FALSE
+"pressures","po_atmos_pcddf","Atmospheric deposition of PCDD/Fs to the Baltic Sea","Atmospheric deposition of PCDD/Fs on the Baltic Sea using scenarios with adjusted emissions.    Data sources:    - [HELCOM provides EMEP/MSC data for Baltic Sea basins](http://www.helcom.fi/baltic-sea-trends/environment-fact-sheets/hazardous-substances/atmospheric-deposition-of-pcdd-fs-on-the-baltic-sea/)","pressure_score","pressure score","po_atmos_pcddf_bhi2015.csv","","","","","","rgn_id",,,,"pressure_score",,TRUE,,,0.021875,0.378125,TRUE,,,,42,FALSE
+"pressures CW","po_inverse_secchi","Water clarity / transparency pressure","Inverse of eut status obtained using secchi data.","pressure_score","pressure score","po_inverse_secchi_bhi2015.csv","","","","","","rgn_id",,,,"pressure_score",,TRUE,,,0,0.35,TRUE,,,,42,FALSE
+"pressures","po_pload","Phosphorus pollution","phosphorus load including atmospheric and land-based sources from HELCOM data normalized to ceilings set by HELCOM for each of the seven major basins","pressure_score","pressure score","po_pload_bhi2015.csv","","spatial data was extracted for each region. ","po_pload","~/github/ohi-global/eez2014/layers/pload.csv","global","rgn_id",,,,"pressure_score",,TRUE,,,0,0.654537184443939,TRUE,,,,42,FALSE
+"pressures","po_trash","Trash pollution","Density of trash from coastal land and sea (Ocean Conservancy).
+
+
+
+Data sources:
+
+
+
+- [Ocean Conservancy International Coastal Cleanup 2012](http://www.oceanconservancy.org/our-work/international-coastal-cleanup/2012-ocean-trash-index.html)
+
+","pressure_score","score","po_trash_bhi2015.csv","equal","global pressures data were applied equally to all regions.","po_trash","~/github/ohi-global/eez2014/layers/po_trash.csv","global","rgn_id",,,,"pressure_score",,TRUE,,,0.0415693829864149,1,TRUE,,,,42,FALSE
+"resilience","res_reg_birds","Directive 2009/147/EC of the European Parliament and of the Council of 30 November 2009 on the conservation of wild birds","Directive 2009/147/EC of the European Parliament and of the Council of 30 November 2009 on the conservation of wild birds","resilience_score","resilience score","res_reg_birds_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.9375,1,TRUE,,,,42,FALSE
+"resilience","res_reg_bsap","HELCOM 2007. HELCOM Baltic Sea Action Plan (BSAP). HELCOM Ministerial Meeting. Adopted in Krakow, Poland, 15 November 2007.","HELCOM 2007. HELCOM Baltic Sea Action Plan (BSAP). HELCOM Ministerial Meeting. Adopted in Krakow, Poland, 15 November 2007.","resilience_score","resilience score","res_reg_bsap_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.5,0.5,TRUE,,,,42,FALSE
+"resilience","res_reg_bwd","Directive 2006/7/EC of the European Parliament and of the Council of 15 February 2006 concerning the management of bathing water quality and repealing the Directive 76/160/EC","Directive 2006/7/EC of the European Parliament and of the Council of 15 February 2006 concerning the management of bathing water quality and repealing the Directive 76/160/EC","resilience_score","resilience score","res_reg_bwd_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,1,1,TRUE,,,,42,FALSE
+"resilience","res_reg_cbd","Convention on Biodiversity","Convention on Biodiversity","resilience_score","resilience score","res_reg_cbd_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.25,0.25,TRUE,,,,42,FALSE
+"resilience","res_reg_cfp","Regulation 1380/2013/EU of the European Parliament and of the Council of 11 December 2013 on the Common Fisheries Policy, amending Council Regulations (EC) No 1954/2003 and (EC) No 1224/2009 and repealing Council Regulations (EC) No 2371/2002 and (EC) No ","Regulation 1380/2013/EU of the European Parliament and of the Council of 11 December 2013 on the Common Fisheries Policy, amending Council Regulations (EC) No 1954/2003 and (EC) No 1224/2009 and repealing Council Regulations (EC) No 2371/2002 and (EC) No ","resilience_score","resilience score","res_reg_cfp_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,1,1,TRUE,,,,42,FALSE
+"resilience","res_reg_cites","Convention on International Trade in Endangered Species of Wild Fauna and Flora","Convention on International Trade in Endangered Species of Wild Fauna and Flora","resilience_score","resilience score","res_reg_cites_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,1,1,TRUE,,,,42,FALSE
+"resilience","res_reg_cop21","Paris Climate Agreement","Paris Climate Agreement","resilience_score","resilience score","res_reg_cop21_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.25,0.25,TRUE,,,,42,FALSE
+"resilience","res_reg_hd","Directive 1992/43/EC of 21 May 1992 on the conservation of natural habitats and of wild fauna and flora","Directive 1992/43/EC of 21 May 1992 on the conservation of natural habitats and of wild fauna and flora","resilience_score","resilience score","res_reg_hd_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.875,0.875,TRUE,,,,42,FALSE
+"resilience","res_reg_helcom","Convention on the Protection of the Marine Environment of the Baltic Sea Area 1992","Convention on the Protection of the Marine Environment of the Baltic Sea Area 1992","resilience_score","resilience score","res_reg_helcom_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,1,1,TRUE,,,,42,FALSE
+"resilience","res_reg_ied","Directive 2010/75/EU of the European Parliament and of the Council of 24 November 2010 on industrial emissions (integrated pollution prevention and control)","Directive 2010/75/EU of the European Parliament and of the Council of 24 November 2010 on industrial emissions (integrated pollution prevention and control)","resilience_score","resilience score","res_reg_ied_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.25,0.25,TRUE,,,,42,FALSE
+"resilience","res_reg_msfd","Directive 2008/56/EC of the European Parliament and of the Council of 17 June 2008 establishing a framework for community action in the field of marine environmental policy","Directive 2008/56/EC of the European Parliament and of the Council of 17 June 2008 establishing a framework for community action in the field of marine environmental policy","resilience_score","resilience score","res_reg_msfd_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.25,0.944444444444444,TRUE,,,,42,FALSE
+"resilience","res_reg_mspd","Directive 2014/89/EC of the European Parliament and of the Council of 23 July 2014 establishing a framework for maritime spatial planning","Directive 2014/89/EC of the European Parliament and of the Council of 23 July 2014 establishing a framework for maritime spatial planning","resilience_score","resilience score","res_reg_mspd_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.25,0.25,TRUE,,,,42,FALSE
+"resilience","res_reg_nd","Council Directive 91/676/EEC of 12 December 1991 concerning the protection of waters against pollution caused by nitrates from agricultural sources","Council Directive 91/676/EEC of 12 December 1991 concerning the protection of waters against pollution caused by nitrates from agricultural sources","resilience_score","resilience score","res_reg_nd_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.55,0.9,TRUE,,,,42,FALSE
+"resilience","res_reg_nec","Directive 1999/32/EC of 26 April 1999 relating to a reduction in the sulphur content of certain liquid fuels and amending Directive 93/12/EEC","Directive 1999/32/EC of 26 April 1999 relating to a reduction in the sulphur content of certain liquid fuels and amending Directive 93/12/EEC","resilience_score","resilience score","res_reg_nec_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.4375,1,TRUE,,,,42,FALSE
+"resilience","res_reg_pop","Regulation 850/2004/EC of the European Parliament and of the Council of 29 April 2004 on persistent organic pollutants and amending Directive 79/117/EEC","Regulation 850/2004/EC of the European Parliament and of the Council of 29 April 2004 on persistent organic pollutants and amending Directive 79/117/EEC","resilience_score","resilience score","res_reg_pop_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.75,0.884615384615385,TRUE,,,,42,FALSE
+"resilience","res_reg_reach","Regulation 1907/2006/EC of the European Parliament and of the Council of 18 December 2006 concerning the Registration, Evaluation, Authorisation and Restriction of Chemicals (REACH), establishing a European Chemicals Agency, amending Directive 1999/45/EC ","Regulation 1907/2006/EC of the European Parliament and of the Council of 18 December 2006 concerning the Registration, Evaluation, Authorisation and Restriction of Chemicals (REACH), establishing a European Chemicals Agency, amending Directive 1999/45/EC ","resilience_score","resilience score","res_reg_reach_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,1,1,TRUE,,,,42,FALSE
+"resilience","res_reg_uwwtd","Directive 1991/271/EEC Council Directive of 21 May 1991 concerning urban waste water treatment ","Directive 1991/271/EEC Council Directive of 21 May 1991 concerning urban waste water treatment ","resilience_score","resilience score","res_reg_uwwtd_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.25,1,TRUE,,,,42,FALSE
+"resilience","res_reg_wfd","Directive 2000/60/EC of the European Parliament and of the Council of 23 October 2000 establishing a framework for Community action in the field of water policy ","Directive 2000/60/EC of the European Parliament and of the Council of 23 October 2000 establishing a framework for Community action in the field of water policy ","resilience_score","resilience score","res_reg_wfd_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.25,0.583333333333333,TRUE,,,,42,FALSE
+"resilience","wgi_all","Strength of governance indicated with the WGI","World Governance Indicators (WGI) six combined scores.
+
+
+
+Data sources:
+
+
+
+- [Worldwide Governance Indicators (WGI)](http://info.worldbank.org/governance/wgi)","resilience_score","resilience score","wgi_all_bhi2015.csv","equal","global resilience data were applied equally to all regions.","wgi_all","~/github/ohi-global/eez2014/layers/wgi_all.csv","global","rgn_id",,,,"resilience_score",,TRUE,,,0.358018824,0.869131366,TRUE,,,,42,FALSE
+"spatial","rgn_area","Region area of total EEZ ocean","Area of Ocean Health Index regions based on exclusive economic zones (VLIZ 2012).
+
+
+
+Data sources:
+
+
+
+- [VLIZ Maritime Boundaries Geodatabase, version 7](http://www.marineregions.org/)
+
+","area_km2","km^2","rgn_area_sc2014-area.csv","raster","spatial data was extracted for each region.","rgn_area","/Volumes/data_edit/git-annex/clip-n-ship/bhi-deu/spatial/rgn_offshore_data.csv","subcountry","rgn_id",,"rgn_name",,"area_km2",,TRUE,,,98.6209,31239.7,FALSE,,,,42,FALSE
+"spatial","rgn_area_inland1km","Region area 1 km inland","inland area 1 km from shore.","area_km2","km^2","rgn_area_inland1km_gl2014.csv","raster","spatial data was extracted for each region.","rgn_area_inland1km","~/github/ohi-global/eez2014/layers/rgn_area_inland1km.csv","global","rgn_id",,,,"area_km2",,TRUE,,,5,5,FALSE,,,,42,FALSE
+"spatial","rgn_area_offshore3nm","Region area offshore 3nm","Area of Ocean Health Index regions to 3nm (VLIZ 2012).
+
+
+
+Data sources:
+
+
+
+- [VLIZ Maritime Boundaries Geodatabase, version 7](http://www.marineregions.org/)
+
+","area_km2","km^2","rgn_area_offshore3nm_gl2014.csv","raster","spatial data was extracted for each region.","rgn_area_offshore3nm","~/github/ohi-global/eez2014/layers/rgn_area_offshore3nm.csv","global","rgn_id",,,,"area_km2",,TRUE,,,5,5,FALSE,,,,42,FALSE
+"spatial","rgn_georegion_labels","Georegion labels per region, at 3 georegion levels","Lookup table of Ocean Health Index regions and UN georegion names at 3 georegion levels.
+
+
+
+Data sources:
+
+
+
+- [UN geographical region and composition](http://unstats.un.org/unsd/methods/m49/m49regin.htm)
+
+","label","label","rgn_georegion_labels_gl2014.csv","raster","spatial data was extracted for each region.","rgn_georegion_labels","~/github/ohi-global/eez2014/layers/rgn_georegion_labels.csv","global","rgn_id",,"level",,,"label",TRUE,,,,,FALSE,,,,42,
+"spatial","rgn_georegions","Georegion ids per region, at 3 georegion levels","Lookup table of Ocean Health Index regions and UN georegion identifiers at 3 georegion levels.
+
+
+
+Data sources:
+
+
+
+- [UN geographical region and composition](http://unstats.un.org/unsd/methods/m49/m49regin.htm)
+
+","georgn_id","georegion id","rgn_georegions_gl2014.csv","raster","spatial data was extracted for each region.","rgn_georegions","~/github/ohi-global/eez2014/layers/rgn_georegions.csv","global","rgn_id",,"level",,"georgn_id",,TRUE,,,1,154,FALSE,,,,42,FALSE
+"spatial","rgn_global","regions used in global analysis for Nature 2012, subset of regions_labels by type=eez and not deleted or disputed ","Regions used in global analysis for Nature 2012, subset of regions_labels by type=eez and not deleted or disputed. ","label","label","rgn_global.csv","raster","spatial data was extracted for each region.","rgn_global","~/github/ohi-global/eez2014/layers/rgn_global.csv","global","rgn_id",,,,,"label",TRUE,,,,,FALSE,,,,42,
+"spatial","rgn_labels","regions by type (eez, subocean, unclaimed) and label","Ocean Health Index regions by type (eez, subocean, unclaimed) and label","label","label","rgn_labels.csv","raster","spatial data was extracted for each region.","rgn_labels","~/github/ohi-global/eez2014/layers/rgn_labels.csv","global","rgn_id",,"type",,,"label",TRUE,,,,,FALSE,,,,42,
+"pressures","hab_anoxia","Bottom oxygen level (mg_L_1) ","From [Carstensen et al. 2014](http://www.pnas.org/content/111/15/5628.abstract). Carstensen provided dbf files containing O2 (mg_L_1) for a series of years for the Baltic Proper and the Gulf of Finland. Other areas are not included in this study but at the present time have no anoxia problems - therefore they will recieve a pressure value of 0.  Data scaled between 0 and 1. ","pressure_score","pressure score","hab_anoxia_bhi2015.csv","","","","","","rgn_id",,,,"pressure_score",,TRUE,,,0,0.98,TRUE,,,,42,FALSE
+"pressures","hab_illegal_oil","proxy_layer","","pressure_score","pressure score","hab_illegal_oil_bhi2015.csv","","","","","","rgn_id",,,,"pressure_score",,TRUE,,,0,1,TRUE,,,,42,FALSE
+"pressures","hab_coastal_pop","proxy_layer","","pressure_score","pressure score","hab_coastal_pop_bhi2015.csv","","","","","","rgn_id",,,,"pressure_score",,TRUE,,,0,0,TRUE,,,,42,FALSE
+"pressures","hab_bottom_trawl","proxy_layer","","pressure_score","pressure score","hab_bottom_trawl_bhi2015.csv","","","","","","rgn_id",,,,"pressure_score",,TRUE,,,0,1,TRUE,,,,42,FALSE
+"pressures","fp_over_harvest","proxy_layer","","pressure_score","pressure score","fp_over_harvest_bhi2015.csv","","","","","","rgn_id",,,,"pressure_score",,TRUE,,,0,0,TRUE,,,,42,FALSE
+"pressures","sp_invasives","Invasive species pressure scores ","Invasive species scores based on the number of invasive species introduction evenets in each country.  ","pressure_score","pressure score","sp_invasives_bhi2015.csv","","","","","","rgn_id",,,,"pressure_score",,TRUE,,,1,1,TRUE,,,,42,FALSE
+"resilience","res_biodiversity","proxy_layer","","resilience_score","resilience score","res_biodiversity_bhi2015.csv","","","","","","rgn_id",,,,"resilience_score",,TRUE,,,0.681016048,0.820195682,TRUE,,,,42,FALSE
+"FP","fp_wildcaught_weight","Fisheries weighting factor","Proportion of wild caught fisheries yield to mariculture yield, based in ICES area landings used in FIS and mariculture production of rainbow trout used in MAR.","w_fis","value","fp_wildcaught_weight_bhi2015.csv","equal","global weights were applied equally to all regions. ","fp_wildcaught_weight","~/github/ohi-global/eez2014/layers/fp_wildcaught_weight.csv","global","rgn_id",,,,"w_fis",,TRUE,,,0,1,TRUE,,,,42,FALSE
