@@ -31,12 +31,15 @@ filelist <- unlist(lapply(content(req)$tree, "[", "path"), use.names = FALSE) %>
   str_extract("/[a-zA-Z0-9_-]+.csv|/[a-zA-Z0-9_-]+$") %>% 
   str_remove_all(".csv")
 lyrcsv2015 <- read_csv(file.path(dir, "compare", "layers2015.csv"))
-dir.create(file.path(dir, "layers2"))
+dir.create(file.path(dir, "layers"))
 lapply(
-  intersect(lyrcsv2015$filename, str_remove(filelist, "/") %>% paste0(".csv")),
+  c(
+    intersect(lyrcsv2015$filename, str_remove(filelist, "/") %>% paste0(".csv")), 
+    "eco_trend_scores_BHI2015.csv" # random capitalization causes issue...
+  ),
   function(x){
     read_csv(paste0("https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/baltic2015/layers/", unlist(x))) %>% 
-      write_csv(file.path(dir, "layers2", unlist(x)))
+      write_csv(file.path(dir, "layers", unlist(x) %>% str_replace_all("_BHI2015", "_bhi2015")))
   }
 )
 source(file.path(dir, "calculate_scores.R"))
@@ -54,19 +57,38 @@ scores2015 <- read.csv(file.path(dir, "scores.csv"))
 ```{r recalculating with same function v2019  data, echo=FALSE, include=FALSE}
 ## now substitute new FIS goal layers from 2019 data prep
 ## copy these over from the bhi-prep v2019 layers folder
+req <- GET("https://api.github.com/repos/OHI-Science/bhi-prep/git/trees/master?recursive=1")
+stop_for_status(req)
+filelist <- unlist(lapply(content(req)$tree, "[", "path"), use.names = FALSE) %>% 
+  grep(pattern = "layers/v2019/", value = TRUE) %>% 
+  str_extract("[a-z0-9_]+.csv")
+lapply(
+  filelist,
+  function(x){
+    read_csv(paste0("https://raw.githubusercontent.com/OHI-Science/bhi-prep/master/layers/v2019/", unlist(x))) %>% 
+      rename(rgn_id = region_id) %>% 
+      write_csv(file.path(dir, "layers", unlist(x)))
+  }
+)
 new_fis_lyrs <- c("fis_ffmsy_bhi2019.csv", "fis_bbmsy_bhi2019.csv", "fis_landings_bhi2019.csv")
 file.exists(file.path(dir, "layers", new_fis_lyrs))
 
-lyrs_csv_fis2019 <- read_csv(file.path(dir, "layers.csv")) %>%
-  mutate(filename = ifelse(
-    layer == "fis_bbmsy", "fis_bbmsy_bhi2019.csv",
-    ifelse(
-      layer == "fis_ffmsy", "fis_ffmsy_bhi2019.csv",
-      ifelse(
-        layer == "fis_landings", "fis_landings_bhi2019.csv", filename
+lyrs_csv_fis2019 <- read_csv(file.path(dir, "compare", "layers2015.csv")) %>%
+  mutate(
+    filename = ifelse(
+      layer == "fis_bbmsy", "fis_bbmsy_bhi2019.csv",
+      ifelse(layer == "fis_ffmsy", "fis_ffmsy_bhi2019.csv",
+             ifelse(layer == "fis_landings", "fis_landings_bhi2019.csv", filename)
       )
-    )
-  ))
+    ),
+    fld_val_num = ifelse(
+      layer == "fis_bbmsy", "value",
+      ifelse(layer == "fis_ffmsy", "value", fld_val_num)
+    ),
+    fld_value = ifelse(
+      layer == "fis_bbmsy", "value",
+      ifelse(layer == "fis_ffmsy", "value", fld_value)
+    ))
 write_csv(lyrs_csv_fis2019, file.path(dir, "layers.csv"))
 source(file.path(dir, "calculate_scores.R"))
 scores_w_fis2019 <- read.csv(file.path(dir, "scores.csv"))
@@ -159,7 +181,7 @@ file.copy(file.path(dir, "compare", "functions2019.R"), file.path(dir, "conf", "
 cod_penalty_lyr <- data.frame(
   targets = "FIS", layer = "fis_cod_penalty", name = "Cod Condition Penalty Factor", 
   description = "Proportion of Cod 20-40cm with Fultons K less than 0.8", 
-  fld_value = "penalty", units = "proportion", 
+  fld_value = "penalty_factor", units = "proportion", 
   filename = "fis_cod_penalty_bhi2019.csv", clip_n_ship_disag = NA, clip_n_ship_disag_description = NA, 
   layer_gl = NA, path_in = NA, rgns_in = NA, fld_id_num = "rgn_id", fld_id_chr = NA, 
   fld_category = NA, fld_year = NA, fld_val_num = "penalty_factor", fld_val_chr = NA, 
