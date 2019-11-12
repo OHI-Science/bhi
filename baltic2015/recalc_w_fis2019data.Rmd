@@ -8,17 +8,39 @@ output: html_document
 
 **Using the original functions.R file and same Pressures/Resilinece Layers**
 
-```{r recalculating with same function, echo=FALSE, include=FALSE}
-## recalculating BHI scores using everything from 2015 assessment except revised Fisheries data
-## replacement datasets for fis_bbmsy, fis_ffmsy, fis_landings
+- Recalculating BHI scores using everything from 2015 assessment except revised Fisheries data
+- Replacement datasets for fis_bbmsy, fis_ffmsy, fis_landings
 
+```{r recalculating with same function v2015 data, echo=FALSE, include=FALSE}
+library(tidyverse)
 dir <- file.path(here::here(), "baltic2015")
+
+## original v2015 functions of v2019 with the constant v2015 0.87 penalty for eastern cod
+file.copy(file.path(dir, "compare", "functions2015.R"), file.path(dir, "conf", "functions.R"), overwrite = TRUE)
+# file.copy(file.path(dir, "functions", "functions2019_constantPenalty.R"), file.path(dir, "conf", "functions.R"), overwrite = TRUE) 
+
 
 ## use 2015 layers and layers.csv to calculate scores
 file.copy(file.path(dir, "compare", "layers2015.csv"), file.path(dir, "layers.csv"), overwrite = TRUE)
-file.copy(file.path(dir, "compare", "functions2015.R"), file.path(dir, "conf", "functions.R"), overwrite = TRUE)
-source(file.path(here::here(), "baltic2015", "calculate_scores.R"))
-scores2015 <- read.csv(file.path(here::here(), "baltic2015", "scores.csv"))
+## for first calculation, need to copy bhi-1.0-archive baltic2015 layers
+library(httr)
+req <- GET("https://api.github.com/repos/OHI-Science/bhi-1.0-archive/git/trees/draft?recursive=1")
+stop_for_status(req)
+filelist <- unlist(lapply(content(req)$tree, "[", "path"), use.names = FALSE) %>% 
+  grep(pattern = "baltic2015/layers/", value = TRUE) %>% 
+  str_extract("/[a-zA-Z0-9_-]+.csv|/[a-zA-Z0-9_-]+$") %>% 
+  str_remove_all(".csv")
+lyrcsv2015 <- read_csv(file.path(dir, "compare", "layers2015.csv"))
+dir.create(file.path(dir, "layers2"))
+lapply(
+  intersect(lyrcsv2015$filename, str_remove(filelist, "/") %>% paste0(".csv")),
+  function(x){
+    read_csv(paste0("https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/baltic2015/layers/", unlist(x))) %>% 
+      write_csv(file.path(dir, "layers2", unlist(x)))
+  }
+)
+source(file.path(dir, "calculate_scores.R"))
+scores2015 <- read.csv(file.path(dir, "scores.csv"))
 
 ## compare to the archived version to confirm it's the same
 # scores2015_archive <- read.csv(file.path("../baltic2015/scores.csv"))
@@ -26,12 +48,16 @@ scores2015 <- read.csv(file.path(here::here(), "baltic2015", "scores.csv"))
 #   left_join(scores2015_archive, by = c("goal", "dimension", "region_id")) %>%
 #   mutate(diffs = score.x-score.y)
 # summary(compare_scores$diffs)
+```
 
+
+```{r recalculating with same function v2019  data, echo=FALSE, include=FALSE}
 ## now substitute new FIS goal layers from 2019 data prep
+## copy these over from the bhi-prep v2019 layers folder
 new_fis_lyrs <- c("fis_ffmsy_bhi2019.csv", "fis_bbmsy_bhi2019.csv", "fis_landings_bhi2019.csv")
-file.exists(file.path(here::here(), "baltic2015", "layers", new_fis_lyrs))
+file.exists(file.path(dir, "layers", new_fis_lyrs))
 
-lyrs_csv_fis2019 <- read_csv(file.path(here::here(), "baltic2015", "layers.csv")) %>%
+lyrs_csv_fis2019 <- read_csv(file.path(dir, "layers.csv")) %>%
   mutate(filename = ifelse(
     layer == "fis_bbmsy", "fis_bbmsy_bhi2019.csv",
     ifelse(
@@ -41,10 +67,14 @@ lyrs_csv_fis2019 <- read_csv(file.path(here::here(), "baltic2015", "layers.csv")
       )
     )
   ))
-write_csv(lyrs_csv_fis2019, file.path(here::here(), "baltic2015", "layers.csv"))
-source(file.path(here::here(), "baltic2015", "calculate_scores.R"))
-scores_w_fis2019 <- read.csv(file.path(here::here(), "baltic2015", "scores.csv"))
+write_csv(lyrs_csv_fis2019, file.path(dir, "layers.csv"))
+source(file.path(dir, "calculate_scores.R"))
+scores_w_fis2019 <- read.csv(file.path(dir, "scores.csv"))
+```
 
+
+```{r compare scores2015 and scores_w_fis2019 version 2015 goal function, echo=FALSE, include=FALSE}
+## joing scores tables and view summaries
 compare_scores <- scores_w_fis2019 %>%
   rename(score2019 = score) %>%
   left_join(
@@ -69,10 +99,14 @@ hist <- ggplot(filter(compareFP, dimension %in% c("status", "future", "score")))
   theme_bw()
 
 trends_plot <- ggplot(filter(compare_scores, goal == "FIS", dimension == "trend")) + 
-  geom_ribbon(aes(x = region_id, ymin = score2019, ymax = score2015), alpha = 0.1) +
-  geom_point(aes(region_id, score2015), color = "mediumorchid", size = 0.8) +
-  geom_point(aes(region_id, score2019), color = "darkslategrey", size = 0.8) +
-  labs(x = "region id", y = "trend scores with 2015 (purple) and 2019 (green) FIS data") +
+  # geom_ribbon(aes(x = region_id, ymin = score2019, ymax = score2015), alpha = 0.1) +
+  # geom_point(aes(region_id, score2015), color = "mediumorchid", size = 0.8) +
+  # geom_point(aes(region_id, score2019), color = "darkslategrey", size = 0.8) +
+  geom_crossbar(
+    aes(x = region_id, y = score2019, ymin = score2019, ymax = score2015), 
+    alpha = 0.1, color = "darkslategrey", fill = "mediumorchid"
+  ) +
+  labs(x = NULL, y = "trend scores with 2015 (purple) and 2019 (green) FIS data") +
   theme_bw()
 
 compare_plot <- ggplot(filter(compareFP, dimension %in% c("status", "future", "score"))) +
@@ -83,12 +117,11 @@ compare_plot <- ggplot(filter(compareFP, dimension %in% c("status", "future", "s
   theme_bw()
 # compare_plot
 # plotly::ggplotly(compare_plot)
-
 ```
 
 <br>
 
-Table with the results, just `status` dimension for FIS goal
+Table with the results, just `status` dimension for FIS goal and BHI regions not EEZs or Subbasins:
 
 ```{r view result}
 DT::datatable(
@@ -102,7 +135,7 @@ DT::datatable(
 
 ```{r, warning=FALSE, message=FALSE}
 hist
-trends_plot
+plotly::ggplotly(trends_plot)
 ```
 
 
@@ -119,8 +152,10 @@ plotly::ggplotly(compare_plot)
 ## Compare 2015 vs 2019 data using updated `FIS` function
 
 ```{r recalculating with slightly revised FIS functions, include=FALSE}
-# file.copy(file.path(dir, "functions", "functions2019_constantPenalty.R"), file.path(dir, "conf", "functions.R"), overwrite = TRUE) 
+## write v2019 functions to conf folder to use in calculation
 file.copy(file.path(dir, "compare", "functions2019.R"), file.path(dir, "conf", "functions.R"), overwrite = TRUE)
+
+## create layers.csv tables with and extra entry for the cod penalty layer
 cod_penalty_lyr <- data.frame(
   targets = "FIS", layer = "fis_cod_penalty", name = "Cod Condition Penalty Factor", 
   description = "Proportion of Cod 20-40cm with Fultons K less than 0.8", 
@@ -132,20 +167,25 @@ cod_penalty_lyr <- data.frame(
   val_min = NA, val_max = NA, val_0to1 = NA, flds_unused = NA, 
   flds_missing = NA, rows_duplicated = NA, num_ids_unique = NA, data_na = NA
 )
-lyrs_csv_fis2019_penalize <- rbind(lyrs_csv_fis2019, cod_penalty_lyr)
 
+## with v2015 data
 ## recalculate scores with updated function and version 2015 (origial) FIS data
-lyrs_csv_fis2015_penalize <- rbind(read_csv(file.path(dir, "compare", "layers2015.csv")), cod_penalty_lyr)
-write_csv(lyrs_csv_fis2015_penalize, file.path(here::here(), "baltic2015", "layers.csv"))
-source(file.path(here::here(), "baltic2015", "calculate_scores.R"))
-scores2015_reviseFun <- read.csv(file.path(here::here(), "baltic2015", "scores.csv"))
+rbind(read_csv(file.path(dir, "compare", "layers2015.csv")), cod_penalty_lyr) %>% 
+  write_csv(file.path(dir, "layers.csv"))
+source(file.path(dir, "calculate_scores.R"))
+scores2015_reviseFun <- read.csv(file.path(dir, "scores.csv"))
 
+## with v2019 data
 ## recalculate scores with updated function and version 2019 (revised) FIS data
-write_csv(lyrs_csv_fis2019_penalize, file.path(here::here(), "baltic2015", "layers.csv"))
-source(file.path(here::here(), "baltic2015", "calculate_scores.R"))
-scores_fis2019_reviseFun <- read.csv(file.path(here::here(), "baltic2015", "scores.csv"))
+rbind(lyrs_csv_fis2019, cod_penalty_lyr) %>% 
+  write_csv(file.path(dir, "layers.csv"))
+source(file.path(dir, "calculate_scores.R"))
+scores2019_reviseFun <- read.csv(file.path(dir, "scores.csv"))
+```
 
-compare_final <- scores_fis2019_reviseFun %>%
+```{r v2015 and v2019 datasets differences when using revised FIS function, include=FALSE}
+## join v2015 and v2019
+compare_final <- scores2019_reviseFun %>%
   rename(score2019 = score) %>%
   left_join(
     rename(scores2015_reviseFun, score2015 = score),
@@ -158,18 +198,22 @@ compare_final <- scores_fis2019_reviseFun %>%
     region_id %in% 1:42
   )
 
-compare_compare <- compare_final %>% 
+## comparing score differences for v2015 vs v2019 functions
+compare_compare <- compare_final %>% # compares data using v2019 function
   rename(
     score2019_newFUN = score2019, 
     score2015_newFUN = score2015, 
     diffs_newFUN = diffs
   ) %>% 
   left_join(
-    compare_scores,
+    compare_scores, # compares data using v2015 function
     by = c("goal", "dimension", "region_id")
   ) %>% 
   mutate(diffs2 = diffs_newFUN-diffs)
 # hist(compare_compare$diffs2)
+```
+
+```{r make plots of diffs using revised v2019 FIS function, include=FALSE}
 compareFUNS_plot <- ggplot(
   compare_compare %>% 
     select(region_id, diffs_newFUN, diffs) %>% 
@@ -196,10 +240,14 @@ hist_final <- ggplot(filter(compareFP_final, dimension %in% c("status", "future"
   theme_bw()
 
 trends_plot_final <- ggplot(filter(compare_final, goal == "FIS", dimension == "trend")) + 
-  geom_ribbon(aes(x = region_id, ymin = score2019, ymax = score2015), alpha = 0.1) +
-  geom_point(aes(region_id, score2015), color = "mediumorchid", size = 0.8) +
-  geom_point(aes(region_id, score2019), color = "darkslategrey", size = 0.8) +
-  labs(x = "region id", y = "trend scores with 2015 (purple) and 2019 (green) FIS data") +
+  # geom_ribbon(aes(x = region_id, ymin = score2019, ymax = score2015), alpha = 0.1) +
+  # geom_point(aes(region_id, score2015), color = "mediumorchid", size = 0.8) +
+  # geom_point(aes(region_id, score2019), color = "darkslategrey", size = 0.8) +
+  geom_crossbar(
+    aes(x = region_id, y = score2019, ymin = score2019, ymax = score2015), 
+    alpha = 0.1, color = "darkslategrey", fill = "mediumorchid"
+  ) +
+  labs(x = NULL, y = "trend scores with 2015 (purple) and 2019 (green) FIS data") +
   theme_bw()
 ```
 
@@ -231,7 +279,7 @@ DT::datatable(
 
 ```{r more plots to match first section, warning=FALSE, message=FALSE}
 hist_final
-trends_plot_final
+plotly::ggplotly(trends_plot_final)
 ```
 
 
@@ -258,6 +306,44 @@ lapply(
     )
   }
 )
+```
+
+<br>
+
+**Data for Eastern cod in the version 2015 dataset only go to year 2012...**
+
+Recalculate everything again assiging 2012 eastern cod data for 2014 scenario
+Re-run relevant chunks using scores2015_reviseFun above: summary and plot chunks i.e. 3-6, 8-13...
+
+```{r recalculate everything again assiging 2012 eastern cod data for 2014 scenario, echo=FALSE, include=FALSE}
+read_csv(file.path(dir, "layers", "fis_bbmsy_bhi2015.csv")) %>% 
+  mutate(year = ifelse(year == 2012 & stock == "cod_2532", 2014, year))%>% 
+  write_csv(file.path(dir, "layers", "fis_bbmsy2015_codE2012.csv"))
+
+read_csv(file.path(dir, "layers", "fis_ffmsy_bhi2015.csv")) %>% 
+  mutate(year = ifelse(year == 2012 & stock == "cod_2532", 2014, year)) %>% 
+  write_csv(file.path(dir, "layers", "fis_ffmsy2015_codE2012.csv"))
+
+layers2015_codE2012 <- read_csv(file.path(dir, "compare", "layers2015.csv")) %>% 
+  mutate(filename = ifelse(layer == "fis_bbmsy", "fis_bbmsy2015_codE2012.csv", filename)) %>% 
+  mutate(filename = ifelse(layer == "fis_ffmsy", "fis_ffmsy2015_codE2012.csv", filename))
+
+## recalculate scores with v2015 function 
+## and v2015 data with eastern cod in 2014 taking 2012 values
+file.copy(file.path(dir, "compare", "functions2015.R"), file.path(dir, "conf", "functions.R"), overwrite = TRUE)
+write_csv(layers2015_codE2012, file.path(dir, "layers.csv"))
+source(file.path(dir, "calculate_scores.R"))
+scores2015 <- read.csv(file.path(dir, "scores.csv")) # now re-run relevant chunks using scores2015 above
+
+## recalculate scores with v2019 function 
+## and v2015 data with eastern cod in 2014 taking 2012 values
+file.copy(file.path(dir, "compare", "functions2019.R"), file.path(dir, "conf", "functions.R"), overwrite = TRUE)
+write_csv(rbind(layers2015_codE2012, cod_penalty_lyr), file.path(dir, "layers.csv")) # need cod penalty layer
+source(file.path(dir, "calculate_scores.R"))
+scores2015_reviseFun <- read.csv(file.path(dir, "scores.csv"))
+
+## now re-run relevant chunks using scores2015_reviseFun above...
+## summary and plot chunks i.e. 3-6, 8-13, no 'source(calculate_scores.R)' chunks...
 ```
 
 <br>
