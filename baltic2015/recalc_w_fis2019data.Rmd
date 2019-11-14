@@ -89,6 +89,7 @@ lyrs_csv_fis2019 <- read_csv(file.path(dir, "compare", "layers2015.csv")) %>%
       layer == "fis_bbmsy", "value",
       ifelse(layer == "fis_ffmsy", "value", fld_value)
     ))
+write_csv(lyrs_csv_fis2019, file.path(dir, "compare", "layers_v2019.csv"))
 write_csv(lyrs_csv_fis2019, file.path(dir, "layers.csv"))
 source(file.path(dir, "calculate_scores.R"))
 scores_w_fis2019 <- read.csv(file.path(dir, "scores.csv"))
@@ -199,7 +200,7 @@ scores2015_reviseFun <- read.csv(file.path(dir, "scores.csv"))
 
 ## with v2019 data
 ## recalculate scores with updated function and version 2019 (revised) FIS data
-rbind(lyrs_csv_fis2019, cod_penalty_lyr) %>% 
+rbind(read_csv(file.path(dir, "compare", "layers_v2019.csv")), cod_penalty_lyr) %>% 
   write_csv(file.path(dir, "layers.csv"))
 source(file.path(dir, "calculate_scores.R"))
 scores2019_reviseFun <- read.csv(file.path(dir, "scores.csv"))
@@ -337,7 +338,7 @@ lapply(
 Recalculate everything again assiging 2012 eastern cod data for 2014 scenario
 Re-run relevant chunks using scores2015_reviseFun above: summary and plot chunks i.e. 3-6, 8-13...
 
-```{r recalculate everything again assiging 2012 eastern cod data for 2014 scenario, echo=FALSE, include=FALSE}
+```{r recalculate everything again assiging 2012 eastern cod data for 2014 scenario, echo=FALSE, include=FALSE, eval=FALSE}
 read_csv(file.path(dir, "layers", "fis_bbmsy_bhi2015.csv")) %>% 
   mutate(year = ifelse(year == 2012 & stock == "cod_2532", 2014, year))%>% 
   write_csv(file.path(dir, "layers", "fis_bbmsy2015_codE2012.csv"))
@@ -369,3 +370,25 @@ scores2015_reviseFun <- read.csv(file.path(dir, "scores.csv"))
 ```
 
 <br>
+
+## Scores All
+
+```{r view all scores datatable, echo = FALSE}
+DT::datatable(
+  left_join(
+    compare_scores %>% 
+      filter(goal == "FIS") %>% 
+      dplyr::select(-diffs) %>% 
+      rename(data2015_fun2015 = score2015, data2019_fun2015 = score2019),
+    compare_final  %>% 
+      filter(goal == "FIS") %>% 
+      dplyr::select(-diffs) %>% 
+      rename(data2015_fun2019 = score2015, data2019_fun2019 = score2019),
+    by = c("goal", "dimension", "region_id")
+  ),
+  class = 'cell-border stripe', 
+  options = list(pageLength = 42),
+  rownames = FALSE
+)
+```
+

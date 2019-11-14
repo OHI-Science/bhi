@@ -29,7 +29,7 @@ FIS = function(layers){
     dplyr::rename(region_id = rgn_id)
 
   landings = SelectLayersData(layers, layers='fis_landings', narrow=T) %>%
-    dplyr::select(rgn_id =id_num,
+    dplyr::select(rgn_id = id_num,
            stock = category,
            year,
            landings= val_num)%>%
@@ -203,7 +203,11 @@ FIS = function(layers){
     #   )
     # )) %>%
     # dplyr::select(-prop_above_pt8, -num_samp) %>%
-    mutate(penalty = ifelse(is.na(prop_above_pt8), 1, prop_above_pt8)) %>%
+    mutate(penalty = ifelse(
+      is.na(prop_above_pt8) & !str_detect(stock, "cod.*32"),
+      1, prop_above_pt8
+    )) %>%
+      # is.na(prop_above_pt8), 1, prop_above_pt8)) %>%
     dplyr::select(-prop_above_pt8) %>%
     mutate(score = penalty*score)
 
