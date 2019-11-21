@@ -15,7 +15,7 @@ The documents contained in this folder are intended to give more detailed inform
 Additional documents provide instruction or advice on:
 
 * `using_database.md`: interacting with (reading from, adding to or updating data within) the BHI postgresql database
-* `modeling_scenarios.md`: how to test different models or data layers, to simulate different scenarios  
+* `scenarios.md`: how to test different models or data layers, to simulate different scenarios  
 * `maintaining_repo.md`: the tedious but important task of maintaining meta information  
 * `finalizing_assessment.md`: assorted tasks and book-keeping for wrapping up an assessment  
 * `maintaining_shiny.md`: app structure and details about hosting and database connections   
