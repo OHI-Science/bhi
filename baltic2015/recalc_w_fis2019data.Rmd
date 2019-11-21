@@ -13,7 +13,8 @@ output: html_document
 
 ```{r recalculating with same function v2015 data, echo=FALSE, include=FALSE}
 library(tidyverse)
-dir <- file.path(here::here(), "baltic2015")
+library(httr)
+dir <- here::here("baltic2015")
 
 ## original v2015 functions of v2019 with the constant v2015 0.87 penalty for eastern cod
 file.copy(file.path(dir, "compare", "functions2015.R"), file.path(dir, "conf", "functions.R"), overwrite = TRUE)
@@ -23,7 +24,6 @@ file.copy(file.path(dir, "compare", "functions2015.R"), file.path(dir, "conf", "
 ## use 2015 layers and layers.csv to calculate scores
 file.copy(file.path(dir, "compare", "layers2015.csv"), file.path(dir, "layers.csv"), overwrite = TRUE)
 ## for first calculation, need to copy bhi-1.0-archive baltic2015 layers
-library(httr)
 req <- GET("https://api.github.com/repos/OHI-Science/bhi-1.0-archive/git/trees/draft?recursive=1")
 stop_for_status(req)
 filelist <- unlist(lapply(content(req)$tree, "[", "path"), use.names = FALSE) %>% 
@@ -391,4 +391,54 @@ DT::datatable(
   rownames = FALSE
 )
 ```
+
+
+# Use Cod-Only layers to calculate Scores
+
+```{r calculate scores using cod only data layers, include=FALSE}
+## register cod-only data as FIS layers in layer.csv
+lyrs_csv_cod_fis2019 <- read_csv(file.path(dir, "compare", "layers2015.csv")) %>%
+  mutate(
+    filename = ifelse(
+      layer == "fis_bbmsy", "fis_cod_bbmsy_bhi2019.csv",
+      ifelse(layer == "fis_ffmsy", "fis_cod_ffmsy_bhi2019.csv", 
+             ifelse(layer == "fis_landings", "fis_cod_landings_bhi2019.csv", filename)
+      )
+    ),
+    fld_val_num = ifelse(
+      layer == "fis_bbmsy", "value",
+      ifelse(layer == "fis_ffmsy", "value", fld_val_num)
+    ),
+    fld_value = ifelse(
+      layer == "fis_bbmsy", "value",
+      ifelse(layer == "fis_ffmsy", "value", fld_value)
+    ))
+
+## configure and calculate scores using cod-only layers
+rbind(lyrs_csv_cod_fis2019, cod_penalty_lyr) %>% 
+  write_csv(file.path(dir, "layers.csv"))
+source(file.path(dir, "calculate_scores.R"))
+scores2019_cod_reviseFun <- read.csv(file.path(dir, "scores.csv"))
+```
+
+```{r visualize result of cod only vs with herring v2019 data}
+compare_cod_noCod <- scores2019_cod_reviseFun %>%
+  rename(score2019codOnly = score) %>%
+  left_join(
+    rename(scores2019_reviseFun, score2019 = score),
+    by = c("goal", "dimension", "region_id")
+    ) %>%
+  mutate(diffs = score2019codOnly-score2019) %>% 
+  filter(goal %in% c("FIS", "FP", "Index"), region_id %in% 1:42)
+
+compare_codOnly <- ggplot(filter(compare_cod_noCod, dimension %in% c("status", "future", "score"))) +
+  geom_point(aes(x = score2019codOnly, y = score2019, color = region_id), alpha = 0.6, size = 1.5) +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_grid(vars(goal), vars(dimension)) +
+  labs(x = "scores calculated with just-cod dataset", y = "scores calculated with cod and herring") +
+  theme_bw()
+
+plotly::ggplotly(compare_codOnly)
+```
+
 
