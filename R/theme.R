@@ -15,35 +15,42 @@ apply_bhi_theme <- function(plot_type = NA){
   palettes <- list(
 
     ## continuous color palettes
-    reds = grDevices::colorRampPalette(
-      c("#A50026","#D73027","#F46D43","#FDAE61", "#ffdcd8"))(50),
-    purples = grDevices::colorRampPalette(
-      c("#EEDFFF","#C093F7","#9E5AF0","#822BEA"))(50),
-    blues = grDevices::colorRampPalette(
-      c("#E0F3F8","#ABD9E9","#74ADD1","#4575B4","#313695"))(50),
-
+    reds = grDevices::colorRampPalette(c("#A50026","#D73027","#F46D43","#FDAE61", "#ffdcd8"))(50),
+    purples = grDevices::colorRampPalette(c("#EEDFFF","#C093F7","#9E5AF0","#822BEA"))(50),
+    blues = grDevices::colorRampPalette(c("#E0F3F8","#ABD9E9","#74ADD1","#4575B4","#313695"))(50),
     divergent_red_blue = c("#8c031a", "#cc0033", "#fff78a", "#f6ffb3", "#009999", "#0278a7"),
 
     ## discrete color palettes
     dims_pal = tibble::tibble(
       dimension =  c("present state", "likely future", "trend", "pressures", "resilience", "status"),
-      color = c("#a0bbd0e8", "#ead19cf0", "#de8b5fe8", "#b13a23db", "#63945ade", "#9483afed")),
+      color = c("#a0bbd0e8", "#ead19cf0", "#de8b5fe8", "#b13a23db", "#63945ade", "#9483afed")
+    ),
 
     goals_pal = tibble::tibble(
-      goal = c("MAR","FIS","FP","CW","CON","EUT","TRA",
-               "SP","LSP","ICO","LE","ECO","LIV",
-               "AO","TR","CS","NP", "BD"),
-      color = c("#549dad","#4ead9d","#53b3ac","#89b181","#60a777","#7ead6d","#9aad7e",
-                "#97a4ba","#9fb3d4","#7c96b4","#9a97ba","#7d7ca3","#9990b4",
-                "#e2de9a","#b6859a","#d0a6a1","#ccb4be","#88b1a6")),
+      goal = c(
+        "MAR","FIS","FP","CW","CON","EUT","TRA",
+        "SP","LSP","ICO","LE","ECO","LIV",
+        "AO","TR","CS","NP", "BD"
+      ),
+      color = c(
+        "#549dad","#4ead9d","#53b3ac","#89b181","#60a777","#7ead6d","#9aad7e",
+        "#97a4ba","#9fb3d4","#7c96b4","#9a97ba","#7d7ca3","#9990b4",
+        "#e2de9a","#b6859a","#d0a6a1","#ccb4be","#88b1a6"
+      )
+    ),
 
     goalpal_shiny = tibble::tibble(
-      goal = c("MAR","FIS","FP","CW","CON","EUT","TRA",
-               "SP","LSP","ICO","LE","ECO","LIV",
-               "AO","TR","CS","NP", "BD"),
-      color = c("aqua","aqua","aqua","olive","olive","olive","olive",
-                "blue","blue","blue","purple","purple","purple",
-                "yellow","red","orange","fuchsia","green"))
+      goal = c(
+        "MAR","FIS","FP","CW","CON","EUT","TRA",
+        "SP","LSP","ICO","LE","ECO","LIV",
+        "AO","TR","CS","NP", "BD"
+      ),
+      color = c(
+        "aqua","aqua","aqua","olive","olive","olive","olive",
+        "blue","blue","blue","purple","purple","purple",
+        "yellow","red","orange","fuchsia","green"
+      )
+    )
 
   ) # end define color palettes
 
@@ -56,13 +63,16 @@ apply_bhi_theme <- function(plot_type = NA){
     axis_weight = 0.5,
     legend_pos = "right",
     legend_colour = NA,
-    legend_fill = NA)
+    legend_fill = NA
+  )
 
-  icons <- list(FP = "utensils", MAR = "anchor", FIS = "fish", AO = "ship",
-                CW = "burn", CON = "flask", EUT = "vial", TRA = "eraser",
-                SP = "monument", LSP = "map-marked", ICO = "kiwi-bird", BD = "dna",
-                LE = "landmark", ECO = "money-bill", LIV = "dharmachakra",
-                TR = "suitcase", CS = "seedling", NP = "mortar-pestle")
+  icons <- list(
+    FP = "utensils", MAR = "anchor", FIS = "fish", AO = "ship",
+    CW = "burn", CON = "flask", EUT = "vial", TRA = "eraser",
+    SP = "monument", LSP = "map-marked", ICO = "kiwi-bird", BD = "dna",
+    LE = "landmark", ECO = "money-bill", LIV = "dharmachakra",
+    TR = "suitcase", CS = "seedling", NP = "mortar-pestle"
+  )
 
   ## plot colors ----
   cols <- list(
@@ -133,9 +143,11 @@ apply_bhi_theme <- function(plot_type = NA){
       theme_update()
     }
   }
-  return(list(elmts = elmts,
-              icons = icons,
-              cols = cols,
-              palettes = palettes,
-              rgn_name_lookup = rgn_name_lookup))
+  return(list(
+    elmts = elmts,
+    icons = icons,
+    cols = cols,
+    palettes = palettes,
+    rgn_name_lookup = rgn_name_lookup
+  ))
 }
