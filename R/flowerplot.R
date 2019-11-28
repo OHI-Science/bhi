@@ -417,7 +417,7 @@ flowerformatting <- function(region_id, rgn_plot_obj, plot_df, flower_rgn_scores
         track.index = 1,
         text = "Coastal Livelihoods & Economies",
         cex = 6.5,
-        text.col = thm$cols$light_grey2,
+        text.col = "#2a272a", # thm$cols$light_grey2,
         col = NA,
         facing = "bending.outside",
         niceFacing = TRUE
@@ -428,7 +428,7 @@ flowerformatting <- function(region_id, rgn_plot_obj, plot_df, flower_rgn_scores
         text = "Sense of Place",
         cex = 6.5,
         padding = c(0, 0, 0, 2.62),
-        text.col = thm$cols$light_grey2,
+        text.col = "#2a272a", # thm$cols$light_grey2,
         col = NA,
         facing = "bending.outside",
         niceFacing = TRUE
@@ -439,7 +439,7 @@ flowerformatting <- function(region_id, rgn_plot_obj, plot_df, flower_rgn_scores
         text = "Clean Waters",
         cex = 6.5,
         padding = c(0, 0.16, 0, 0),
-        text.col = thm$cols$light_grey2,
+        text.col = "#2a272a", # thm$cols$light_grey2,
         col = NA,
         facing = "bending.outside",
         niceFacing = TRUE
@@ -569,7 +569,7 @@ flowerplot <- function(rgn_scores, rgns = NA, plot_year = NA, dim = "score", inc
         scale_fill_gradientn(colors = color_pal, na.value = "black", limits = c(0, 100))
     }
 
-    if(any(!is.na(rgn_plot_df$plot_NA))){ # overlay light grey background for NAs
+    if(any(!is.na(plot_df$plot_NA))){ # overlay light grey background for NAs
       plot_obj <- plot_obj +
         geom_bar(
           aes(y = plot_NA),
