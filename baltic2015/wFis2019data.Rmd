@@ -1,0 +1,417 @@
+---
+title: "Recalculating FIS scores with Updated data"
+output: html_document
+---
+
+<br>
+
+## Comparing scores for assessment year 2014
+### Using v2015 v. v2019 FIS Data
+
+**Using the original functions.R file and same Pressures/Resilinece Layers**
+
+This document uses newly revised data (obtained in 2019) to recalculate BHI scores for the 2015 scenario. All data layers except for the FIS input data are the same as were used in the calcualtions made in 2015, including FIS pressure/resilience layers. Multiple calculations are done and cross-checked, to investigate/isolate the effect of using this new data.
+
+Additionally, we test how using only cod fisheries data (i.e. removing herring data from the calculation) changes the scores.
+
+In summary:
+
+- Recalculating BHI scores using everything from 2015 assessment except revised Fisheries data
+- Replacement datasets for fis_bbmsy, fis_ffmsy, fis_landings
+- Also tested with replacement datasets fis_cod_bbmsy, fis_cod_ffmsy, fis_cod_landings
+
+<br>
+
+---
+
+### Set-up, Data, and Functions
+
+**Using the same set-up/data read-in/defined helper functions etc as in `woCONpenalty.Rmd`**
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(ohicore)
+library(httr)
+library(zoo)
+
+dir <- here::here("baltic2015")
+```
+
+```{r function for configuring and getting scores}
+## based on 'calculate_scores.R' 
+## but dont want to save scores.csv each time, and want some other results returned as well...
+calculate_bhi <- function(directory, funRpath, lyrcsv, calcforYr = 2014, writeAll = FALSE){
+  
+  if(file.exists(file.path(directory, "conf", "functions.R"))){
+    funs_current <- scan(
+      file.path(directory, "conf", "functions.R"), 
+      what = "character", 
+      sep = "\n", 
+      blank.lines.skip = FALSE
+    )
+  } else {funs_current <- NULL}
+  if(file.exists(file.path(directory, "layers.csv"))){
+    lyrs_current <- read_csv(file.path(directory, "layers.csv"), col_types = cols())
+  } else {lyrs_current <- NULL}
+  
+  ## configure functions and layers.csv as needed for desired calculations
+  funs_use <- scan(
+    funRpath, 
+    what = "character", 
+    sep = "\n", 
+    blank.lines.skip = FALSE
+  )
+  write_lines(funs_use, file.path(directory, "conf", "functions.R"), sep = "\n")
+  
+  ## configure layers: when lyrcsv is a valid filepath read it, just write if a df
+  if(is.character(lyrcsv)){
+    if(file.exists(lyrcsv)){
+      lyrs_use <- read_csv(lyrcsv, col_types = cols())
+    } else {stop("specified layers.csv file does not exist")}
+  } else {lyrs_use <- lyrcsv}
+  write_csv(lyrs_use, file.path(directory, "layers.csv"))
+  
+  ## use ohicore functions to calculate scores
+  # setwd(directory)
+  conf = ohicore::Conf("conf")
+  ## check that scenario layers files in \layers folder match layers.csv registration. Layers files not modified.
+  ohicore::CheckLayers("layers.csv", "layers", flds_id=conf$config$layers_id_fields)
+  layersobj <- ohicore::Layers("layers.csv", "layers")
+  scenario_years <- calcforYr # select corresponding data year to use for pressures and resilience
+  layersobj$data$scenario_year <- scenario_years
+  assign("layers", layersobj, envir = .GlobalEnv) # ohicore needs 'layers' in global not function env...
+  scores <- CalculateAll(conf, layers) # calculate scenario scores
+  
+  if(!writeAll){
+    if(!is.null(lyrs_current) & !is.null(funs_current)){
+      ## ohicore calculations requires files in scenario folder
+      ## so if we dont want things overwritten (just want scores), actually need to write back to previous...
+      write_lines(funs_current, file.path(directory, "conf", "functions.R"), sep = "\n")
+      write_csv(lyrs_current, file.path(directory, "layers.csv"))
+    }
+  } else {
+    ## if we do want everything saved, write scores also
+    write_csv(scores, file.path(directory, "scores.csv"))
+  }
+
+  return(list(scores = scores, layerscsv = lyrs_use, functionsR = funs_use))
+}
+```
+
+```{r function to compare two scores results dataframes}
+
+## score_df1should be v2015 dataframe
+## score_df2 should be the 2019 dataframe (ie with 2019 revised data for year calcforYr), 
+comparing_scores <- function(score_df1, score_df2, name_df1 = "2015", name_df2 = "2019", calcforYr = 2014){
+  
+  compare_scores <- score_df1 %>% # with version 2019 data
+    rename(scores1 = score) %>%
+    left_join(
+      rename(score_df2, scores2 = score),
+      by = c("goal", "dimension", "region_id")
+    ) %>%
+    mutate(diffs = round(scores2-scores1, 3))
+  
+  ## some plots to visualize how new data shifted scores
+  ## old minus revised scores so positive diffs mean revised scores are lower:
+  compareFP <- filter(compare_scores, goal %in% c("FIS", "FP", "Index"), region_id %in% 1:42)
+  
+  hist <- ggplot(filter(compareFP, dimension %in% c("status", "future", "score"))) +
+    geom_histogram(aes(diffs)) +
+    facet_grid(vars(goal), vars(dimension)) +
+    labs(x = sprintf("score differences (%s minus %s scores, for yr %s)", name_df2, name_df1, calcforYr)) +
+    theme_bw()
+  
+  trends_plot <- ggplot(filter(compare_scores, goal == "FIS", dimension == "trend")) +
+    geom_crossbar(
+      aes(x = region_id, y = scores2, ymin = scores2, ymax = scores1), 
+      alpha = 0.1, color = "darkslategrey", fill = "mediumorchid"
+    ) +
+    labs(x = NULL, y = "trend scores with 2015 (purple) and 2019 (green) FIS data") +
+    theme_bw()
+  
+  compare_plot <- ggplot(filter(compareFP, dimension %in% c("status", "future", "score"))) +
+    geom_point(aes(scores1, scores2, color = region_id), alpha = 0.6, size = 1.5) +
+    geom_abline(slope = 1, intercept = 0) +
+    facet_grid(vars(goal), vars(dimension)) +
+    labs(x = "scores calculated with old dataset", y = "scores calculated with updated FIS data") +
+    theme_bw()
+  
+  return(list(
+    compare_scores_tab = compare_scores, 
+    compareFP = compareFP, 
+    hist = hist, 
+    trends_plot = trends_plot, 
+    compare_plot = compare_plot
+  ))
+}
+```
+
+```{r get relevant layers data from github, results="hide", warning=FALSE, message=FALSE}
+
+if(!file.exists(file.path(dir, "layers"))){dir.create(file.path(dir, "layers"))}
+
+## copy bhi-1.0-archive baltic2015 layers
+req <- GET("https://api.github.com/repos/OHI-Science/bhi-1.0-archive/git/trees/draft?recursive=1")
+stop_for_status(req)
+filelist <- unlist(lapply(content(req)$tree, "[", "path"), use.names = FALSE) %>% 
+  grep(pattern = "baltic2015/layers/", value = TRUE) %>% 
+  str_extract("/[a-zA-Z0-9_-]+.csv|/[a-zA-Z0-9_-]+$") %>% 
+  str_remove_all(".csv")
+lyrcsv2015 <- read_csv(file.path(dir, "compare", "layers2015.csv"), col_types = cols())
+lapply(
+  c(
+    intersect(lyrcsv2015$filename, str_remove(filelist, "/") %>% paste0(".csv")), 
+    "eco_trend_scores_BHI2015.csv" # random capitalization causes issue...
+  ),
+  function(x){
+    read_csv(
+      paste0("https://raw.githubusercontent.com/OHI-Science/bhi-1.0-archive/draft/baltic2015/layers/", unlist(x)),
+      col_types = cols() ) %>% 
+      write_csv(file.path(dir, "layers", unlist(x) %>% str_replace_all("_BHI2015", "_bhi2015")))
+  }
+)
+
+## copy new FIS goal layers from 2019 data prep over from the bhi-prep v2019 layers folder
+req <- GET("https://api.github.com/repos/OHI-Science/bhi-prep/git/trees/master?recursive=1")
+stop_for_status(req)
+filelist <- unlist(lapply(content(req)$tree, "[", "path"), use.names = FALSE) %>% 
+  grep(pattern = "layers/v2019/", value = TRUE) %>% 
+  str_extract("[a-z0-9_]+.csv")
+lapply(
+  filelist,
+  function(x){
+    read_csv(
+      paste0("https://raw.githubusercontent.com/OHI-Science/bhi-prep/master/layers/v2019/", unlist(x)),
+      col_types = cols()) %>% 
+      rename(rgn_id = region_id) %>% 
+      write_csv(file.path(dir, "layers", unlist(x)))
+  }
+)
+new_fis_lyrs <- c("fis_ffmsy_bhi2019.csv", "fis_bbmsy_bhi2019.csv", "fis_landings_bhi2019.csv")
+file.exists(file.path(dir, "layers", new_fis_lyrs))
+```
+
+<br>
+
+---
+
+## Compare versions 2015 vs 2019 FIS data
+
+**Using the original functions.R file (`compare/fuctions2015.R`) and original Pressures/Resilinece Layers**
+
+```{r recalculating with old v2015 function, results="hide", warning=FALSE, message=FALSE}
+## first (base) calculation using:
+## original v2015 functions of v2019 with the constant v2015 0.87 penalty for eastern cod
+
+## v2015 layers and layers.csv to calculate scores
+result_v2015dat_oldfun <- calculate_bhi(
+  directory = dir, 
+  funRpath = file.path(dir, "compare", "functions2015.R"), 
+  lyrcsv = file.path(dir, "compare", "layers2015.csv"),
+  writeAll = TRUE
+)
+
+## need to reconfigure layers file, 'register' with new replacement data layers
+lyrs_csv_fis2019 <- read_csv(file.path(dir, "compare", "layers2015.csv")) %>%
+  mutate(
+    filename = ifelse(
+      layer == "fis_bbmsy", "fis_bbmsy_bhi2019.csv",
+      ifelse(layer == "fis_ffmsy", "fis_ffmsy_bhi2019.csv",
+             ifelse(layer == "fis_landings", "fis_landings_bhi2019.csv", filename)
+      )
+    ),
+    fld_val_num = ifelse(
+      layer == "fis_bbmsy", "value",
+      ifelse(layer == "fis_ffmsy", "value", fld_val_num)
+    ),
+    fld_value = ifelse(
+      layer == "fis_bbmsy", "value",
+      ifelse(layer == "fis_ffmsy", "value", fld_value)
+    ))
+
+## with v2019 FIS layers+ registered layers.csv
+result_v2019dat_oldfun <- calculate_bhi(
+  directory = dir, 
+  funRpath = file.path(dir, "compare", "functions2015.R"), 
+  lyrcsv = lyrs_csv_fis2019
+)
+```
+
+```{r comparing results with old v2015 function, results="hide", warning=FALSE, message=FALSE}
+result_oldfun <- comparing_scores(result_v2019dat_oldfun$scores, result_v2015dat_oldfun$scores)
+
+summary(result_oldfun$compare_scores_tab$diffs)
+summary(filter(result_oldfun$compare_scores_tab, goal == "FIS")$diffs)
+
+## but differences only in FIS, FP, and Index as expected
+summary(filter(result_oldfun$compare_scores_tab, !goal %in% c("FIS", "FP", "Index"))$diffs)
+```
+
+<br>
+
+Table with the results, just `status` dimension for FIS goal and BHI regions not EEZs or Subbasins:
+
+```{r view comparison result v2015functions table}
+DT::datatable(
+  filter(result_oldfun$compare_scores_tab, goal == "FIS", dimension == "status", region_id %in% 1:42), 
+  class = 'cell-border stripe', 
+  options = list(pageLength = 42)
+)
+```
+
+```{r view comparison result v2015functions plots, echo=FALSE, warning=FALSE, message=FALSE}
+result_oldfun$hist
+plotly::ggplotly(result_oldfun$trends_plot)
+plotly::ggplotly(result_oldfun$compare_plot)
+```
+
+
+## Compare 2015 vs 2019 data using updated `FIS` function
+**Using and the revised functions.R file (`compare/fuctions2019.R`) and original Pressures/Resilinece Layers**
+
+```{r calculating with new revised v2019 function, results="hide", warning=FALSE, message=FALSE}
+## create layers.csv tables with and extra entry for the cod penalty layer
+## variable cod penalty by region, so needs to be its own registered layer in layers.csv
+cod_penalty_lyr <- data.frame(
+  targets = "FIS", layer = "fis_cod_penalty", name = "Cod Condition Penalty Factor", 
+  description = "Proportion of Cod 20-40cm with Fultons K less than 0.8", 
+  fld_value = "penalty_factor", units = "proportion", 
+  filename = "fis_cod_penalty_bhi2019.csv", clip_n_ship_disag = NA, clip_n_ship_disag_description = NA, 
+  layer_gl = NA, path_in = NA, rgns_in = NA, fld_id_num = "rgn_id", fld_id_chr = NA, 
+  fld_category = NA, fld_year = NA, fld_val_num = "penalty_factor", fld_val_chr = NA, 
+  file_exists = NA, year_min = NA, year_max = NA, 
+  val_min = NA, val_max = NA, val_0to1 = NA, flds_unused = NA, 
+  flds_missing = NA, rows_duplicated = NA, num_ids_unique = NA, data_na = NA
+)
+
+## v2015 layers and layers.csv to calculate scores, with new function requiring cod penalty layer
+result_v2015dat_newfun <- calculate_bhi(
+  directory = dir, 
+  # funRpath = file.path(dir, "compare", "functions2019_constantPenalty.R"), # with constant penalty function...
+  # lyrcsv = file.path(dir, "compare", "layers2015.csv") # with constant penalty function...
+  funRpath = file.path(dir, "compare", "functions2019.R"),
+  lyrcsv = rbind(read_csv(file.path(dir, "compare", "layers2015.csv")), cod_penalty_lyr)
+)
+
+## with v2019 FIS layers+ registered layers.csv, and new function
+## use lyrs_csv_fis2019 created above as basis of layers csv and bind with cod_penalty
+result_v2019dat_newfun <- calculate_bhi(
+  directory = dir, 
+  # funRpath = file.path(dir, "compare", "functions2019_constantPenalty.R"),# with constant penalty function...
+  # lyrcsv = lyrs_csv_fis2019, # with constant penalty function...
+  funRpath = file.path(dir, "compare", "functions2019.R"),
+  lyrcsv = rbind(lyrs_csv_fis2019, cod_penalty_lyr),
+  writeAll = TRUE
+)
+```
+
+```{r comparing results with new revised v2019 function, results="hide", warning=FALSE, message=FALSE}
+result_newfun <- comparing_scores(result_v2019dat_newfun$scores, result_v2015dat_newfun$scores)
+
+summary(result_newfun$compare_scores_tab$diffs)
+summary(filter(result_newfun$compare_scores_tab, goal == "FIS")$diffs)
+## but differences only in FIS, FP, and Index as expected
+summary(filter(result_newfun$compare_scores_tab, !goal %in% c("FIS", "FP", "Index"))$diffs)
+```
+
+<br>
+
+Table with the results, just `status` dimension for FIS goal and BHI regions not EEZs or Subbasins:
+
+```{r view comparison result v2019function table}
+DT::datatable(
+  filter(result_newfun$compare_scores_tab, goal == "FIS", dimension == "status", region_id %in% 1:42), 
+  class = 'cell-border stripe', 
+  options = list(pageLength = 42)
+)
+```
+
+```{r view comparison result v2019function plots, echo=FALSE, warning=FALSE, message=FALSE}
+result_newfun$hist
+plotly::ggplotly(result_newfun$trends_plot)
+plotly::ggplotly(result_newfun$compare_plot)
+```
+
+## Scores All
+
+```{r view all scores datatable}
+DT::datatable(
+  left_join(
+    result_oldfun$compare_scores_tab %>% 
+      filter(goal == "FIS") %>% 
+      dplyr::select(-diffs) %>% 
+      rename(data2015_fun2015 = scores1, data2019_fun2015 = scores2),
+    result_newfun$compare_scores_tab  %>% 
+      filter(goal == "FIS") %>% 
+      dplyr::select(-diffs) %>% 
+      rename(data2015_fun2019 = scores1, data2019_fun2019 = scores2),
+    by = c("goal", "dimension", "region_id")
+  ),
+  class = 'cell-border stripe', 
+  options = list(pageLength = 42),
+  rownames = FALSE
+)
+```
+
+<br>
+
+### Do the differences make sense?
+
+Regions 11, 12, 13, 16 recieve better scores with 2019 data because of inclusion of Eastern cod (which despite poor condition, is high scoring because of decent B/BMSY and F/FMSY)
+
+Regions 3, 4, 7-10, (ICES subdivision 22) contain only scores for Western not Eastern cod stock. The same goes for BHI 5&6 The Sound ie ICES 23, but `her_3a22` for some reason is missing from `ffmsy` data for 5 and 6 for year 2014, resulting in higher scores for these 2 regions.
+
+In BHI Regions 37-42 scores decreased with the 2019 data, because in the 2019 version of the prepared data, Eastern cod are not included. Herring in those regions have biomass much above the MSY value, and though mortality is also well above 1, BHI penalizes for underfishing-- something to consider when setting the F and B score parameters, though these parameters need to work for all stocks...
+
+<br>
+
+# Use Cod-Only layers to calculate Scores
+
+```{r calculate scores using cod only data layers, results="hide", warning=FALSE, message=FALSE}
+## register cod-only data as FIS layers in layer.csv
+lyrs_csv_cod_fis2019 <- read_csv(file.path(dir, "compare", "layers2015.csv")) %>%
+  mutate(
+    filename = ifelse(
+      layer == "fis_bbmsy", "fis_cod_bbmsy_bhi2019.csv",
+      ifelse(layer == "fis_ffmsy", "fis_cod_ffmsy_bhi2019.csv", 
+             ifelse(layer == "fis_landings", "fis_cod_landings_bhi2019.csv", filename)
+      )
+    ),
+    fld_val_num = ifelse(
+      layer == "fis_bbmsy", "value",
+      ifelse(layer == "fis_ffmsy", "value", fld_val_num)
+    ),
+    fld_value = ifelse(
+      layer == "fis_bbmsy", "value",
+      ifelse(layer == "fis_ffmsy", "value", fld_value)
+    ))
+
+result_cod_v2019dat_newfun <- calculate_bhi(
+  directory = dir, 
+  funRpath = file.path(dir, "compare", "functions2019.R"),
+  lyrcsv = rbind(lyrs_csv_cod_fis2019, cod_penalty_lyr)
+)
+```
+
+```{r cod only vs with herring v2019 data, warning=FALSE, message=FALSE}
+compare_justCod <- comparing_scores(result_cod_v2019dat_newfun$scores, result_v2019dat_newfun$scores)
+
+compare_justCod <- compare_justCod$compare_plot + 
+ labs(x = "scores calculated with just-cod dataset", y = "scores calculated with cod and herring")
+plotly::ggplotly(compare_justCod)
+```
+
+<br>
+
+### Save finals results
+
+```{r finalize the score recalculation and save final scores etc in the directory, results="hide", warning=FALSE, message=FALSE}
+## lastly we want to save only results calculated with v2019 revised FIS data and revised v2019 functions.R
+finalscores <- calculate_bhi(
+  directory = dir, 
+  funRpath = file.path(dir, "compare", "functions2019.R"),
+  lyrcsv = rbind(lyrs_csv_fis2019, cod_penalty_lyr),
+  writeAll = TRUE
+)
+```

@@ -10,6 +10,7 @@ FIS = function(layers){
   ## added to functions.r by Jennifer Griffiths 7 June 2016
   ## only Cod and Herrings data are used here. Sprats data moved to NP, by Ning Jiang in Oct 2016.
 
+  scenario_years <- layers$data$scenario_year
 
   ## Call Layers
   bbmsy = SelectLayersData(layers, layers='fis_bbmsy', narrow=T) %>%
