@@ -103,7 +103,8 @@ apply_bhi_theme <- function(plot_type = NA){
   ## region names lookup table ----
   rgn_name_lookup <- rbind(
     tbl(bhi_db_con, "regions") %>%
-      dplyr::select(region_id, subbasin, plot_title = region_name) %>%
+      dplyr::mutate(plot_title = paste(subbasin, eez, sep = ", ")) %>%
+      dplyr::select(region_id, subbasin, plot_title) %>%
       dplyr::collect(),
     tbl(bhi_db_con, "basins") %>%
       dplyr::select(region_id = subbasin_id, subbasin) %>%
