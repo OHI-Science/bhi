@@ -104,10 +104,12 @@ calculate_bhi <- function(directory, funRpath, lyrcsv, calcforYr = 2014, writeAl
 ## score_df2 should be the 2019 dataframe (ie with 2019 revised data for year calcforYr), 
 comparing_scores <- function(score_df1, score_df2, name_df1 = "2015", name_df2 = "2019", calcforYr = 2014){
   
-  compare_scores <- score_df1 %>% # with version 2019 data
+  message("remember: first dataframe is with v2015 data, second arg is df with v2019 data...")
+  
+  compare_scores <- score_df1 %>% 
     rename(scores1 = score) %>%
     left_join(
-      rename(score_df2, scores2 = score),
+      rename(score_df2, scores2 = score), # with version 2019 data
       by = c("goal", "dimension", "region_id")
     ) %>%
     mutate(diffs = round(scores2-scores1, 3))
@@ -239,7 +241,8 @@ result_v2019dat_oldfun <- calculate_bhi(
 ```
 
 ```{r comparing results with old v2015 function, results="hide", warning=FALSE, message=FALSE}
-result_oldfun <- comparing_scores(result_v2019dat_oldfun$scores, result_v2015dat_oldfun$scores)
+## dataframe for 
+result_oldfun <- comparing_scores(result_v2015dat_oldfun$scores, result_v2019dat_oldfun$scores)
 
 summary(result_oldfun$compare_scores_tab$diffs)
 summary(filter(result_oldfun$compare_scores_tab, goal == "FIS")$diffs)
@@ -307,7 +310,7 @@ result_v2019dat_newfun <- calculate_bhi(
 ```
 
 ```{r comparing results with new revised v2019 function, results="hide", warning=FALSE, message=FALSE}
-result_newfun <- comparing_scores(result_v2019dat_newfun$scores, result_v2015dat_newfun$scores)
+result_newfun <- comparing_scores(result_v2015dat_newfun$scores, result_v2019dat_newfun$scores)
 
 summary(result_newfun$compare_scores_tab$diffs)
 summary(filter(result_newfun$compare_scores_tab, goal == "FIS")$diffs)
