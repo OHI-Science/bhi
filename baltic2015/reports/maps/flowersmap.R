@@ -36,58 +36,91 @@ flowerplot(
 
 ## flowerplots for basins, make backgrounds transparent
 flowerplotloc <- here("baltic2015", "reports", "flowerplots")
-basin1flower <- magick::image_transparent(
-  magick::image_read(file.path(
-    flowerplotloc,
-    "flowerplot517base_bothnian_bay.png"
-  )),
-  color = "white"
+
+## dataframe of basin flowerplots info
+## filenames without png extension and xy placement positions for plotting
+basinsinfo <- data.frame(
+  ## left align
+  flowerplot517base_bothnian_bay = c(x = 0.81, y = 0.96, x0 = 0.65, y0 = 0.94, h = 0, v = 0.5),
+  flowerplot515base_bothnian_sea = c(x = 0.67, y = 0.73, x0 = 0.50, y0 = 0.7, h = 0, v = 0.5),
+  flowerplot513base_gulf_of_finland = c(x = 0.90, y = 0.68, x0 = 0.76, y0 = 0.52, h = 0, v = 0.25),
+  flowerplot509base_eastern_gotland_basin = c(x = 0.74, y = 0.26, x0 = 0.53, y0 = 0.22, h = 0, v = 0.5),
+  flowerplot511base_gulf_of_riga = c(x = 0.87, y = 0.41, x0 = 0.69, y0 = 0.33, h = 0, v = 0.25),
+  flowerplot508base_gdansk_basin = c(x = 0.63, y = 0.11, x0 = 0.525, y0 = 0.055, h = 0, v = 0.25),
+  ## right align
+  flowerplot510base_western_gotland_basin = c(x = 0.40, y = 0.43, x0 = 0.46, y0 = 0.33, h = 0.5, v = -0.25),
+  flowerplot507base_bornholm_basin = c(x = 0.34, y = 0.27, x0 = 0.41, y0 = 0.13, h = 0.5, v = -0.25),
+  flowerplot501base_kattegat = c(x = 0.15, y = 0.28, x0 = 0.22, y0 = 0.24, h = 0.5, v = -0.25),
+  flowerplot506base_arkona_basin = c(x = 0.08, y = 0.05, x0 = 0.29, y0 = 0.07, h = 0.5, v = -0.25)
 )
-basin2flower <- magick::image_transparent(
-  magick::image_read(file.path(
-    flowerplotloc,
-    "flowerplot515base_bothnian_sea.png"
-  )),
-  color = "white"
-)
-basin3flower <- magick::image_transparent(
-  magick::image_read(file.path(
-    flowerplotloc,
-    "flowerplot513base_gulf_of_finland.png"
-  )),
-  color = "white"
-)
-basin4flower <- magick::image_transparent(
-  magick::image_read(file.path(
-    flowerplotloc,
-    "flowerplot509base_eastern_gotland_basin.png"
-  )),
-  color = "white"
-)
+plotlines_df <- basinsinfo %>%
+  filter(rownames(basinsinfo) %in% c("x", "y", "x0", "y0")) %>%
+  cbind(var = c("x", "y", "x0", "y0")) %>%
+  gather("basin", "value", -var) %>%
+  mutate(var = as.character(var)) %>%
+  spread(var, value)
 
 ## combine everything into one figure using cowplot!
-ggdraw(balticmap) +
-  ## main flowerplot
+## start with base map and add main flowerplot,
+## and add plotlines for other flowerplots
+flowermap <- ggdraw(balticmap) +
+
+  ## arrows from small plots pointing to basins
+  draw_plot(
+    ggplot(data = plotlines_df) +
+      geom_curve(
+        aes(x = x, xend = x0, y = y, yend = y0),
+        data = plotlines_df,
+        arrow = arrow(length = unit(0.14, "cm")),
+        curvature = 0.4,
+        size = 0.2,
+        color = "#687c92"
+      ) +
+      theme(
+        legend.position = "none",
+        axis.text = element_blank()
+      ) +
+      xlim(0, 1) +
+      ylim(0, 1) +
+      labs(x = NULL, y = NULL),
+    x = 0.08, y = 0.03,
+    width = 0.88, height = 0.97
+  ) +
+
+  ## main flowerplot in a box with labels
   draw_image(
-    magick::image_transparent(
-      magick::image_read(file.path(
-        flowerplotloc,
-        "flowerplot0base_baltic_sea.png"
-      )),
-      color = "white"
-    ),
-    x = 0.07, y = 0.4,
-    width = 0.46, height = 0.46
+    file.path(flowerplotloc, "flower_curvetxt_baltic_sea.png") %>%
+      magick::image_read() %>%
+      magick::image_background("#f3f5f7") %>%
+      magick::image_border(color = "grey20", geometry = "5x5"),
+    x = 0.065, y = 0.61,
+    width = 0.37, height = 0.37
   ) +
   draw_image(
-    file.path(
-      flowerplotloc,
-      "flower_curvetxt_baltic_sea.png"
-    ),
-    x = 0.07, y = 0.4,
-    width = 0.46, height = 0.46
-  ) +
-  draw_image(basin1flower, x = 0.52, y = 0.77, width = 0.22, height = 0.22) +
-  draw_image(basin2flower, x = 0.44, y = 0.58, width = 0.22, height = 0.22) +
-  draw_image(basin3flower, x = 0.62, y = 0.43, width = 0.22, height = 0.22) +
-  draw_image(basin4flower, x = 0.44, y = 0.18, width = 0.22, height = 0.22)
+    file.path(flowerplotloc, "flowerplot0base_baltic_sea.png") %>%
+      magick::image_read() %>%
+      magick::image_transparent(color = "white"),
+    x = 0.065, y = 0.61,
+    width = 0.37, height = 0.37
+  )
+
+## now loop through to add all other basin plots
+for(basin in names(basinsinfo)){
+  p <- basinsinfo[c("x", "y", "h", "v"), basin]
+  flowermap <- flowermap +
+    draw_image(
+      file.path(flowerplotloc, paste0(basin, ".png")) %>%
+        magick::image_read() %>%
+        magick::image_trim() %>%
+        magick::image_transparent(color = "white"),
+      x = p[1]*0.8+0.1, y = p[2]*0.85+0.05,
+      width = 0.14, height = 0.14,
+      hjust = p[3], vjust = p[4]
+    )
+}
+
+ggsave(
+  "flowermap.png", device = "png",
+  path = here("baltic2015", "reports", "maps"),
+  dpi = 320, width = 28.5, height = 24, units = c("cm")
+)

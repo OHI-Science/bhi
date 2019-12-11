@@ -1,5 +1,4 @@
 ## Libraries
-source(file.path(here::here(), "R", "common.R"))
 library(ggplot2)
 library(ggrepel)
 library(rnaturalearth)
@@ -208,9 +207,6 @@ map_general <- function(goal_code, basins_or_rgns = "subbasins", shp, scores_csv
       st_crop(xmin = -5, xmax = 35, ymin = 48, ymax = 70)
   }
 
-  ## apply theme to get standardized elements, colors, palettes
-  thm <- apply_bhi_theme()
-
   ## create the map using ggplot geom_sf ----
   plot_map <- ggplot(data = baltic) +
     ## baltic countries
@@ -267,12 +263,13 @@ map_general <- function(goal_code, basins_or_rgns = "subbasins", shp, scores_csv
       )
     ) +
     ## subbasin labels can uses either ggrepel or regular geom_text
-    # ggrepel::geom_text_repel(
-    #   data = mapping_data_sp,
-    #   aes(label = Name, geometry = geometry),
-    #   stat = "sf_coordinates",
-    #   size = 3.25
-    # ) +
+    ggrepel::geom_text_repel(
+    # geom_text(
+      data = cbind(mapping_data_sp, st_coordinates(st_centroid(mapping_data_sp))),
+      aes(X, Y, label = Name),
+      size = 3.4,
+      color = "#8b98a6"
+    ) +
     ## labels and assorted plot elements
     labs(x = element_blank(), y = element_blank()) + # no x or y axes labels
     theme_bw() +

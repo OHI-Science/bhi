@@ -15,12 +15,13 @@ library(webshot)
 bhi_db_file <- "/Users/eleanorecampbell/Desktop/bhi-config.sqlite" # for now... depends on local path to sqlite db...
 bhi_db_con <- DBI::dbConnect(RSQLite::SQLite(), bhi_db_file)
 
-source(here::here("R", "theme.R"))
+source(here("R", "theme.R"))
 thm <- apply_bhi_theme(plot_type = "flowerplot") # theme_update for bhi flowerplot
 
 
 ## https://jokergoo.github.io/circlize_book/book/ about circlize package
 ## to install phantomjs, used only in flowerlegend function use webshot::install_phantomjs()
+
 
 
 ## Functions
@@ -179,7 +180,6 @@ flowerconfig <- function(dir_config, labels = "none", color_by = "goal", color_p
 
   return(list(
     plot_config = plot_config,
-    thm = thm,
     color_df = color_df,
     color_pal = color_pal
   ))
