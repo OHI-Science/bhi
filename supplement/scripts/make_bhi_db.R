@@ -2,10 +2,14 @@ library(DBI)
 library(dbplyr)
 library(dplyr)
 library(RSQLite)
+library(sf)
 
 bhi_db_file <- "/Users/eleanorecampbell/Desktop/bhi-config.sqlite"
 bhi_conf_db <- src_sqlite(bhi_db_file, create = TRUE)
 con <- DBI::dbConnect(RSQLite::SQLite(), bhi_db_file)
+
+bhi_db_file <- "/Users/eleanorecampbell/Desktop/bhi-config.sqlite" # for now... depends on local path to sqlite db...
+bhi_db_con <- DBI::dbConnect(RSQLite::SQLite(), bhi_db_file)
 
 
 dir <- "~/Desktop/GitHub/bhi/spatial"
@@ -153,7 +157,7 @@ short_defs <- tibble(
     "Revenues from marine-related sectors",
     "Protection of coastal and marine features that contribute to sense of cultural identity",
     "Cultural, spiritual, or aesthetic connection to the environment afforded by iconic species",
-    "Geographic locations that hold particular value for aesthetic, spiritual, cultural, recreational or existence reasons, and assesses how well they are protected",
+    "Geographic locations that hold particular value for aesthetic, spiritlual, cultural, recreational or existence reasons, and assesses how well they are protected",
     "Levels of pollution in marine areas",
     "The degree to which marine areas are unpolluted by nutrients",
     "The degree to which marine areas are unpolluted by trash",
@@ -170,4 +174,22 @@ goals_defs <- tbl(bhi_db_con, "plot_conf") %>%
 copy_to(bhi_db_con, goals_defs, "goals", temporary = FALSE)
 
 
+
+## december 6 changes....
+
+shp_rgn <- sf::st_read("/Volumes/BHI_share/Shapefiles/BHI_shapefile", "BHI_shapefile")
+# area_m2 <- sf::st_area(shp_rgn) %>% as.numeric()
+# shp_rgn <- shp_rgn %>% cbind(area_m2 = area_m2, chk_area_km2 = area_m2/10^6)
+shp_rgn_df <- shp_rgn
+st_geometry(shp_rgn_df) <- NULL
+
+current_rgn <- tbl(bhi_db_con, "regions") %>% select(region_id, order, eez) %>% collect()
+
+new_db_rgn <- shp_rgn_df %>%
+  select(region_id = BHI_ID, subbasin = Subbasin, area_km2 = Area_km2) %>%
+  left_join(current_rgn, by = "region_id") %>%
+  select(region_id, subbasin, eez, area_km2, order) %>%
+  mutate(subbasin = ifelse(str_detect(subbasin, "Bothian Sea"), "Bothnian Sea", subbasin))
+
+copy_to(bhi_db_con, new_db_rgn, "regions", temporary = FALSE, overwrite = TRUE)
 
