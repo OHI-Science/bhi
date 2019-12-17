@@ -113,7 +113,8 @@ flowerdata <- function(rgn_scores, rgns = NA, plot_year = NA, dim = "score", inc
   ## weights for fis vs. mar, uses layers/fp_wildcaught_weight.csv
   ## csv info determines relative width in the flowerplot of the two food provision subgoals
   w_fn <- list.files(
-    file.path(dir_assess, "layers"),
+    here::here("baltic", "layers"),
+    # file.path(dir_assess, "layers"),
     pattern = "fp_wildcaught_weight",
     full.names = TRUE
   )
@@ -123,14 +124,52 @@ flowerdata <- function(rgn_scores, rgns = NA, plot_year = NA, dim = "score", inc
     } else {message("fp_wildcaught_weight.csv not found in layers...")}
     w_fn <- NULL
   }
-  if(is.null(w_fn)){message("plotting FIS and MAR with equal weighting\n")}
+  if(is.null(w_fn)){
+    message("plotting FIS and MAR with equal weighting\n")
+    wgts <- NULL
+  } else {
+    wgts <- readr::read_csv(w_fn)
+    if("year" %in% names(wgts)){
+      wgts <- wgts %>%
+        dplyr::filter(year == plot_year) %>%
+        dplyr::select(-year)
+    }
+    if(nrow(wgts) != 0){
+      mean_wgt <- mean(wgts$w_fis) # mean across regions within the year of interest
+
+      ## area weighted subbasin means
+      wgts_basin <- tbl(bhi_db_con, "regions") %>%
+        select(rgn_id = region_id, area_km2, subbasin) %>%
+        collect() %>%
+        left_join(wgts, by = "rgn_id") %>%
+        group_by(subbasin) %>%
+        summarize(w_fis = weighted.mean(w_fis, area_km2)) %>%
+        left_join(
+          tbl(bhi_db_con, "basins") %>%
+            select(subbasin, rgn_id = subbasin_id) %>%
+            collect(),
+          by = "subbasin"
+        ) %>%
+        ungroup() %>%
+        select(rgn_id, w_fis)
+
+      wgts <- rbind(
+        data.frame(rgn_id = 0, w_fis = mean_wgt),
+        dplyr::filter(wgts, rgn_id %in% unique_rgn),
+        dplyr::filter(wgts_basin, rgn_id %in% unique_rgn)
+      )
+    } else {
+      message(paste("fp_wildcaught_weight.csv doesn't have data for the plot_year:", plot_year))
+      wgts <- NULL
+    }
+  }
 
   return(list(
     unique_rgn = unique_rgn,
     rgn_scores = rgn_scores,
     rgn_scores_summary = rgn_scores_summary,
     plot_year = plot_year,
-    w_fn = w_fn
+    wgts = wgts
   ))
 }
 
@@ -185,12 +224,12 @@ flowerconfig <- function(dir_config, labels = "none", color_by = "goal", color_p
   ))
 }
 
-rgnconfig <- function(region_id, rgn_scores, plot_config, w_fn, wgts, rgn_scores_summary, color_by = "goal", color_df = NULL, include_ranges){
+rgnconfig <- function(region_id, rgn_scores, plot_config, wgts, rgn_scores_summary, color_by = "goal", color_df = NULL, include_ranges){
 
   ## PLOTTING CONFIGURATION, REGION SPECIFIC
 
   r <- region_id
-  if(!is.null(w_fn)){ # mar vs fis weights differ between regions
+  if(!is.null(wgts)){ # mar vs fis weights differ between regions
     plot_config$weight[plot_config$goal == "FIS"] <- wgts$w_fis[wgts$rgn_id == r]
     plot_config$weight[plot_config$goal == "MAR"] <- 1 - wgts$w_fis[wgts$rgn_id == r]
   }
@@ -207,7 +246,7 @@ rgnconfig <- function(region_id, rgn_scores, plot_config, w_fn, wgts, rgn_scores
     dplyr::ungroup() %>%
     dplyr::filter(weight != 0) %>%
     dplyr::select(-dimension, -region_id, -year, -order_color, -parent, -name) %>%
-    dplyr::mutate(plot_NA = ifelse(is.na(score), 100, NA)) # for displaying NAs
+    dplyr::mutate(plot_NA = ifelse(is.na(score)|is.nan(score), 100, NA)) # for displaying NAs
 
   if(color_by == "goal"){
     plot_df <- plot_df %>%
@@ -407,7 +446,7 @@ flowerformatting <- function(region_id, rgn_plot_obj, plot_df, flower_rgn_scores
         text = "Food Provision",
         cex = 6.5,
         padding = c(0, 0, 0, 2.67),
-        text.col = thm$cols$light_grey2,
+        text.col = "#2a272a", # thm$cols$light_grey2,
         col = NA,
         facing = "bending.outside",
         niceFacing = TRUE
@@ -478,44 +517,6 @@ flowerplot <- function(rgn_scores, rgns = NA, plot_year = NA, dim = "score", inc
   ## flowerplot configuration
   rflowerconfig <- flowerconfig(dir_config, labels, color_by, color_pal)
 
-  ## petal weights for food provision goal ----
-  if(!is.null(rflowerdata$w_fn)){
-    wgts <- readr::read_csv(rflowerdata$w_fn)
-    if("year" %in% names(wgts)){
-      wgts <- wgts %>%
-        dplyr::filter(year == rflowerdata$plot_year) %>%
-        dplyr::select(-year)
-    }
-    if(length(wgts$w_fis) != 0){
-      mean_wgt <- mean(wgts$w_fis) # mean across regions within the year of interest
-
-      ## area weighted subbasin means
-      wgts_basin <- tbl(bhi_db_con, "regions") %>%
-        select(rgn_id = region_id, area_km2, subbasin) %>%
-        collect() %>%
-        left_join(wgts, by = "rgn_id") %>%
-        group_by(subbasin) %>%
-        summarize(w_fis = weighted.mean(w_fis, area_km2)) %>%
-        left_join(
-          tbl(bhi_db_con, "basins") %>%
-            select(subbasin, rgn_id = subbasin_id) %>%
-            collect(),
-          by = "subbasin"
-        ) %>%
-        ungroup() %>%
-        select(rgn_id, w_fis)
-
-      wgts <- rbind(
-        data.frame(rgn_id = 0, w_fis = mean_wgt),
-        dplyr::filter(wgts, rgn_id %in% rflowerdata$unique_rgn),
-        wgts_basin
-      )
-    } else {
-      message(paste("fp_wildcaught_weight.csv doesn't have data for the plot_year:", rflowerdata$plot_year))
-      rflowerdata$w_fn <- NULL
-    }
-  }
-
   ## start looping over regions
   for(r in rflowerdata$unique_rgn){
     ## flowerplot region-specific configuration
@@ -524,8 +525,7 @@ flowerplot <- function(rgn_scores, rgns = NA, plot_year = NA, dim = "score", inc
       r,
       rflowerdata$rgn_scores,
       rflowerconfig$plot_config,
-      rflowerdata$w_fn,
-      wgts,
+      rflowerdata$wgts, # petal weights for food provision goal
       rflowerdata$rgn_scores_summary,
       color_by,
       rflowerconfig$color_df,
@@ -616,44 +616,6 @@ flowerwgradient <- function(rgn_scores, rgns = NA, plot_year = NA, dim = "score"
   ## flowerplot configuration
   rflowerconfig <- flowerconfig(dir_config, labels, color_by, color_pal)
 
-  ## petal weights for food provision goal ----
-  if(!is.null(rflowerdata$w_fn)){
-    wgts <- readr::read_csv(rflowerdata$w_fn)
-    if("year" %in% names(wgts)){
-      wgts <- wgts %>%
-        dplyr::filter(year == rflowerdata$plot_year) %>%
-        dplyr::select(-year)
-    }
-    if(length(wgts$w_fis) != 0){
-      mean_wgt <- mean(wgts$w_fis) # mean across regions within the year of interest
-
-      ## area weighted subbasin means
-      wgts_basin <- tbl(bhi_db_con, "regions") %>%
-        select(rgn_id = region_id, area_km2, subbasin) %>%
-        collect() %>%
-        left_join(wgts, by = "rgn_id") %>%
-        group_by(subbasin) %>%
-        summarize(w_fis = weighted.mean(w_fis, area_km2)) %>%
-        left_join(
-          tbl(bhi_db_con, "basins") %>%
-            select(subbasin, rgn_id = subbasin_id) %>%
-            collect(),
-          by = "subbasin"
-        ) %>%
-        ungroup() %>%
-        select(rgn_id, w_fis)
-
-      wgts <- rbind(
-        data.frame(rgn_id = 0, w_fis = mean_wgt),
-        dplyr::filter(wgts, rgn_id %in% rflowerdata$unique_rgn),
-        wgts_basin
-      )
-    } else {
-      message(paste("fp_wildcaught_weight.csv doesn't have data for the plot_year:", rflowerdata$plot_year))
-      rflowerdata$w_fn <- NULL
-    }
-  }
-
   ## plotting by region
   r <- rflowerdata$unique_rgn[1]
   message("since plotting with a gradient is so intensive, plotting only for first region!!!\n")
@@ -662,8 +624,7 @@ flowerwgradient <- function(rgn_scores, rgns = NA, plot_year = NA, dim = "score"
     r,
     rflowerdata$rgn_scores,
     rflowerconfig$plot_config,
-    rflowerdata$w_fn,
-    wgts,
+    rflowerdata$wgts,
     rflowerdata$rgn_scores_summary,
     color_by,
     rflowerconfig$color_df,
