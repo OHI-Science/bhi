@@ -288,8 +288,8 @@ flowerformatting <- function(region_id, rgn_plot_obj, plot_df, flower_rgn_scores
     labs(x = NULL, y = NULL) +
     coord_polar(start = pi * 0.5) + # from linear bar chart to polar
     scale_x_continuous(labels = NULL,
-                       breaks = plot_df$pos,
-                       limits = c(0, max(plot_df$pos_end))) +
+                       breaks = plot_df$pos) +
+                       # limits = c(0, max(plot_df$pos_end))) +
     scale_y_continuous(limits = c(blank_circle_rad, ifelse(first(goal_labels == TRUE)|is.data.frame(goal_labels), 150, 100)))
   ## include average value in center
   score_index <- flower_rgn_scores %>%
