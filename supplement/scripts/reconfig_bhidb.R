@@ -45,9 +45,8 @@ clean_tab <- function(con = dbcon, tab){
 
   ## GEOSPATIAL STUFF
   ## where relevant combine lat long into a single geospatial column
-  ## check lat long exist and whether decimal deg or min/sec
+  ## check lat long exist and whether decimal deg or min/sec etc
   chksp <- FALSE
-
   latlon <- data.frame(
     lon = c("longitude", "long", "lon"),
     lat = c("latitude", "lat", "lat")
@@ -66,39 +65,15 @@ clean_tab <- function(con = dbcon, tab){
   }
   if(i == j & length(lon) != 0 & length(lat) != 0){
     if(is.numeric(df[[lon]]) & is.numeric(df[[lat]])){
-      chksp <- max(df[[lon]]) < 185 & min(df[[lon]]) > -180 & max(df[[lat]]) < 85 & min(df[[lat]]) > -85
+      chkna <- nrow(df %>% filter(is.na(!!sym(lon))) %>% filter(is.na(!!sym(lat)))) == 0
+      chklat <- max(df[[lat]], na.rm = TRUE) < 85 & min(df[[lat]], na.rm = TRUE) > -85
+      chklon <- max(df[[lon]], na.rm = TRUE) < 185 & min(df[[lon]], na.rm = TRUE) > -180
+      chksp <- chklon & chklat & chkna
     }
   }
-
   if(chksp){
-    dfspatial <- sf::st_as_sf(
-      coords = c(lon, lat),
-      x = df,
-      remove = FALSE
-    )
-    geombin <- sf::st_as_binary(dfspatial[["geometry"]])
-    wkbcol <- c()
-    for(i in length(geombin)){
-      wkbcol <- c(wkbcol, geombin[[i]] %>% as.character() %>% paste(collapse = " "))
-    }
-    spatialcols <- dfspatial %>%
-      cbind(wkbcol = wkbcol) %>%
-      select(
-        matches("wkbcol"),
-        matches("^Lat.*|^lat.*"),
-        matches("^Lon.*|^lon.*")
-      ) %>%
-      as_tibble() %>%
-      mutate(
-        wkbcol = as.character(wkbcol),
-        tabname = tab,
-        newtabname = ifelse(
-          str_detect(db, "[0-9]"),
-          paste0("level", str_extract(db, "[0.9]"), "_", tab), tab
-        )
-      )
-    df <- dfspatial
-  } else {spatialcols = NULL}
+    df <- sf::st_as_sf(x = df, coords = c(lon, lat), remove = FALSE)
+  }
 
   return(
     list(
@@ -110,8 +85,7 @@ clean_tab <- function(con = dbcon, tab){
             str_detect(db, "[0-9]"),
             paste0("level", str_extract(db, "[0.9]"), "_", tab), tab
           )
-        ),
-      spatialcols = head(spatialcols)
+        )
     )
   )
 }
@@ -122,7 +96,6 @@ chkresults <- list()
 for(tab in DBI::dbListTables(dbcon)){
   tabresult <- clean_tab(dbcon, tab)
   chkresults[["colnames"]][[tab]] <- tabresult[["colnames"]]
-  # chkresults[["spatialcols"]][[tab]]  <- tabresult[["spatialcols"]]
 }
 ## IMPORTANT save this info about how changed column names and data types
 trackcols <- purrr::map(magrittr::extract(chkresults, "colnames"), bind_rows)$colnames
@@ -147,11 +120,7 @@ rpostgis::pgPostGIS(postgresdbcon) # check postgis
 
 ## uploading data tables to the PostGIS database
 for(tab in listtables){
-
   tabresult <- clean_tab(dbcon, tab)
-  specify_types <- filter(trackcols, tabname == tab)$typnew %>% as.character()
-  names(specify_types) <- filter(trackcols, tabname == tab)$revised
-
   dbWriteTable(
     conn = testcon,
     name = c("bhi", "testSPATIAL"),
