@@ -596,3 +596,129 @@ scores_barplot <- function(scores_csv, basins_or_rgns = "subbasins", goal_code, 
   }
   return(invisible(plot_obj))
 }
+
+
+#' make OHI future dimensions diagrams
+#'
+#' @param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R),
+#' filtered to region
+#' @param rgns vector of bhi region ids
+#' @param goal_code the two or three letter code indicating which goal/subgoal to create the plot for
+#'
+#' @return
+
+bhi_freebody <- function(rgn_scores, rgns, goal_code){
+
+  ## plotting dataframe
+  plotdf <- rgn_scores %>%
+    dplyr::filter(region_id %in% rgns) %>%
+    dplyr::filter(goal == goal_code) %>%
+    tidyr::pivot_wider(names_from = dimension, values_from = score) %>%
+    select(-goal, -score) %>%
+    mutate(
+      trend_prior = status,
+      trend_post = future,
+      status_current = status
+    ) %>%
+    tidyr::pivot_longer(
+      cols = c("status", "future"),
+      names_to = "dim",
+      values_to = "score"
+    ) %>%
+    mutate(
+      position = ifelse(dim == "status", 0, 1),
+      position_shift = ifelse(dim == "status", -1.02, -0.02),
+      trend_prior = ifelse(dim == "status", trend_prior-trend*100, trend_prior),
+      trend_post = ifelse(dim == "status", score, trend_post),
+      prs_prior = ifelse(dim == "status", status_current+pressures, status_current),
+      res_prior = ifelse(dim == "status", status_current-resilience, status_current)
+    )
+  plotdf <- plotdf %>%
+    mutate(
+      prs = ifelse(pressures < 31, 0.01, (pressures-30)/70)*(-1),
+      res = ifelse(resilience < 31, 0.01, (resilience-30)/70)
+    ) %>%
+    select(-trend, -status_current, -dim)
+
+  txtdf <- plotdf %>%
+    filter(position == 0) %>%
+    select(region_id, resilience, pressures, score, res, prs) %>%
+    tidyr::pivot_longer(cols = c("pressures", "resilience")) %>%
+    mutate(
+      xtxt = -0.5,
+      ytxt = ifelse(name == "pressures", score + 15, score - 20),
+      txtval = ifelse(name == "pressures", prs, res),
+      txt = sprintf("%s: %s", name, value)
+    )
+
+  ## make plots
+  bhi_fb_diagrams <- ggplot(plotdf) +
+
+    ## current and likely future status
+    geom_col(
+      aes(x = position, y = score),
+      width = 0.02,
+      fill = "royalblue3",
+      alpha = 0.7
+    ) +
+    geom_point(aes(x = position, y = score), size = 7, color = "royalblue3",  alpha = 0.4) +
+    geom_point(aes(x = position, y = score), size = 5, color = "royalblue3",  alpha = 0.7) +
+    geom_point(aes(x = position, y = score), size = 2, color = "royalblue3") +
+
+    geom_hline(aes(yintercept = score), size = 0.15) +
+
+    ## trend from past to present and to likely future
+    geom_path(
+      aes(x = position_shift, y = trend_prior, group = 1),
+      color = "navy",
+      alpha = 0.8,
+      linetype = 2
+    ) +
+    geom_path(
+      aes(x = position, y = trend_post, group = 1),
+      color = "steelblue",
+      alpha = 0.8,
+      linetype = 2,
+      size = 0.3,
+      arrow = arrow(17, unit(0.35, "cm"), type = "closed")
+    ) +
+
+    ## pressures and resilience
+    geom_path(
+      aes(
+        x = position_shift,
+        y = res_prior,
+        group = 1,
+        color = res
+      ),
+      arrow = arrow(17, unit(0.35, "cm"), type = "closed"),
+      show.legend = FALSE
+    ) +
+    geom_path(
+      aes(
+        x = position_shift,
+        y = prs_prior,
+        group = 1,
+        color = prs
+      ),
+      arrow = arrow(17, unit(0.35, "cm"), type = "closed"),
+      show.legend = FALSE
+    ) +
+    geom_label(
+      data = txtdf,
+      aes(x = xtxt, y = ytxt, label = txt, color = txtval),
+      alpha = 0.6,
+      size = 3.5,
+      show.legend = FALSE
+    ) +
+
+    ## formatting and theme stuff
+    labs(x = NULL, y = NULL) +
+    coord_cartesian(ylim = c(5, 115), xlim = c(-0.8, 1.2)) +
+    scale_color_gradient2(low = "#ff7e05", mid = "#cc618f", high = "#0e22a4") +
+    theme_bw() +
+    theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
+    facet_wrap(~region_id)
+
+  return(bhi_fb_diagrams)
+}
