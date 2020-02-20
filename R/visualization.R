@@ -720,5 +720,80 @@ bhi_freebody <- function(rgn_scores, rgns, goal_code){
     theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) +
     facet_wrap(~region_id)
 
+  ## return plots
   return(bhi_fb_diagrams)
 }
+
+
+#' make plot of likely future minus status vs status
+#'
+#' @param rgn_scores scores dataframe e.g. output of ohicore::CalculateAll (typically from calculate_scores.R),
+#'
+#' @return
+
+status_v_future <- function(rgn_scores){
+
+  ## plotting dataframe
+  rgn_scores <- rgn_scores %>%
+    filter(goal != "Index") %>%
+    mutate(score = ifelse(is.na(score)|is.nan(score), NA, score)) %>%
+    tidyr::pivot_wider(names_from = dimension, values_from = score) %>%
+    mutate(diff_future_status = future - status)
+
+  plotdf <- rgn_scores %>%
+    filter(region_id %in% 501:517) %>%
+    group_by(goal) %>%
+    summarize(
+      max_diff = max(diff_future_status, na.rm = TRUE),
+      min_diff = min(diff_future_status, na.rm = TRUE)
+    )
+  plotdf <- plotdf %>%
+    left_join(
+      rgn_scores %>%
+        filter(region_id == 0) %>%
+        select(goal, status, diff_future_status),
+      by = "goal"
+    )
+
+  ## make plot
+  status_v_future <- ggplot(plotdf) +
+    geom_hline(yintercept = 0) +
+
+    ## ranges, min to max of diff_future_status per goal across basins
+    geom_errorbar(
+      aes(status, ymin = min_diff, ymax = max_diff, color = goal),
+      alpha = 0.5,
+      show.legend = FALSE
+    ) +
+    geom_errorbar(
+      aes(status, ymin = min_diff, ymax = max_diff),
+      alpha = 0.5,
+      width = 0.3
+    ) +
+
+    ## diff_future_status versus current status
+    geom_point(
+      aes(status, diff_future_status, color = goal),
+      size = 3,
+      show.legend = FALSE
+    ) +
+
+    ## plot elements formatting
+    ggrepel::geom_text_repel(
+      aes(status, diff_future_status, label = goal),
+      segment.color = NA
+    ) +
+    theme_classic() +
+    theme(
+      axis.text = element_text(size = 12),
+      axis.title = element_text(size = 14)
+    ) +
+    labs(x = "\nStatus", y = "Likely Future minus Status\n") +
+    scale_x_continuous(breaks = seq(0, 100, 5)) +
+    scale_y_continuous(breaks = seq(-20, 100, 5))
+
+  ## return plot
+  return(status_v_future)
+}
+
+
