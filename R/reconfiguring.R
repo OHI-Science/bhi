@@ -106,31 +106,23 @@ layerscsv_edit <- function(layers_obj, lyr_file, lyr_name, dir_assess, lyr_meta,
 #' @param test_funs_list a list of filepaths from (not including) 'testing/alt_functions' to the functions we want to use in analysis
 #' @return revises functions.R at existing location in 'conf' folder; no direct output
 
-configure_functions <- function(dir_assess, test_funs_list = NULL){
-
-  functionsR_path <- file.path(dir_assess, "conf", "functions.R")
-  fun_scripts_path <- file.path(dir_assess, "testing", "alt_functions")
+configure_functions <- function(dir_assess, test_funs_list){
 
   ## get filepaths list of functions we want to collect into functions.R
-  if(is.null(test_funs_list)){ # only works if 'test_functions.csv' exists in directory
-    if(file.exists("test_functions.csv")){
-      fun_scripts_lst <- readr::read_csv("test_functions.csv", col_names = FALSE) %>%
-        as.list() %>%
-        lapply(function(x) file.path(dir_assess, "testing", "alt_functions", x))
-    } else { stop("no 'test functions' list provided, and no 'test_function.csv' found") }
-  } else { # better to actually provide the list
-    fun_scripts_lst <- test_funs_list %>%
-      lapply(function(x) file.path(dir_assess, "testing", "alt_functions", x))
-  }
+  fun_scripts_lst <- list(file.path(dir_assess, "functions", test_funs_list))
 
   ## confirm all specified function versions actually exist before overwriting functions.R
   chk <- file.exists(fun_scripts_lst[[1]])
   if(any(!chk)){
-    m <- basename(fun_scripts_lst[[1]][!chk]) # file.exists is FALSE ie, functions aren't at given location
-    stop(sprintf("the following do not exist in given locations: %s",
-                 paste(m, collapse = ", ")))
+    ## file.exists is FALSE i.e., functions aren't at given location
+    m <- basename(fun_scripts_lst[[1]][!chk])
+    stop(sprintf(
+      "the following do not exist in given locations: %s",
+      paste(m, collapse = ", ")
+    ))
   }
 
+  functionsR_path <- file.path(dir_assess, "conf", "functions.R")
   sink(file = functionsR_path, append = FALSE) # overwrite functions.R with first function
   cat(
     scan(
