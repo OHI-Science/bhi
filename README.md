@@ -9,9 +9,9 @@ As of January of 2019, we began working on our second Baltic Health Index assess
 
 
 **Explore the BHI on GitHub:** <br/>
+[Data preparation](https://github.com/OHI-Science/bhi-prep/tree/master/prep) 
 [Functions for calculating Status and Trend](https://github.com/OHI-Science/bhi/blob/master/baltic/conf/functions.R)  
 [Video about following BHI progress in GitHub](https://www.youtube.com/watch?v=u5BRx05Wmwo)  
-[Data preparation](https://github.com/OHI-Science/bhi-prep/tree/master/prep) 
 
 ---
 
@@ -28,8 +28,6 @@ Our region of focus is the [Baltic Sea](https://www.google.se/maps/place/Baltic+
 
 ### Learn more about the Baltic Health Index <br/>
 [BHI at the Stockholm Resilience Centre](http://www.stockholmresilience.org/research/research-themes/marine/baltic-health-index.html)  
-[BHI at the Baltic Sea Center in English](http://www.su.se/ostersjocentrum/english/baltic-eye/research/baltic-health-index)  
-[BHI at the Baltic Sea Center in Swedish](http://www.su.se/ostersjocentrum/baltic-eye/forskning/baltic-health-index)  
 [Ocean Health Index](http://www.oceanhealthindex.org/about)  
 [Ocean Health Index Science](http://ohi-science.org)
 
