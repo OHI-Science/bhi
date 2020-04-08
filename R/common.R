@@ -127,7 +127,7 @@ bhiprep_github_layers <- function(github_api_url = bhiprep_gh_api){
 #' @return a boolean indicating if differences were found, list of checks results including scan for NAs,
 #' comparisons ie missing or extra unique values within key columns
 
-compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_nas = NA){
+compare_tables <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_nas = NA){
 
   ## setup, load tables, get key variable info
   if(!is.data.frame(tab1)){tab1df <- read.csv(tab1, stringsAsFactors = FALSE)
@@ -139,7 +139,6 @@ compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_
     check_cols <- names(tab1)
     print("using all columns of table 1 in the comparision")
   }
-
   tab1_keys <- unique(tab1df[, key_row_var])
   tab2_keys <- unique(tab2df[, key_row_var])
   keys <- dplyr::union(tab1_keys, tab2_keys)
@@ -153,16 +152,21 @@ compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_
   not_in_tab1 <- setdiff(check_cols, names(tab1df)) # check_cols not in tab1
   not_in_tab2 <- setdiff(check_cols, names(tab2df)) # check_cols not in tab2
   if(length(not_in_tab1) != 0 | length(not_in_tab2) != 0){
-    stop(sprintf("given 'check' column(s) not found in one or both of the tables: %s",
-                 dplyr::union(not_in_tab1, not_in_tab2) %>%
-                   paste(collapse = ", ")))
+    stop(sprintf(
+      "given 'check' column(s) not found in one or both of the tables: %s",
+      dplyr::union(not_in_tab1, not_in_tab2) %>%
+        paste(collapse = ", ")
+    ))
   }
   if(!(key_row_var %in% names(tab1df) & key_row_var %in% names(tab2df))){
       stop(paste("one or both tables are missing the key row variable:", key_row_var))
   }
   if(!is.na(check_for_nas)){
-    chk_na <- array(NA, dim = c(nrow(tab1df), length(check_for_nas)),
-                    dimnames = list(tab1df[, key_row_var], check_for_nas))
+    chk_na <- array(
+      NA,
+      dim = c(nrow(tab1df), length(check_for_nas)),
+      dimnames = list(tab1df[, key_row_var], check_for_nas)
+    )
     for(k in 1:length(check_for_nas)){
       chk_na[, k] <- is.na(tab2df[, check_for_nas[k]]) # TRUE where are NAs in column
     }
@@ -178,10 +182,14 @@ compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_
     e <- list()
     m <- list()
     for(j in keys %>% unlist()){ # from stops above check_cols incl. key_row_var must be in both tabs
-      e[[j]] <- setdiff(unique(tab2df[tab2df[key_row_var] == j, i]),
-                        unique(tab1df[tab1df[key_row_var] == j, i]))
-      m[[j]] <- setdiff(unique(tab1df[tab1df[key_row_var] == j, i]),
-                        unique(tab2df[tab2df[key_row_var] == j, i]))
+      e[[j]] <- setdiff(
+        unique(tab2df[tab2df[key_row_var] == j, i]),
+        unique(tab1df[tab1df[key_row_var] == j, i])
+      )
+      m[[j]] <- setdiff(
+        unique(tab1df[tab1df[key_row_var] == j, i]),
+        unique(tab2df[tab2df[key_row_var] == j, i])
+      )
     }
     comparisons$extra[[i]] <- e
     comparisons$missing[[i]] <- m
@@ -195,90 +203,4 @@ compare_tabs <- function(tab1, tab2, key_row_var, check_cols = "all", check_for_
       comparisons = comparisons
     )
   )
-}
-
-
-#' filter score data
-#'
-#' @param scores_csv scores dataframe with goal, dimension, region_id, year and score columns,
-#' e.g. output of ohicore::CalculateAll typically from calculate_scores.R
-#' @param dims the dimensions to extract score data for
-#' @param goals the goals to extract score data for
-#' @param rgns the regions to extract score data for
-#' @param scenario_yrs the years in scores_csv for which to extract score data
-#'
-#' @return a dataframe of OHI scores filtered by the given conditions
-
-filter_score_data <- function(scores_csv, dims = "all", goals = "all", rgns = NA, scenario_yrs = NA){
-
-  filter_scores <- scores_csv
-  years <- scenario_yrs
-
-  if(dims != "all"){
-    filter_scores <- filter_scores %>%
-      dplyr::filter(dimension %in% unlist(dims))
-    if(length(filter_scores$score) == 0){
-      message("filtering score data by these dimensions returns zero rows")
-    }
-  }
-  if(goals != "all" & length(filter_scores$score) > 0){
-    goals <- stringr::str_to_upper(goals) %>% unlist()
-    filter_scores <- filter_scores %>%
-      dplyr::filter(goal %in% goals)
-    if(length(filter_scores$score) == 0){
-      message("filtering score data by these goals returns zero rows")
-    }
-  }
-  if(!is.na(rgns) & length(filter_scores$score) > 0){
-    filter_scores <- filter_scores %>%
-      dplyr::filter(region_id %in% unlist(rgns))
-    if(length(filter_scores$score) == 0){
-      message("filtering score data by these region ID values returns zero rows")
-    }
-  }
-  if(!is.na(years) & "year" %in% names(filter_scores) & length(filter_scores$score) > 0){
-    if(years == "max" | years == "latest"){
-      years <- max(filter_scores$year)
-    }
-    filter_scores <- filter_scores %>%
-      dplyr::filter(year %in% unlist(years))
-    if(length(filter_scores$score) == 0){
-      message("filtering score data by these years returns zero rows")
-    }
-  }
-  if(!is.na(years) & !("year" %in% names(filter_scores))){
-    print("there is no year column in the scores data table provided")
-  }
-  ## checking completeness
-  chk1a <- identical(
-    names(filter_scores),
-    c("goal","dimension","region_id","score"))
-  chk1b <- identical(
-    names(filter_scores),
-    c("goal","dimension","region_id","score","year"))
-
-  if(chk1b){
-    summary_tab <- filter_scores %>%
-      group_by(goal, dimension, year)
-  } else {
-    summary_tab <- filter_scores %>%
-      group_by(goal, dimension)
-  }
-  summary_tab <- summary_tab %>%
-    summarize(
-      missing_rgn = list(setdiff(0:42, region_id)),
-      num_NAs = sum(is.na(score)),
-      scores_range = list(range(score, na.rm = TRUE))
-    ) %>%
-    ungroup()
-  chk2 <- length(unlist(summary_tab$missing_rgn)) == 0
-
-  if(!(chk1a|chk1b)){
-    message("double check columns included in score_data input")
-  }
-  if(!chk2){
-    message("missing for some regions and/or for some goals; see 2nd output summary_tab")
-  }
-
-  return(list(filter_scores, summary_tab))
 }
