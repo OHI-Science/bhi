@@ -5,7 +5,6 @@ FIS <- function(layers){
   ## Revised to use multi-year framework, incorporating scenario_data_years
   ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
 
-
   scenario_year <- layers$data$scenario_year
 
 
@@ -196,15 +195,17 @@ FIS <- function(layers){
     dplyr::group_by(region_id) %>%
     dplyr::filter(year %in% trend_years) %>%
     dplyr::do(mdl = lm(status_prop ~ year, data = .)) %>%
-    dplyr::summarize(region_id = region_id,
-                     trend = coef(mdl)["year"] * 5) %>% # trend multiplied by 5 to predict 5 yrs out
+    dplyr::summarize(
+      region_id = region_id,
+      trend = coef(mdl)["year"] * 5
+    ) %>% # trend multiplied by 5 to predict 5 yrs out
     dplyr::ungroup() %>%
     dplyr::mutate(trend = round(trend, 2))
 
   scores <- rbind(
     ## status scores
     status_scores %>%
-      dplyr::filter(year == scenario_years) %>%
+      dplyr::filter(year == scenario_year) %>%
       dplyr::mutate(status = round(status_prop * 100, 1)) %>%
       dplyr::select(region_id, score = status) %>%
       tidyr::complete(region_id = full_seq(c(1, 42), 1)) %>%
