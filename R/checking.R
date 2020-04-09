@@ -1,5 +1,5 @@
 ## Libraries
-source(file.path(here::here(), "R", "setup.R"))
+source(here::here("R", "setup.R"))
 library(plotly)
 library(ggplot2)
 library(dplyr)
@@ -29,43 +29,46 @@ compare_scores <- function(scores1, year1, scores2, year2, dim = "score", goals 
   } else {
     g <- goals
 
-    comparison_tab <- scores1 %>%
-      dplyr::filter(dimension %in% dim,
-                    goal %in% g,
-                    year == year1) %>%
-      dplyr::full_join(scores2 %>%
-                         dplyr::filter(dimension %in% dim,
-                                       goal %in% g,
-                                       year == year2),
-                       by = c("region_id", "dimension", "goal")) %>%
-      dplyr::rename(scores1 = score.x, year1 = year.x,
-                    scores2 = score.y, year2 = year.y) %>%
-      dplyr::mutate(scores_diff = scores1 - scores2,
-                    yr_diff = ifelse(year1 - year2 > 0, year1 - year2, 1),
-                    yearly_diff = scores_diff/yr_diff)
+    comparison_tab <- dplyr::full_join(
+      dplyr::filter(scores1, dimension %in% dim, goal %in% g, year == year1),
+      dplyr::filter(scores2, dimension %in% dim, goal %in% g, year == year2),
+      by = c("region_id", "dimension", "goal")
+    ) %>%
+      dplyr::rename(
+        scores1 = score.x, year1 = year.x,
+        scores2 = score.y, year2 = year.y
+      ) %>%
+      dplyr::mutate(
+        scores_diff = scores1 - scores2,
+        yr_diff = ifelse(year1 - year2 > 0, year1 - year2, 1),
+        yearly_diff = scores_diff/yr_diff
+      )
 
     ## comparision summary table
     comparison_summary <- comparison_tab %>%
       dplyr::group_by(goal, dimension) %>%
-      dplyr::summarise(mean_diff = mean(scores_diff, na.rm = TRUE),
-                       sd_diff = sd(scores_diff, na.rm = TRUE),
-                       number_na = sum(is.na(scores_diff)),
-                       mean_yearly_diff = mean(yearly_diff, na.rm = TRUE),
-                       biggest_diff = max(abs(scores_diff), na.rm = TRUE))
+      dplyr::summarise(
+        mean_diff = mean(scores_diff, na.rm = TRUE),
+        sd_diff = sd(scores_diff, na.rm = TRUE),
+        number_na = sum(is.na(scores_diff)),
+        mean_yearly_diff = mean(yearly_diff, na.rm = TRUE),
+        biggest_diff = max(abs(scores_diff), na.rm = TRUE)
+      )
 
     ## create plot(s) for comparing two datasets
     pal <- RColorBrewer::brewer.pal(6, "Set2")
     n_facet <- ceiling(length(goal)/3)
 
-    comparison_plot <- ggplot2::ggplot(data = comparison_tab %>%
-                                         na.omit(), aes(scores1, scores2)) +
+    comparison_plot <- ggplot2::ggplot(data = comparison_tab %>% na.omit(), aes(scores1, scores2)) +
       geom_point(aes(color = dimension, label = region_id), alpha = 0.5, size = 3) +
       scale_color_manual(values = pal) +
       geom_abline(slope = 1, intercept = 0, color = "gray70") +
 
       theme_bw() + theme(legend.position = c(0.9, 0.12)) +
-      labs(x = sprintf("\n Scores for %s from Table 1", year1),
-           y = sprintf("Scores for %s from Table 2 \n", year2)) +
+      labs(
+        x = sprintf("\n Scores for %s from Table 1", year1),
+        y = sprintf("Scores for %s from Table 2 \n", year2)
+      ) +
       facet_wrap( ~goal, ncol = n_facet) # split up by (sub)goals
 
     return(list(comparison_plot, comparison_summary, comparison_tab))
@@ -78,7 +81,7 @@ compare_scores <- function(scores1, year1, scores2, year2, dim = "score", goals 
 #' This function compares BHI scores from the current analysis and a previous commit
 #' Written originally by Melanie Frazier for the ohi-global assessment
 #'
-#' @param repo repository name, e.g. 'bhi'
+#' @param repo repository name, e.g. 'bhi' or  'bhi-1.0-archive'
 #' @param assessmt name of assessment subfolder that contains the 'scores.csv' file of interest
 #' @param commit 7 digit sha number identifying the commit. Otherwise, it is compared to the previous commit
 #'
@@ -98,9 +101,10 @@ change_plot <- function(repo = "bhi", assessmt = basename(dir_assess), commit = 
   org <- stringr::str_split(tmp, "/")[[1]][4]
   path <- file.path(r, assessmt, "scores.csv")
 
-  data_old <- ohicore::read_git_csv(paste(org, repo, sep = .Platform$file.sep),
-                                    substr(c, 1, 7), path) %>%
-    dplyr::select(goal, dimension, region_id, old_score = score)
+  data_old <- ohicore::read_git_csv(
+    paste(org, repo, sep = .Platform$file.sep),
+    substr(c, 1, 7), path
+  ) %>% dplyr::select(goal, dimension, region_id, old_score = score)
 
   ## join old data with new data, and calculate change
   data <- read.csv(path) %>%
@@ -108,18 +112,25 @@ change_plot <- function(repo = "bhi", assessmt = basename(dir_assess), commit = 
     dplyr::mutate(change = score - old_score)
 
   ## create plot
-  p <- ggplot2::ggplot(data_new, aes(x = goal, y = change, color = dimension)) +
-    theme_bw() +
-    labs(title = paste(assessmt, commit, sep = " "),
-         y = "Change in score",
-         x = "") +
-    scale_x_discrete(limits = c("Index", "AO", "FP", "FIS", "MAR", "BD",
-                                "CW", "CON", "TRA", "EUT", "SP", "LSP", "ICO",
-                                "LE", "ECO", "LIV", "TR", "CS", "NP")) +
-    scale_colour_brewer(palette = "Dark2") +
-    geom_jitter(aes(text = paste0("rgn = ", region_id)),
-                position = position_jitter(width = 0.2, height = 0), shape = 19, size = 1)
-  plotly_fig <- plotly::ggplotly(p)
+  plotly_fig <- plotly::ggplotly(
+
+    ggplot2::ggplot(data_new, aes(x = goal, y = change, color = dimension)) +
+      geom_jitter(
+        aes(text = paste0("rgn = ", region_id)),
+        position = position_jitter(width = 0.2, height = 0),
+        shape = 19,
+        size = 1
+      ) +
+      theme_bw() +
+      labs(title = paste(assessmt, commit, sep = " "), y = "Change in score", x = "") +
+      scale_x_discrete(
+        limits = c(
+          "Index", "AO", "FP", "FIS", "MAR", "BD",
+          "CW", "CON", "TRA", "EUT", "SP", "LSP", "ICO",
+          "LE", "ECO", "LIV", "TR", "CS", "NP"
+        )) +
+      scale_colour_brewer(palette = "Dark2")
+  )
 
   return(list(plotly_fig, data))
 

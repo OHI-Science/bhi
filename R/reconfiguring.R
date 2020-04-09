@@ -6,98 +6,6 @@ library(tibble)
 
 ## Functions
 
-#' update rows in layers.csv for a given layer
-#'
-#' registers a specified file to the given layer,
-#' after checking registration against layers object created by ohicore::Layers
-#' written originally/mostly for setting up bhi multiyear assessments repo from the archived repo...
-#'
-#' @param layers_obj a layers object created with ohicore::Layers,
-#' for the repo assessment folder to reconfigure, not the archived version
-#' @param lyr_file file path to where layer data file is located,
-#' including the name of the csv file itself to be incorporated into bhi layers object
-#' @param lyr_name single character string with name of the layer (not the filename) to be associated with the layer data file
-#' @param dir_assess file path to assessment folder within bhi repo
-#' @param lyr_meta file path to lyr_metadata.csv that contains info corresponding to lyr_file;
-#' should have layer, name, description, units, and targets fields
-#' @param update_w a dataframe or tibble with at least one row,
-#' with the information to be added to layers.csv for the layer
-#' @param write if TRUE then the function will automatically overwrite layers.csv and write lyr_file to the 'layers' folder
-#'
-#' @return updated layers.csv table is first output, the second output is the contents of the layer file specified by lyr_file arg
-
-layerscsv_edit <- function(layers_obj, lyr_file, lyr_name, dir_assess, lyr_meta, update_w = NULL, write = FALSE){
-
-  lyr_file_data <- readr::read_csv(lyr_file, col_types = cols())
-  lyr_file_name <- basename(lyr_file)
-
-  ## using the layers object, check if layer is already registerd with the specified layer file
-  chk1 <- lyr_file_name %in% layers_obj$meta$filename
-  chk2 <- lyr_name %in% layers_obj$meta$layer
-  if(chk1 & chk2){
-    chk3a <- which(layers_obj$meta$filename == lyr_file_name)
-    chk3b <- which(layers_obj$meta$layer == lyr_name)
-    chk3 <- chk3a == chk3b
-  } else { chk3 <- FALSE }
-
-  if(chk1 & chk2 & chk3){
-    message("layer already registered/configured with given filename")
-  } else {
-
-    ## register layer in layers.csv
-
-    layers_csv <- readr::read_csv(
-      file.path(dir_assess, "layers.csv"),
-      col_types = cols()) # matches w layers_obj 'meta' slot contents
-    lyr_metadata_csv <- readr::read_csv(
-      file.path(lyr_meta),
-      col_types = cols(.default = "c")) %>%
-      dplyr::select(-data_source, -gapfill_file)
-
-    ## create or extract 'update with' information for layer, i.e. row entry for layer.csv
-    if(is.null(update_w)){
-
-      ## need to generate information to fill layers.csv row
-      update_w <- data.frame(array(NA, dim = c(1, ncol(layers_csv))))
-      colnames(update_w) <- names(layers_csv)
-      update_w[1, "layer"] <- lyr_name
-      update_w[1, "filename"] <- lyr_file_name
-
-      ## add other layer information if it exists in the lyr_metadata.csv
-      if(lyr_name %in% lyr_metadata_csv$layer){
-        update_w <- update_w %>%
-          dplyr::select(-name, -description, -units, -targets) %>%
-          dplyr::left_join(lyr_metadata_csv, by = "layer") %>%
-          dplyr::select(names(layers_csv)) # original column ordering
-      } else {
-        message("check layers.csv and lyr_metadata.csv: some critical information must be entered manually")
-      }
-    } else {
-      update_w <- update_w %>%
-        dplyr::filter(grepl(sprintf("^%s.*", lyr_name), layer))
-    }
-    updated_tab <- update_w %>%
-      rbind(layers_csv %>%
-              dplyr::filter(!grepl(sprintf("^%s.*", lyr_name), layer)) %>%
-              dplyr::mutate(clip_n_ship_disag = NA,
-                     clip_n_ship_disag_description = NA,
-                     rgns_in = NA))
-
-    ## write updated layers.csv and write layer file to the layers folder, overwriting if it is already there
-    if(write == TRUE){
-      readr::write_csv(updated_tab, file.path(dir_assess, "layers.csv"))
-      readr::write_csv(lyr_file_data, file.path(dir_assess, "layers", lyr_file_name))
-    }
-
-    ## final messages and return results
-    message(sprintf("file '%s' has been registered to be used for the '%s' layer", lyr_file_name, lyr_name))
-    print("note: update scenario_data_years.csv to match new layer data!")
-
-    return(list(updated_tab, lyr_file_data))
-  }
-}
-
-
 #' configure functions.R for testing
 #'
 #' compiles files listed in a local 'test_functions.csv' into the single \code{functions.R} that ohicore needs
@@ -181,12 +89,6 @@ configure_functions <- function(dir_assess, test_funs_list){
 
   write_csv(int_goals_csv, file.path(dir_assess, "conf", "goals.csv"))
 }
-
-
-# configure_pressures <- function(){}
-#
-#
-# configure_resilience <- function(){}
 
 
 #' copy prepared layers from bhi-prep to bhi repo
@@ -359,4 +261,141 @@ scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scenario_yr
     dplyr::arrange(layer_name, scenario_year, data_year)
 
   return(years_align)
+}
+
+
+#' make assessment configuration files
+#'
+#' @param bhi_db_con connection to bhi config database
+#' @param dir_assess file path to assessment folder within bhi repo
+#'
+#' @return create configuration tables from database versions and save to conf folder in specified assessment directory
+
+make_config_files <- function(bhi_db_con, dir_assess){
+
+  lapply(
+    list(
+      "goals",
+      "pressure_categories", "resilience_categories",
+      "pressures_matrix", "resilience_matrix",
+      "pressure_categories", "resilience_categories"
+    ),
+    function(x){
+      tbl(bhi_db_con, x) %>%
+        collect() %>%
+        write_csv(file.path(dir_assess, "conf", sprintf("%s.csv", x)))
+    }
+  )
+
+  rgns_complete <- left_join(
+    tbl(bhi_db_con, "regions") %>%
+      collect() %>%
+      rename(region_area_km2 = area_km2, region_order = order),
+    tbl(bhi_db_con, "basins") %>%
+      collect() %>%
+      rename(subbasin_area_km2 = area_km2, subbasin_order = order),
+    by = c("subbasin")
+  )
+  rgns_complete %>%
+    mutate(region_name = paste(subbasin, eez, sep = ", ")) %>%
+    select(
+      region_id, subbasin, subbasin_id, helcom_id,
+      eez, region_name,
+      region_order, subbasin_order,
+      region_area_km2, subbasin_area_km2
+    ) %>%
+    write_csv(file.path(dir_assess, "conf", "rgns_complete.csv"))
+
+}
+
+
+#' update rows in layers.csv for a given layer
+#'
+#' registers a specified file to the given layer,
+#' after checking registration against layers object created by ohicore::Layers
+#' written originally/mostly for setting up bhi multiyear assessments repo from the archived repo...
+#'
+#' @param layers_obj a layers object created with ohicore::Layers,
+#' for the repo assessment folder to reconfigure, not the archived version
+#' @param lyr_file file path to where layer data file is located,
+#' including the name of the csv file itself to be incorporated into bhi layers object
+#' @param lyr_name single character string with name of the layer (not the filename) to be associated with the layer data file
+#' @param dir_assess file path to assessment folder within bhi repo
+#' @param lyr_meta file path to lyr_metadata.csv that contains info corresponding to lyr_file;
+#' should have layer, name, description, units, and targets fields
+#' @param update_w a dataframe or tibble with at least one row,
+#' with the information to be added to layers.csv for the layer
+#' @param write if TRUE then the function will automatically overwrite layers.csv and write lyr_file to the 'layers' folder
+#'
+#' @return updated layers.csv table is first output, the second output is the contents of the layer file specified by lyr_file arg
+
+layerscsv_edit <- function(layers_obj, lyr_file, lyr_name, dir_assess, lyr_meta, update_w = NULL, write = FALSE){
+
+  lyr_file_data <- readr::read_csv(lyr_file, col_types = cols())
+  lyr_file_name <- basename(lyr_file)
+
+  ## using the layers object, check if layer is already registerd with the specified layer file
+  chk1 <- lyr_file_name %in% layers_obj$meta$filename
+  chk2 <- lyr_name %in% layers_obj$meta$layer
+  if(chk1 & chk2){
+    chk3a <- which(layers_obj$meta$filename == lyr_file_name)
+    chk3b <- which(layers_obj$meta$layer == lyr_name)
+    chk3 <- chk3a == chk3b
+  } else { chk3 <- FALSE }
+
+  if(chk1 & chk2 & chk3){
+    message("layer already registered/configured with given filename")
+  } else {
+
+    ## register layer in layers.csv
+
+    layers_csv <- readr::read_csv(
+      file.path(dir_assess, "layers.csv"),
+      col_types = cols()) # matches w layers_obj 'meta' slot contents
+    lyr_metadata_csv <- readr::read_csv(
+      file.path(lyr_meta),
+      col_types = cols(.default = "c")) %>%
+      dplyr::select(-data_source, -gapfill_file)
+
+    ## create or extract 'update with' information for layer, i.e. row entry for layer.csv
+    if(is.null(update_w)){
+
+      ## need to generate information to fill layers.csv row
+      update_w <- data.frame(array(NA, dim = c(1, ncol(layers_csv))))
+      colnames(update_w) <- names(layers_csv)
+      update_w[1, "layer"] <- lyr_name
+      update_w[1, "filename"] <- lyr_file_name
+
+      ## add other layer information if it exists in the lyr_metadata.csv
+      if(lyr_name %in% lyr_metadata_csv$layer){
+        update_w <- update_w %>%
+          dplyr::select(-name, -description, -units, -targets) %>%
+          dplyr::left_join(lyr_metadata_csv, by = "layer") %>%
+          dplyr::select(names(layers_csv)) # original column ordering
+      } else {
+        message("check layers.csv and lyr_metadata.csv: some critical information must be entered manually")
+      }
+    } else {
+      update_w <- update_w %>%
+        dplyr::filter(grepl(sprintf("^%s.*", lyr_name), layer))
+    }
+    updated_tab <- update_w %>%
+      rbind(layers_csv %>%
+              dplyr::filter(!grepl(sprintf("^%s.*", lyr_name), layer)) %>%
+              dplyr::mutate(clip_n_ship_disag = NA,
+                            clip_n_ship_disag_description = NA,
+                            rgns_in = NA))
+
+    ## write updated layers.csv and write layer file to the layers folder, overwriting if it is already there
+    if(write == TRUE){
+      readr::write_csv(updated_tab, file.path(dir_assess, "layers.csv"))
+      readr::write_csv(lyr_file_data, file.path(dir_assess, "layers", lyr_file_name))
+    }
+
+    ## final messages and return results
+    message(sprintf("file '%s' has been registered to be used for the '%s' layer", lyr_file_name, lyr_name))
+    print("note: update scenario_data_years.csv to match new layer data!")
+
+    return(list(updated_tab, lyr_file_data))
+  }
 }

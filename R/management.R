@@ -1,5 +1,5 @@
 ## Libraries
-source(file.path(here::here(), "R", "setup.R"))
+source(here::here("R", "setup.R"))
 library(tidytext)
 library(sf)
 library(config)
@@ -16,7 +16,7 @@ library(config)
 #'
 #' @return text for readme content is returned in the console, but output is also configured as a character vector
 
-Rfun_readme <- function(dir_R, script_name){
+funR_readme <- function(dir_R, script_name){
 
   funs_text <- scan(file = file.path(dir_R, script_name), what = "character", sep = "\n")
 
@@ -70,10 +70,13 @@ readme_outline <- function(folder_filepath, type_objects = "files", delim = ",")
 
   obj_info <- list()
   subtitles <- NULL
-  general <- paste0(c("Created on:",
-                      "Last modified on:",
-                      "Used by or referenced in functions/scripts: <br/>\n\n"),
-                    collapse = " <br/>\n") ## can change and include more/different fields later...
+  general <- paste0(
+    c("Created on:",
+      "Last modified on:",
+      "Used by or referenced in functions/scripts: <br/>\n\n"
+    ),
+    collapse = " <br/>\n"
+  ) # can change and include more/different fields later...
 
   ## if we want subfolders listed (with summary descriptions for each)
   if(type_objects == "folders"){
@@ -91,10 +94,9 @@ readme_outline <- function(folder_filepath, type_objects = "files", delim = ",")
       gsub(pattern = S, replacement = "")
     general <- vector() # for functions get rid of 'general' fields...
     for(s in subtitles){
-      obj_names <- c(scan(file = file.path(folder_filepath, s),
-                          what = "character", sep = "\n") %>%
-                       grep(pattern = "^[a-z_]+.*function.*", value = TRUE) %>%
-                       stringr::str_extract("^\\S+"))
+      obj_names <- scan(file = file.path(folder_filepath, s), what = "character", sep = "\n") %>%
+        grep(pattern = "^[a-z_]+.*function.*", value = TRUE) %>%
+        stringr::str_extract("^\\S+")
       obj_info[[s]][["obj_names"]] <- list(obj_names)
     }
   }
@@ -128,9 +130,11 @@ readme_outline <- function(folder_filepath, type_objects = "files", delim = ",")
         cla <- vector() # classes of each attribute or column
         lvl <- vector() # levels or categories (or a place for descriptions)
         for(k in 1:ncol(tmp)){
-          lvls <- ifelse(length(unique(tmp[, k])) < 10 & # these won't work if tmp is a tibble
-                                 all(str_length(unique(tmp[, 1])) < 10),
-                         paste(unique(tmp[, k]), collapse = ", "), "")
+          lvls <- ifelse(
+            ## these won't work if tmp is a tibble
+            length(unique(tmp[, k])) < 10 & all(str_length(unique(tmp[, 1])) < 10),
+            paste(unique(tmp[, k]), collapse = ", "), ""
+          )
           cla <- c(cla, paste0("* ", nms[k], ": ", class(tmp[, k])))
           lvl <- c(lvl, paste0("* ", nms[k], ": ", paste(lvls, collapse = ", ")))
         }
@@ -146,24 +150,27 @@ readme_outline <- function(folder_filepath, type_objects = "files", delim = ",")
   for(i in names(obj_info)){
     line <- unlist(obj_info[[i]])
     if(i %in% subtitles){
-      subt <- paste0("### ",
-                    i %>% stringr::str_pad(width = str_length(.) + 2,
-                                            side = "both", pad = "`"))
+      subt <- paste0("### ", i %>% stringr::str_pad(width = str_length(.) + 2,  side = "both", pad = "`"))
       line <- line %>% stringr::str_pad(width = str_length(.) + 4, side = "both", pad = "*")
     } else {
-      subt <- paste0(i %>% stringr::str_pad(width = str_length(.) + 2,
-                                    side = "both", pad = "`") %>%
-                       stringr::str_pad(width = str_length(.) + 4,
-                                        side = "both", pad = "*"))
+      subt <- paste0(
+        i %>%
+          stringr::str_pad(width = str_length(.) + 2, side = "both", pad = "`") %>%
+          stringr::str_pad(width = str_length(.) + 4, side = "both", pad = "*")
+      )
     }
     cat(subt, "\n\n")
     cat(general)
     if(type_objects == "tables"){
-      cat(paste0(line, collapse = " <br/>\n"),
-          ifelse(length(line) == 0, "\n", " <br/>\n\n<br/>\n\n"))
+      cat(
+        paste0(line, collapse = " <br/>\n"),
+        ifelse(length(line) == 0, "\n", " <br/>\n\n<br/>\n\n")
+      )
     } else {
-      cat(paste0(line, collapse = " <br/>\n\n<br/>\n\n"),
-          ifelse(length(line) == 0, "<br/>\n\n", "<br/>\n\n<br/>\n\n"))
+      cat(
+        paste0(line, collapse = " <br/>\n\n<br/>\n\n"),
+        ifelse(length(line) == 0, "<br/>\n\n", "<br/>\n\n<br/>\n\n")
+      )
     }
     out <- c(out, subt, general, line)
   }
@@ -179,7 +186,7 @@ readme_outline <- function(folder_filepath, type_objects = "files", delim = ",")
 #'
 #' @return dataframe created from a readme markdown file with structure outlined by `readme_outline` function above
 
-readme_to_df <- function(folder_filepath, write_df = FALSE){
+readme_to_dataframe <- function(folder_filepath, write_df = FALSE){
 
   ## to parse look for structure (heading styles) as created by readme_outline function...
   mdtext <- scan(file = file.path(folder_filepath, "README.md"),
@@ -230,12 +237,16 @@ readme_to_df <- function(folder_filepath, write_df = FALSE){
   colnames(readme_df) <- dim_nms
 
   if(length(h2) > 0){
-    readme_df <- readme_df %>% cbind(recorded_in)
+    if(nrow(readme_df) != length(recorded_in)){
+      readme_df <- readme_df %>% mutate(recorded_in = NULL)
+    } else {readme_df <- readme_df %>% cbind(recorded_in)}
   }
   if(write_df){
     ti <- gsub("[^a-z]", "", mdtext[1])
-    readr::write_csv(readme_df,
-                     file.path(folder_filepath, sprintf("%s_readme_metadata.csv", ti)))
+    readr::write_csv(
+      readme_df,
+      file.path(folder_filepath, sprintf("%s_readme_metadata.csv", ti))
+    )
   }
   return(readme_df)
 }
@@ -256,15 +267,15 @@ readme_to_df <- function(folder_filepath, write_df = FALSE){
 readme_status <- function(folder_filepath, type_objects, temp_filepath){
 
   ## current readme
-  readme <- readme_to_df(folder_filepath) # depends on readme_to_df function
+  readme <- readme_to_dataframe(folder_filepath) # depends on readme_to_dataframe function
 
   ## generate expected readme
   sink(file = file.path(temp_filepath, "README.md"))
   outline <- readme_outline(folder_filepath, type_objects) # depends on readme_outline function
   closeAllConnections() # stop the sinking!
-  readme_new_struc <- readme_to_df(temp_filepath)
+  readme_new_struc <- readme_to_dataframe(temp_filepath)
 
-  ## using compare_tabs function defined in common.R
+  ## using compare_tables function defined in common.R
   if(type_objects == "tables"){
     readme <- readme %>% dplyr::mutate(
       attributes = stringr::str_extract_all(
@@ -275,9 +286,11 @@ readme_status <- function(folder_filepath, type_objects, temp_filepath){
     check_cols = c("object", "classes", "attributes")
   }
   check_cols <- c("object", "classes")
-  comp <- compare_tabs(tab1 = readme_new_struc, tab2 = readme,
-                       key_row_var = "object", check_cols = check_cols,
-                       check_for_nas = "description")
+  comp <- compare_tables(
+    tab1 = readme_new_struc, tab2 = readme,
+    key_row_var = "object", check_cols = check_cols,
+    check_for_nas = "description"
+  )
   checks <- comp[[2]]
   chk_na <- comp[[3]]
   comparisons <- comp[[4]]
@@ -286,52 +299,46 @@ readme_status <- function(folder_filepath, type_objects, temp_filepath){
     print("different numbers of rows in current readme and expected readme")
   }
   if(length(checks$chk_missing_key) != 0){
-    stop(sprintf("objects missing from current readme: %s",
-                 paste(checks$chk_missing_key, collapse = ", ")))
+    stop(sprintf(
+      "objects missing from current readme: %s",
+      paste(checks$chk_missing_key, collapse = ", ")
+    ))
   }
   if(length(checks$chk_extra_key) != 0){
-    stop(sprintf("unexpected objects found in current readme: %s",
-                 paste(checks$chk_extra_key, collapse = ", ")))
+    stop(sprintf(
+      "unexpected objects found in current readme: %s",
+      paste(checks$chk_extra_key, collapse = ", ")
+    ))
   }
   if(any(chk_na[, "description"])){
-    sprintf("some NAs found in place of descriptions for objects: %s",
-            grep(TRUE, chk_na[, "description"], value = TRUE) %>%
-              names() %>% paste(collapse = ", "))
+    sprintf(
+      "some NAs found in place of descriptions for objects: %s",
+      grep(TRUE, chk_na[, "description"], value = TRUE) %>%
+        names() %>% paste(collapse = ", ")
+    )
   }
 
   ## if documented objects are tables, have an additional column (attributes) to compare
   if(type_objects == "tables"){
     if(length(unlist(comparisons$missing)) != 0){
       for(i in comparisons$missing){
-        sprintf("object '%s' is missing attributes: %s",
-                paste(unlist(missing[i]), collapse = "\n "),
-                names(comparisons$missing[i]))
+        sprintf(
+          "object '%s' is missing attributes: %s",
+          paste(unlist(missing[i]), collapse = "\n "),
+          names(comparisons$missing[i])
+        )
       }
     }
     if(length(unlist(comparisons$extra)) != 0){
       for(i in comparisons$extra){
-        sprintf("object '%s' is missing attributes: %s",
-                paste(unlist(missing[i]), collapse = "\n "),
-                names(comparisons$missing[i]))
+        sprintf(
+          "object '%s' is missing attributes: %s",
+          paste(unlist(missing[i]), collapse = "\n "),
+          names(comparisons$missing[i])
+        )
       }
     }
   }
-}
-
-
-#' confirm layers in layers.csv have corresponding entries in layers_metadata.csv
-#'
-#' @param layers_csv layers.csv dataframe
-#' @param lyr_metadata layers_metadata.csv dataframe
-#'
-#' @return
-
-layerscsv_metadata_exists <- function(layers_csv, lyr_metadata){
-
-  compare_tabs(tab1 = layers_csv, tab2 = lyr_metadata, key_row_var = "layer")
-
-  chk <- "a boolean, true if correct matching exists"
-  return(chk)
 }
 
 
@@ -375,6 +382,8 @@ update_goalsRmd_links <- function(dir, version_year){
 }
 
 
+
+
 #' fill in roxygen param documentation from a common params_index
 #'
 #' the objective of this function is to facilitate consistent use of parameter names throughout the BHI repositories
@@ -384,8 +393,9 @@ update_goalsRmd_links <- function(dir, version_year){
 #' @param params_index a character string giving the file path to this document
 #' @param script_function specific functions to create documentation for, if not for entire script
 #'
+#' @return no returned value, roxygen documentation updated with parameters described based on params_index.md
 
-fill_oxygendoc_param <- function(script_name, params_index = NA, script_function = NA){
+fill_oxygendocs_param <- function(script_name, params_index = NA, script_function = NA){
 
   if(is.na(params_index)){
     param_txt <- readLines(file.path(here::here(), "supplement", "documents", "params_index.md")) %>%
@@ -410,16 +420,20 @@ fill_oxygendoc_param <- function(script_name, params_index = NA, script_function
   params <- grep(pattern = breaks_param, x = script_txt)
 
   if(!is.na(script_function)){
-    start_fun <- grep(pattern = sprintf("^%s\\s<-\\sfunction\\(|^%s\\s=\\sfunction\\(",
-                                        script_function, script_function), x = script_txt)
+    start_fun <- grep(
+      pattern = sprintf("^%s\\s<-\\sfunction\\(|^%s\\s=\\sfunction\\(", script_function, script_function),
+      x = script_txt
+    )
     if(length(start_fun) == 0){
       stop(sprintf("given function '%s' not contained in '%s' script", script_function, script_name))
     }
-    breaks_fun <- c(0, grep(pattern = "^[A-Za-z0-9_]+\\s<-\\sfunction\\(|^[A-Za-z0-9_]+\\s=\\sfunction\\(", x = script_txt))
+    breaks_fun <- c(0, grep(
+      pattern = "^[A-Za-z0-9_]+\\s<-\\sfunction\\(|^[A-Za-z0-9_]+\\s=\\sfunction\\(",
+      x = script_txt
+    ))
     count <- grep(x = breaks_fun, pattern = start_fun)
     params <- params[params %in% breaks_fun[count-1]:breaks_fun[count]]
   }
-
   ## match parameter documentation
   ## and replace rows of function within script with the updated info
   script_txt_updated <- script_txt
@@ -435,11 +449,12 @@ fill_oxygendoc_param <- function(script_name, params_index = NA, script_function
       replace_formated
     )
     if(length(replace_formated) == 0){
-      message(sprintf("no parameter definition found for '%s' in given param_index",
-                      str_extract(script_txt[p], pattern = "[A-Za-z0-9_]+$")))
+      message(sprintf(
+        "no parameter definition found for '%s' in given param_index",
+        str_extract(script_txt[p], pattern = "[A-Za-z0-9_]+$")
+      ))
     }
   }
-
   ## write the updated script in the original location
   script_name_updated <- paste0(str_extract(script_name, pattern = "[A-Za-z0-9]+"), "_docupdate.R")
   writeLines(script_txt_updated, file.path(here::here(), "R", script_name_updated))
