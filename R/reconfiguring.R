@@ -110,11 +110,12 @@ copy_lyrs_from_bhiprep <- function(dir_assess, copy_layers = list("all"), repo_l
     print("copying over all layers from bhi-prep repository 'layers' folder")
     print("note: will overwrite layers in bhi repo 'layers' folder with bhi-prep versions from github, of same name")
     filelist <- bhiprep_github_layers(github_api_url = bhiprep_gh_api)
+    colnames(filelist) <- "lyrfiles"
     ## bhiprep_api defined in setup.R, function in common.R
   } else {
-    filelist <- data.frame(V1 = unlist(copy_layers))
+    filelist <- data.frame(lyrfiles = unlist(copy_layers))
   }
-  for(i in 1:length(filelist$V1)){
+  for(i in 1:length(filelist$lyrfiles)){
     tmp <- filelist[i,1] %>% as.character()
 
     if(stringr::str_length(tmp) != 0){
@@ -123,7 +124,7 @@ copy_lyrs_from_bhiprep <- function(dir_assess, copy_layers = list("all"), repo_l
 
       httr::GET(
         url,
-        write_disk(
+        httr::write_disk(
           sprintf("%s/layers/%s", dir_assess, name_of_layer),
           overwrite = TRUE
         )
