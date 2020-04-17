@@ -1,5 +1,5 @@
 ## Libraries
-source(file.path(here::here(), "R", "setup.R"))
+source(here::here("R", "setup.R"))
 library(tools)
 library(tibble)
 
@@ -104,11 +104,11 @@ configure_functions <- function(dir_assess, test_funs_list){
 copy_lyrs_from_bhiprep <- function(dir_assess, copy_layers = list("all"), repo_loc = NULL){
 
   if(is.null(repo_loc)){
-    repo_loc <- paste(bhiprep_gh_raw, "master", sep = "/") # raw bhi-prep github repo url, bhiprep_gh_raw from setup.R
+    repo_loc <- paste(bhiprep_gh_raw, "master", "layers", sep = "/") # raw bhi-prep github repo url, bhiprep_gh_raw from setup.R
   }
-  if(unlist(copy_layers) == "all"){
-    print("copying over all layers from bhi-prep repository 'layers' folder")
-    print("note: will overwrite layers in bhi repo 'layers' folder with bhi-prep versions from github, of same name")
+  if(any(unlist(copy_layers) == "all")){
+    message("copying over all layers from bhi-prep repository 'layers' folder")
+    message("note: will overwrite layers in bhi repo 'layers' folder with bhi-prep versions from github, of same name")
     filelist <- bhiprep_github_layers(github_api_url = bhiprep_gh_api)
     colnames(filelist) <- "lyrfiles"
     ## bhiprep_api defined in setup.R, function in common.R
@@ -146,20 +146,23 @@ copy_lyrs_from_bhiprep <- function(dir_assess, copy_layers = list("all"), repo_l
 scenario_data_include <- function(scen_data_years, scenario_yrs, new_lyrs = "", rename_lyrs = ""){
 
   cols <- names(scen_data_years)
-  new_scen_yrs <- setdiff(scenario_yrs, scen_data_years$scenario_year %>% unique())
+  new_scen_yrs <- setdiff(scenario_yrs, unique(scen_data_years$scenario_year))
 
   ## the new scenario years rows for existing layers
   add_scen_rows <- scen_data_years %>%
     dplyr::select(layer_name) %>%
     unique() %>%
-    dplyr::mutate(scenario_year = list(new_scen_yrs), data_year = NA) %>%
-    tidyr::unnest()
+    dplyr::mutate(scenario_year = list(new_scen_yrs),data_year = NA) %>%
+    tidyr::unnest(cols = c(scenario_year))
 
   ## rows for new layers with the given range of scenario years
-  add_lyr_rows <- tibble::tibble(layer_name = new_lyrs,
-                                 scenario_year = list(scenario_yrs),
-                                 data_year = NA) %>%
-    tidyr::unnest() %>%
+  add_lyr_rows <- tibble::tibble(
+    layer_name = new_lyrs,
+    scenario_year = list(scenario_yrs),
+    data_year = NA
+  )
+  add_lyr_rows <- add_lyr_rows %>%
+    tidyr::unnest(cols = c(scenario_year)) %>%
     dplyr::filter(layer_name != "")
 
   ## bind new rows to old table and rename layers if specified
@@ -168,22 +171,20 @@ scenario_data_include <- function(scen_data_years, scenario_yrs, new_lyrs = "", 
     rbind(add_lyr_rows) %>%
     dplyr::arrange(layer_name, scenario_year, data_year)
 
-
   if(rename_lyrs != ""){
-
     rename_df <- as.data.frame(rename_lyrs, stringsAsFactors = FALSE)
 
     scenario_data_years_updated <- scenario_data_years_updated %>%
       dplyr::left_join(rename_df, by = "layer_name") %>%
       dplyr::mutate(layer_name = ifelse(is.na(to), layer_name, to)) %>%
       dplyr::select(-to) %>%
-      dplyr::arrange(layer_name, scenario_year, data_year)
+      dplyr::arrange(layer_name, scenario_year, data_year) %>%
+      dplyr::mutate(layer_name = as.character(layer_name))
   }
 
   ## return the updated table
-  ## when using this function, overwrite file with new table
+  ## when using this function, overwrite file with new table yourself
   return(scenario_data_years_updated)
-
 }
 
 
@@ -196,7 +197,7 @@ scenario_data_include <- function(scen_data_years, scenario_yrs, new_lyrs = "", 
 #' @param layer_name name of the layer for which to align scenario and data years
 #' @param data_yrs the years of data for the specified layer, i.e. all the years in the layer data file
 #' @param scenario_yrs the scenario years to be included in the updated scenario_data_years.csv
-#' @param approach
+#' @param approach a string containing keywords indicating whether to match with next closest year or some other intervals, given some constraints
 #'
 #' @return
 
@@ -207,7 +208,7 @@ scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scenario_yr
     dplyr::filter(layer_name != lyr_name)
 
   if(length(scenario_yrs) != length(data_yrs)){
-    print("unequal numbers of scenario years and data years")
+    message("unequal numbers of scenario years and data years")
   }
   all_data_yrs <- data_yrs
 
@@ -217,49 +218,58 @@ scenario_data_align <- function(scen_data_years, lyr_name, data_yrs, scenario_yr
   data_yrs <- data_yrs[1:length(scenario_yrs)]
 
   ## matrix M with potential edge-weights
-  M <- array(sort(rep(scenario_yrs, length(data_yrs)),
-                  decreasing = TRUE) - rep(data_yrs, length(scenario_yrs)),
-             c(length(data_yrs), length(scenario_yrs)),
-             list(data_yrs, sort(scenario_yrs, decreasing = TRUE)))
-
-  match_years <- data.frame(scenario_year = sort(scenario_yrs, decreasing = TRUE),
-                            data_year = NA)
+  M <- array(
+    sort(rep(scenario_yrs, length(data_yrs)), decreasing = TRUE) - rep(data_yrs, length(scenario_yrs)),
+    c(length(data_yrs), length(scenario_yrs)),
+    list(data_yrs, sort(scenario_yrs, decreasing = TRUE))
+  )
+  match_years <- data.frame(
+    scenario_year = sort(scenario_yrs, decreasing = TRUE),
+    data_year = NA
+  )
 
   if(str_detect(approach, "intervals|steps|timestep")){
     ## don't actually want to assign if si to dj if |si-dj| > reasonable_diff
-    reasonable_diff <- ifelse(str_detect(approach, "max step|maximum step|with step|max diff|maximum|max.|difference"),
-                              as.numeric(gsub("\\D", "", approach)), 5)
-    for (s in 1:length(scenario_yrs)){
-      match_years[s, "data_year"] <- ifelse(abs(M[s,s]) < reasonable_diff,
-                                            dimnames(M)[[1]][s],
-                                            which.min(M[,s][M[,s] >= 0]) %>%
-                                              names()) %>% as.integer()
+    reasonable_diff <- ifelse(
+      str_detect(approach, "max step|maximum step|with step|max diff|maximum|max.|difference"),
+      as.numeric(gsub("\\D", "", approach)),
+      5
+    )
+    for(s in 1:length(scenario_yrs)){
+      match_years[s, "data_year"] <- ifelse(
+        abs(M[s,s]) < reasonable_diff,
+        dimnames(M)[[1]][s],
+        which.min(M[,s][M[,s] >= 0]) %>% names()
+      ) %>% as.integer()
     }
-    print(sprintf(
-      "matching scenario years with data so when reasonable (<%syr difference), there are more discrete timesteps",
-      reasonable_diff))
+    message(sprintf(
+      "matching scenario yrs with data so when reasonable (<%syr diff.) there are more discrete timesteps",
+      reasonable_diff
+    ))
 
   } else {
     ## default is to assign closest years
-    print("matching each scenario year with its next closest data year")
+    message("matching each scenario year with its next closest data year")
 
     ## find min sum of edge-weights where F: S->D is onto and deg(si)=1 for all si in scenario_yrs
     for (s in 1:length(scenario_yrs)){
-      match_years[s, "data_year"] <- which.min(M[,s][M[,s] >= 0]) %>%
-        names() %>% as.integer()
+      match_years[s, "data_year"] <- as.integer(names(which.min(M[,s][M[,s] >= 0])))
     }
   }
 
   layer_years_align <- tibble::tibble(
     layer_name = lyr_name,
-    scenario_year = list(scenario_yrs)) %>%
-    tidyr::unnest() %>%
-    dplyr::left_join(match_years, by = "scenario_year")
+    scenario_year = list(scenario_yrs)
+  ) %>% tidyr::unnest(cols = c(scenario_year))
+
+  layer_years_align <- dplyr::left_join(layer_years_align, match_years, by = "scenario_year")
+
   data_yrs_unused <- setdiff(all_data_yrs, unique(layer_years_align$data_year))
 
   years_align <- layer_years_align %>%
     rbind(keep_rows) %>%
-    dplyr::arrange(layer_name, scenario_year, data_year)
+    dplyr::arrange(layer_name, scenario_year, data_year) %>%
+    dplyr::mutate(layer_name = as.character(layer_name))
 
   return(years_align)
 }
@@ -395,7 +405,7 @@ layerscsv_edit <- function(layers_obj, lyr_file, lyr_name, dir_assess, lyr_meta,
 
     ## final messages and return results
     message(sprintf("file '%s' has been registered to be used for the '%s' layer", lyr_file_name, lyr_name))
-    print("note: update scenario_data_years.csv to match new layer data!")
+    message("note: update scenario_data_years.csv to match new layer data!")
 
     return(list(updated_tab, lyr_file_data))
   }
