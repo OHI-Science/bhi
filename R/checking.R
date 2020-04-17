@@ -1,8 +1,8 @@
 ## Libraries
 source(here::here("R", "setup.R"))
-library(plotly)
 library(ggplot2)
 library(dplyr)
+library(plotly)
 library(git2r)
 
 

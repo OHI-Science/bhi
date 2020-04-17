@@ -1,10 +1,8 @@
 ## Libraries ----
-library(here)
 library(readr)
 library(dplyr)
 library(stringr)
 library(tidyr)
-library(ohicore)
 
 ## Global ----
 
@@ -23,7 +21,7 @@ bhiprep_gh_api <- bhiprep_gh %>%
   paste("git/trees/master?recursive=1", sep = "/")
 
 ## SET MAIN AUX BHI DIRECTORY HERE
-dir_B <- file.path(dirname(here()), "bhi-data", "BHI 2.0")
+dir_B <- file.path(dirname(here::here()), "bhi-data", "BHI 2.0")
 if(!file.exists(dir_B)){
   ## warning if BHI internal, shared directory doesn't exist
   warning(sprintf(

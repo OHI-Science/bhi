@@ -1,8 +1,8 @@
 ## Libraries
 source(here::here("R", "setup.R"))
 library(tidytext)
-library(sf)
 library(config)
+library(sf)
 
 
 ## Functions
