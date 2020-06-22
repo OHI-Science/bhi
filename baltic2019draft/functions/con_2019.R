@@ -3,6 +3,10 @@ CON <- function(layers){
 
   scen_year <- layers$data$scenario_year
 
+  rgns_complete <- file.path(dir_assess, "conf", "rgns_complete.csv") %>%
+    read_csv() %>%
+    select(region_id, subbasin, eez, subbasin_id)
+
   ## From code in 'functions.R CON' of v2015 BHI assessment, see bhi-1.0-archive github repo
   ## Revised to use multi-year framework, incorporating scenario_data_years and layers$data$scenario_year
   ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
@@ -17,16 +21,11 @@ CON <- function(layers){
 
   con_indicators <- function(layer, yrs, bio_thresh, sed_thresh){
 
-    rgns_complete <- file.path(dir_assess, "conf", "rgns_complete.csv") %>%
-      read_csv() %>%
-      select(region_id, subbasin, eez, subbasin_id)
-
     result <- list()
 
 
     ## STATUS CALCULATIONS ----
     ## calculate status by subbasins
-
     result[["basin_status"]] <- layer %>%
       filter(year %in% yrs) %>%
       ## NOTE: CHANGE METHOD FROM BHI1.0
@@ -108,6 +107,18 @@ CON <- function(layers){
   dioxin_indicator <- AlignDataYears(layer_nm="cw_con_dioxin", layers_obj=layers) %>%
     con_indicators(yrs, bio_thresh = 6.5, sed_thresh = 0.86) %>%
     dplyr::mutate(indicator = "dioxin")
+
+  ## save individual indicators as intermediate results
+  for(ind in c("pcb_indicator", "pfos_indicator", "dioxin_indicator")){
+    write.table(
+      mutate(get(ind), scen_year = scen_year),
+      file.path(dir_assess, "intermediate", sprintf("%s.csv", ind)),
+      append = file.exists(file.path(dir_assess, "intermediate", sprintf("%s.csv", ind))),
+      sep = ",",
+      row.names = FALSE
+    )
+  }
+
 
   ## join PCB, Dioxin and PFOS indicators, and take average
   cw_con <- dplyr::bind_rows(pcb_indicator, pfos_indicator, dioxin_indicator) %>%
