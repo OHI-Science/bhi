@@ -237,17 +237,21 @@ EUT <- function(layers){
 
   ## EUTROPHIATION SUB-GOAL SCORES ----
   ## join all five indicators, and take geometric mean
-  scores <- dplyr::bind_rows(secchi_indicator, chla_indicator, dip_indicator, dip_indicator, oxyg_indicator) %>%
+  scores <- dplyr::bind_rows(secchi_indicator, chla_indicator, din_indicator, dip_indicator, oxyg_indicator) %>%
+    select(subbasin_id, indicator, dimension, score) %>%
+    distinct() %>%
     dplyr::group_by(subbasin_id, dimension) %>%
     dplyr::summarise(score = ifelse(
       sum(is.na(score)) == n(), NA,
-      geometric.mean(score, na.rm = TRUE)
+      ## using an arithmetic mean here; maybe should use psych::geometric.mean
+      ## then, would need to separate out and still use arithmetic mean for trend!
+      mean(score, na.rm = TRUE)
     )) %>%
-    dplyr::mutate(score = round(score, 3)) %>%
+    dplyr::mutate(score = round(score, 2)) %>%
     ungroup() %>%
     ## rejoin with region ids
-    left_join(rgns_complete, by = "subbasin_id") %>%
-    mutate(goal = "EUT") %>%
+    full_join(mutate(rgns_complete, subbasin_id = as.character(subbasin_id))) %>%
+    mutate(goal = "EUT", score = ifelse(is.nan(score), NA, score)) %>%
     select(region_id, goal, dimension, score)
 
   return(scores)
