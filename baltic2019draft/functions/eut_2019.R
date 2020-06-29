@@ -227,7 +227,9 @@ EUT <- function(layers){
   ## save individual indicators as intermediate results
   for(ind in c("secchi_indicator", "chla_indicator", "din_indicator", "dip_indicator", "oxyg_indicator")){
     write.table(
-      mutate(get(ind), scen_year = scen_year),
+      get(ind) %>%
+        mutate(scen_year = scen_year) %>%
+        select(region_id, score, dimension, indicator, scen_year),
       file.path(dir_assess, "intermediate", sprintf("%s.csv", ind)),
       append = file.exists(file.path(dir_assess, "intermediate", sprintf("%s.csv", ind))),
       sep = ",",
