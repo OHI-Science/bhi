@@ -5,36 +5,34 @@ FIS <- function(layers){
   ## Revised to use multi-year framework, incorporating scenario_data_years
   ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
 
-  scenario_year <- layers$data$scenario_year
+  scen_year <- layers$data$scenario_year
 
 
   bbmsy <- AlignDataYears(layer_nm="fis_bbmsy", layers_obj=layers) %>%
-    dplyr::mutate(metric="bbmsy") %>%
-    dplyr::rename(region_id = rgn_id)
-
+    dplyr::mutate(metric="bbmsy")
   ffmsy <- AlignDataYears(layer_nm="fis_ffmsy", layers_obj=layers) %>%
-    dplyr::mutate(metric="ffmsy") %>%
-    dplyr::rename(region_id = rgn_id)
+    dplyr::mutate(metric="ffmsy")
+
+  ## combine bbmsy and ffmsy into single object
+  metric_scores <- rbind(
+    dplyr::select(bbmsy, -fis_bbmsy_year, -layer_name, year = scenario_year),
+    dplyr::select(ffmsy, -fis_ffmsy_year, -layer_name, year = scenario_year)
+  )
+  metric_scores <- metric_scores %>%
+    dplyr::mutate(metric = as.factor(metric)) %>%
+    tidyr::pivot_wider(names_from = metric, values_from = value)
+
 
   landings <- AlignDataYears(layer_nm="fis_landings", layers_obj=layers) %>%
-    dplyr::rename(region_id = rgn_id)
+    select(year = scenario_year, region_id, stock, landings)
 
   cod_penalty <- AlignDataYears(layer_nm="fis_cod_penalty", layers_obj=layers) %>%
-    dplyr::rename(region_id = rgn_id) %>%
     dplyr::mutate(
       stock = as.character(unique(bbmsy$stock)) %>%
         grep(pattern = "cod", value = TRUE) %>%
         grep(pattern = "32", value = TRUE)
-    )
-
-  ## combine bbmsy and ffmsy into single object
-
-  metric_scores <- rbind(
-    dplyr::select(bbmsy, -fis_bbmsy_year, -layer_name, year = scenario_year),
-    dplyr::select(ffmsy, -fis_ffmsy_year, -layer_name, year = scenario_year)
-  ) %>% dplyr::mutate(metric = as.factor(metric))
-
-  metric_scores <- tidyr::spread(metric_scores, metric, score)
+    ) %>%
+    select(year = scenario_year, region_id, penalty_factor, stock)
 
 
   ## BSCORES
@@ -141,13 +139,11 @@ FIS <- function(layers){
   ## STEP 4: calculating the weights ----
 
   ## subset the data to include only the most recent 10 years
-  landings <- landings %>%
-    dplyr::select(year, region_id, stock, landings) %>%
-    dplyr::filter(year %in% (max(year)-9):max(year))
+  # landings <- dplyr::filter(landings, year %in% (scen_year-9):scen_year)
 
   ## we use the average catch for each stock/region across the last 25 years to obtain weights
   weights <- landings %>%
-    filter(year > max(year) - 26) %>%
+    filter(year > scen_year - 25) %>%
     ## each region/stock will have same avg catch across years, timeseries mean
     group_by(region_id, stock) %>%
     mutate(avgCatch = mean(landings)) %>%
@@ -162,6 +158,8 @@ FIS <- function(layers){
 
   ## STEP 5: calculate status and trend ----
 
+  ## STATUS
+
   ## join scores and weights to calculate status
   status_with_penalty <- weights %>%
 
@@ -173,11 +171,11 @@ FIS <- function(layers){
     ## apply penalty because bad cod condition in eastern baltic
     left_join(cod_penalty, by = c("year", "region_id", "stock")) %>%
     mutate(penalty = ifelse(
-      is.na(prop_above_pt8) & !str_detect(stock, "cod.*32"),
-      1, prop_above_pt8
+      is.na(penalty_factor) & !str_detect(stock, "cod.*32"),
+      1, penalty_factor
     )) %>%
-    # is.na(prop_above_pt8), 1, prop_above_pt8)) %>%
-    dplyr::select(-prop_above_pt8) %>%
+    # is.na(penalty_factor), 1, penalty_factor)) %>%
+    dplyr::select(-penalty_factor) %>%
     mutate(score = penalty*score)
 
   ## calculate BHI scores, using stocks by region
@@ -189,7 +187,10 @@ FIS <- function(layers){
     dplyr::ungroup() %>%
     data.frame()
 
-  trend_years <- (max(status_scores$year)-4):max(status_scores$year)
+
+  ## TREND
+
+  trend_years <- (scen_year-4):scen_year
 
   trend <- status_scores %>%
     dplyr::group_by(region_id) %>%
@@ -205,17 +206,17 @@ FIS <- function(layers){
   scores <- rbind(
     ## status scores
     status_scores %>%
-      dplyr::filter(year == scenario_year) %>%
+      dplyr::filter(year == scen_year) %>%
       dplyr::mutate(status = round(status_prop * 100, 1)) %>%
       dplyr::select(region_id, score = status) %>%
       tidyr::complete(region_id = full_seq(c(1, 42), 1)) %>%
-      dplyr::mutate(dimension = "status"),
+      dplyr::mutate(dimension = "status", goal = "FIS"),
     ## trend scores
     trend %>%
       dplyr::select(region_id, score = trend) %>%
       tidyr::complete(region_id = full_seq(c(1, 42), 1)) %>%
-      dplyr::mutate(dimension = "trend")) %>%
-    dplyr::mutate(goal = "FIS")
+      dplyr::mutate(dimension = "trend", goal = "FIS")
+  )
 
   return(scores)
 
