@@ -1,0 +1,43 @@
+region_id,subbasin,subbasin_id,helcom_id,eez,region_name,region_order,subbasin_order,region_area_km2,subbasin_area_km2
+1,Kattegat,501,SEA-001,Sweden,"Kattegat, Sweden",42,17,6565.58647973,22040.23616
+2,Kattegat,501,SEA-001,Denmark,"Kattegat, Denmark",41,17,16315.485175,22040.23616
+3,Great Belt,502,SEA-002,Denmark,"Great Belt, Denmark",40,16,9987.81169212,10510.102
+4,Great Belt,502,SEA-002,Germany,"Great Belt, Germany",39,16,98.620894352,10510.102
+5,The Sound,503,SEA-003,Sweden,"The Sound, Sweden",38,15,594.722913079,1201.05226
+6,The Sound,503,SEA-003,Denmark,"The Sound, Denmark",37,15,577.86889397,1201.05226
+7,Kiel Bay,504,SEA-004,Denmark,"Kiel Bay, Denmark",36,14,1211.20620511,3288.3558700000003
+8,Kiel Bay,504,SEA-004,Germany,"Kiel Bay, Germany",35,14,1996.89387929,3288.3558700000003
+9,Bay of Mecklenburg,505,SEA-005,Denmark,"Bay of Mecklenburg, Denmark",33,13,1141.1073139,4583.11505
+10,Bay of Mecklenburg,505,SEA-005,Germany,"Bay of Mecklenburg, Germany",34,13,3380.61988679,4583.11505
+11,Arkona Basin,506,SEA-006,Sweden,"Arkona Basin, Sweden",31,12,4229.10211615,17570.47913
+12,Arkona Basin,506,SEA-006,Denmark,"Arkona Basin, Denmark",32,12,6178.48445672,17570.47913
+13,Arkona Basin,506,SEA-006,Germany,"Arkona Basin, Germany",30,12,6943.7423114,17570.47913
+14,Bornholm Basin,507,SEA-007,Sweden,"Bornholm Basin, Sweden",26,11,15059.2100591,42151.18226
+15,Bornholm Basin,507,SEA-007,Denmark,"Bornholm Basin, Denmark",27,11,7132.67066085,42151.18226
+16,Bornholm Basin,507,SEA-007,Germany,"Bornholm Basin, Germany",29,11,2532.23009238,42151.18226
+17,Bornholm Basin,507,SEA-007,Poland,"Bornholm Basin, Poland",28,11,17231.0761968,42151.18226
+18,Gdansk Basin,508,SEA-008,Poland,"Gdansk Basin, Poland",24,10,3598.08465588,5821.25035
+19,Gdansk Basin,508,SEA-008,Russia,"Gdansk Basin, Russia",23,10,2093.5152419,5821.25035
+20,Eastern Gotland Basin,509,SEA-009,Sweden,"Eastern Gotland Basin, Sweden",19,9,21904.3069818,74952.58754
+21,Eastern Gotland Basin,509,SEA-009,Poland,"Eastern Gotland Basin, Poland",25,9,11013.7075193,74952.58754
+22,Eastern Gotland Basin,509,SEA-009,Russia,"Eastern Gotland Basin, Russia",22,9,9402.46841717,74952.58754
+23,Eastern Gotland Basin,509,SEA-009,Lithuania,"Eastern Gotland Basin, Lithuania",21,9,6083.72552283,74952.58754
+24,Eastern Gotland Basin,509,SEA-009,Latvia,"Eastern Gotland Basin, Latvia",20,9,20992.3153589,74952.58754
+25,Eastern Gotland Basin,509,SEA-009,Estonia,"Eastern Gotland Basin, Estonia",17,9,5364.64302521,74952.58754
+26,Western Gotland Basin,510,SEA-010,Sweden,"Western Gotland Basin, Sweden",18,8,27312.8600383,27456.05692
+27,Gulf of Riga,511,SEA-011,Latvia,"Gulf of Riga, Latvia",16,7,7846.03761071,18768.4712
+28,Gulf of Riga,511,SEA-011,Estonia,"Gulf of Riga, Estonia",15,7,10356.8864271,18768.4712
+29,Northern Baltic Proper,512,SEA-012,Sweden,"Northern Baltic Proper, Sweden",13,6,17846.7987612,39370.04477
+30,Northern Baltic Proper,512,SEA-012,Finland,"Northern Baltic Proper, Finland",12,6,9809.85368294,39370.04477
+31,Northern Baltic Proper,512,SEA-012,Estonia,"Northern Baltic Proper, Estonia",14,6,11685.7615569,39370.04477
+32,Gulf of Finland,513,SEA-013,Finland,"Gulf of Finland, Finland",10,5,9376.48131105,29547.32054
+33,Gulf of Finland,513,SEA-013,Russia,"Gulf of Finland, Russia",9,5,11279.1063198,29547.32054
+34,Gulf of Finland,513,SEA-013,Estonia,"Gulf of Finland, Estonia",11,5,8121.92054132,29547.32054
+35,Aland Sea,514,SEA-014,Sweden,"Aland Sea, Sweden",8,4,2732.12022608,15108.741970000001
+36,Aland Sea,514,SEA-014,Finland,"Aland Sea, Finland",7,4,12812.0246603,15108.741970000001
+37,Bothnian Sea,515,SEA-015,Sweden,"Bothnian Sea, Sweden",5,3,31239.6673474,59872.69655
+38,Bothnian Sea,515,SEA-015,Finland,"Bothnian Sea, Finland",6,3,27952.3832074,59872.69655
+39,The Quark,516,SEA-016,Sweden,"The Quark, Sweden",3,2,3164.64521903,8148.71162
+40,The Quark,516,SEA-016,Finland,"The Quark, Finland",4,2,4862.2798263,8148.71162
+41,Bothnian Bay,517,SEA-017,Sweden,"Bothnian Bay, Sweden",1,1,16947.6650747,32266.734279999997
+42,Bothnian Bay,517,SEA-017,Finland,"Bothnian Bay, Finland",2,1,14709.8681336,32266.734279999997
