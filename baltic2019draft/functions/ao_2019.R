@@ -27,10 +27,10 @@ AO <- function(layers){
   ## Return artisial fishing opportunities status and trend scores ----
 
   ao_status_and_trend <- dplyr::bind_rows(
-    mutate(lsp_status, goal = "AO"),
-    mutate(lsp_trend, goal = "AO")
+    mutate(ao_status, goal = "AO"),
+    mutate(ao_trend, goal = "AO")
   )
-  scores <- select(as_status_and_trend, region_id, goal, dimension, score)
+  scores <- select(ao_status_and_trend, region_id, goal, dimension, score)
 
   return(scores)
 
