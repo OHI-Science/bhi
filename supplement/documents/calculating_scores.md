@@ -38,6 +38,12 @@ The full, descriptive name of the dataset.
 Expands on the information summarized in the 'name' variable to explain more fully about the original source, ranges, and in some cases methods of collection or creation of the data.
 
 **fld_value** <br/>
+This field must match the name of the layer dataset column containing values for the index score calculation
+
+**fld_category** <br/>
+This field must match the name of the layer dataset column containing categorical variable needed for the index score calculation
+
+
 **units** <br/>
 **clip_n_ship_disag** <br/>
 **clip_n_ship_disag_description** <br/>
@@ -53,7 +59,6 @@ For more insight about these fields see the [source code](https://github.com/OHI
 
 **fld_id_num** <br/>
 **fld_id_chr** <br/>
-**fld_category** <br/>
 **fld_year** <br/>
 **fld_val_num** <br/>
 **fld_val_chr** <br/>
