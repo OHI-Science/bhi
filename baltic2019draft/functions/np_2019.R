@@ -17,24 +17,22 @@ NP <- function(layers){
 
 
   bbmsy <- AlignDataYears(layer_nm="np_bbmsy", layers_obj=layers) %>%
-    dplyr::mutate(metric="bbmsy") %>%
-    dplyr::rename(region_id = rgn_id)
+    dplyr::mutate(metric="bbmsy")
 
   ffmsy <- AlignDataYears(layer_nm="np_ffmsy", layers_obj=layers) %>%
-    dplyr::mutate(metric="ffmsy") %>%
-    dplyr::rename(region_id = rgn_id)
+    dplyr::mutate(metric="ffmsy")
 
-  landings <- AlignDataYears(layer_nm="np_landings", layers_obj=layers) %>%
-    dplyr::rename(region_id = rgn_id)
+  landings <- AlignDataYears(layer_nm="np_landings", layers_obj=layers)
+
 
   ## combine bbmsy and ffmsy into single object
-
   metric_scores <- rbind(
     dplyr::select(bbmsy, -np_bbmsy_year, -layer_name, year = scenario_year),
     dplyr::select(ffmsy, -np_ffmsy_year, -layer_name, year = scenario_year)
-  ) %>% dplyr::mutate(metric = as.factor(metric))
-
-  metric_scores <- tidyr::spread(metric_scores, metric, score)
+  )
+  metric_scores <- metric_scores %>%
+    dplyr::mutate(metric = as.factor(metric)) %>%
+    tidyr::pivot_wider(names_from = metric, values_from = value)
 
 
   ## BSCORES
