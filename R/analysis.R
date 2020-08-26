@@ -62,16 +62,16 @@ sim_elast_of_sub <- function(scorescsv, calcyear = 2014, elast_of_sub = c(0, 1),
     select(-goal)
 
   ## quick plots to check results
-  plotdf <- mutate(simulated_scores, region = as.factor(paste("region", region_id)))
-  plotdf$region <- factor(plotdf$region, levels = paste("region", scores_arithmetic$region_id))
-  scoreplot <- ggplot(plotdf) +
-    geom_point(aes(region, score), size = 1.2, alpha = 0.01, color = "steelblue") +
-    coord_flip() +
-    labs(x = NULL, y =  NULL)
-  rankplot <- ggplot(plotdf, aes(region, rank)) +
-    geom_boxplot(outlier.size = 0.2, size = 0.2, alpha = 0.2, fill = "steelblue", color = "royalblue") +
-    coord_flip() +
-    labs(x = NULL, y =  NULL)
+  # plotdf <- mutate(simulated_scores, region = as.factor(paste("region", region_id)))
+  # plotdf$region <- factor(plotdf$region, levels = paste("region", scores_arithmetic$region_id))
+  # scoreplot <- ggplot(plotdf) +
+  #   geom_point(aes(region, score), size = 1.2, alpha = 0.01, color = "steelblue") +
+  #   coord_flip() +
+  #   labs(x = NULL, y =  NULL)
+  # rankplot <- ggplot(plotdf, aes(region, rank)) +
+  #   geom_boxplot(outlier.size = 0.2, size = 0.2, alpha = 0.2, fill = "steelblue", color = "royalblue") +
+  #   coord_flip() +
+  #   labs(x = NULL, y =  NULL)
 
   result <- rbind(scores_arithmetic, simulated_scores)
 
