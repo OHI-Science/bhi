@@ -209,12 +209,10 @@ FIS <- function(layers){
       dplyr::filter(year == scen_year) %>%
       dplyr::mutate(status = round(status_prop * 100, 1)) %>%
       dplyr::select(region_id, score = status) %>%
-      tidyr::complete(region_id = full_seq(c(1, 42), 1)) %>%
       dplyr::mutate(dimension = "status", goal = "FIS"),
     ## trend scores
     trend %>%
       dplyr::select(region_id, score = trend) %>%
-      tidyr::complete(region_id = full_seq(c(1, 42), 1)) %>%
       dplyr::mutate(dimension = "trend", goal = "FIS")
   )
 
