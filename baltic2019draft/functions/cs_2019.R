@@ -28,8 +28,8 @@ CS <- function(layers){
   ## Return carbon storage status and trend scores ----
 
   cs_status_and_trend <- dplyr::bind_rows(
-    mutate(cs_status, dimension = "status", goal = "ICO"),
-    mutate(cs_trend, dimension = "trend", goal = "ICO")
+    mutate(cs_status, goal = "ICO"),
+    mutate(cs_trend, goal = "ICO")
   )
   scores <- select(cs_status_and_trend, region_id, goal, dimension, score)
 
