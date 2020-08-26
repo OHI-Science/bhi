@@ -74,11 +74,29 @@ BD <- function(layers){
       nspp = sum(nspp)
     ) %>%
     ungroup() %>%
-    mutate(status_taxa_initial = (1 - wi_spp)) %>%
+    mutate(status_taxa_initial = (1 - wi_spp))
 
-    ## 3:
-    ## summarize status values across taxa by region, using geometric mean
-    ## normalizing by number disinct species in each taxa
+
+  ## save individual indicators as intermediate results
+  for(grp in unique(spp_status$species_group)){
+    savefp <- file.path(
+      dir_assess, "intermediate",
+      sprintf("%s.csv", stringr::str_to_lower(stringr::str_replace_all(grp, " ", " ")))
+    )
+    if(!file.exists(savefp)){
+      write_csv(
+        spp_status %>%
+          filter(species_group == grp) %>%
+          select(region_id, species_group_score = status_taxa_initial, num_species = nspp),
+        savefp
+      )
+    }
+  }
+
+  ## 3:
+  ## summarize status values across taxa by region, using geometric mean
+  ## normalizing by number disinct species in each taxa
+  spp_status <- spp_status %>%
     group_by(region_id) %>%
     summarize(status = 100*round(exp(weighted.mean(log(status_taxa_initial), nspp, na.rm = TRUE)), 2))
 
