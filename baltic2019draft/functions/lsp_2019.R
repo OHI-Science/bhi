@@ -24,7 +24,7 @@ LSP <- function(layers){
     dplyr::select(region_id = rgn_id, score, dimension)
 
 
-  ## Return carbon storage status and trend scores ----
+  ## Return lasting special places status and trend scores ----
 
   lsp_status_and_trend <- dplyr::bind_rows(
     mutate(lsp_status, goal = "LSP"),
