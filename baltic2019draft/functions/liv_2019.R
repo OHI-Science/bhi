@@ -9,8 +9,10 @@ LIV <- function(layers){
 
 
   ## liv data layers include regional (by BHI region) and national employment rates
-  regional_employ <- AlignDataYears(layer_nm="le_liv_regional_employ", layers_obj=layers)
-  country_employ <- AlignDataYears(layer_nm="le_liv_national_employ", layers_obj=layers)
+  regional_employ <- AlignDataYears(layer_nm="le_liv_regional_employ", layers_obj=layers) %>%
+    select(year = scenario_year, bhi_employ_rate, region_id)
+  country_employ <- AlignDataYears(layer_nm="le_liv_national_employ", layers_obj=layers) %>%
+    select(year = scenario_year, employ_pop, region_id)
 
   liv_data <- full_join(regional_employ, country_employ, by = c("region_id", "year")) %>%
     mutate(bhi_employ_rate = bhi_employ_rate*100) %>%
@@ -105,7 +107,7 @@ LIV <- function(layers){
       dplyr::filter(year == scen_year) %>%
       dplyr::select(region_id, score = status) %>%
       tidyr::complete(region_id = 1:42) %>%
-      dplyr::mutate(dimension = "status", goal = "LIV"),
+      dplyr::mutate(dimension = "status", goal = "LIV", score = score*100),
     ## trend scores
     liv_trend %>%
       dplyr::select(region_id, score = trend) %>%

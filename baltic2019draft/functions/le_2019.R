@@ -8,14 +8,13 @@ LE <- function(layers, scores){
   le_scores <- scores %>%
     dplyr::filter(
       goal %in% c("LIV", "ECO"),
-      dimension %in% c("status", "trend", "future", "score"),
-      year == scen_year
+      dimension %in% c("status", "trend", "future", "score")
     ) %>%
     # reshape2::dcast(region_id + dimension ~ goal, value.var = "score") %>%
     # mutate(score = rowMeans(cbind(ECO, LIV), na.rm = TRUE)) %>%
     dplyr::group_by(region_id, dimension) %>%
     dplyr::summarize(score = mean(score, na.rm = TRUE)) %>%
-    dplyr::mutate(goal = "FP") %>%
+    dplyr::mutate(goal = "LE") %>%
     dplyr::ungroup() %>%
     dplyr::select(region_id, goal, dimension, score)
 

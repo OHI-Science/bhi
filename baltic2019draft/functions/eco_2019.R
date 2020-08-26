@@ -8,8 +8,10 @@ ECO <- function(layers){
   scen_year <- layers$data$scenario_year
 
 
-  annual_growth_rates <- AlignDataYears(layer_nm="le_eco_bluegrowth_rates", layers_obj=layers)
-  annual_revenue_estimates <- AlignDataYears(layer_nm="le_eco_yearly_gva", layers_obj=layers)
+  annual_growth_rates <- AlignDataYears(layer_nm="le_eco_bluegrowth_rates", layers_obj=layers) %>%
+    select(year = scenario_year, region_id, sector, annual_growth_rate)
+  annual_revenue_estimates <- AlignDataYears(layer_nm="le_eco_yearly_gva", layers_obj=layers) %>%
+    select(year = scenario_year, region_id, sector, gva_sector_prop, country_gva_estim)
 
   eco_status <- full_join(annual_growth_rates, annual_revenue_estimates, by = c("region_id", "sector", "year")) %>%
     mutate(sector_status = case_when(
@@ -19,6 +21,7 @@ ECO <- function(layers){
     )) %>%
     group_by(region_id, year) %>%
     summarize(status = weighted.mean(sector_status, gva_sector_prop, na.rm = TRUE)) %>%
+    ungroup() %>%
     mutate(status = ifelse(is.nan(status), NA, status))
 
 
