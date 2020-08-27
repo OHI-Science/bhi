@@ -31,20 +31,21 @@ CW <- function(layers, scores){
   }
 
   ## calculate dimensions for CW goal, from scores subsetted to CW subgoals
-  scores_cw <- scores %>%
-    filter(goal %in% c("EUT", "TRA", "CON"),
-           year == scen_year) %>%
-    arrange(dimension, region_id)
+  subsetscores <- scores %>%
+    filter(
+      goal %in% c("EUT", "TRA", "CON"),
+      dimension %in% c("status", "trend", "future", "score")
+    )
 
   cw_scores <- rbind(
-    scores_cw %>%
+    subsetscores %>%
       dplyr::filter(dimension %in% c("status", "future", "score")) %>%
-      dplyr::group_by(region_id, dimension, year) %>%
+      dplyr::group_by(region_id, dimension) %>%
       dplyr::summarize(score = round(geometric.mean2(score, na.rm = TRUE))) %>% # round status to 0 decimals
       ungroup(),
-    scores_cw %>%
+    subsetscores %>%
       dplyr::filter(dimension == "trend") %>%
-      dplyr::group_by(region_id, dimension, year) %>%
+      dplyr::group_by(region_id, dimension) %>%
       dplyr::summarize(score = mean(score, na.rm = TRUE)) %>%
       ungroup()) %>%
     dplyr::arrange(region_id) %>%

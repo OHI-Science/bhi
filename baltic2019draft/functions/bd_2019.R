@@ -15,7 +15,7 @@ BD <- function(layers){
   spp_subbasin_assessments <- AlignDataYears(layer_nm="bd_spp_assessments", layers_obj=layers) %>%
     ## scenario year here is the assessment_year_red_list:
     ## because of infrequent iucn assessments, there will inevitably be a lag in biodiversity status...
-    rename(year = scenario_year)
+    rename(assessment_year_red_list = scenario_year)
 
 
   ## Create vulnerability lookup table ----
@@ -98,13 +98,17 @@ BD <- function(layers){
   ## normalizing by number disinct species in each taxa
   spp_status <- spp_status %>%
     group_by(region_id) %>%
-    summarize(status = 100*round(exp(weighted.mean(log(status_taxa_initial), nspp, na.rm = TRUE)), 2))
+    summarize(status = 100*round(exp(weighted.mean(log(status_taxa_initial), nspp, na.rm = TRUE)), 3)) %>%
+    rename(score = status)
 
 
   ## Trend ----
 
   spp_trend <- AlignDataYears(layer_nm="bd_spp_trend", layers_obj=layers) %>%
-    dplyr::rename(year = ohiglobal_assess_year)
+    dplyr::rename(year = scenario_year) %>%
+    filter(year == scen_year) %>%
+    select(region_id, score) %>%
+    mutate(score = round(score, 3))
 
 
   ## Return biodiversity status and trend scores ----

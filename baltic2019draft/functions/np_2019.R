@@ -141,7 +141,7 @@ NP <- function(layers){
 
   ## subset the data to include only the most recent 10 years
   landings <- landings %>%
-    dplyr::select(year, region_id, stock, landings) %>%
+    dplyr::select(year = scenario_year, region_id, stock, landings) %>%
     dplyr::filter(year %in% (max(year)-9):max(year))
 
   ## we use the average catch for each stock/region across the last 25 years to obtain weights
@@ -198,8 +198,8 @@ NP <- function(layers){
 
   scores <- rbind(
     ## status scores
-    status_scores %>%
-      dplyr::filter(year == scenario_year) %>%
+    status %>%
+      dplyr::filter(year == scen_year) %>%
       dplyr::mutate(status = round(status_prop * 100, 1)) %>%
       dplyr::select(region_id, score = status) %>%
       tidyr::complete(region_id = full_seq(c(1, 42), 1)) %>%

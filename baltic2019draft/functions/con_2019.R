@@ -215,7 +215,7 @@ CON <- function(layers){
   ## incorporate concerning substances indicator
   cw_con_with_penalty <- cw_con %>%
     full_join(concern_subst_indicator, by = c("region_id", "dimension")) %>%
-    mutate(score_w_penalty = ifelse(dimension == "trend", score, score*proportion_monitored)) %>%
+    mutate(score_w_penalty = ifelse(dimension == "trend", score, score*proportion_monitored*100)) %>%
     mutate(goal = "CON") %>%
     select(region_id, goal, dimension, score = score_w_penalty)
 
