@@ -29,7 +29,7 @@ CS <- function(layers){
 
   cs_status_and_trend <- dplyr::bind_rows(
     mutate(cs_status, goal = "CS"),
-    mutate(cs_trend, goal = "CS")
+    mutate(cs_trend, dimension = "trend", goal = "CS")
   )
   scores <- select(cs_status_and_trend, region_id, goal, dimension, score)
 

@@ -51,9 +51,9 @@ ICO <- function(layers){
     ## 1:
     ## for each species, take only values from most recent redlist assessment
     ## s.t. the year is less than or equal to the scenario year being evaluated...
-    filter(assessment_year_red_list <= scen_year) %>%
+    filter(year <= scen_year) %>%
     group_by(scientific_name) %>%
-    filter(assessment_year_red_list == max(assessment_year_red_list)) %>%
+    filter(year == max(year)) %>%
     ungroup() %>%
 
     ## 2:
@@ -90,8 +90,11 @@ ICO <- function(layers){
   ## Return iconic species status and trend scores ----
 
   ico_status_and_trend <- dplyr::bind_rows(
-    mutate(ico_status, dimension = "status", goal = "ICO"),
-    mutate(ico_trend, dimension = "trend", goal = "ICO")
+    ico_status %>%
+      rename(score = status) %>%
+      mutate(dimension = "status", goal = "ICO"),
+    ico_trend %>%
+      mutate(dimension = "trend", goal = "ICO")
   )
   scores <- select(ico_status_and_trend, region_id, goal, dimension, score)
 
