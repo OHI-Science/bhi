@@ -170,6 +170,14 @@ semicolon_to_comma <- function(csv_filepath, remove_na_cols = TRUE, overwrite = 
     file_commas <- head(readr::read_csv(csv_filepath, col_types = cols()))
   }
 
+  ## remove any rows that are all NAs...
+  file_commas <- cbind(
+    file_commas,
+    chk = apply(file_commas, MARGIN = 1, FUN = function(x) !all(is.na(x)))
+  )
+  file_commas <- filter(file_commas, chk)
+
+
   return(file_commas)
 }
 
