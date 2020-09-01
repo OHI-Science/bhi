@@ -187,7 +187,7 @@ CalculateAll = function(conf, layers){
     scores %>%
 
       # filter only score, status, future dimensions, merge to the area (km2) of each region
-      dplyr::filter(dimension %in% c('score','status','future')) %>%
+      # dplyr::filter(dimension %in% c('score','status','future')) %>%
       merge(SelectLayersData(layers, layers=conf$config$layer_region_areas, narrow=T) %>%
               dplyr::select(region_id = id_num,
                             area      = val_num)) %>%
