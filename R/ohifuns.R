@@ -88,7 +88,7 @@ CalculateAll = function(conf, layers){
     }
 
     ## Calculations and Scaling
-    x = CalculateGoalIndex(
+    x = ohicore::CalculateGoalIndex(
       id         = v$region_id,
       status     = v$status/100,
       trend      = v$trend,
