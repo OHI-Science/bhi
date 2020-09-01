@@ -4,8 +4,7 @@ EUT <- function(layers){
   scen_year <- layers$data$scenario_year
 
   ## adjust subbasin_id values so joinable with helcom_id values
-  rgns_complete <- file.path(dir_assess, "conf", "rgns_complete.csv") %>%
-    read_csv() %>%
+  rgns_complete <- read.csv(file.path(dir_assess, "layers", "rgns_complete.csv")) %>%
     select(region_id, subbasin_id)
 
 

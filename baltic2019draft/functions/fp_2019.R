@@ -19,7 +19,7 @@ FP <- function(layers, scores){
   ## before joining the fis and mar datasets, need to estimate landings by region:
   ## in fis data prep the ICES assessment area values were assigned to each bhi region,
   ## because fis goal uses ratios not values
-  fis_landings <- read_csv(file.path(dir_assess, "conf", "rgns_complete.csv")) %>%
+  fis_landings <- read.csv(file.path(dir_assess, "layers", "rgns_complete.csv")) %>%
     select(region_id, region_name, region_area_km2) %>%
     right_join(fis_landings, by = "region_id") %>%
     group_by(year, stock) %>%

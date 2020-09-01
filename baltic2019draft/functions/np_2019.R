@@ -13,7 +13,7 @@ NP <- function(layers){
   ## sustainability coefficient for each natural product: 1 - mean(c(exposure, risk))
   ## status for all production years for each region, a weighted mean of all products produced
 
-  scenario_year <- layers$data$scenario_year
+  scen_year <- layers$data$scenario_year
 
 
   bbmsy <- AlignDataYears(layer_nm="np_bbmsy", layers_obj=layers) %>%

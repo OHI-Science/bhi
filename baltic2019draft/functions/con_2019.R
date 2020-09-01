@@ -3,8 +3,7 @@ CON <- function(layers){
 
   scen_year <- layers$data$scenario_year
 
-  rgns_complete <- file.path(dir_assess, "conf", "rgns_complete.csv") %>%
-    read_csv() %>%
+  rgns_complete <- read.csv(file.path(dir_assess, "layers", "rgns_complete.csv")) %>%
     select(region_id, subbasin, eez, subbasin_id)
 
   ## From code in 'functions.R CON' of v2015 BHI assessment, see bhi-1.0-archive github repo

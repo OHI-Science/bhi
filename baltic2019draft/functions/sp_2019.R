@@ -11,8 +11,7 @@ SP <- function(layers, scores){
   sp_scores <- scores %>%
     dplyr::filter(
       goal %in% c("ICO", "LSP"),
-      dimension %in% c("status", "trend", "future", "score"),
-      year == scen_year
+      dimension %in% c("status", "trend", "future", "score")
     ) %>%
     group_by(region_id, dimension) %>%
     summarize(score = mean(score, na.rm = TRUE)) %>%
