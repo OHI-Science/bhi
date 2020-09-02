@@ -255,6 +255,14 @@ EUT <- function(layers){
     mutate(goal = "EUT", score = ifelse(is.nan(score), NA, score)) %>%
     select(region_id, goal, dimension, score)
 
+
+  ## because most of archipelago sea is coastal, and coastal data were not used in this assessment
+  ## will set archipelago sea (Åland sea Finland, BHI region 36) eutrophication scores to NA for now
+  ## so as not to be misleading in presentation/visuzlization of results
+  scores <- scores %>%
+    mutate(score = ifelse(region_id == 36, NA, score))
+
+
   return(scores)
 
 } ## End EUT function
