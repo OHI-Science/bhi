@@ -65,7 +65,6 @@ FinalizeScores <- function(layers, conf, scores){
 
   ## Add NAs to missing combos of region_id, goal, dimension ----
   explst <- list(
-    score_NA = NA,
     region_id = c(0, 1:42, 301:309, 501:517),
     dimension = c("pressures", "resilience", "status", "trend", "future", "score"),
     goal = c(conf$goals$goal, "Index")
@@ -75,9 +74,10 @@ FinalizeScores <- function(layers, conf, scores){
 
   ## RETURN SCORES ----
   ## merge NAs dataframe with scores, and arrange
-  scores <- merge(scores, d, all = TRUE)[, c("goal", "dimension", "region_id", "score")] %>%
-    dplyr::arrange(goal, dimension, region_id)
-  scores$score <- round(scores$score, 2) # round scores
+  scores <- dplyr::left_join(d, scores, by = c("goal",  "dimension", "region_id")) %>%
+    dplyr::arrange(goal, dimension, region_id) %>%
+    dplyr::mutate(score = ifelse(dimension == "trend", round(score, 3), round(score, 1)))
+
 
   return(scores)
 
