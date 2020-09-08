@@ -88,9 +88,9 @@ CalculateAll = function(conf, layers){
     }
 
     ## Calculations and Scaling
-    x = ohicore::CalculateGoalIndex(
+    x = CalculateGoalIndex(
       id         = v$region_id,
-      status     = v$status/100,
+      status     = pmin(v$status/100, 1), # weird thing where ECO status is 1 and gets 'out of bounds' warning...
       trend      = v$trend,
       resilience = v$resilience/100,
       pressure   = v$pressures/100,
@@ -119,6 +119,8 @@ CalculateAll = function(conf, layers){
   goals_Y = conf$goals %>%
     # dplyr::filter(!is.na(preindex_function)) %>% # if it realizes it's NA
     dplyr::filter(postindex_function != "NA") # if it thinks NA is a character string
+
+  supragoals = goals_Y$goal
   # supragoals = subset(conf$goals, is.na(parent), goal, drop=T); supragoals
 
   for (i in 1:nrow(goals_Y)){ # i = 1
@@ -188,7 +190,7 @@ CalculateAll = function(conf, layers){
 
       # filter only score, status, future dimensions, merge to the area (km2) of each region
       # dplyr::filter(dimension %in% c('score','status','future')) %>%
-      merge(SelectLayersData(layers, layers=conf$config$layer_region_areas, narrow=T) %>%
+      merge(ohicore::SelectLayersData(layers, layers=conf$config$layer_region_areas, narrow=T) %>%
               dplyr::select(region_id = id_num,
                             area      = val_num)) %>%
 
@@ -243,7 +245,7 @@ CalculatePressuresAll <- function(layers, conf) {
 
   ### error if the config.R weighting files are not actually included in the the data
   if ( !is.null(p_element) ) {
-    obs_data <- SelectLayersData(layers, layers = p_element$layer) %>%
+    obs_data <- ohicore::SelectLayersData(layers, layers = p_element$layer) %>%
       .$layer %>%
       unique()
     exp_data <- unique(p_element$layer)
@@ -312,9 +314,9 @@ CalculatePressuresAll <- function(layers, conf) {
 
 
   ### setup initial data.frame for column binding results by region
-  regions_dataframe <- SelectLayersData(layers,
-                                        layers = conf$config$layer_region_labels,
-                                        narrow = TRUE) %>%
+  regions_dataframe <- ohicore::SelectLayersData(layers,
+                                                 layers = conf$config$layer_region_labels,
+                                                 narrow = TRUE) %>%
     dplyr::select(region_id = id_num)
   regions_vector <- regions_dataframe[['region_id']]
 
@@ -359,7 +361,7 @@ CalculatePressuresAll <- function(layers, conf) {
 
 
   ### get each pressure data layer and select the appropriate year of data:
-  p_rgn_layers_data <- SelectLayersData(layers, layers = p_layers)
+  p_rgn_layers_data <- ohicore::SelectLayersData(layers, layers = p_layers)
 
   if(length(which(names(p_rgn_layers_data) == "year")) == 0){
     p_rgn_layers_data$year <- NA
@@ -451,7 +453,7 @@ CalculatePressuresAll <- function(layers, conf) {
 
   ### Deal with goals with goal elements
   if (length(p_element) >= 1) { ### only if there are any goals that have elements
-    p_element_layers <- SelectLayersData(layers, layers = p_element$layer) %>%
+    p_element_layers <- ohicore::SelectLayersData(layers, layers = p_element$layer) %>%
       dplyr::filter(id_num %in% regions_vector) %>%
       dplyr::select(region_id  = id_num,
                     element    = category,
@@ -542,7 +544,7 @@ CalculateResilienceAll = function(layers, conf){
 
   ## error if the config.R weighting files are not actually included in the the data
   if ( !is.null(r_element) ) {
-    obs_data <- dplyr::select(SelectLayersData(layers, layers=r_element$layer), layer)
+    obs_data <- dplyr::select(ohicore::SelectLayersData(layers, layers=r_element$layer), layer)
     obs_data <- unique(obs_data$layer)
     exp_data <- unique(r_element$layer)
     dif <- setdiff(exp_data, obs_data)
@@ -590,7 +592,7 @@ CalculateResilienceAll = function(layers, conf){
 
 
   ## setup initial data.frame for column binding results by region
-  regions_dataframe = SelectLayersData(layers, layers=conf$config$layer_region_labels, narrow=T) %>%
+  regions_dataframe = ohicore::SelectLayersData(layers, layers=conf$config$layer_region_labels, narrow=T) %>%
     dplyr::select(region_id = id_num)
   regions_vector = regions_dataframe[['region_id']]
 
@@ -630,7 +632,7 @@ CalculateResilienceAll = function(layers, conf){
     mutate(layer = as.character(layer))
 
   ### get the regional data layer associated with each resilience data layer:
-  r_rgn_layers_data <- SelectLayersData(layers, layers=r_layers)
+  r_rgn_layers_data <- ohicore::SelectLayersData(layers, layers=r_layers)
 
   if(length(which(names(r_rgn_layers_data)=="year"))==0){
     r_rgn_layers_data$year = NA
@@ -699,7 +701,7 @@ CalculateResilienceAll = function(layers, conf){
 
   ## For goals with elements, get the relevant data layers used for weights
   if (length(r_element) >= 1) { # only if there are any goals that have elements
-    r_element_layers <- SelectLayersData(layers, layers=r_element$layer) %>%
+    r_element_layers <- ohicore::SelectLayersData(layers, layers=r_element$layer) %>%
       dplyr::filter(id_num %in% regions_vector) %>%
       dplyr::select(region_id = id_num,
                     element = category,
@@ -745,4 +747,56 @@ CalculateResilienceAll = function(layers, conf){
 
   return(scores)
 
+}
+
+CalculateGoalIndex <- function(id, status, trend, resilience, pressure,
+                               DISCOUNT = 1.0, BETA = 0.67, default_trend = 0.0, xlim = c(0, 1)) {
+
+  # verify parameters
+  #if (getOption('debug', FALSE)) {
+  if(!(BETA >= 0 && BETA <= 1))
+    stop('Beta parameter must be between 0 and 1; check it in config.R')
+  if(!DISCOUNT >= 0)
+    stop('Discount parameter must be greater than 0 (1.0 = no discounting); check it in config.R')
+  #}
+
+  # Simplify symbols based on math writeup
+  d <- data.frame(id = id, x = status, t = trend, r = resilience, p = pressure)
+
+  # replace a trend of NA with a default (0)
+  if (!is.null(default_trend) && is.numeric(default_trend) && any(is.na(d$t))) {
+    d$t[is.na(d$t)] <- default_trend
+  }
+
+  # enforce domains
+  if(!(min(d$x, na.rm = T) >= 0  && max(d$x, na.rm = T) <= xlim[2]))
+    stop('one or more status scores exceed bounds of 0 to ', xlim[2])
+  # if(!(min(d$t, na.rm = T) >= -1 && max(d$t, na.rm = T) <= 1))
+  if(!(min(d$t, na.rm = T) >= -1 && max(d$t, na.rm = T) <= 1))
+    stop('one or more trend scores exceed bounds of -1 to +1')
+  if(!(min(d$r, na.rm = T) >= 0  && max(d$r, na.rm = T) <= xlim[2]))
+    stop('one or more resilience scores exceed bounds of 0 to ', xlim[2])
+  # if(!(min(d$p, na.rm = T) >= 0  && max(d$p, na.rm = T) <= xlim[2]))
+
+  ## manage when resilience or pressure is NA
+  d$p <- ifelse(is.na(d$p), 0, d$p)
+  d$r <- ifelse(is.na(d$r), 0, d$r)
+
+  # compute "future" status, using all dimensions
+
+  #handle cases with NA for resilience or pressures, converts NA to zero so it drops out of equation
+  d$r <- ifelse(is.na(d$r), 0, d$r)
+  d$p <- ifelse(is.na(d$p), 0, d$p)
+
+  d$xF <- with(d, (DISCOUNT * (1 + (BETA * t) + ((1-BETA) * (r - p)))) * x)
+  # clamp status domain to [0, 1]
+  d$xF <- with(d, ohicore::score.clamp(xF, xlim = c(0,1)))
+  # compute score using formula for individual goal component indicator
+  d$score <- with(d, (x + xF)/2)
+
+  # return results, rescaling if needed
+  #if (identical(xlim, c(0,100))){
+  #   d[,c('x','r','p','xF','score')] = d[,c('x','r','p','xF','score')]*100
+  #}
+  return(d)
 }
