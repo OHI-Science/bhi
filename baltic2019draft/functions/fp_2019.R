@@ -8,7 +8,8 @@ FP <- function(layers, scores){
   scen_year <- layers$data$scenario_year
 
   ## layers needed: fisheries landings and mariculture harvest ----
-  mar_harvest_tonnes <- AlignDataYears(layer_nm="mar_harvest_tonnes", layers_obj=layers)
+  mar_harvest_tonnes <- AlignDataYears(layer_nm="mar_harvest", layers_obj=layers) %>%
+    select(year = scenario_year, region_id, produced_tonnes)
 
   fis_landings <- AlignDataYears(layer_nm="fis_landings", layers_obj=layers) %>%
     select(year = scenario_year, region_id, stock, landings)
@@ -65,8 +66,7 @@ FP <- function(layers, scores){
   fp_scores <- scores %>%
     dplyr::filter(
       goal %in% c("FIS", "MAR"),
-      dimension %in% c("status", "trend", "future", "score"),
-      year == scen_year
+      dimension %in% c("status", "trend", "future", "score")
     ) %>%
     dplyr::left_join(fp_weights, by = "region_id")  %>%
     dplyr::mutate(prop_mar_harvest = 1 - prop_wildcaught) %>%
@@ -80,7 +80,7 @@ FP <- function(layers, scores){
       goal == "FIS" &
         is.na(score) &
         dimension == "score" &
-        (!is.na(w_fis) & w_fis != 0)
+        (!is.na( weight) &  weight != 0)
     )
   if(dim(tmp)[1] > 0){
     warning(sprintf(
@@ -94,7 +94,7 @@ FP <- function(layers, scores){
       goal == "MAR" &
         is.na(score) &
         dimension == "score" &
-        (!is.na(w_mar) & w_mar != 0)
+        (!is.na(1- weight) & (1- weight) != 0)
     )
   if(dim(tmp)[1] > 0){
     warning(sprintf(
@@ -110,7 +110,7 @@ FP <- function(layers, scores){
         dimension == "score" &
         region_id != 0 &
         (!is.na(score) & score > 0) &
-        (is.na(w_fis) | w_fis == 0)
+        (is.na( weight) | weight == 0)
     )
   if(dim(tmp)[1] > 0){
     warning(sprintf(
@@ -123,7 +123,7 @@ FP <- function(layers, scores){
     dplyr::filter(
       goal == "MAR" &
         (!is.na(score) & score > 0) &
-        (is.na(w_mar) | w_mar == 0) &
+        (is.na(1- weight) | (1- weight) == 0) &
         dimension == "score" &
         region_id != 0
     )
