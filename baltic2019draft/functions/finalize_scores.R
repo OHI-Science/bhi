@@ -4,6 +4,17 @@ FinalizeScores <- function(layers, conf, scores){
   ## From code in 'functions.R FinalizeScores' of v2015 BHI assessment, see bhi-1.0-archive github repo
   ## modified from functions.R template to aggregte to EEZs and Subbasins of Baltic
 
+  ## resilience and pressures for supragoals??
+  supragoal_prs_res <- scores %>%
+    left_join(conf$goals, by = "goal") %>%
+    select("region_id", "dimension", "goal", "score", "parent", "weight") %>%
+    filter(!(is.na(parent)|parent == "NA"), dimension %in% c("pressures", "resilience")) %>%
+    group_by(region_id, parent, dimension) %>%
+    summarize(score = weighted.mean(score, weight)) %>%
+    select(region_id, dimension, goal = parent, score)
+
+  scores <- bind_rows(scores, supragoal_prs_res)
+
 
   ## Calculate Scores for EEZs and SUBBASINS by area weighting ----
 
