@@ -5,120 +5,158 @@ BD <- function(layers){
   ## Revised to use multi-year framework, incorporating scenario_data_years
   ## Uses ohicore::AlignDataYears() rather than ohicore::SelectLayersData()
 
-  ## BD goal currently has no subgoals; it is only species (SPP)
-  ## status is the geometric mean of each taxa group status by basin
-  ## trend is temporarily substituted by OHI-global (2019) BD trend scores
+  ## BD goal currently has no subgoals, though it contains info on species (SPP) and habitat (HAB)
+  ## status is the geometric mean of each biodiversity component:
+  ## benthic and pelagic habitats, fish, seals, and birds (wintering and breeding combined)
+
+  ## biodiversity trend is temporarily substituted by OHI-global (2019) BD trend scores
 
 
   scen_year <- layers$data$scenario_year
 
-  spp_subbasin_assessments <- AlignDataYears(layer_nm="bd_spp_assessments", layers_obj=layers) %>%
-    ## scenario year here is the assessment_year_red_list:
-    ## because of infrequent iucn assessments, there will inevitably be a lag in biodiversity status...
-    rename(assessment_year_red_list = scenario_year)
+  ## wrangle birds first, need to summarize across feeding and wintering vs breeding groups
+  bd_spp_birds <- ohicore::AlignDataYears(layer_nm="bd_spp_birds", layers_obj=layers) %>%
+    filter(scenario_year == scen_year) %>%
+    mutate(helcom_id = as.character(helcom_id)) %>%
+    mutate(coastal = str_detect(helcom_id, "^SEA")) %>%
+    select(-scenario_year)
+
+  birds_spatial_units <- distinct(bd_spp_birds, region_id, spatial_group)
+  birds <- bd_spp_birds %>%
+    group_by(helcom_id, feeder_group) %>%
+    mutate(helcom_id_area_km2 = sum(area_km2)) %>%
+    ## each helcom_id region has 10 groups - 5 feeding groups, for each wintering and breeding
+    ## what kind of average to use?? will use arithmetic mean of BQRs across groups for now...
+    ## note: only benthic feeders are assessed for the open sea areas
+    distinct(helcom_id, coastal, spatial_group, feeder_group, BQR, helcom_id_area_km2) %>%
+    group_by(coastal, spatial_group, helcom_id_area_km2) %>%
+    summarize(averageBQR = mean(BQR, na.rm = TRUE)) %>%
+    ungroup() %>%
+    ## will take area weighted means of BQRs within coastal areas of the spatial assessment area
+    group_by(coastal, spatial_group) %>%
+    summarize(averageBQR = weighted.mean(averageBQR, helcom_id_area_km2)) %>%
+    ungroup() %>%
+    ## combine coastal and open sea with equal weights rather than area-weighted average
+    group_by(spatial_group) %>%
+    summarize(averageBQR = mean(averageBQR, na.rm = TRUE)) %>%
+    ungroup() %>%
+    ## now rejoin the BHI regions based on which spatial unit they are within
+    right_join(birds_spatial_units, by = "spatial_group") %>%
+    mutate(indicator = "spp_birds") %>%
+    select(-spatial_group)
 
 
-  ## Create vulnerability lookup table ----
-  ## weights from Halpern et al 2012, SI
-  vuln_lookup <- mutate(
-      data.frame(
-        red_list_category = c(
-          "EX - Extinct",
-          "RE - Regionally Extinct",
-          "CR - Critically Endangered",
-          "EN - Endangered",
-          "VU - Vulnerable",
-          "NT - Near Threatened",
-          "LC - Least Concern"
-        ),
-        stringsAsFactors = FALSE
-      ),
-      red_list_category_numeric = case_when(
-        red_list_category == "EX - Extinct" ~ 1,
-        red_list_category == "RE - Regionally Extinct" ~ 1,
-        red_list_category == "CR - Critically Endangered" ~ 0.8,
-        red_list_category == "EN - Endangered" ~ 0.6,
-        red_list_category == "VU - Vulnerable" ~ 0.4,
-        red_list_category == "NT - Near Threatened" ~ 0.2,
-        red_list_category == "LC - Least Concern" ~ 0
-      )
-    )
-  ## join vulnerability score to subbasin assessments dataframe
-  ## filter where red_list_category_numeric is NA, as these correspond to unused categories:
-  ## NA - Not Applicable, NE - Not Evaluated, DD - Data Deficient
-  spp_assess_w_num <- left_join(spp_subbasin_assessments, vuln_lookup, by = "red_list_category") %>%
-    filter(!is.na(red_list_category_numeric))
+
+  ## other layers are already ready to merge and summarize
+
+  bd_all_data <- bind_rows(
+    ## benthic habitat
+    AlignDataYears(layer_nm="bd_hab_benthic", layers_obj=layers) %>%
+      filter(scenario_year == scen_year) %>%
+      mutate(coastal = str_detect(helcom_id, "^SEA")) %>%
+      select(region_id, coastal, BQR, area_km2) %>%
+      mutate(indicator = "hab_benthic"),
+    ## pelagic habitat
+    AlignDataYears(layer_nm="bd_hab_pelagic", layers_obj=layers) %>%
+      filter(scenario_year == scen_year) %>%
+      mutate(coastal = str_detect(helcom_id, "^SEA")) %>%
+      select(region_id, coastal, BQR, area_km2) %>%
+      mutate(indicator = "hab_pelagic"),
+    ## fishes
+    AlignDataYears(layer_nm="bd_spp_fish", layers_obj=layers) %>%
+      filter(scenario_year == scen_year) %>%
+      mutate(coastal = str_detect(helcom_id, "^SEA")) %>%
+      select(region_id, coastal, BQR, area_km2) %>%
+      mutate(indicator = "spp_fishes"),
+    ## seals
+    AlignDataYears(layer_nm="bd_spp_seals", layers_obj=layers) %>%
+      filter(scenario_year == scen_year) %>%
+      mutate(coastal = str_detect(helcom_id, "^SEA")) %>%
+      select(region_id, coastal, BQR, area_km2) %>%
+      mutate(indicator = "spp_seals")
+  )
+
+
+  ## will use geometric mean to represent how components are not interchangeable
+  ## https://stackoverflow.com/questions/2602583/geometric-mean-is-there-a-built-in
+  gm_mean <- function(x, na.rm = TRUE, zero.propagate = FALSE){
+    if(any(x < 0, na.rm = TRUE)){
+      return(NaN)
+    }
+    if(zero.propagate){
+      if(any(x == 0, na.rm = TRUE)){
+        return(0)
+      }
+      exp(mean(log(x), na.rm = na.rm))
+    } else {
+      exp(sum(log(x[x > 0]), na.rm = na.rm) / length(x))
+    }
+  }
 
 
   ## Calculate Status ----
 
-  spp_status <- spp_assess_w_num %>%
-    ## 1:
-    ## for each species, take only values from most recent redlist assessment
-    ## s.t. the year is less than or equal to the scenario year being evaluated...
-    filter(assessment_year_red_list <= scen_year) %>%
-    group_by(scientific_name) %>%
-    filter(assessment_year_red_list == max(assessment_year_red_list)) %>%
+  ## at BQR of 0.6 is the reference point except for birds, which have a ref point of 0.75
+  ## will rescale so BQR = 0.6 or above is a status of 1, while BQR = 0 is a status of zero
+  bd_status <- bd_all_data %>%
+    group_by(region_id, coastal, indicator) %>%
+    summarize(averageBQR = weighted.mean(BQR, area_km2, na.rm = TRUE)) %>%
     ungroup() %>%
-
-    ## 2:
-    ## sum threat weights for each region and taxa (species_group),
-    ## normalizing by number distinct spp
-    group_by(region_id, species_group, red_list_category_numeric) %>%
-    summarize(nspp = n()) %>%
+    ## combine coastal and open sea with equal weights rather than area-weighted average
+    group_by(region_id, indicator) %>%
+    summarize(averageBQR = mean(averageBQR, na.rm = TRUE)) %>%
     ungroup() %>%
-    rename(weights = red_list_category_numeric) %>%
-    group_by(region_id, species_group) %>%
-    summarise(
-      wi_spp = sum(weights*nspp)/sum(nspp),
-      nspp = sum(nspp)
-    ) %>%
-    ungroup() %>%
-    mutate(status_taxa_initial = (1 - wi_spp))
-
+    ## bind birds data with other biodiversity layers
+    bind_rows(birds) %>%
+    mutate(averageBQR = ifelse(is.nan(averageBQR), NA, averageBQR)) %>%
+    ## calculate the status for individual indicators
+    mutate(indicator_status = case_when(
+      indicator == "spp_birds" ~ pmin(1, (4/3)*averageBQR),
+      indicator != "spp_birds" ~ pmin(1, (5/3)*averageBQR)
+    )) %>%
+    mutate(indicator_status= 100*indicator_status) %>%
+    select(-averageBQR)
 
   ## save individual indicators as intermediate results
-  for(grp in unique(spp_status$species_group)){
+  for(ind in unique(bd_status$indicator)){
     savefp <- file.path(
       dir_assess, "intermediate",
-      sprintf("%s.csv", stringr::str_to_lower(stringr::str_replace_all(grp, " ", " ")))
+      sprintf("%s.csv", ind)
     )
     if(!file.exists(savefp)){
       write_csv(
-        spp_status %>%
-          filter(species_group == grp) %>%
-          select(region_id, species_group_score = status_taxa_initial, num_species = nspp),
+        bd_status %>%
+          filter(indicator == ind) %>%
+          select(region_id, indicator_status),
         savefp
       )
     }
   }
 
-  ## 3:
-  ## summarize status values across taxa by region, using geometric mean
-  ## normalizing by number disinct species in each taxa
-  spp_status <- spp_status %>%
+  ## calculate overall biodiversity status scores
+  bd_status <- bd_status %>%
     group_by(region_id) %>%
-    summarize(status = 100*round(exp(weighted.mean(log(status_taxa_initial), nspp, na.rm = TRUE)), 3)) %>%
+    summarize(status = gm_mean(indicator_status)) %>%
+    ungroup() %>%
     rename(score = status)
 
 
   ## Trend ----
 
-  spp_trend <- AlignDataYears(layer_nm="bd_spp_trend", layers_obj=layers) %>%
-    dplyr::rename(year = scenario_year) %>%
-    filter(year == scen_year) %>%
+  bd_trend <- AlignDataYears(layer_nm="bd_spp_trend", layers_obj=layers) %>%
+    filter(scenario_year == scen_year) %>%
     select(region_id, score) %>%
     mutate(score = round(score, 3))
 
 
   ## Return biodiversity status and trend scores ----
 
-  spp_status_and_trend <- dplyr::bind_rows(
-    mutate(spp_status, dimension = "status"),
-    mutate(spp_trend, dimension = "trend")
+  bd_status_and_trend <- dplyr::bind_rows(
+    mutate(bd_status, dimension = "status"),
+    mutate(bd_trend, dimension = "trend")
   )
 
-  scores <- spp_status_and_trend %>%
+  scores <- bd_status_and_trend %>%
     dplyr::mutate(goal = "BD") %>%
     dplyr::select(region_id, goal, dimension, score)
 
