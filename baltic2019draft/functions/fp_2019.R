@@ -59,7 +59,9 @@ FP <- function(layers, scores){
       year < 1991 & !is.na(produced_tonnes),
       ratio1991, prop_wildcaught)
     ) %>%
-    select(region_id, year, prop_wildcaught)
+    select(region_id, year, prop_wildcaught) %>%
+    filter(year == scen_year) %>%
+    select(-year)
 
 
   ## scores of FIS and MAR with appropriate weight ----
