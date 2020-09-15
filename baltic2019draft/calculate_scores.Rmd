@@ -50,10 +50,16 @@ Then, run these chunks to ensure that all layer files in the `bhi` repo are up-t
 
 ```{r configure layers, eval=FALSE}
 source(here::here("R", "reconfiguring.R"))
+source(here::here("R", "common.R"))
+
+## use semicolon_to_comma to remove extra NA rows in the file if they exist
+## check before copying layers that layers.csv filenames and info are all correct and complete
+# lyrs <- semicolon_to_comma(file.path(dir_assess, "layers.csv"))
+# write_csv(lyrs, file.path(dir_assess, "layers.csv"))
 
 ## read layers.csv so proper layers can be copied from bhi-prep
-## check before copying layers that layers.csv filenames and info are all correct and complete
 lyrs <- readr::read_csv(file.path(dir_assess, "layers.csv"))
+
 
 ## copy layers from the bhi-prep, via github master branch, assessment-specific layer folder
 ## the function 'copy_lyrs_from_bhiprep' is defined in reconfiguring.R script
@@ -62,7 +68,7 @@ copy_lyrs_from_bhiprep(dir_assess, copy_layers = list(lyrs$filename))
 
 ```{r configure functions, eval=FALSE}
 funs <- c(
-  "fis_2019.R", # "mar_2019.R", 
+  "fis_2019.R", "mar_2019.R", 
   "fp_2019.R", "np_2019.R", "ao_2019.R",
   "bd_2019.R", "ico_2019.R", "lsp_2019.R", "sp_2019.R", 
   "con_2019.R", "eut_2019.R", "tra_2019.R", "cw_2019.R",
@@ -117,18 +123,15 @@ write_csv(updated, file.path(dir_assess, "conf", "scenario_data_years.csv"))
 Run this chunk to calculate and save scores as `scores` object and as `scores.csv`. Functions from ohicore (`ohicore::`) will check your repo's files to make sure you have registered layers properly, etc. It will create `conf` and `layers` objects that will be used to calculate scores, based on current `functions.R`, `layers.csv`, etc. These functions will not modify layers files.
 
 ```{r calculate scores, eval=FALSE}
-## scenario years for which to calculate scores in this assessment
-scenario_years <- 2019
-
 ## often we use excel to edit these files, 
-## so, need to make sure for ohicore funcs etc they are comma delim. not semicolons
-lapply(
-  list(
-    file.path(dir_assess, "layers.csv"),
-    file.path(dir_assess, "conf", "scenario_data_years.csv")
-  ),
-  function(x){semicolon_to_comma(x, remove_na_cols = TRUE, overwrite = TRUE)}
-)
+## so, for ohicore funcs etc may need to confirm they are comma delim. not semicolons
+# lapply(
+#   list(
+#     file.path(dir_assess, "layers.csv"),
+#     file.path(dir_assess, "conf", "scenario_data_years.csv")
+#   ),
+#   function(x){semicolon_to_comma(x, remove_na_cols = TRUE, overwrite = TRUE)}
+# )
 
 
 ## load scenario configuration, 
@@ -136,6 +139,7 @@ lapply(
 conf <- ohicore::Conf("conf")
 conf$goals$order_calculate <- as.numeric(conf$goals$order_calculate)
 conf$pressures_matrix[, -(1:3)] <- sapply(conf$pressures_matrix[, -(1:3)], as.integer)
+conf$scenario_data_years$data_year <- as.numeric(conf$scenario_data_years$data_year)
 
 
 ## check that scenario layers files in the layers folder match layers.csv registration
@@ -146,6 +150,12 @@ layers <- ohicore::Layers("layers.csv", "layers")
 
 ## calculate scores for all scenario years and save as scores.csv
 source(here::here("R", "ohifuns.R"))
+layers$data$scenario_year <- 2019
+scorelist <- CalculateAll(conf, layers)
+
+## scenario years for which to calculate scores in this assessment
+scenario_years <- 2019
+
 scorelist <- do.call(rbind, lapply(scenario_years, function(yr){
   layers$data$scenario_year <- yr
   cbind(
@@ -156,6 +166,10 @@ scorelist <- do.call(rbind, lapply(scenario_years, function(yr){
 
 ## save the scores
 readr::write_csv(scorelist, sprintf("%s/scores.csv", dir_assess), na = "")
+readr::write_csv(
+  scorelist %>% mutate(year = 2019, score = ifelse(is.nan(score), NA, score)), 
+  file.path(dirname(here::here()), "bhi-shiny", "dashboard", "data", "scores.csv")
+)
 ```
 
 ---
