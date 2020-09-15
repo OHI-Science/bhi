@@ -779,13 +779,13 @@ CalculateGoalIndex <- function(id, status, trend, resilience, pressure,
     d$t[is.na(d$t)] <- default_trend
   }
 
-  # enforce domains
-  if(!(min(d$x, na.rm = T) >= 0  && max(d$x, na.rm = T) <= xlim[2]))
+  # enforce domains if not all NAs
+  if(!all(is.na(d$x)) && !(min(d$x, na.rm = T) >= 0  && max(d$x, na.rm = T) <= xlim[2]))
     stop('one or more status scores exceed bounds of 0 to ', xlim[2])
   # if(!(min(d$t, na.rm = T) >= -1 && max(d$t, na.rm = T) <= 1))
-  if(!(min(d$t, na.rm = T) >= -1 && max(d$t, na.rm = T) <= 1))
+  if(!all(is.na(d$x)) && !(min(d$t, na.rm = T) >= -1 && max(d$t, na.rm = T) <= 1))
     stop('one or more trend scores exceed bounds of -1 to +1')
-  if(!(min(d$r, na.rm = T) >= 0  && max(d$r, na.rm = T) <= xlim[2]))
+  if(!all(is.na(d$x)) && !(min(d$r, na.rm = T) >= 0  && max(d$r, na.rm = T) <= xlim[2]))
     stop('one or more resilience scores exceed bounds of 0 to ', xlim[2])
   # if(!(min(d$p, na.rm = T) >= 0  && max(d$p, na.rm = T) <= xlim[2]))
 
