@@ -33,8 +33,8 @@
 32,76.71,"status","secchi",2019
 33,76.71,"status","secchi",2019
 34,76.71,"status","secchi",2019
-35,90.29,"status","secchi",2019
-36,90.29,"status","secchi",2019
+35,NA,"status","secchi",2019
+36,NA,"status","secchi",2019
 37,82.33,"status","secchi",2019
 38,82.33,"status","secchi",2019
 39,84.17,"status","secchi",2019
@@ -75,11 +75,11 @@
 32,-0.045,"trend","secchi",2019
 33,-0.045,"trend","secchi",2019
 34,-0.045,"trend","secchi",2019
-35,0.232,"trend","secchi",2019
-36,0.232,"trend","secchi",2019
 37,-0.028,"trend","secchi",2019
 38,-0.028,"trend","secchi",2019
 39,-0.171,"trend","secchi",2019
 40,-0.171,"trend","secchi",2019
 41,-0.054,"trend","secchi",2019
 42,-0.054,"trend","secchi",2019
+35,NA,"trend","secchi",2019
+36,NA,"trend","secchi",2019
