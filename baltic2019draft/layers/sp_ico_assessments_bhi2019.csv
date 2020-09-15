@@ -1,0 +1,491 @@
+region_id,year,scientific_name,species_group,red_list_category
+1,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+1,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+1,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+1,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+1,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+1,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+1,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+1,2013,Halichoerus grypus,Mammals,LC - Least Concern
+1,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+1,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+1,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+1,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+1,2013,Somateria mollissima,Birds,VU - Vulnerable
+2,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+2,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+2,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+2,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+2,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+2,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+2,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+2,2013,Halichoerus grypus,Mammals,LC - Least Concern
+2,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+2,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+2,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+2,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+2,2013,Somateria mollissima,Birds,VU - Vulnerable
+3,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+3,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+3,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+3,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+3,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+3,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+3,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+3,2013,Halichoerus grypus,Mammals,LC - Least Concern
+3,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+3,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+3,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+3,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+3,2013,Somateria mollissima,Birds,VU - Vulnerable
+4,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+4,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+4,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+4,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+4,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+4,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+4,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+4,2013,Halichoerus grypus,Mammals,LC - Least Concern
+4,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+4,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+4,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+4,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+4,2013,Somateria mollissima,Birds,VU - Vulnerable
+5,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+5,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+5,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+5,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+5,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+5,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+5,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+5,2013,Halichoerus grypus,Mammals,LC - Least Concern
+5,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+5,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+5,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+5,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+5,2013,Somateria mollissima,Birds,VU - Vulnerable
+6,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+6,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+6,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+6,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+6,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+6,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+6,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+6,2013,Halichoerus grypus,Mammals,LC - Least Concern
+6,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+6,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+6,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+6,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+6,2013,Somateria mollissima,Birds,VU - Vulnerable
+7,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+7,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+7,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+7,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+7,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+7,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+7,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+7,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+7,2013,Somateria mollissima,Birds,VU - Vulnerable
+8,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+8,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+8,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+8,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+8,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+8,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+8,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+8,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+8,2013,Somateria mollissima,Birds,VU - Vulnerable
+9,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+9,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+9,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+9,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+9,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+9,2013,Halichoerus grypus,Mammals,LC - Least Concern
+9,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+9,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+9,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+9,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+9,2013,Somateria mollissima,Birds,VU - Vulnerable
+10,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+10,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+10,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+10,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+10,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+10,2013,Halichoerus grypus,Mammals,LC - Least Concern
+10,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+10,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+10,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+10,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+10,2013,Somateria mollissima,Birds,VU - Vulnerable
+11,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+11,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+11,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+11,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+11,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+11,2013,Halichoerus grypus,Mammals,LC - Least Concern
+11,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+11,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+11,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+11,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+11,2013,Somateria mollissima,Birds,VU - Vulnerable
+12,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+12,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+12,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+12,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+12,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+12,2013,Halichoerus grypus,Mammals,LC - Least Concern
+12,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+12,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+12,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+12,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+12,2013,Somateria mollissima,Birds,VU - Vulnerable
+13,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+13,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+13,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+13,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+13,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+13,2013,Halichoerus grypus,Mammals,LC - Least Concern
+13,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+13,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+13,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+13,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+13,2013,Somateria mollissima,Birds,VU - Vulnerable
+14,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+14,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+14,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+14,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+14,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+14,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+14,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+14,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+14,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+14,2013,Halichoerus grypus,Mammals,LC - Least Concern
+14,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+14,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+14,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+14,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+14,2013,Somateria mollissima,Birds,VU - Vulnerable
+15,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+15,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+15,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+15,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+15,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+15,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+15,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+15,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+15,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+15,2013,Halichoerus grypus,Mammals,LC - Least Concern
+15,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+15,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+15,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+15,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+15,2013,Somateria mollissima,Birds,VU - Vulnerable
+16,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+16,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+16,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+16,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+16,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+16,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+16,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+16,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+16,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+16,2013,Halichoerus grypus,Mammals,LC - Least Concern
+16,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+16,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+16,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+16,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+16,2013,Somateria mollissima,Birds,VU - Vulnerable
+17,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+17,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+17,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+17,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+17,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+17,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+17,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+17,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+17,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+17,2013,Halichoerus grypus,Mammals,LC - Least Concern
+17,2013,Phoca vitulina vitulina,Mammals,LC - Least Concern
+17,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+17,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+17,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+17,2013,Somateria mollissima,Birds,VU - Vulnerable
+18,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+18,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+18,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+18,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+18,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+18,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+18,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+18,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+18,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+18,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+18,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+18,2013,Somateria mollissima,Birds,VU - Vulnerable
+19,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+19,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+19,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+19,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+19,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+19,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+19,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+19,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+19,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+19,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+19,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+19,2013,Somateria mollissima,Birds,VU - Vulnerable
+20,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+20,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+20,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+20,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+20,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+20,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+20,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+20,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+20,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+20,2013,Halichoerus grypus,Mammals,LC - Least Concern
+20,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+20,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+20,2013,Somateria mollissima,Birds,VU - Vulnerable
+21,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+21,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+21,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+21,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+21,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+21,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+21,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+21,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+21,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+21,2013,Halichoerus grypus,Mammals,LC - Least Concern
+21,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+21,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+21,2013,Somateria mollissima,Birds,VU - Vulnerable
+22,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+22,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+22,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+22,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+22,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+22,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+22,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+22,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+22,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+22,2013,Halichoerus grypus,Mammals,LC - Least Concern
+22,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+22,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+22,2013,Somateria mollissima,Birds,VU - Vulnerable
+23,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+23,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+23,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+23,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+23,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+23,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+23,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+23,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+23,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+23,2013,Halichoerus grypus,Mammals,LC - Least Concern
+23,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+23,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+23,2013,Somateria mollissima,Birds,VU - Vulnerable
+24,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+24,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+24,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+24,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+24,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+24,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+24,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+24,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+24,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+24,2013,Halichoerus grypus,Mammals,LC - Least Concern
+24,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+24,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+24,2013,Somateria mollissima,Birds,VU - Vulnerable
+25,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+25,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+25,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+25,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+25,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+25,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+25,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+25,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+25,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+25,2013,Halichoerus grypus,Mammals,LC - Least Concern
+25,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+25,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+25,2013,Somateria mollissima,Birds,VU - Vulnerable
+26,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+26,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+26,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+26,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+26,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+26,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+26,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+26,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+26,2007,Salmo salar,Fish and Lamprey,EN - Endangered
+26,2013,Salmo salar,Fish and Lamprey,VU - Vulnerable
+26,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+26,2013,Phoca vitulina vitulina,Mammals,VU - Vulnerable
+26,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+26,2013,Phocoena phocoena (Western Baltic Sea subpopulation),Mammals,VU - Vulnerable
+26,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+26,2013,Somateria mollissima,Birds,VU - Vulnerable
+27,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+27,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+27,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+27,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+27,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+27,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+27,2013,Halichoerus grypus,Mammals,LC - Least Concern
+27,2013,Pusa hispida,Mammals,VU - Vulnerable
+27,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+27,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+27,2013,Somateria mollissima,Birds,VU - Vulnerable
+28,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+28,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+28,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+28,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+28,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+28,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+28,2013,Halichoerus grypus,Mammals,LC - Least Concern
+28,2013,Pusa hispida,Mammals,VU - Vulnerable
+28,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+28,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+28,2013,Somateria mollissima,Birds,VU - Vulnerable
+29,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+29,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+29,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+29,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+29,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+29,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+29,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+29,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+29,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+29,2013,Halichoerus grypus,Mammals,LC - Least Concern
+29,2013,Pusa hispida,Mammals,VU - Vulnerable
+29,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+29,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+29,2013,Somateria mollissima,Birds,VU - Vulnerable
+30,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+30,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+30,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+30,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+30,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+30,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+30,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+30,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+30,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+30,2013,Halichoerus grypus,Mammals,LC - Least Concern
+30,2013,Pusa hispida,Mammals,VU - Vulnerable
+30,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+30,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+30,2013,Somateria mollissima,Birds,VU - Vulnerable
+31,2007,Gadus morhua,Fish and Lamprey,EN - Endangered
+31,2013,Gadus morhua,Fish and Lamprey,VU - Vulnerable
+31,2013,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+31,2007,Platichthys flesus,Fish and Lamprey,LC - Least Concern
+31,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+31,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+31,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+31,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+31,2013,Sprattus sprattus,Fish and Lamprey,LC - Least Concern
+31,2013,Halichoerus grypus,Mammals,LC - Least Concern
+31,2013,Pusa hispida,Mammals,VU - Vulnerable
+31,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+31,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+31,2013,Somateria mollissima,Birds,VU - Vulnerable
+32,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+32,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+32,2013,Halichoerus grypus,Mammals,LC - Least Concern
+32,2013,Pusa hispida,Mammals,VU - Vulnerable
+32,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+32,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+32,2013,Somateria mollissima,Birds,VU - Vulnerable
+33,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+33,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+33,2013,Halichoerus grypus,Mammals,LC - Least Concern
+33,2013,Pusa hispida,Mammals,VU - Vulnerable
+33,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+33,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+33,2013,Somateria mollissima,Birds,VU - Vulnerable
+34,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+34,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+34,2013,Halichoerus grypus,Mammals,LC - Least Concern
+34,2013,Pusa hispida,Mammals,VU - Vulnerable
+34,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+34,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+34,2013,Somateria mollissima,Birds,VU - Vulnerable
+35,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+35,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+35,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+35,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+35,2013,Pusa hispida,Mammals,VU - Vulnerable
+35,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+35,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+35,2013,Somateria mollissima,Birds,VU - Vulnerable
+36,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+36,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+36,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+36,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+36,2013,Pusa hispida,Mammals,VU - Vulnerable
+36,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+36,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+36,2013,Somateria mollissima,Birds,VU - Vulnerable
+37,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+37,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+37,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+37,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+37,2007,Salmo salar,Fish and Lamprey,EN - Endangered
+37,2013,Salmo salar,Fish and Lamprey,VU - Vulnerable
+37,2013,Pusa hispida,Mammals,VU - Vulnerable
+37,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+37,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+37,2013,Somateria mollissima,Birds,VU - Vulnerable
+38,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+38,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+38,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+38,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+38,2007,Salmo salar,Fish and Lamprey,EN - Endangered
+38,2013,Salmo salar,Fish and Lamprey,VU - Vulnerable
+38,2013,Pusa hispida,Mammals,VU - Vulnerable
+38,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+38,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+38,2013,Somateria mollissima,Birds,VU - Vulnerable
+39,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+39,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+39,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+39,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+39,2007,Salmo salar,Fish and Lamprey,EN - Endangered
+39,2013,Salmo salar,Fish and Lamprey,VU - Vulnerable
+39,2013,Pusa hispida,Mammals,VU - Vulnerable
+39,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+39,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+39,2013,Somateria mollissima,Birds,VU - Vulnerable
+40,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+40,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+40,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+40,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+40,2007,Salmo salar,Fish and Lamprey,EN - Endangered
+40,2013,Salmo salar,Fish and Lamprey,VU - Vulnerable
+40,2013,Pusa hispida,Mammals,VU - Vulnerable
+40,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+40,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+40,2013,Somateria mollissima,Birds,VU - Vulnerable
+41,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+41,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+41,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+41,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+41,2007,Salmo salar,Fish and Lamprey,EN - Endangered
+41,2013,Salmo salar,Fish and Lamprey,VU - Vulnerable
+41,2013,Pusa hispida,Mammals,VU - Vulnerable
+41,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+41,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+41,2013,Somateria mollissima,Birds,VU - Vulnerable
+42,2007,Clupea harengus,Fish and Lamprey,EN - Endangered
+42,2013,Clupea harengus,Fish and Lamprey,LC - Least Concern
+42,2013,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+42,2007,Perca fluviatilis,Fish and Lamprey,LC - Least Concern
+42,2007,Salmo salar,Fish and Lamprey,EN - Endangered
+42,2013,Salmo salar,Fish and Lamprey,VU - Vulnerable
+42,2013,Pusa hispida,Mammals,VU - Vulnerable
+42,2013,Phocoena phocoena (Baltic Sea Sub-population),Mammals,CR - Critically Endangered
+42,2013,Haliaeetus albicilla,Birds,LC - Least Concern
+42,2013,Somateria mollissima,Birds,VU - Vulnerable

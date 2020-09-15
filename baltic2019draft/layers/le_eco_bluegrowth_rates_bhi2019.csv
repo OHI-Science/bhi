@@ -1,0 +1,2761 @@
+region_id,sector,year,annual_growth_rate
+1,Coastal tourism,2009,2.9
+1,Coastal tourism,2010,2.9
+1,Coastal tourism,2011,2.9
+1,Coastal tourism,2012,2.9
+1,Coastal tourism,2013,2.9
+1,Coastal tourism,2014,2.9
+1,Coastal tourism,2015,2.9
+1,Coastal tourism,2016,2.9
+1,Coastal tourism,2017,2.9
+1,Coastal tourism,2018,2.9
+1,Marine living resources,2009,2.9
+1,Marine living resources,2010,2.9
+1,Marine living resources,2011,2.9
+1,Marine living resources,2012,2.9
+1,Marine living resources,2013,2.9
+1,Marine living resources,2014,2.9
+1,Marine living resources,2015,2.9
+1,Marine living resources,2016,2.9
+1,Marine living resources,2017,2.9
+1,Marine living resources,2018,2.9
+1,Marine non-living resources,2009,NA
+1,Marine non-living resources,2010,NA
+1,Marine non-living resources,2011,NA
+1,Marine non-living resources,2012,NA
+1,Marine non-living resources,2013,NA
+1,Marine non-living resources,2014,NA
+1,Marine non-living resources,2015,NA
+1,Marine non-living resources,2016,NA
+1,Marine non-living resources,2017,NA
+1,Marine non-living resources,2018,NA
+1,Marine renewable energy,2009,NA
+1,Marine renewable energy,2010,NA
+1,Marine renewable energy,2011,NA
+1,Marine renewable energy,2012,NA
+1,Marine renewable energy,2013,NA
+1,Marine renewable energy,2014,NA
+1,Marine renewable energy,2015,NA
+1,Marine renewable energy,2016,NA
+1,Marine renewable energy,2017,NA
+1,Marine renewable energy,2018,NA
+1,Maritime transport,2009,2.4
+1,Maritime transport,2010,2.4
+1,Maritime transport,2011,2.4
+1,Maritime transport,2012,2.4
+1,Maritime transport,2013,2.4
+1,Maritime transport,2014,2.4
+1,Maritime transport,2015,2.4
+1,Maritime transport,2016,2.4
+1,Maritime transport,2017,2.4
+1,Maritime transport,2018,2.4
+1,Port activites,2009,3.6
+1,Port activites,2010,3.6
+1,Port activites,2011,3.6
+1,Port activites,2012,3.6
+1,Port activites,2013,3.6
+1,Port activites,2014,3.6
+1,Port activites,2015,3.6
+1,Port activites,2016,3.6
+1,Port activites,2017,3.6
+1,Port activites,2018,3.6
+1,Shipbuilding and repair,2009,5.5
+1,Shipbuilding and repair,2010,5.5
+1,Shipbuilding and repair,2011,5.5
+1,Shipbuilding and repair,2012,5.5
+1,Shipbuilding and repair,2013,5.5
+1,Shipbuilding and repair,2014,5.5
+1,Shipbuilding and repair,2015,5.5
+1,Shipbuilding and repair,2016,5.5
+1,Shipbuilding and repair,2017,5.5
+1,Shipbuilding and repair,2018,5.5
+2,Coastal tourism,2009,6.9
+2,Coastal tourism,2010,6.9
+2,Coastal tourism,2011,6.9
+2,Coastal tourism,2012,6.9
+2,Coastal tourism,2013,6.9
+2,Coastal tourism,2014,6.9
+2,Coastal tourism,2015,6.9
+2,Coastal tourism,2016,6.9
+2,Coastal tourism,2017,6.9
+2,Coastal tourism,2018,6.9
+2,Marine living resources,2009,2
+2,Marine living resources,2010,2
+2,Marine living resources,2011,2
+2,Marine living resources,2012,2
+2,Marine living resources,2013,2
+2,Marine living resources,2014,2
+2,Marine living resources,2015,2
+2,Marine living resources,2016,2
+2,Marine living resources,2017,2
+2,Marine living resources,2018,2
+2,Marine non-living resources,2009,-12.7
+2,Marine non-living resources,2010,-12.7
+2,Marine non-living resources,2011,-12.7
+2,Marine non-living resources,2012,-12.7
+2,Marine non-living resources,2013,-12.7
+2,Marine non-living resources,2014,-12.7
+2,Marine non-living resources,2015,-12.7
+2,Marine non-living resources,2016,-12.7
+2,Marine non-living resources,2017,-12.7
+2,Marine non-living resources,2018,-12.7
+2,Marine renewable energy,2009,32.2
+2,Marine renewable energy,2010,32.2
+2,Marine renewable energy,2011,32.2
+2,Marine renewable energy,2012,32.2
+2,Marine renewable energy,2013,32.2
+2,Marine renewable energy,2014,32.2
+2,Marine renewable energy,2015,32.2
+2,Marine renewable energy,2016,32.2
+2,Marine renewable energy,2017,32.2
+2,Marine renewable energy,2018,32.2
+2,Maritime transport,2009,5.3
+2,Maritime transport,2010,5.3
+2,Maritime transport,2011,5.3
+2,Maritime transport,2012,5.3
+2,Maritime transport,2013,5.3
+2,Maritime transport,2014,5.3
+2,Maritime transport,2015,5.3
+2,Maritime transport,2016,5.3
+2,Maritime transport,2017,5.3
+2,Maritime transport,2018,5.3
+2,Port activites,2009,6.3
+2,Port activites,2010,6.3
+2,Port activites,2011,6.3
+2,Port activites,2012,6.3
+2,Port activites,2013,6.3
+2,Port activites,2014,6.3
+2,Port activites,2015,6.3
+2,Port activites,2016,6.3
+2,Port activites,2017,6.3
+2,Port activites,2018,6.3
+2,Shipbuilding and repair,2009,0.1
+2,Shipbuilding and repair,2010,0.1
+2,Shipbuilding and repair,2011,0.1
+2,Shipbuilding and repair,2012,0.1
+2,Shipbuilding and repair,2013,0.1
+2,Shipbuilding and repair,2014,0.1
+2,Shipbuilding and repair,2015,0.1
+2,Shipbuilding and repair,2016,0.1
+2,Shipbuilding and repair,2017,0.1
+2,Shipbuilding and repair,2018,0.1
+3,Coastal tourism,2009,6.9
+3,Coastal tourism,2010,6.9
+3,Coastal tourism,2011,6.9
+3,Coastal tourism,2012,6.9
+3,Coastal tourism,2013,6.9
+3,Coastal tourism,2014,6.9
+3,Coastal tourism,2015,6.9
+3,Coastal tourism,2016,6.9
+3,Coastal tourism,2017,6.9
+3,Coastal tourism,2018,6.9
+3,Marine living resources,2009,2
+3,Marine living resources,2010,2
+3,Marine living resources,2011,2
+3,Marine living resources,2012,2
+3,Marine living resources,2013,2
+3,Marine living resources,2014,2
+3,Marine living resources,2015,2
+3,Marine living resources,2016,2
+3,Marine living resources,2017,2
+3,Marine living resources,2018,2
+3,Marine non-living resources,2009,-12.7
+3,Marine non-living resources,2010,-12.7
+3,Marine non-living resources,2011,-12.7
+3,Marine non-living resources,2012,-12.7
+3,Marine non-living resources,2013,-12.7
+3,Marine non-living resources,2014,-12.7
+3,Marine non-living resources,2015,-12.7
+3,Marine non-living resources,2016,-12.7
+3,Marine non-living resources,2017,-12.7
+3,Marine non-living resources,2018,-12.7
+3,Marine renewable energy,2009,32.2
+3,Marine renewable energy,2010,32.2
+3,Marine renewable energy,2011,32.2
+3,Marine renewable energy,2012,32.2
+3,Marine renewable energy,2013,32.2
+3,Marine renewable energy,2014,32.2
+3,Marine renewable energy,2015,32.2
+3,Marine renewable energy,2016,32.2
+3,Marine renewable energy,2017,32.2
+3,Marine renewable energy,2018,32.2
+3,Maritime transport,2009,5.3
+3,Maritime transport,2010,5.3
+3,Maritime transport,2011,5.3
+3,Maritime transport,2012,5.3
+3,Maritime transport,2013,5.3
+3,Maritime transport,2014,5.3
+3,Maritime transport,2015,5.3
+3,Maritime transport,2016,5.3
+3,Maritime transport,2017,5.3
+3,Maritime transport,2018,5.3
+3,Port activites,2009,6.3
+3,Port activites,2010,6.3
+3,Port activites,2011,6.3
+3,Port activites,2012,6.3
+3,Port activites,2013,6.3
+3,Port activites,2014,6.3
+3,Port activites,2015,6.3
+3,Port activites,2016,6.3
+3,Port activites,2017,6.3
+3,Port activites,2018,6.3
+3,Shipbuilding and repair,2009,0.1
+3,Shipbuilding and repair,2010,0.1
+3,Shipbuilding and repair,2011,0.1
+3,Shipbuilding and repair,2012,0.1
+3,Shipbuilding and repair,2013,0.1
+3,Shipbuilding and repair,2014,0.1
+3,Shipbuilding and repair,2015,0.1
+3,Shipbuilding and repair,2016,0.1
+3,Shipbuilding and repair,2017,0.1
+3,Shipbuilding and repair,2018,0.1
+4,Coastal tourism,2009,-4.8
+4,Coastal tourism,2010,-4.8
+4,Coastal tourism,2011,-4.8
+4,Coastal tourism,2012,-4.8
+4,Coastal tourism,2013,-4.8
+4,Coastal tourism,2014,-4.8
+4,Coastal tourism,2015,-4.8
+4,Coastal tourism,2016,-4.8
+4,Coastal tourism,2017,-4.8
+4,Coastal tourism,2018,-4.8
+4,Marine living resources,2009,3
+4,Marine living resources,2010,3
+4,Marine living resources,2011,3
+4,Marine living resources,2012,3
+4,Marine living resources,2013,3
+4,Marine living resources,2014,3
+4,Marine living resources,2015,3
+4,Marine living resources,2016,3
+4,Marine living resources,2017,3
+4,Marine living resources,2018,3
+4,Marine non-living resources,2009,-6.8
+4,Marine non-living resources,2010,-6.8
+4,Marine non-living resources,2011,-6.8
+4,Marine non-living resources,2012,-6.8
+4,Marine non-living resources,2013,-6.8
+4,Marine non-living resources,2014,-6.8
+4,Marine non-living resources,2015,-6.8
+4,Marine non-living resources,2016,-6.8
+4,Marine non-living resources,2017,-6.8
+4,Marine non-living resources,2018,-6.8
+4,Marine renewable energy,2009,NA
+4,Marine renewable energy,2010,NA
+4,Marine renewable energy,2011,NA
+4,Marine renewable energy,2012,NA
+4,Marine renewable energy,2013,NA
+4,Marine renewable energy,2014,NA
+4,Marine renewable energy,2015,NA
+4,Marine renewable energy,2016,NA
+4,Marine renewable energy,2017,NA
+4,Marine renewable energy,2018,NA
+4,Maritime transport,2009,-6.7
+4,Maritime transport,2010,-6.7
+4,Maritime transport,2011,-6.7
+4,Maritime transport,2012,-6.7
+4,Maritime transport,2013,-6.7
+4,Maritime transport,2014,-6.7
+4,Maritime transport,2015,-6.7
+4,Maritime transport,2016,-6.7
+4,Maritime transport,2017,-6.7
+4,Maritime transport,2018,-6.7
+4,Port activites,2009,6.3
+4,Port activites,2010,6.3
+4,Port activites,2011,6.3
+4,Port activites,2012,6.3
+4,Port activites,2013,6.3
+4,Port activites,2014,6.3
+4,Port activites,2015,6.3
+4,Port activites,2016,6.3
+4,Port activites,2017,6.3
+4,Port activites,2018,6.3
+4,Shipbuilding and repair,2009,3.8
+4,Shipbuilding and repair,2010,3.8
+4,Shipbuilding and repair,2011,3.8
+4,Shipbuilding and repair,2012,3.8
+4,Shipbuilding and repair,2013,3.8
+4,Shipbuilding and repair,2014,3.8
+4,Shipbuilding and repair,2015,3.8
+4,Shipbuilding and repair,2016,3.8
+4,Shipbuilding and repair,2017,3.8
+4,Shipbuilding and repair,2018,3.8
+5,Coastal tourism,2009,2.9
+5,Coastal tourism,2010,2.9
+5,Coastal tourism,2011,2.9
+5,Coastal tourism,2012,2.9
+5,Coastal tourism,2013,2.9
+5,Coastal tourism,2014,2.9
+5,Coastal tourism,2015,2.9
+5,Coastal tourism,2016,2.9
+5,Coastal tourism,2017,2.9
+5,Coastal tourism,2018,2.9
+5,Marine living resources,2009,2.9
+5,Marine living resources,2010,2.9
+5,Marine living resources,2011,2.9
+5,Marine living resources,2012,2.9
+5,Marine living resources,2013,2.9
+5,Marine living resources,2014,2.9
+5,Marine living resources,2015,2.9
+5,Marine living resources,2016,2.9
+5,Marine living resources,2017,2.9
+5,Marine living resources,2018,2.9
+5,Marine non-living resources,2009,NA
+5,Marine non-living resources,2010,NA
+5,Marine non-living resources,2011,NA
+5,Marine non-living resources,2012,NA
+5,Marine non-living resources,2013,NA
+5,Marine non-living resources,2014,NA
+5,Marine non-living resources,2015,NA
+5,Marine non-living resources,2016,NA
+5,Marine non-living resources,2017,NA
+5,Marine non-living resources,2018,NA
+5,Marine renewable energy,2009,NA
+5,Marine renewable energy,2010,NA
+5,Marine renewable energy,2011,NA
+5,Marine renewable energy,2012,NA
+5,Marine renewable energy,2013,NA
+5,Marine renewable energy,2014,NA
+5,Marine renewable energy,2015,NA
+5,Marine renewable energy,2016,NA
+5,Marine renewable energy,2017,NA
+5,Marine renewable energy,2018,NA
+5,Maritime transport,2009,2.4
+5,Maritime transport,2010,2.4
+5,Maritime transport,2011,2.4
+5,Maritime transport,2012,2.4
+5,Maritime transport,2013,2.4
+5,Maritime transport,2014,2.4
+5,Maritime transport,2015,2.4
+5,Maritime transport,2016,2.4
+5,Maritime transport,2017,2.4
+5,Maritime transport,2018,2.4
+5,Port activites,2009,3.6
+5,Port activites,2010,3.6
+5,Port activites,2011,3.6
+5,Port activites,2012,3.6
+5,Port activites,2013,3.6
+5,Port activites,2014,3.6
+5,Port activites,2015,3.6
+5,Port activites,2016,3.6
+5,Port activites,2017,3.6
+5,Port activites,2018,3.6
+5,Shipbuilding and repair,2009,5.5
+5,Shipbuilding and repair,2010,5.5
+5,Shipbuilding and repair,2011,5.5
+5,Shipbuilding and repair,2012,5.5
+5,Shipbuilding and repair,2013,5.5
+5,Shipbuilding and repair,2014,5.5
+5,Shipbuilding and repair,2015,5.5
+5,Shipbuilding and repair,2016,5.5
+5,Shipbuilding and repair,2017,5.5
+5,Shipbuilding and repair,2018,5.5
+6,Coastal tourism,2009,6.9
+6,Coastal tourism,2010,6.9
+6,Coastal tourism,2011,6.9
+6,Coastal tourism,2012,6.9
+6,Coastal tourism,2013,6.9
+6,Coastal tourism,2014,6.9
+6,Coastal tourism,2015,6.9
+6,Coastal tourism,2016,6.9
+6,Coastal tourism,2017,6.9
+6,Coastal tourism,2018,6.9
+6,Marine living resources,2009,2
+6,Marine living resources,2010,2
+6,Marine living resources,2011,2
+6,Marine living resources,2012,2
+6,Marine living resources,2013,2
+6,Marine living resources,2014,2
+6,Marine living resources,2015,2
+6,Marine living resources,2016,2
+6,Marine living resources,2017,2
+6,Marine living resources,2018,2
+6,Marine non-living resources,2009,-12.7
+6,Marine non-living resources,2010,-12.7
+6,Marine non-living resources,2011,-12.7
+6,Marine non-living resources,2012,-12.7
+6,Marine non-living resources,2013,-12.7
+6,Marine non-living resources,2014,-12.7
+6,Marine non-living resources,2015,-12.7
+6,Marine non-living resources,2016,-12.7
+6,Marine non-living resources,2017,-12.7
+6,Marine non-living resources,2018,-12.7
+6,Marine renewable energy,2009,32.2
+6,Marine renewable energy,2010,32.2
+6,Marine renewable energy,2011,32.2
+6,Marine renewable energy,2012,32.2
+6,Marine renewable energy,2013,32.2
+6,Marine renewable energy,2014,32.2
+6,Marine renewable energy,2015,32.2
+6,Marine renewable energy,2016,32.2
+6,Marine renewable energy,2017,32.2
+6,Marine renewable energy,2018,32.2
+6,Maritime transport,2009,5.3
+6,Maritime transport,2010,5.3
+6,Maritime transport,2011,5.3
+6,Maritime transport,2012,5.3
+6,Maritime transport,2013,5.3
+6,Maritime transport,2014,5.3
+6,Maritime transport,2015,5.3
+6,Maritime transport,2016,5.3
+6,Maritime transport,2017,5.3
+6,Maritime transport,2018,5.3
+6,Port activites,2009,6.3
+6,Port activites,2010,6.3
+6,Port activites,2011,6.3
+6,Port activites,2012,6.3
+6,Port activites,2013,6.3
+6,Port activites,2014,6.3
+6,Port activites,2015,6.3
+6,Port activites,2016,6.3
+6,Port activites,2017,6.3
+6,Port activites,2018,6.3
+6,Shipbuilding and repair,2009,0.1
+6,Shipbuilding and repair,2010,0.1
+6,Shipbuilding and repair,2011,0.1
+6,Shipbuilding and repair,2012,0.1
+6,Shipbuilding and repair,2013,0.1
+6,Shipbuilding and repair,2014,0.1
+6,Shipbuilding and repair,2015,0.1
+6,Shipbuilding and repair,2016,0.1
+6,Shipbuilding and repair,2017,0.1
+6,Shipbuilding and repair,2018,0.1
+7,Coastal tourism,2009,6.9
+7,Coastal tourism,2010,6.9
+7,Coastal tourism,2011,6.9
+7,Coastal tourism,2012,6.9
+7,Coastal tourism,2013,6.9
+7,Coastal tourism,2014,6.9
+7,Coastal tourism,2015,6.9
+7,Coastal tourism,2016,6.9
+7,Coastal tourism,2017,6.9
+7,Coastal tourism,2018,6.9
+7,Marine living resources,2009,2
+7,Marine living resources,2010,2
+7,Marine living resources,2011,2
+7,Marine living resources,2012,2
+7,Marine living resources,2013,2
+7,Marine living resources,2014,2
+7,Marine living resources,2015,2
+7,Marine living resources,2016,2
+7,Marine living resources,2017,2
+7,Marine living resources,2018,2
+7,Marine non-living resources,2009,-12.7
+7,Marine non-living resources,2010,-12.7
+7,Marine non-living resources,2011,-12.7
+7,Marine non-living resources,2012,-12.7
+7,Marine non-living resources,2013,-12.7
+7,Marine non-living resources,2014,-12.7
+7,Marine non-living resources,2015,-12.7
+7,Marine non-living resources,2016,-12.7
+7,Marine non-living resources,2017,-12.7
+7,Marine non-living resources,2018,-12.7
+7,Marine renewable energy,2009,32.2
+7,Marine renewable energy,2010,32.2
+7,Marine renewable energy,2011,32.2
+7,Marine renewable energy,2012,32.2
+7,Marine renewable energy,2013,32.2
+7,Marine renewable energy,2014,32.2
+7,Marine renewable energy,2015,32.2
+7,Marine renewable energy,2016,32.2
+7,Marine renewable energy,2017,32.2
+7,Marine renewable energy,2018,32.2
+7,Maritime transport,2009,5.3
+7,Maritime transport,2010,5.3
+7,Maritime transport,2011,5.3
+7,Maritime transport,2012,5.3
+7,Maritime transport,2013,5.3
+7,Maritime transport,2014,5.3
+7,Maritime transport,2015,5.3
+7,Maritime transport,2016,5.3
+7,Maritime transport,2017,5.3
+7,Maritime transport,2018,5.3
+7,Port activites,2009,6.3
+7,Port activites,2010,6.3
+7,Port activites,2011,6.3
+7,Port activites,2012,6.3
+7,Port activites,2013,6.3
+7,Port activites,2014,6.3
+7,Port activites,2015,6.3
+7,Port activites,2016,6.3
+7,Port activites,2017,6.3
+7,Port activites,2018,6.3
+7,Shipbuilding and repair,2009,0.1
+7,Shipbuilding and repair,2010,0.1
+7,Shipbuilding and repair,2011,0.1
+7,Shipbuilding and repair,2012,0.1
+7,Shipbuilding and repair,2013,0.1
+7,Shipbuilding and repair,2014,0.1
+7,Shipbuilding and repair,2015,0.1
+7,Shipbuilding and repair,2016,0.1
+7,Shipbuilding and repair,2017,0.1
+7,Shipbuilding and repair,2018,0.1
+8,Coastal tourism,2009,-4.8
+8,Coastal tourism,2010,-4.8
+8,Coastal tourism,2011,-4.8
+8,Coastal tourism,2012,-4.8
+8,Coastal tourism,2013,-4.8
+8,Coastal tourism,2014,-4.8
+8,Coastal tourism,2015,-4.8
+8,Coastal tourism,2016,-4.8
+8,Coastal tourism,2017,-4.8
+8,Coastal tourism,2018,-4.8
+8,Marine living resources,2009,3
+8,Marine living resources,2010,3
+8,Marine living resources,2011,3
+8,Marine living resources,2012,3
+8,Marine living resources,2013,3
+8,Marine living resources,2014,3
+8,Marine living resources,2015,3
+8,Marine living resources,2016,3
+8,Marine living resources,2017,3
+8,Marine living resources,2018,3
+8,Marine non-living resources,2009,-6.8
+8,Marine non-living resources,2010,-6.8
+8,Marine non-living resources,2011,-6.8
+8,Marine non-living resources,2012,-6.8
+8,Marine non-living resources,2013,-6.8
+8,Marine non-living resources,2014,-6.8
+8,Marine non-living resources,2015,-6.8
+8,Marine non-living resources,2016,-6.8
+8,Marine non-living resources,2017,-6.8
+8,Marine non-living resources,2018,-6.8
+8,Marine renewable energy,2009,NA
+8,Marine renewable energy,2010,NA
+8,Marine renewable energy,2011,NA
+8,Marine renewable energy,2012,NA
+8,Marine renewable energy,2013,NA
+8,Marine renewable energy,2014,NA
+8,Marine renewable energy,2015,NA
+8,Marine renewable energy,2016,NA
+8,Marine renewable energy,2017,NA
+8,Marine renewable energy,2018,NA
+8,Maritime transport,2009,-6.7
+8,Maritime transport,2010,-6.7
+8,Maritime transport,2011,-6.7
+8,Maritime transport,2012,-6.7
+8,Maritime transport,2013,-6.7
+8,Maritime transport,2014,-6.7
+8,Maritime transport,2015,-6.7
+8,Maritime transport,2016,-6.7
+8,Maritime transport,2017,-6.7
+8,Maritime transport,2018,-6.7
+8,Port activites,2009,6.3
+8,Port activites,2010,6.3
+8,Port activites,2011,6.3
+8,Port activites,2012,6.3
+8,Port activites,2013,6.3
+8,Port activites,2014,6.3
+8,Port activites,2015,6.3
+8,Port activites,2016,6.3
+8,Port activites,2017,6.3
+8,Port activites,2018,6.3
+8,Shipbuilding and repair,2009,3.8
+8,Shipbuilding and repair,2010,3.8
+8,Shipbuilding and repair,2011,3.8
+8,Shipbuilding and repair,2012,3.8
+8,Shipbuilding and repair,2013,3.8
+8,Shipbuilding and repair,2014,3.8
+8,Shipbuilding and repair,2015,3.8
+8,Shipbuilding and repair,2016,3.8
+8,Shipbuilding and repair,2017,3.8
+8,Shipbuilding and repair,2018,3.8
+9,Coastal tourism,2009,6.9
+9,Coastal tourism,2010,6.9
+9,Coastal tourism,2011,6.9
+9,Coastal tourism,2012,6.9
+9,Coastal tourism,2013,6.9
+9,Coastal tourism,2014,6.9
+9,Coastal tourism,2015,6.9
+9,Coastal tourism,2016,6.9
+9,Coastal tourism,2017,6.9
+9,Coastal tourism,2018,6.9
+9,Marine living resources,2009,2
+9,Marine living resources,2010,2
+9,Marine living resources,2011,2
+9,Marine living resources,2012,2
+9,Marine living resources,2013,2
+9,Marine living resources,2014,2
+9,Marine living resources,2015,2
+9,Marine living resources,2016,2
+9,Marine living resources,2017,2
+9,Marine living resources,2018,2
+9,Marine non-living resources,2009,-12.7
+9,Marine non-living resources,2010,-12.7
+9,Marine non-living resources,2011,-12.7
+9,Marine non-living resources,2012,-12.7
+9,Marine non-living resources,2013,-12.7
+9,Marine non-living resources,2014,-12.7
+9,Marine non-living resources,2015,-12.7
+9,Marine non-living resources,2016,-12.7
+9,Marine non-living resources,2017,-12.7
+9,Marine non-living resources,2018,-12.7
+9,Marine renewable energy,2009,32.2
+9,Marine renewable energy,2010,32.2
+9,Marine renewable energy,2011,32.2
+9,Marine renewable energy,2012,32.2
+9,Marine renewable energy,2013,32.2
+9,Marine renewable energy,2014,32.2
+9,Marine renewable energy,2015,32.2
+9,Marine renewable energy,2016,32.2
+9,Marine renewable energy,2017,32.2
+9,Marine renewable energy,2018,32.2
+9,Maritime transport,2009,5.3
+9,Maritime transport,2010,5.3
+9,Maritime transport,2011,5.3
+9,Maritime transport,2012,5.3
+9,Maritime transport,2013,5.3
+9,Maritime transport,2014,5.3
+9,Maritime transport,2015,5.3
+9,Maritime transport,2016,5.3
+9,Maritime transport,2017,5.3
+9,Maritime transport,2018,5.3
+9,Port activites,2009,6.3
+9,Port activites,2010,6.3
+9,Port activites,2011,6.3
+9,Port activites,2012,6.3
+9,Port activites,2013,6.3
+9,Port activites,2014,6.3
+9,Port activites,2015,6.3
+9,Port activites,2016,6.3
+9,Port activites,2017,6.3
+9,Port activites,2018,6.3
+9,Shipbuilding and repair,2009,0.1
+9,Shipbuilding and repair,2010,0.1
+9,Shipbuilding and repair,2011,0.1
+9,Shipbuilding and repair,2012,0.1
+9,Shipbuilding and repair,2013,0.1
+9,Shipbuilding and repair,2014,0.1
+9,Shipbuilding and repair,2015,0.1
+9,Shipbuilding and repair,2016,0.1
+9,Shipbuilding and repair,2017,0.1
+9,Shipbuilding and repair,2018,0.1
+10,Coastal tourism,2009,-4.8
+10,Coastal tourism,2010,-4.8
+10,Coastal tourism,2011,-4.8
+10,Coastal tourism,2012,-4.8
+10,Coastal tourism,2013,-4.8
+10,Coastal tourism,2014,-4.8
+10,Coastal tourism,2015,-4.8
+10,Coastal tourism,2016,-4.8
+10,Coastal tourism,2017,-4.8
+10,Coastal tourism,2018,-4.8
+10,Marine living resources,2009,3
+10,Marine living resources,2010,3
+10,Marine living resources,2011,3
+10,Marine living resources,2012,3
+10,Marine living resources,2013,3
+10,Marine living resources,2014,3
+10,Marine living resources,2015,3
+10,Marine living resources,2016,3
+10,Marine living resources,2017,3
+10,Marine living resources,2018,3
+10,Marine non-living resources,2009,-6.8
+10,Marine non-living resources,2010,-6.8
+10,Marine non-living resources,2011,-6.8
+10,Marine non-living resources,2012,-6.8
+10,Marine non-living resources,2013,-6.8
+10,Marine non-living resources,2014,-6.8
+10,Marine non-living resources,2015,-6.8
+10,Marine non-living resources,2016,-6.8
+10,Marine non-living resources,2017,-6.8
+10,Marine non-living resources,2018,-6.8
+10,Marine renewable energy,2009,NA
+10,Marine renewable energy,2010,NA
+10,Marine renewable energy,2011,NA
+10,Marine renewable energy,2012,NA
+10,Marine renewable energy,2013,NA
+10,Marine renewable energy,2014,NA
+10,Marine renewable energy,2015,NA
+10,Marine renewable energy,2016,NA
+10,Marine renewable energy,2017,NA
+10,Marine renewable energy,2018,NA
+10,Maritime transport,2009,-6.7
+10,Maritime transport,2010,-6.7
+10,Maritime transport,2011,-6.7
+10,Maritime transport,2012,-6.7
+10,Maritime transport,2013,-6.7
+10,Maritime transport,2014,-6.7
+10,Maritime transport,2015,-6.7
+10,Maritime transport,2016,-6.7
+10,Maritime transport,2017,-6.7
+10,Maritime transport,2018,-6.7
+10,Port activites,2009,6.3
+10,Port activites,2010,6.3
+10,Port activites,2011,6.3
+10,Port activites,2012,6.3
+10,Port activites,2013,6.3
+10,Port activites,2014,6.3
+10,Port activites,2015,6.3
+10,Port activites,2016,6.3
+10,Port activites,2017,6.3
+10,Port activites,2018,6.3
+10,Shipbuilding and repair,2009,3.8
+10,Shipbuilding and repair,2010,3.8
+10,Shipbuilding and repair,2011,3.8
+10,Shipbuilding and repair,2012,3.8
+10,Shipbuilding and repair,2013,3.8
+10,Shipbuilding and repair,2014,3.8
+10,Shipbuilding and repair,2015,3.8
+10,Shipbuilding and repair,2016,3.8
+10,Shipbuilding and repair,2017,3.8
+10,Shipbuilding and repair,2018,3.8
+11,Coastal tourism,2009,2.9
+11,Coastal tourism,2010,2.9
+11,Coastal tourism,2011,2.9
+11,Coastal tourism,2012,2.9
+11,Coastal tourism,2013,2.9
+11,Coastal tourism,2014,2.9
+11,Coastal tourism,2015,2.9
+11,Coastal tourism,2016,2.9
+11,Coastal tourism,2017,2.9
+11,Coastal tourism,2018,2.9
+11,Marine living resources,2009,2.9
+11,Marine living resources,2010,2.9
+11,Marine living resources,2011,2.9
+11,Marine living resources,2012,2.9
+11,Marine living resources,2013,2.9
+11,Marine living resources,2014,2.9
+11,Marine living resources,2015,2.9
+11,Marine living resources,2016,2.9
+11,Marine living resources,2017,2.9
+11,Marine living resources,2018,2.9
+11,Marine non-living resources,2009,NA
+11,Marine non-living resources,2010,NA
+11,Marine non-living resources,2011,NA
+11,Marine non-living resources,2012,NA
+11,Marine non-living resources,2013,NA
+11,Marine non-living resources,2014,NA
+11,Marine non-living resources,2015,NA
+11,Marine non-living resources,2016,NA
+11,Marine non-living resources,2017,NA
+11,Marine non-living resources,2018,NA
+11,Marine renewable energy,2009,NA
+11,Marine renewable energy,2010,NA
+11,Marine renewable energy,2011,NA
+11,Marine renewable energy,2012,NA
+11,Marine renewable energy,2013,NA
+11,Marine renewable energy,2014,NA
+11,Marine renewable energy,2015,NA
+11,Marine renewable energy,2016,NA
+11,Marine renewable energy,2017,NA
+11,Marine renewable energy,2018,NA
+11,Maritime transport,2009,2.4
+11,Maritime transport,2010,2.4
+11,Maritime transport,2011,2.4
+11,Maritime transport,2012,2.4
+11,Maritime transport,2013,2.4
+11,Maritime transport,2014,2.4
+11,Maritime transport,2015,2.4
+11,Maritime transport,2016,2.4
+11,Maritime transport,2017,2.4
+11,Maritime transport,2018,2.4
+11,Port activites,2009,3.6
+11,Port activites,2010,3.6
+11,Port activites,2011,3.6
+11,Port activites,2012,3.6
+11,Port activites,2013,3.6
+11,Port activites,2014,3.6
+11,Port activites,2015,3.6
+11,Port activites,2016,3.6
+11,Port activites,2017,3.6
+11,Port activites,2018,3.6
+11,Shipbuilding and repair,2009,5.5
+11,Shipbuilding and repair,2010,5.5
+11,Shipbuilding and repair,2011,5.5
+11,Shipbuilding and repair,2012,5.5
+11,Shipbuilding and repair,2013,5.5
+11,Shipbuilding and repair,2014,5.5
+11,Shipbuilding and repair,2015,5.5
+11,Shipbuilding and repair,2016,5.5
+11,Shipbuilding and repair,2017,5.5
+11,Shipbuilding and repair,2018,5.5
+12,Coastal tourism,2009,6.9
+12,Coastal tourism,2010,6.9
+12,Coastal tourism,2011,6.9
+12,Coastal tourism,2012,6.9
+12,Coastal tourism,2013,6.9
+12,Coastal tourism,2014,6.9
+12,Coastal tourism,2015,6.9
+12,Coastal tourism,2016,6.9
+12,Coastal tourism,2017,6.9
+12,Coastal tourism,2018,6.9
+12,Marine living resources,2009,2
+12,Marine living resources,2010,2
+12,Marine living resources,2011,2
+12,Marine living resources,2012,2
+12,Marine living resources,2013,2
+12,Marine living resources,2014,2
+12,Marine living resources,2015,2
+12,Marine living resources,2016,2
+12,Marine living resources,2017,2
+12,Marine living resources,2018,2
+12,Marine non-living resources,2009,-12.7
+12,Marine non-living resources,2010,-12.7
+12,Marine non-living resources,2011,-12.7
+12,Marine non-living resources,2012,-12.7
+12,Marine non-living resources,2013,-12.7
+12,Marine non-living resources,2014,-12.7
+12,Marine non-living resources,2015,-12.7
+12,Marine non-living resources,2016,-12.7
+12,Marine non-living resources,2017,-12.7
+12,Marine non-living resources,2018,-12.7
+12,Marine renewable energy,2009,32.2
+12,Marine renewable energy,2010,32.2
+12,Marine renewable energy,2011,32.2
+12,Marine renewable energy,2012,32.2
+12,Marine renewable energy,2013,32.2
+12,Marine renewable energy,2014,32.2
+12,Marine renewable energy,2015,32.2
+12,Marine renewable energy,2016,32.2
+12,Marine renewable energy,2017,32.2
+12,Marine renewable energy,2018,32.2
+12,Maritime transport,2009,5.3
+12,Maritime transport,2010,5.3
+12,Maritime transport,2011,5.3
+12,Maritime transport,2012,5.3
+12,Maritime transport,2013,5.3
+12,Maritime transport,2014,5.3
+12,Maritime transport,2015,5.3
+12,Maritime transport,2016,5.3
+12,Maritime transport,2017,5.3
+12,Maritime transport,2018,5.3
+12,Port activites,2009,6.3
+12,Port activites,2010,6.3
+12,Port activites,2011,6.3
+12,Port activites,2012,6.3
+12,Port activites,2013,6.3
+12,Port activites,2014,6.3
+12,Port activites,2015,6.3
+12,Port activites,2016,6.3
+12,Port activites,2017,6.3
+12,Port activites,2018,6.3
+12,Shipbuilding and repair,2009,0.1
+12,Shipbuilding and repair,2010,0.1
+12,Shipbuilding and repair,2011,0.1
+12,Shipbuilding and repair,2012,0.1
+12,Shipbuilding and repair,2013,0.1
+12,Shipbuilding and repair,2014,0.1
+12,Shipbuilding and repair,2015,0.1
+12,Shipbuilding and repair,2016,0.1
+12,Shipbuilding and repair,2017,0.1
+12,Shipbuilding and repair,2018,0.1
+13,Coastal tourism,2009,-4.8
+13,Coastal tourism,2010,-4.8
+13,Coastal tourism,2011,-4.8
+13,Coastal tourism,2012,-4.8
+13,Coastal tourism,2013,-4.8
+13,Coastal tourism,2014,-4.8
+13,Coastal tourism,2015,-4.8
+13,Coastal tourism,2016,-4.8
+13,Coastal tourism,2017,-4.8
+13,Coastal tourism,2018,-4.8
+13,Marine living resources,2009,3
+13,Marine living resources,2010,3
+13,Marine living resources,2011,3
+13,Marine living resources,2012,3
+13,Marine living resources,2013,3
+13,Marine living resources,2014,3
+13,Marine living resources,2015,3
+13,Marine living resources,2016,3
+13,Marine living resources,2017,3
+13,Marine living resources,2018,3
+13,Marine non-living resources,2009,-6.8
+13,Marine non-living resources,2010,-6.8
+13,Marine non-living resources,2011,-6.8
+13,Marine non-living resources,2012,-6.8
+13,Marine non-living resources,2013,-6.8
+13,Marine non-living resources,2014,-6.8
+13,Marine non-living resources,2015,-6.8
+13,Marine non-living resources,2016,-6.8
+13,Marine non-living resources,2017,-6.8
+13,Marine non-living resources,2018,-6.8
+13,Marine renewable energy,2009,NA
+13,Marine renewable energy,2010,NA
+13,Marine renewable energy,2011,NA
+13,Marine renewable energy,2012,NA
+13,Marine renewable energy,2013,NA
+13,Marine renewable energy,2014,NA
+13,Marine renewable energy,2015,NA
+13,Marine renewable energy,2016,NA
+13,Marine renewable energy,2017,NA
+13,Marine renewable energy,2018,NA
+13,Maritime transport,2009,-6.7
+13,Maritime transport,2010,-6.7
+13,Maritime transport,2011,-6.7
+13,Maritime transport,2012,-6.7
+13,Maritime transport,2013,-6.7
+13,Maritime transport,2014,-6.7
+13,Maritime transport,2015,-6.7
+13,Maritime transport,2016,-6.7
+13,Maritime transport,2017,-6.7
+13,Maritime transport,2018,-6.7
+13,Port activites,2009,6.3
+13,Port activites,2010,6.3
+13,Port activites,2011,6.3
+13,Port activites,2012,6.3
+13,Port activites,2013,6.3
+13,Port activites,2014,6.3
+13,Port activites,2015,6.3
+13,Port activites,2016,6.3
+13,Port activites,2017,6.3
+13,Port activites,2018,6.3
+13,Shipbuilding and repair,2009,3.8
+13,Shipbuilding and repair,2010,3.8
+13,Shipbuilding and repair,2011,3.8
+13,Shipbuilding and repair,2012,3.8
+13,Shipbuilding and repair,2013,3.8
+13,Shipbuilding and repair,2014,3.8
+13,Shipbuilding and repair,2015,3.8
+13,Shipbuilding and repair,2016,3.8
+13,Shipbuilding and repair,2017,3.8
+13,Shipbuilding and repair,2018,3.8
+14,Coastal tourism,2009,2.9
+14,Coastal tourism,2010,2.9
+14,Coastal tourism,2011,2.9
+14,Coastal tourism,2012,2.9
+14,Coastal tourism,2013,2.9
+14,Coastal tourism,2014,2.9
+14,Coastal tourism,2015,2.9
+14,Coastal tourism,2016,2.9
+14,Coastal tourism,2017,2.9
+14,Coastal tourism,2018,2.9
+14,Marine living resources,2009,2.9
+14,Marine living resources,2010,2.9
+14,Marine living resources,2011,2.9
+14,Marine living resources,2012,2.9
+14,Marine living resources,2013,2.9
+14,Marine living resources,2014,2.9
+14,Marine living resources,2015,2.9
+14,Marine living resources,2016,2.9
+14,Marine living resources,2017,2.9
+14,Marine living resources,2018,2.9
+14,Marine non-living resources,2009,NA
+14,Marine non-living resources,2010,NA
+14,Marine non-living resources,2011,NA
+14,Marine non-living resources,2012,NA
+14,Marine non-living resources,2013,NA
+14,Marine non-living resources,2014,NA
+14,Marine non-living resources,2015,NA
+14,Marine non-living resources,2016,NA
+14,Marine non-living resources,2017,NA
+14,Marine non-living resources,2018,NA
+14,Marine renewable energy,2009,NA
+14,Marine renewable energy,2010,NA
+14,Marine renewable energy,2011,NA
+14,Marine renewable energy,2012,NA
+14,Marine renewable energy,2013,NA
+14,Marine renewable energy,2014,NA
+14,Marine renewable energy,2015,NA
+14,Marine renewable energy,2016,NA
+14,Marine renewable energy,2017,NA
+14,Marine renewable energy,2018,NA
+14,Maritime transport,2009,2.4
+14,Maritime transport,2010,2.4
+14,Maritime transport,2011,2.4
+14,Maritime transport,2012,2.4
+14,Maritime transport,2013,2.4
+14,Maritime transport,2014,2.4
+14,Maritime transport,2015,2.4
+14,Maritime transport,2016,2.4
+14,Maritime transport,2017,2.4
+14,Maritime transport,2018,2.4
+14,Port activites,2009,3.6
+14,Port activites,2010,3.6
+14,Port activites,2011,3.6
+14,Port activites,2012,3.6
+14,Port activites,2013,3.6
+14,Port activites,2014,3.6
+14,Port activites,2015,3.6
+14,Port activites,2016,3.6
+14,Port activites,2017,3.6
+14,Port activites,2018,3.6
+14,Shipbuilding and repair,2009,5.5
+14,Shipbuilding and repair,2010,5.5
+14,Shipbuilding and repair,2011,5.5
+14,Shipbuilding and repair,2012,5.5
+14,Shipbuilding and repair,2013,5.5
+14,Shipbuilding and repair,2014,5.5
+14,Shipbuilding and repair,2015,5.5
+14,Shipbuilding and repair,2016,5.5
+14,Shipbuilding and repair,2017,5.5
+14,Shipbuilding and repair,2018,5.5
+15,Coastal tourism,2009,6.9
+15,Coastal tourism,2010,6.9
+15,Coastal tourism,2011,6.9
+15,Coastal tourism,2012,6.9
+15,Coastal tourism,2013,6.9
+15,Coastal tourism,2014,6.9
+15,Coastal tourism,2015,6.9
+15,Coastal tourism,2016,6.9
+15,Coastal tourism,2017,6.9
+15,Coastal tourism,2018,6.9
+15,Marine living resources,2009,2
+15,Marine living resources,2010,2
+15,Marine living resources,2011,2
+15,Marine living resources,2012,2
+15,Marine living resources,2013,2
+15,Marine living resources,2014,2
+15,Marine living resources,2015,2
+15,Marine living resources,2016,2
+15,Marine living resources,2017,2
+15,Marine living resources,2018,2
+15,Marine non-living resources,2009,-12.7
+15,Marine non-living resources,2010,-12.7
+15,Marine non-living resources,2011,-12.7
+15,Marine non-living resources,2012,-12.7
+15,Marine non-living resources,2013,-12.7
+15,Marine non-living resources,2014,-12.7
+15,Marine non-living resources,2015,-12.7
+15,Marine non-living resources,2016,-12.7
+15,Marine non-living resources,2017,-12.7
+15,Marine non-living resources,2018,-12.7
+15,Marine renewable energy,2009,32.2
+15,Marine renewable energy,2010,32.2
+15,Marine renewable energy,2011,32.2
+15,Marine renewable energy,2012,32.2
+15,Marine renewable energy,2013,32.2
+15,Marine renewable energy,2014,32.2
+15,Marine renewable energy,2015,32.2
+15,Marine renewable energy,2016,32.2
+15,Marine renewable energy,2017,32.2
+15,Marine renewable energy,2018,32.2
+15,Maritime transport,2009,5.3
+15,Maritime transport,2010,5.3
+15,Maritime transport,2011,5.3
+15,Maritime transport,2012,5.3
+15,Maritime transport,2013,5.3
+15,Maritime transport,2014,5.3
+15,Maritime transport,2015,5.3
+15,Maritime transport,2016,5.3
+15,Maritime transport,2017,5.3
+15,Maritime transport,2018,5.3
+15,Port activites,2009,6.3
+15,Port activites,2010,6.3
+15,Port activites,2011,6.3
+15,Port activites,2012,6.3
+15,Port activites,2013,6.3
+15,Port activites,2014,6.3
+15,Port activites,2015,6.3
+15,Port activites,2016,6.3
+15,Port activites,2017,6.3
+15,Port activites,2018,6.3
+15,Shipbuilding and repair,2009,0.1
+15,Shipbuilding and repair,2010,0.1
+15,Shipbuilding and repair,2011,0.1
+15,Shipbuilding and repair,2012,0.1
+15,Shipbuilding and repair,2013,0.1
+15,Shipbuilding and repair,2014,0.1
+15,Shipbuilding and repair,2015,0.1
+15,Shipbuilding and repair,2016,0.1
+15,Shipbuilding and repair,2017,0.1
+15,Shipbuilding and repair,2018,0.1
+16,Coastal tourism,2009,-4.8
+16,Coastal tourism,2010,-4.8
+16,Coastal tourism,2011,-4.8
+16,Coastal tourism,2012,-4.8
+16,Coastal tourism,2013,-4.8
+16,Coastal tourism,2014,-4.8
+16,Coastal tourism,2015,-4.8
+16,Coastal tourism,2016,-4.8
+16,Coastal tourism,2017,-4.8
+16,Coastal tourism,2018,-4.8
+16,Marine living resources,2009,3
+16,Marine living resources,2010,3
+16,Marine living resources,2011,3
+16,Marine living resources,2012,3
+16,Marine living resources,2013,3
+16,Marine living resources,2014,3
+16,Marine living resources,2015,3
+16,Marine living resources,2016,3
+16,Marine living resources,2017,3
+16,Marine living resources,2018,3
+16,Marine non-living resources,2009,-6.8
+16,Marine non-living resources,2010,-6.8
+16,Marine non-living resources,2011,-6.8
+16,Marine non-living resources,2012,-6.8
+16,Marine non-living resources,2013,-6.8
+16,Marine non-living resources,2014,-6.8
+16,Marine non-living resources,2015,-6.8
+16,Marine non-living resources,2016,-6.8
+16,Marine non-living resources,2017,-6.8
+16,Marine non-living resources,2018,-6.8
+16,Marine renewable energy,2009,NA
+16,Marine renewable energy,2010,NA
+16,Marine renewable energy,2011,NA
+16,Marine renewable energy,2012,NA
+16,Marine renewable energy,2013,NA
+16,Marine renewable energy,2014,NA
+16,Marine renewable energy,2015,NA
+16,Marine renewable energy,2016,NA
+16,Marine renewable energy,2017,NA
+16,Marine renewable energy,2018,NA
+16,Maritime transport,2009,-6.7
+16,Maritime transport,2010,-6.7
+16,Maritime transport,2011,-6.7
+16,Maritime transport,2012,-6.7
+16,Maritime transport,2013,-6.7
+16,Maritime transport,2014,-6.7
+16,Maritime transport,2015,-6.7
+16,Maritime transport,2016,-6.7
+16,Maritime transport,2017,-6.7
+16,Maritime transport,2018,-6.7
+16,Port activites,2009,6.3
+16,Port activites,2010,6.3
+16,Port activites,2011,6.3
+16,Port activites,2012,6.3
+16,Port activites,2013,6.3
+16,Port activites,2014,6.3
+16,Port activites,2015,6.3
+16,Port activites,2016,6.3
+16,Port activites,2017,6.3
+16,Port activites,2018,6.3
+16,Shipbuilding and repair,2009,3.8
+16,Shipbuilding and repair,2010,3.8
+16,Shipbuilding and repair,2011,3.8
+16,Shipbuilding and repair,2012,3.8
+16,Shipbuilding and repair,2013,3.8
+16,Shipbuilding and repair,2014,3.8
+16,Shipbuilding and repair,2015,3.8
+16,Shipbuilding and repair,2016,3.8
+16,Shipbuilding and repair,2017,3.8
+16,Shipbuilding and repair,2018,3.8
+17,Coastal tourism,2009,14
+17,Coastal tourism,2010,14
+17,Coastal tourism,2011,14
+17,Coastal tourism,2012,14
+17,Coastal tourism,2013,14
+17,Coastal tourism,2014,14
+17,Coastal tourism,2015,14
+17,Coastal tourism,2016,14
+17,Coastal tourism,2017,14
+17,Coastal tourism,2018,14
+17,Marine living resources,2009,3.9
+17,Marine living resources,2010,3.9
+17,Marine living resources,2011,3.9
+17,Marine living resources,2012,3.9
+17,Marine living resources,2013,3.9
+17,Marine living resources,2014,3.9
+17,Marine living resources,2015,3.9
+17,Marine living resources,2016,3.9
+17,Marine living resources,2017,3.9
+17,Marine living resources,2018,3.9
+17,Marine non-living resources,2009,-8
+17,Marine non-living resources,2010,-8
+17,Marine non-living resources,2011,-8
+17,Marine non-living resources,2012,-8
+17,Marine non-living resources,2013,-8
+17,Marine non-living resources,2014,-8
+17,Marine non-living resources,2015,-8
+17,Marine non-living resources,2016,-8
+17,Marine non-living resources,2017,-8
+17,Marine non-living resources,2018,-8
+17,Marine renewable energy,2009,NA
+17,Marine renewable energy,2010,NA
+17,Marine renewable energy,2011,NA
+17,Marine renewable energy,2012,NA
+17,Marine renewable energy,2013,NA
+17,Marine renewable energy,2014,NA
+17,Marine renewable energy,2015,NA
+17,Marine renewable energy,2016,NA
+17,Marine renewable energy,2017,NA
+17,Marine renewable energy,2018,NA
+17,Maritime transport,2009,-1.2
+17,Maritime transport,2010,-1.2
+17,Maritime transport,2011,-1.2
+17,Maritime transport,2012,-1.2
+17,Maritime transport,2013,-1.2
+17,Maritime transport,2014,-1.2
+17,Maritime transport,2015,-1.2
+17,Maritime transport,2016,-1.2
+17,Maritime transport,2017,-1.2
+17,Maritime transport,2018,-1.2
+17,Port activites,2009,3.3
+17,Port activites,2010,3.3
+17,Port activites,2011,3.3
+17,Port activites,2012,3.3
+17,Port activites,2013,3.3
+17,Port activites,2014,3.3
+17,Port activites,2015,3.3
+17,Port activites,2016,3.3
+17,Port activites,2017,3.3
+17,Port activites,2018,3.3
+17,Shipbuilding and repair,2009,-2
+17,Shipbuilding and repair,2010,-2
+17,Shipbuilding and repair,2011,-2
+17,Shipbuilding and repair,2012,-2
+17,Shipbuilding and repair,2013,-2
+17,Shipbuilding and repair,2014,-2
+17,Shipbuilding and repair,2015,-2
+17,Shipbuilding and repair,2016,-2
+17,Shipbuilding and repair,2017,-2
+17,Shipbuilding and repair,2018,-2
+18,Coastal tourism,2009,14
+18,Coastal tourism,2010,14
+18,Coastal tourism,2011,14
+18,Coastal tourism,2012,14
+18,Coastal tourism,2013,14
+18,Coastal tourism,2014,14
+18,Coastal tourism,2015,14
+18,Coastal tourism,2016,14
+18,Coastal tourism,2017,14
+18,Coastal tourism,2018,14
+18,Marine living resources,2009,3.9
+18,Marine living resources,2010,3.9
+18,Marine living resources,2011,3.9
+18,Marine living resources,2012,3.9
+18,Marine living resources,2013,3.9
+18,Marine living resources,2014,3.9
+18,Marine living resources,2015,3.9
+18,Marine living resources,2016,3.9
+18,Marine living resources,2017,3.9
+18,Marine living resources,2018,3.9
+18,Marine non-living resources,2009,-8
+18,Marine non-living resources,2010,-8
+18,Marine non-living resources,2011,-8
+18,Marine non-living resources,2012,-8
+18,Marine non-living resources,2013,-8
+18,Marine non-living resources,2014,-8
+18,Marine non-living resources,2015,-8
+18,Marine non-living resources,2016,-8
+18,Marine non-living resources,2017,-8
+18,Marine non-living resources,2018,-8
+18,Marine renewable energy,2009,NA
+18,Marine renewable energy,2010,NA
+18,Marine renewable energy,2011,NA
+18,Marine renewable energy,2012,NA
+18,Marine renewable energy,2013,NA
+18,Marine renewable energy,2014,NA
+18,Marine renewable energy,2015,NA
+18,Marine renewable energy,2016,NA
+18,Marine renewable energy,2017,NA
+18,Marine renewable energy,2018,NA
+18,Maritime transport,2009,-1.2
+18,Maritime transport,2010,-1.2
+18,Maritime transport,2011,-1.2
+18,Maritime transport,2012,-1.2
+18,Maritime transport,2013,-1.2
+18,Maritime transport,2014,-1.2
+18,Maritime transport,2015,-1.2
+18,Maritime transport,2016,-1.2
+18,Maritime transport,2017,-1.2
+18,Maritime transport,2018,-1.2
+18,Port activites,2009,3.3
+18,Port activites,2010,3.3
+18,Port activites,2011,3.3
+18,Port activites,2012,3.3
+18,Port activites,2013,3.3
+18,Port activites,2014,3.3
+18,Port activites,2015,3.3
+18,Port activites,2016,3.3
+18,Port activites,2017,3.3
+18,Port activites,2018,3.3
+18,Shipbuilding and repair,2009,-2
+18,Shipbuilding and repair,2010,-2
+18,Shipbuilding and repair,2011,-2
+18,Shipbuilding and repair,2012,-2
+18,Shipbuilding and repair,2013,-2
+18,Shipbuilding and repair,2014,-2
+18,Shipbuilding and repair,2015,-2
+18,Shipbuilding and repair,2016,-2
+18,Shipbuilding and repair,2017,-2
+18,Shipbuilding and repair,2018,-2
+19,NA,2009,NA
+19,NA,2010,NA
+19,NA,2011,NA
+19,NA,2012,NA
+19,NA,2013,NA
+19,NA,2014,NA
+19,NA,2015,NA
+19,NA,2016,NA
+19,NA,2017,NA
+19,NA,2018,NA
+20,Coastal tourism,2009,2.9
+20,Coastal tourism,2010,2.9
+20,Coastal tourism,2011,2.9
+20,Coastal tourism,2012,2.9
+20,Coastal tourism,2013,2.9
+20,Coastal tourism,2014,2.9
+20,Coastal tourism,2015,2.9
+20,Coastal tourism,2016,2.9
+20,Coastal tourism,2017,2.9
+20,Coastal tourism,2018,2.9
+20,Marine living resources,2009,2.9
+20,Marine living resources,2010,2.9
+20,Marine living resources,2011,2.9
+20,Marine living resources,2012,2.9
+20,Marine living resources,2013,2.9
+20,Marine living resources,2014,2.9
+20,Marine living resources,2015,2.9
+20,Marine living resources,2016,2.9
+20,Marine living resources,2017,2.9
+20,Marine living resources,2018,2.9
+20,Marine non-living resources,2009,NA
+20,Marine non-living resources,2010,NA
+20,Marine non-living resources,2011,NA
+20,Marine non-living resources,2012,NA
+20,Marine non-living resources,2013,NA
+20,Marine non-living resources,2014,NA
+20,Marine non-living resources,2015,NA
+20,Marine non-living resources,2016,NA
+20,Marine non-living resources,2017,NA
+20,Marine non-living resources,2018,NA
+20,Marine renewable energy,2009,NA
+20,Marine renewable energy,2010,NA
+20,Marine renewable energy,2011,NA
+20,Marine renewable energy,2012,NA
+20,Marine renewable energy,2013,NA
+20,Marine renewable energy,2014,NA
+20,Marine renewable energy,2015,NA
+20,Marine renewable energy,2016,NA
+20,Marine renewable energy,2017,NA
+20,Marine renewable energy,2018,NA
+20,Maritime transport,2009,2.4
+20,Maritime transport,2010,2.4
+20,Maritime transport,2011,2.4
+20,Maritime transport,2012,2.4
+20,Maritime transport,2013,2.4
+20,Maritime transport,2014,2.4
+20,Maritime transport,2015,2.4
+20,Maritime transport,2016,2.4
+20,Maritime transport,2017,2.4
+20,Maritime transport,2018,2.4
+20,Port activites,2009,3.6
+20,Port activites,2010,3.6
+20,Port activites,2011,3.6
+20,Port activites,2012,3.6
+20,Port activites,2013,3.6
+20,Port activites,2014,3.6
+20,Port activites,2015,3.6
+20,Port activites,2016,3.6
+20,Port activites,2017,3.6
+20,Port activites,2018,3.6
+20,Shipbuilding and repair,2009,5.5
+20,Shipbuilding and repair,2010,5.5
+20,Shipbuilding and repair,2011,5.5
+20,Shipbuilding and repair,2012,5.5
+20,Shipbuilding and repair,2013,5.5
+20,Shipbuilding and repair,2014,5.5
+20,Shipbuilding and repair,2015,5.5
+20,Shipbuilding and repair,2016,5.5
+20,Shipbuilding and repair,2017,5.5
+20,Shipbuilding and repair,2018,5.5
+21,Coastal tourism,2009,14
+21,Coastal tourism,2010,14
+21,Coastal tourism,2011,14
+21,Coastal tourism,2012,14
+21,Coastal tourism,2013,14
+21,Coastal tourism,2014,14
+21,Coastal tourism,2015,14
+21,Coastal tourism,2016,14
+21,Coastal tourism,2017,14
+21,Coastal tourism,2018,14
+21,Marine living resources,2009,3.9
+21,Marine living resources,2010,3.9
+21,Marine living resources,2011,3.9
+21,Marine living resources,2012,3.9
+21,Marine living resources,2013,3.9
+21,Marine living resources,2014,3.9
+21,Marine living resources,2015,3.9
+21,Marine living resources,2016,3.9
+21,Marine living resources,2017,3.9
+21,Marine living resources,2018,3.9
+21,Marine non-living resources,2009,-8
+21,Marine non-living resources,2010,-8
+21,Marine non-living resources,2011,-8
+21,Marine non-living resources,2012,-8
+21,Marine non-living resources,2013,-8
+21,Marine non-living resources,2014,-8
+21,Marine non-living resources,2015,-8
+21,Marine non-living resources,2016,-8
+21,Marine non-living resources,2017,-8
+21,Marine non-living resources,2018,-8
+21,Marine renewable energy,2009,NA
+21,Marine renewable energy,2010,NA
+21,Marine renewable energy,2011,NA
+21,Marine renewable energy,2012,NA
+21,Marine renewable energy,2013,NA
+21,Marine renewable energy,2014,NA
+21,Marine renewable energy,2015,NA
+21,Marine renewable energy,2016,NA
+21,Marine renewable energy,2017,NA
+21,Marine renewable energy,2018,NA
+21,Maritime transport,2009,-1.2
+21,Maritime transport,2010,-1.2
+21,Maritime transport,2011,-1.2
+21,Maritime transport,2012,-1.2
+21,Maritime transport,2013,-1.2
+21,Maritime transport,2014,-1.2
+21,Maritime transport,2015,-1.2
+21,Maritime transport,2016,-1.2
+21,Maritime transport,2017,-1.2
+21,Maritime transport,2018,-1.2
+21,Port activites,2009,3.3
+21,Port activites,2010,3.3
+21,Port activites,2011,3.3
+21,Port activites,2012,3.3
+21,Port activites,2013,3.3
+21,Port activites,2014,3.3
+21,Port activites,2015,3.3
+21,Port activites,2016,3.3
+21,Port activites,2017,3.3
+21,Port activites,2018,3.3
+21,Shipbuilding and repair,2009,-2
+21,Shipbuilding and repair,2010,-2
+21,Shipbuilding and repair,2011,-2
+21,Shipbuilding and repair,2012,-2
+21,Shipbuilding and repair,2013,-2
+21,Shipbuilding and repair,2014,-2
+21,Shipbuilding and repair,2015,-2
+21,Shipbuilding and repair,2016,-2
+21,Shipbuilding and repair,2017,-2
+21,Shipbuilding and repair,2018,-2
+22,NA,2009,NA
+22,NA,2010,NA
+22,NA,2011,NA
+22,NA,2012,NA
+22,NA,2013,NA
+22,NA,2014,NA
+22,NA,2015,NA
+22,NA,2016,NA
+22,NA,2017,NA
+22,NA,2018,NA
+23,Coastal tourism,2009,7.3
+23,Coastal tourism,2010,7.3
+23,Coastal tourism,2011,7.3
+23,Coastal tourism,2012,7.3
+23,Coastal tourism,2013,7.3
+23,Coastal tourism,2014,7.3
+23,Coastal tourism,2015,7.3
+23,Coastal tourism,2016,7.3
+23,Coastal tourism,2017,7.3
+23,Coastal tourism,2018,7.3
+23,Marine living resources,2009,8
+23,Marine living resources,2010,8
+23,Marine living resources,2011,8
+23,Marine living resources,2012,8
+23,Marine living resources,2013,8
+23,Marine living resources,2014,8
+23,Marine living resources,2015,8
+23,Marine living resources,2016,8
+23,Marine living resources,2017,8
+23,Marine living resources,2018,8
+23,Marine non-living resources,2009,NA
+23,Marine non-living resources,2010,NA
+23,Marine non-living resources,2011,NA
+23,Marine non-living resources,2012,NA
+23,Marine non-living resources,2013,NA
+23,Marine non-living resources,2014,NA
+23,Marine non-living resources,2015,NA
+23,Marine non-living resources,2016,NA
+23,Marine non-living resources,2017,NA
+23,Marine non-living resources,2018,NA
+23,Marine renewable energy,2009,NA
+23,Marine renewable energy,2010,NA
+23,Marine renewable energy,2011,NA
+23,Marine renewable energy,2012,NA
+23,Marine renewable energy,2013,NA
+23,Marine renewable energy,2014,NA
+23,Marine renewable energy,2015,NA
+23,Marine renewable energy,2016,NA
+23,Marine renewable energy,2017,NA
+23,Marine renewable energy,2018,NA
+23,Maritime transport,2009,1.5
+23,Maritime transport,2010,1.5
+23,Maritime transport,2011,1.5
+23,Maritime transport,2012,1.5
+23,Maritime transport,2013,1.5
+23,Maritime transport,2014,1.5
+23,Maritime transport,2015,1.5
+23,Maritime transport,2016,1.5
+23,Maritime transport,2017,1.5
+23,Maritime transport,2018,1.5
+23,Port activites,2009,4.4
+23,Port activites,2010,4.4
+23,Port activites,2011,4.4
+23,Port activites,2012,4.4
+23,Port activites,2013,4.4
+23,Port activites,2014,4.4
+23,Port activites,2015,4.4
+23,Port activites,2016,4.4
+23,Port activites,2017,4.4
+23,Port activites,2018,4.4
+23,Shipbuilding and repair,2009,3.7
+23,Shipbuilding and repair,2010,3.7
+23,Shipbuilding and repair,2011,3.7
+23,Shipbuilding and repair,2012,3.7
+23,Shipbuilding and repair,2013,3.7
+23,Shipbuilding and repair,2014,3.7
+23,Shipbuilding and repair,2015,3.7
+23,Shipbuilding and repair,2016,3.7
+23,Shipbuilding and repair,2017,3.7
+23,Shipbuilding and repair,2018,3.7
+24,Coastal tourism,2009,9.4
+24,Coastal tourism,2010,9.4
+24,Coastal tourism,2011,9.4
+24,Coastal tourism,2012,9.4
+24,Coastal tourism,2013,9.4
+24,Coastal tourism,2014,9.4
+24,Coastal tourism,2015,9.4
+24,Coastal tourism,2016,9.4
+24,Coastal tourism,2017,9.4
+24,Coastal tourism,2018,9.4
+24,Marine living resources,2009,0.7
+24,Marine living resources,2010,0.7
+24,Marine living resources,2011,0.7
+24,Marine living resources,2012,0.7
+24,Marine living resources,2013,0.7
+24,Marine living resources,2014,0.7
+24,Marine living resources,2015,0.7
+24,Marine living resources,2016,0.7
+24,Marine living resources,2017,0.7
+24,Marine living resources,2018,0.7
+24,Marine non-living resources,2009,NA
+24,Marine non-living resources,2010,NA
+24,Marine non-living resources,2011,NA
+24,Marine non-living resources,2012,NA
+24,Marine non-living resources,2013,NA
+24,Marine non-living resources,2014,NA
+24,Marine non-living resources,2015,NA
+24,Marine non-living resources,2016,NA
+24,Marine non-living resources,2017,NA
+24,Marine non-living resources,2018,NA
+24,Marine renewable energy,2009,NA
+24,Marine renewable energy,2010,NA
+24,Marine renewable energy,2011,NA
+24,Marine renewable energy,2012,NA
+24,Marine renewable energy,2013,NA
+24,Marine renewable energy,2014,NA
+24,Marine renewable energy,2015,NA
+24,Marine renewable energy,2016,NA
+24,Marine renewable energy,2017,NA
+24,Marine renewable energy,2018,NA
+24,Maritime transport,2009,-1.4
+24,Maritime transport,2010,-1.4
+24,Maritime transport,2011,-1.4
+24,Maritime transport,2012,-1.4
+24,Maritime transport,2013,-1.4
+24,Maritime transport,2014,-1.4
+24,Maritime transport,2015,-1.4
+24,Maritime transport,2016,-1.4
+24,Maritime transport,2017,-1.4
+24,Maritime transport,2018,-1.4
+24,Port activites,2009,5.8
+24,Port activites,2010,5.8
+24,Port activites,2011,5.8
+24,Port activites,2012,5.8
+24,Port activites,2013,5.8
+24,Port activites,2014,5.8
+24,Port activites,2015,5.8
+24,Port activites,2016,5.8
+24,Port activites,2017,5.8
+24,Port activites,2018,5.8
+24,Shipbuilding and repair,2009,-1.2
+24,Shipbuilding and repair,2010,-1.2
+24,Shipbuilding and repair,2011,-1.2
+24,Shipbuilding and repair,2012,-1.2
+24,Shipbuilding and repair,2013,-1.2
+24,Shipbuilding and repair,2014,-1.2
+24,Shipbuilding and repair,2015,-1.2
+24,Shipbuilding and repair,2016,-1.2
+24,Shipbuilding and repair,2017,-1.2
+24,Shipbuilding and repair,2018,-1.2
+25,Coastal tourism,2009,1.8
+25,Coastal tourism,2010,1.8
+25,Coastal tourism,2011,1.8
+25,Coastal tourism,2012,1.8
+25,Coastal tourism,2013,1.8
+25,Coastal tourism,2014,1.8
+25,Coastal tourism,2015,1.8
+25,Coastal tourism,2016,1.8
+25,Coastal tourism,2017,1.8
+25,Coastal tourism,2018,1.8
+25,Marine living resources,2009,1.2
+25,Marine living resources,2010,1.2
+25,Marine living resources,2011,1.2
+25,Marine living resources,2012,1.2
+25,Marine living resources,2013,1.2
+25,Marine living resources,2014,1.2
+25,Marine living resources,2015,1.2
+25,Marine living resources,2016,1.2
+25,Marine living resources,2017,1.2
+25,Marine living resources,2018,1.2
+25,Marine non-living resources,2009,NA
+25,Marine non-living resources,2010,NA
+25,Marine non-living resources,2011,NA
+25,Marine non-living resources,2012,NA
+25,Marine non-living resources,2013,NA
+25,Marine non-living resources,2014,NA
+25,Marine non-living resources,2015,NA
+25,Marine non-living resources,2016,NA
+25,Marine non-living resources,2017,NA
+25,Marine non-living resources,2018,NA
+25,Marine renewable energy,2009,NA
+25,Marine renewable energy,2010,NA
+25,Marine renewable energy,2011,NA
+25,Marine renewable energy,2012,NA
+25,Marine renewable energy,2013,NA
+25,Marine renewable energy,2014,NA
+25,Marine renewable energy,2015,NA
+25,Marine renewable energy,2016,NA
+25,Marine renewable energy,2017,NA
+25,Marine renewable energy,2018,NA
+25,Maritime transport,2009,7.2
+25,Maritime transport,2010,7.2
+25,Maritime transport,2011,7.2
+25,Maritime transport,2012,7.2
+25,Maritime transport,2013,7.2
+25,Maritime transport,2014,7.2
+25,Maritime transport,2015,7.2
+25,Maritime transport,2016,7.2
+25,Maritime transport,2017,7.2
+25,Maritime transport,2018,7.2
+25,Port activites,2009,0.8
+25,Port activites,2010,0.8
+25,Port activites,2011,0.8
+25,Port activites,2012,0.8
+25,Port activites,2013,0.8
+25,Port activites,2014,0.8
+25,Port activites,2015,0.8
+25,Port activites,2016,0.8
+25,Port activites,2017,0.8
+25,Port activites,2018,0.8
+25,Shipbuilding and repair,2009,6.6
+25,Shipbuilding and repair,2010,6.6
+25,Shipbuilding and repair,2011,6.6
+25,Shipbuilding and repair,2012,6.6
+25,Shipbuilding and repair,2013,6.6
+25,Shipbuilding and repair,2014,6.6
+25,Shipbuilding and repair,2015,6.6
+25,Shipbuilding and repair,2016,6.6
+25,Shipbuilding and repair,2017,6.6
+25,Shipbuilding and repair,2018,6.6
+26,Coastal tourism,2009,2.9
+26,Coastal tourism,2010,2.9
+26,Coastal tourism,2011,2.9
+26,Coastal tourism,2012,2.9
+26,Coastal tourism,2013,2.9
+26,Coastal tourism,2014,2.9
+26,Coastal tourism,2015,2.9
+26,Coastal tourism,2016,2.9
+26,Coastal tourism,2017,2.9
+26,Coastal tourism,2018,2.9
+26,Marine living resources,2009,2.9
+26,Marine living resources,2010,2.9
+26,Marine living resources,2011,2.9
+26,Marine living resources,2012,2.9
+26,Marine living resources,2013,2.9
+26,Marine living resources,2014,2.9
+26,Marine living resources,2015,2.9
+26,Marine living resources,2016,2.9
+26,Marine living resources,2017,2.9
+26,Marine living resources,2018,2.9
+26,Marine non-living resources,2009,NA
+26,Marine non-living resources,2010,NA
+26,Marine non-living resources,2011,NA
+26,Marine non-living resources,2012,NA
+26,Marine non-living resources,2013,NA
+26,Marine non-living resources,2014,NA
+26,Marine non-living resources,2015,NA
+26,Marine non-living resources,2016,NA
+26,Marine non-living resources,2017,NA
+26,Marine non-living resources,2018,NA
+26,Marine renewable energy,2009,NA
+26,Marine renewable energy,2010,NA
+26,Marine renewable energy,2011,NA
+26,Marine renewable energy,2012,NA
+26,Marine renewable energy,2013,NA
+26,Marine renewable energy,2014,NA
+26,Marine renewable energy,2015,NA
+26,Marine renewable energy,2016,NA
+26,Marine renewable energy,2017,NA
+26,Marine renewable energy,2018,NA
+26,Maritime transport,2009,2.4
+26,Maritime transport,2010,2.4
+26,Maritime transport,2011,2.4
+26,Maritime transport,2012,2.4
+26,Maritime transport,2013,2.4
+26,Maritime transport,2014,2.4
+26,Maritime transport,2015,2.4
+26,Maritime transport,2016,2.4
+26,Maritime transport,2017,2.4
+26,Maritime transport,2018,2.4
+26,Port activites,2009,3.6
+26,Port activites,2010,3.6
+26,Port activites,2011,3.6
+26,Port activites,2012,3.6
+26,Port activites,2013,3.6
+26,Port activites,2014,3.6
+26,Port activites,2015,3.6
+26,Port activites,2016,3.6
+26,Port activites,2017,3.6
+26,Port activites,2018,3.6
+26,Shipbuilding and repair,2009,5.5
+26,Shipbuilding and repair,2010,5.5
+26,Shipbuilding and repair,2011,5.5
+26,Shipbuilding and repair,2012,5.5
+26,Shipbuilding and repair,2013,5.5
+26,Shipbuilding and repair,2014,5.5
+26,Shipbuilding and repair,2015,5.5
+26,Shipbuilding and repair,2016,5.5
+26,Shipbuilding and repair,2017,5.5
+26,Shipbuilding and repair,2018,5.5
+27,Coastal tourism,2009,9.4
+27,Coastal tourism,2010,9.4
+27,Coastal tourism,2011,9.4
+27,Coastal tourism,2012,9.4
+27,Coastal tourism,2013,9.4
+27,Coastal tourism,2014,9.4
+27,Coastal tourism,2015,9.4
+27,Coastal tourism,2016,9.4
+27,Coastal tourism,2017,9.4
+27,Coastal tourism,2018,9.4
+27,Marine living resources,2009,0.7
+27,Marine living resources,2010,0.7
+27,Marine living resources,2011,0.7
+27,Marine living resources,2012,0.7
+27,Marine living resources,2013,0.7
+27,Marine living resources,2014,0.7
+27,Marine living resources,2015,0.7
+27,Marine living resources,2016,0.7
+27,Marine living resources,2017,0.7
+27,Marine living resources,2018,0.7
+27,Marine non-living resources,2009,NA
+27,Marine non-living resources,2010,NA
+27,Marine non-living resources,2011,NA
+27,Marine non-living resources,2012,NA
+27,Marine non-living resources,2013,NA
+27,Marine non-living resources,2014,NA
+27,Marine non-living resources,2015,NA
+27,Marine non-living resources,2016,NA
+27,Marine non-living resources,2017,NA
+27,Marine non-living resources,2018,NA
+27,Marine renewable energy,2009,NA
+27,Marine renewable energy,2010,NA
+27,Marine renewable energy,2011,NA
+27,Marine renewable energy,2012,NA
+27,Marine renewable energy,2013,NA
+27,Marine renewable energy,2014,NA
+27,Marine renewable energy,2015,NA
+27,Marine renewable energy,2016,NA
+27,Marine renewable energy,2017,NA
+27,Marine renewable energy,2018,NA
+27,Maritime transport,2009,-1.4
+27,Maritime transport,2010,-1.4
+27,Maritime transport,2011,-1.4
+27,Maritime transport,2012,-1.4
+27,Maritime transport,2013,-1.4
+27,Maritime transport,2014,-1.4
+27,Maritime transport,2015,-1.4
+27,Maritime transport,2016,-1.4
+27,Maritime transport,2017,-1.4
+27,Maritime transport,2018,-1.4
+27,Port activites,2009,5.8
+27,Port activites,2010,5.8
+27,Port activites,2011,5.8
+27,Port activites,2012,5.8
+27,Port activites,2013,5.8
+27,Port activites,2014,5.8
+27,Port activites,2015,5.8
+27,Port activites,2016,5.8
+27,Port activites,2017,5.8
+27,Port activites,2018,5.8
+27,Shipbuilding and repair,2009,-1.2
+27,Shipbuilding and repair,2010,-1.2
+27,Shipbuilding and repair,2011,-1.2
+27,Shipbuilding and repair,2012,-1.2
+27,Shipbuilding and repair,2013,-1.2
+27,Shipbuilding and repair,2014,-1.2
+27,Shipbuilding and repair,2015,-1.2
+27,Shipbuilding and repair,2016,-1.2
+27,Shipbuilding and repair,2017,-1.2
+27,Shipbuilding and repair,2018,-1.2
+28,Coastal tourism,2009,1.8
+28,Coastal tourism,2010,1.8
+28,Coastal tourism,2011,1.8
+28,Coastal tourism,2012,1.8
+28,Coastal tourism,2013,1.8
+28,Coastal tourism,2014,1.8
+28,Coastal tourism,2015,1.8
+28,Coastal tourism,2016,1.8
+28,Coastal tourism,2017,1.8
+28,Coastal tourism,2018,1.8
+28,Marine living resources,2009,1.2
+28,Marine living resources,2010,1.2
+28,Marine living resources,2011,1.2
+28,Marine living resources,2012,1.2
+28,Marine living resources,2013,1.2
+28,Marine living resources,2014,1.2
+28,Marine living resources,2015,1.2
+28,Marine living resources,2016,1.2
+28,Marine living resources,2017,1.2
+28,Marine living resources,2018,1.2
+28,Marine non-living resources,2009,NA
+28,Marine non-living resources,2010,NA
+28,Marine non-living resources,2011,NA
+28,Marine non-living resources,2012,NA
+28,Marine non-living resources,2013,NA
+28,Marine non-living resources,2014,NA
+28,Marine non-living resources,2015,NA
+28,Marine non-living resources,2016,NA
+28,Marine non-living resources,2017,NA
+28,Marine non-living resources,2018,NA
+28,Marine renewable energy,2009,NA
+28,Marine renewable energy,2010,NA
+28,Marine renewable energy,2011,NA
+28,Marine renewable energy,2012,NA
+28,Marine renewable energy,2013,NA
+28,Marine renewable energy,2014,NA
+28,Marine renewable energy,2015,NA
+28,Marine renewable energy,2016,NA
+28,Marine renewable energy,2017,NA
+28,Marine renewable energy,2018,NA
+28,Maritime transport,2009,7.2
+28,Maritime transport,2010,7.2
+28,Maritime transport,2011,7.2
+28,Maritime transport,2012,7.2
+28,Maritime transport,2013,7.2
+28,Maritime transport,2014,7.2
+28,Maritime transport,2015,7.2
+28,Maritime transport,2016,7.2
+28,Maritime transport,2017,7.2
+28,Maritime transport,2018,7.2
+28,Port activites,2009,0.8
+28,Port activites,2010,0.8
+28,Port activites,2011,0.8
+28,Port activites,2012,0.8
+28,Port activites,2013,0.8
+28,Port activites,2014,0.8
+28,Port activites,2015,0.8
+28,Port activites,2016,0.8
+28,Port activites,2017,0.8
+28,Port activites,2018,0.8
+28,Shipbuilding and repair,2009,6.6
+28,Shipbuilding and repair,2010,6.6
+28,Shipbuilding and repair,2011,6.6
+28,Shipbuilding and repair,2012,6.6
+28,Shipbuilding and repair,2013,6.6
+28,Shipbuilding and repair,2014,6.6
+28,Shipbuilding and repair,2015,6.6
+28,Shipbuilding and repair,2016,6.6
+28,Shipbuilding and repair,2017,6.6
+28,Shipbuilding and repair,2018,6.6
+29,Coastal tourism,2009,2.9
+29,Coastal tourism,2010,2.9
+29,Coastal tourism,2011,2.9
+29,Coastal tourism,2012,2.9
+29,Coastal tourism,2013,2.9
+29,Coastal tourism,2014,2.9
+29,Coastal tourism,2015,2.9
+29,Coastal tourism,2016,2.9
+29,Coastal tourism,2017,2.9
+29,Coastal tourism,2018,2.9
+29,Marine living resources,2009,2.9
+29,Marine living resources,2010,2.9
+29,Marine living resources,2011,2.9
+29,Marine living resources,2012,2.9
+29,Marine living resources,2013,2.9
+29,Marine living resources,2014,2.9
+29,Marine living resources,2015,2.9
+29,Marine living resources,2016,2.9
+29,Marine living resources,2017,2.9
+29,Marine living resources,2018,2.9
+29,Marine non-living resources,2009,NA
+29,Marine non-living resources,2010,NA
+29,Marine non-living resources,2011,NA
+29,Marine non-living resources,2012,NA
+29,Marine non-living resources,2013,NA
+29,Marine non-living resources,2014,NA
+29,Marine non-living resources,2015,NA
+29,Marine non-living resources,2016,NA
+29,Marine non-living resources,2017,NA
+29,Marine non-living resources,2018,NA
+29,Marine renewable energy,2009,NA
+29,Marine renewable energy,2010,NA
+29,Marine renewable energy,2011,NA
+29,Marine renewable energy,2012,NA
+29,Marine renewable energy,2013,NA
+29,Marine renewable energy,2014,NA
+29,Marine renewable energy,2015,NA
+29,Marine renewable energy,2016,NA
+29,Marine renewable energy,2017,NA
+29,Marine renewable energy,2018,NA
+29,Maritime transport,2009,2.4
+29,Maritime transport,2010,2.4
+29,Maritime transport,2011,2.4
+29,Maritime transport,2012,2.4
+29,Maritime transport,2013,2.4
+29,Maritime transport,2014,2.4
+29,Maritime transport,2015,2.4
+29,Maritime transport,2016,2.4
+29,Maritime transport,2017,2.4
+29,Maritime transport,2018,2.4
+29,Port activites,2009,3.6
+29,Port activites,2010,3.6
+29,Port activites,2011,3.6
+29,Port activites,2012,3.6
+29,Port activites,2013,3.6
+29,Port activites,2014,3.6
+29,Port activites,2015,3.6
+29,Port activites,2016,3.6
+29,Port activites,2017,3.6
+29,Port activites,2018,3.6
+29,Shipbuilding and repair,2009,5.5
+29,Shipbuilding and repair,2010,5.5
+29,Shipbuilding and repair,2011,5.5
+29,Shipbuilding and repair,2012,5.5
+29,Shipbuilding and repair,2013,5.5
+29,Shipbuilding and repair,2014,5.5
+29,Shipbuilding and repair,2015,5.5
+29,Shipbuilding and repair,2016,5.5
+29,Shipbuilding and repair,2017,5.5
+29,Shipbuilding and repair,2018,5.5
+30,Coastal tourism,2009,5.1
+30,Coastal tourism,2010,5.1
+30,Coastal tourism,2011,5.1
+30,Coastal tourism,2012,5.1
+30,Coastal tourism,2013,5.1
+30,Coastal tourism,2014,5.1
+30,Coastal tourism,2015,5.1
+30,Coastal tourism,2016,5.1
+30,Coastal tourism,2017,5.1
+30,Coastal tourism,2018,5.1
+30,Marine living resources,2009,1.4
+30,Marine living resources,2010,1.4
+30,Marine living resources,2011,1.4
+30,Marine living resources,2012,1.4
+30,Marine living resources,2013,1.4
+30,Marine living resources,2014,1.4
+30,Marine living resources,2015,1.4
+30,Marine living resources,2016,1.4
+30,Marine living resources,2017,1.4
+30,Marine living resources,2018,1.4
+30,Marine non-living resources,2009,NA
+30,Marine non-living resources,2010,NA
+30,Marine non-living resources,2011,NA
+30,Marine non-living resources,2012,NA
+30,Marine non-living resources,2013,NA
+30,Marine non-living resources,2014,NA
+30,Marine non-living resources,2015,NA
+30,Marine non-living resources,2016,NA
+30,Marine non-living resources,2017,NA
+30,Marine non-living resources,2018,NA
+30,Marine renewable energy,2009,NA
+30,Marine renewable energy,2010,NA
+30,Marine renewable energy,2011,NA
+30,Marine renewable energy,2012,NA
+30,Marine renewable energy,2013,NA
+30,Marine renewable energy,2014,NA
+30,Marine renewable energy,2015,NA
+30,Marine renewable energy,2016,NA
+30,Marine renewable energy,2017,NA
+30,Marine renewable energy,2018,NA
+30,Maritime transport,2009,1.6
+30,Maritime transport,2010,1.6
+30,Maritime transport,2011,1.6
+30,Maritime transport,2012,1.6
+30,Maritime transport,2013,1.6
+30,Maritime transport,2014,1.6
+30,Maritime transport,2015,1.6
+30,Maritime transport,2016,1.6
+30,Maritime transport,2017,1.6
+30,Maritime transport,2018,1.6
+30,Port activites,2009,0.3
+30,Port activites,2010,0.3
+30,Port activites,2011,0.3
+30,Port activites,2012,0.3
+30,Port activites,2013,0.3
+30,Port activites,2014,0.3
+30,Port activites,2015,0.3
+30,Port activites,2016,0.3
+30,Port activites,2017,0.3
+30,Port activites,2018,0.3
+30,Shipbuilding and repair,2009,-3.5
+30,Shipbuilding and repair,2010,-3.5
+30,Shipbuilding and repair,2011,-3.5
+30,Shipbuilding and repair,2012,-3.5
+30,Shipbuilding and repair,2013,-3.5
+30,Shipbuilding and repair,2014,-3.5
+30,Shipbuilding and repair,2015,-3.5
+30,Shipbuilding and repair,2016,-3.5
+30,Shipbuilding and repair,2017,-3.5
+30,Shipbuilding and repair,2018,-3.5
+31,Coastal tourism,2009,1.8
+31,Coastal tourism,2010,1.8
+31,Coastal tourism,2011,1.8
+31,Coastal tourism,2012,1.8
+31,Coastal tourism,2013,1.8
+31,Coastal tourism,2014,1.8
+31,Coastal tourism,2015,1.8
+31,Coastal tourism,2016,1.8
+31,Coastal tourism,2017,1.8
+31,Coastal tourism,2018,1.8
+31,Marine living resources,2009,1.2
+31,Marine living resources,2010,1.2
+31,Marine living resources,2011,1.2
+31,Marine living resources,2012,1.2
+31,Marine living resources,2013,1.2
+31,Marine living resources,2014,1.2
+31,Marine living resources,2015,1.2
+31,Marine living resources,2016,1.2
+31,Marine living resources,2017,1.2
+31,Marine living resources,2018,1.2
+31,Marine non-living resources,2009,NA
+31,Marine non-living resources,2010,NA
+31,Marine non-living resources,2011,NA
+31,Marine non-living resources,2012,NA
+31,Marine non-living resources,2013,NA
+31,Marine non-living resources,2014,NA
+31,Marine non-living resources,2015,NA
+31,Marine non-living resources,2016,NA
+31,Marine non-living resources,2017,NA
+31,Marine non-living resources,2018,NA
+31,Marine renewable energy,2009,NA
+31,Marine renewable energy,2010,NA
+31,Marine renewable energy,2011,NA
+31,Marine renewable energy,2012,NA
+31,Marine renewable energy,2013,NA
+31,Marine renewable energy,2014,NA
+31,Marine renewable energy,2015,NA
+31,Marine renewable energy,2016,NA
+31,Marine renewable energy,2017,NA
+31,Marine renewable energy,2018,NA
+31,Maritime transport,2009,7.2
+31,Maritime transport,2010,7.2
+31,Maritime transport,2011,7.2
+31,Maritime transport,2012,7.2
+31,Maritime transport,2013,7.2
+31,Maritime transport,2014,7.2
+31,Maritime transport,2015,7.2
+31,Maritime transport,2016,7.2
+31,Maritime transport,2017,7.2
+31,Maritime transport,2018,7.2
+31,Port activites,2009,0.8
+31,Port activites,2010,0.8
+31,Port activites,2011,0.8
+31,Port activites,2012,0.8
+31,Port activites,2013,0.8
+31,Port activites,2014,0.8
+31,Port activites,2015,0.8
+31,Port activites,2016,0.8
+31,Port activites,2017,0.8
+31,Port activites,2018,0.8
+31,Shipbuilding and repair,2009,6.6
+31,Shipbuilding and repair,2010,6.6
+31,Shipbuilding and repair,2011,6.6
+31,Shipbuilding and repair,2012,6.6
+31,Shipbuilding and repair,2013,6.6
+31,Shipbuilding and repair,2014,6.6
+31,Shipbuilding and repair,2015,6.6
+31,Shipbuilding and repair,2016,6.6
+31,Shipbuilding and repair,2017,6.6
+31,Shipbuilding and repair,2018,6.6
+32,Coastal tourism,2009,5.1
+32,Coastal tourism,2010,5.1
+32,Coastal tourism,2011,5.1
+32,Coastal tourism,2012,5.1
+32,Coastal tourism,2013,5.1
+32,Coastal tourism,2014,5.1
+32,Coastal tourism,2015,5.1
+32,Coastal tourism,2016,5.1
+32,Coastal tourism,2017,5.1
+32,Coastal tourism,2018,5.1
+32,Marine living resources,2009,1.4
+32,Marine living resources,2010,1.4
+32,Marine living resources,2011,1.4
+32,Marine living resources,2012,1.4
+32,Marine living resources,2013,1.4
+32,Marine living resources,2014,1.4
+32,Marine living resources,2015,1.4
+32,Marine living resources,2016,1.4
+32,Marine living resources,2017,1.4
+32,Marine living resources,2018,1.4
+32,Marine non-living resources,2009,NA
+32,Marine non-living resources,2010,NA
+32,Marine non-living resources,2011,NA
+32,Marine non-living resources,2012,NA
+32,Marine non-living resources,2013,NA
+32,Marine non-living resources,2014,NA
+32,Marine non-living resources,2015,NA
+32,Marine non-living resources,2016,NA
+32,Marine non-living resources,2017,NA
+32,Marine non-living resources,2018,NA
+32,Marine renewable energy,2009,NA
+32,Marine renewable energy,2010,NA
+32,Marine renewable energy,2011,NA
+32,Marine renewable energy,2012,NA
+32,Marine renewable energy,2013,NA
+32,Marine renewable energy,2014,NA
+32,Marine renewable energy,2015,NA
+32,Marine renewable energy,2016,NA
+32,Marine renewable energy,2017,NA
+32,Marine renewable energy,2018,NA
+32,Maritime transport,2009,1.6
+32,Maritime transport,2010,1.6
+32,Maritime transport,2011,1.6
+32,Maritime transport,2012,1.6
+32,Maritime transport,2013,1.6
+32,Maritime transport,2014,1.6
+32,Maritime transport,2015,1.6
+32,Maritime transport,2016,1.6
+32,Maritime transport,2017,1.6
+32,Maritime transport,2018,1.6
+32,Port activites,2009,0.3
+32,Port activites,2010,0.3
+32,Port activites,2011,0.3
+32,Port activites,2012,0.3
+32,Port activites,2013,0.3
+32,Port activites,2014,0.3
+32,Port activites,2015,0.3
+32,Port activites,2016,0.3
+32,Port activites,2017,0.3
+32,Port activites,2018,0.3
+32,Shipbuilding and repair,2009,-3.5
+32,Shipbuilding and repair,2010,-3.5
+32,Shipbuilding and repair,2011,-3.5
+32,Shipbuilding and repair,2012,-3.5
+32,Shipbuilding and repair,2013,-3.5
+32,Shipbuilding and repair,2014,-3.5
+32,Shipbuilding and repair,2015,-3.5
+32,Shipbuilding and repair,2016,-3.5
+32,Shipbuilding and repair,2017,-3.5
+32,Shipbuilding and repair,2018,-3.5
+33,NA,2009,NA
+33,NA,2010,NA
+33,NA,2011,NA
+33,NA,2012,NA
+33,NA,2013,NA
+33,NA,2014,NA
+33,NA,2015,NA
+33,NA,2016,NA
+33,NA,2017,NA
+33,NA,2018,NA
+34,Coastal tourism,2009,1.8
+34,Coastal tourism,2010,1.8
+34,Coastal tourism,2011,1.8
+34,Coastal tourism,2012,1.8
+34,Coastal tourism,2013,1.8
+34,Coastal tourism,2014,1.8
+34,Coastal tourism,2015,1.8
+34,Coastal tourism,2016,1.8
+34,Coastal tourism,2017,1.8
+34,Coastal tourism,2018,1.8
+34,Marine living resources,2009,1.2
+34,Marine living resources,2010,1.2
+34,Marine living resources,2011,1.2
+34,Marine living resources,2012,1.2
+34,Marine living resources,2013,1.2
+34,Marine living resources,2014,1.2
+34,Marine living resources,2015,1.2
+34,Marine living resources,2016,1.2
+34,Marine living resources,2017,1.2
+34,Marine living resources,2018,1.2
+34,Marine non-living resources,2009,NA
+34,Marine non-living resources,2010,NA
+34,Marine non-living resources,2011,NA
+34,Marine non-living resources,2012,NA
+34,Marine non-living resources,2013,NA
+34,Marine non-living resources,2014,NA
+34,Marine non-living resources,2015,NA
+34,Marine non-living resources,2016,NA
+34,Marine non-living resources,2017,NA
+34,Marine non-living resources,2018,NA
+34,Marine renewable energy,2009,NA
+34,Marine renewable energy,2010,NA
+34,Marine renewable energy,2011,NA
+34,Marine renewable energy,2012,NA
+34,Marine renewable energy,2013,NA
+34,Marine renewable energy,2014,NA
+34,Marine renewable energy,2015,NA
+34,Marine renewable energy,2016,NA
+34,Marine renewable energy,2017,NA
+34,Marine renewable energy,2018,NA
+34,Maritime transport,2009,7.2
+34,Maritime transport,2010,7.2
+34,Maritime transport,2011,7.2
+34,Maritime transport,2012,7.2
+34,Maritime transport,2013,7.2
+34,Maritime transport,2014,7.2
+34,Maritime transport,2015,7.2
+34,Maritime transport,2016,7.2
+34,Maritime transport,2017,7.2
+34,Maritime transport,2018,7.2
+34,Port activites,2009,0.8
+34,Port activites,2010,0.8
+34,Port activites,2011,0.8
+34,Port activites,2012,0.8
+34,Port activites,2013,0.8
+34,Port activites,2014,0.8
+34,Port activites,2015,0.8
+34,Port activites,2016,0.8
+34,Port activites,2017,0.8
+34,Port activites,2018,0.8
+34,Shipbuilding and repair,2009,6.6
+34,Shipbuilding and repair,2010,6.6
+34,Shipbuilding and repair,2011,6.6
+34,Shipbuilding and repair,2012,6.6
+34,Shipbuilding and repair,2013,6.6
+34,Shipbuilding and repair,2014,6.6
+34,Shipbuilding and repair,2015,6.6
+34,Shipbuilding and repair,2016,6.6
+34,Shipbuilding and repair,2017,6.6
+34,Shipbuilding and repair,2018,6.6
+35,Coastal tourism,2009,2.9
+35,Coastal tourism,2010,2.9
+35,Coastal tourism,2011,2.9
+35,Coastal tourism,2012,2.9
+35,Coastal tourism,2013,2.9
+35,Coastal tourism,2014,2.9
+35,Coastal tourism,2015,2.9
+35,Coastal tourism,2016,2.9
+35,Coastal tourism,2017,2.9
+35,Coastal tourism,2018,2.9
+35,Marine living resources,2009,2.9
+35,Marine living resources,2010,2.9
+35,Marine living resources,2011,2.9
+35,Marine living resources,2012,2.9
+35,Marine living resources,2013,2.9
+35,Marine living resources,2014,2.9
+35,Marine living resources,2015,2.9
+35,Marine living resources,2016,2.9
+35,Marine living resources,2017,2.9
+35,Marine living resources,2018,2.9
+35,Marine non-living resources,2009,NA
+35,Marine non-living resources,2010,NA
+35,Marine non-living resources,2011,NA
+35,Marine non-living resources,2012,NA
+35,Marine non-living resources,2013,NA
+35,Marine non-living resources,2014,NA
+35,Marine non-living resources,2015,NA
+35,Marine non-living resources,2016,NA
+35,Marine non-living resources,2017,NA
+35,Marine non-living resources,2018,NA
+35,Marine renewable energy,2009,NA
+35,Marine renewable energy,2010,NA
+35,Marine renewable energy,2011,NA
+35,Marine renewable energy,2012,NA
+35,Marine renewable energy,2013,NA
+35,Marine renewable energy,2014,NA
+35,Marine renewable energy,2015,NA
+35,Marine renewable energy,2016,NA
+35,Marine renewable energy,2017,NA
+35,Marine renewable energy,2018,NA
+35,Maritime transport,2009,2.4
+35,Maritime transport,2010,2.4
+35,Maritime transport,2011,2.4
+35,Maritime transport,2012,2.4
+35,Maritime transport,2013,2.4
+35,Maritime transport,2014,2.4
+35,Maritime transport,2015,2.4
+35,Maritime transport,2016,2.4
+35,Maritime transport,2017,2.4
+35,Maritime transport,2018,2.4
+35,Port activites,2009,3.6
+35,Port activites,2010,3.6
+35,Port activites,2011,3.6
+35,Port activites,2012,3.6
+35,Port activites,2013,3.6
+35,Port activites,2014,3.6
+35,Port activites,2015,3.6
+35,Port activites,2016,3.6
+35,Port activites,2017,3.6
+35,Port activites,2018,3.6
+35,Shipbuilding and repair,2009,5.5
+35,Shipbuilding and repair,2010,5.5
+35,Shipbuilding and repair,2011,5.5
+35,Shipbuilding and repair,2012,5.5
+35,Shipbuilding and repair,2013,5.5
+35,Shipbuilding and repair,2014,5.5
+35,Shipbuilding and repair,2015,5.5
+35,Shipbuilding and repair,2016,5.5
+35,Shipbuilding and repair,2017,5.5
+35,Shipbuilding and repair,2018,5.5
+36,Coastal tourism,2009,5.1
+36,Coastal tourism,2010,5.1
+36,Coastal tourism,2011,5.1
+36,Coastal tourism,2012,5.1
+36,Coastal tourism,2013,5.1
+36,Coastal tourism,2014,5.1
+36,Coastal tourism,2015,5.1
+36,Coastal tourism,2016,5.1
+36,Coastal tourism,2017,5.1
+36,Coastal tourism,2018,5.1
+36,Marine living resources,2009,1.4
+36,Marine living resources,2010,1.4
+36,Marine living resources,2011,1.4
+36,Marine living resources,2012,1.4
+36,Marine living resources,2013,1.4
+36,Marine living resources,2014,1.4
+36,Marine living resources,2015,1.4
+36,Marine living resources,2016,1.4
+36,Marine living resources,2017,1.4
+36,Marine living resources,2018,1.4
+36,Marine non-living resources,2009,NA
+36,Marine non-living resources,2010,NA
+36,Marine non-living resources,2011,NA
+36,Marine non-living resources,2012,NA
+36,Marine non-living resources,2013,NA
+36,Marine non-living resources,2014,NA
+36,Marine non-living resources,2015,NA
+36,Marine non-living resources,2016,NA
+36,Marine non-living resources,2017,NA
+36,Marine non-living resources,2018,NA
+36,Marine renewable energy,2009,NA
+36,Marine renewable energy,2010,NA
+36,Marine renewable energy,2011,NA
+36,Marine renewable energy,2012,NA
+36,Marine renewable energy,2013,NA
+36,Marine renewable energy,2014,NA
+36,Marine renewable energy,2015,NA
+36,Marine renewable energy,2016,NA
+36,Marine renewable energy,2017,NA
+36,Marine renewable energy,2018,NA
+36,Maritime transport,2009,1.6
+36,Maritime transport,2010,1.6
+36,Maritime transport,2011,1.6
+36,Maritime transport,2012,1.6
+36,Maritime transport,2013,1.6
+36,Maritime transport,2014,1.6
+36,Maritime transport,2015,1.6
+36,Maritime transport,2016,1.6
+36,Maritime transport,2017,1.6
+36,Maritime transport,2018,1.6
+36,Port activites,2009,0.3
+36,Port activites,2010,0.3
+36,Port activites,2011,0.3
+36,Port activites,2012,0.3
+36,Port activites,2013,0.3
+36,Port activites,2014,0.3
+36,Port activites,2015,0.3
+36,Port activites,2016,0.3
+36,Port activites,2017,0.3
+36,Port activites,2018,0.3
+36,Shipbuilding and repair,2009,-3.5
+36,Shipbuilding and repair,2010,-3.5
+36,Shipbuilding and repair,2011,-3.5
+36,Shipbuilding and repair,2012,-3.5
+36,Shipbuilding and repair,2013,-3.5
+36,Shipbuilding and repair,2014,-3.5
+36,Shipbuilding and repair,2015,-3.5
+36,Shipbuilding and repair,2016,-3.5
+36,Shipbuilding and repair,2017,-3.5
+36,Shipbuilding and repair,2018,-3.5
+37,Coastal tourism,2009,2.9
+37,Coastal tourism,2010,2.9
+37,Coastal tourism,2011,2.9
+37,Coastal tourism,2012,2.9
+37,Coastal tourism,2013,2.9
+37,Coastal tourism,2014,2.9
+37,Coastal tourism,2015,2.9
+37,Coastal tourism,2016,2.9
+37,Coastal tourism,2017,2.9
+37,Coastal tourism,2018,2.9
+37,Marine living resources,2009,2.9
+37,Marine living resources,2010,2.9
+37,Marine living resources,2011,2.9
+37,Marine living resources,2012,2.9
+37,Marine living resources,2013,2.9
+37,Marine living resources,2014,2.9
+37,Marine living resources,2015,2.9
+37,Marine living resources,2016,2.9
+37,Marine living resources,2017,2.9
+37,Marine living resources,2018,2.9
+37,Marine non-living resources,2009,NA
+37,Marine non-living resources,2010,NA
+37,Marine non-living resources,2011,NA
+37,Marine non-living resources,2012,NA
+37,Marine non-living resources,2013,NA
+37,Marine non-living resources,2014,NA
+37,Marine non-living resources,2015,NA
+37,Marine non-living resources,2016,NA
+37,Marine non-living resources,2017,NA
+37,Marine non-living resources,2018,NA
+37,Marine renewable energy,2009,NA
+37,Marine renewable energy,2010,NA
+37,Marine renewable energy,2011,NA
+37,Marine renewable energy,2012,NA
+37,Marine renewable energy,2013,NA
+37,Marine renewable energy,2014,NA
+37,Marine renewable energy,2015,NA
+37,Marine renewable energy,2016,NA
+37,Marine renewable energy,2017,NA
+37,Marine renewable energy,2018,NA
+37,Maritime transport,2009,2.4
+37,Maritime transport,2010,2.4
+37,Maritime transport,2011,2.4
+37,Maritime transport,2012,2.4
+37,Maritime transport,2013,2.4
+37,Maritime transport,2014,2.4
+37,Maritime transport,2015,2.4
+37,Maritime transport,2016,2.4
+37,Maritime transport,2017,2.4
+37,Maritime transport,2018,2.4
+37,Port activites,2009,3.6
+37,Port activites,2010,3.6
+37,Port activites,2011,3.6
+37,Port activites,2012,3.6
+37,Port activites,2013,3.6
+37,Port activites,2014,3.6
+37,Port activites,2015,3.6
+37,Port activites,2016,3.6
+37,Port activites,2017,3.6
+37,Port activites,2018,3.6
+37,Shipbuilding and repair,2009,5.5
+37,Shipbuilding and repair,2010,5.5
+37,Shipbuilding and repair,2011,5.5
+37,Shipbuilding and repair,2012,5.5
+37,Shipbuilding and repair,2013,5.5
+37,Shipbuilding and repair,2014,5.5
+37,Shipbuilding and repair,2015,5.5
+37,Shipbuilding and repair,2016,5.5
+37,Shipbuilding and repair,2017,5.5
+37,Shipbuilding and repair,2018,5.5
+38,Coastal tourism,2009,5.1
+38,Coastal tourism,2010,5.1
+38,Coastal tourism,2011,5.1
+38,Coastal tourism,2012,5.1
+38,Coastal tourism,2013,5.1
+38,Coastal tourism,2014,5.1
+38,Coastal tourism,2015,5.1
+38,Coastal tourism,2016,5.1
+38,Coastal tourism,2017,5.1
+38,Coastal tourism,2018,5.1
+38,Marine living resources,2009,1.4
+38,Marine living resources,2010,1.4
+38,Marine living resources,2011,1.4
+38,Marine living resources,2012,1.4
+38,Marine living resources,2013,1.4
+38,Marine living resources,2014,1.4
+38,Marine living resources,2015,1.4
+38,Marine living resources,2016,1.4
+38,Marine living resources,2017,1.4
+38,Marine living resources,2018,1.4
+38,Marine non-living resources,2009,NA
+38,Marine non-living resources,2010,NA
+38,Marine non-living resources,2011,NA
+38,Marine non-living resources,2012,NA
+38,Marine non-living resources,2013,NA
+38,Marine non-living resources,2014,NA
+38,Marine non-living resources,2015,NA
+38,Marine non-living resources,2016,NA
+38,Marine non-living resources,2017,NA
+38,Marine non-living resources,2018,NA
+38,Marine renewable energy,2009,NA
+38,Marine renewable energy,2010,NA
+38,Marine renewable energy,2011,NA
+38,Marine renewable energy,2012,NA
+38,Marine renewable energy,2013,NA
+38,Marine renewable energy,2014,NA
+38,Marine renewable energy,2015,NA
+38,Marine renewable energy,2016,NA
+38,Marine renewable energy,2017,NA
+38,Marine renewable energy,2018,NA
+38,Maritime transport,2009,1.6
+38,Maritime transport,2010,1.6
+38,Maritime transport,2011,1.6
+38,Maritime transport,2012,1.6
+38,Maritime transport,2013,1.6
+38,Maritime transport,2014,1.6
+38,Maritime transport,2015,1.6
+38,Maritime transport,2016,1.6
+38,Maritime transport,2017,1.6
+38,Maritime transport,2018,1.6
+38,Port activites,2009,0.3
+38,Port activites,2010,0.3
+38,Port activites,2011,0.3
+38,Port activites,2012,0.3
+38,Port activites,2013,0.3
+38,Port activites,2014,0.3
+38,Port activites,2015,0.3
+38,Port activites,2016,0.3
+38,Port activites,2017,0.3
+38,Port activites,2018,0.3
+38,Shipbuilding and repair,2009,-3.5
+38,Shipbuilding and repair,2010,-3.5
+38,Shipbuilding and repair,2011,-3.5
+38,Shipbuilding and repair,2012,-3.5
+38,Shipbuilding and repair,2013,-3.5
+38,Shipbuilding and repair,2014,-3.5
+38,Shipbuilding and repair,2015,-3.5
+38,Shipbuilding and repair,2016,-3.5
+38,Shipbuilding and repair,2017,-3.5
+38,Shipbuilding and repair,2018,-3.5
+39,Coastal tourism,2009,2.9
+39,Coastal tourism,2010,2.9
+39,Coastal tourism,2011,2.9
+39,Coastal tourism,2012,2.9
+39,Coastal tourism,2013,2.9
+39,Coastal tourism,2014,2.9
+39,Coastal tourism,2015,2.9
+39,Coastal tourism,2016,2.9
+39,Coastal tourism,2017,2.9
+39,Coastal tourism,2018,2.9
+39,Marine living resources,2009,2.9
+39,Marine living resources,2010,2.9
+39,Marine living resources,2011,2.9
+39,Marine living resources,2012,2.9
+39,Marine living resources,2013,2.9
+39,Marine living resources,2014,2.9
+39,Marine living resources,2015,2.9
+39,Marine living resources,2016,2.9
+39,Marine living resources,2017,2.9
+39,Marine living resources,2018,2.9
+39,Marine non-living resources,2009,NA
+39,Marine non-living resources,2010,NA
+39,Marine non-living resources,2011,NA
+39,Marine non-living resources,2012,NA
+39,Marine non-living resources,2013,NA
+39,Marine non-living resources,2014,NA
+39,Marine non-living resources,2015,NA
+39,Marine non-living resources,2016,NA
+39,Marine non-living resources,2017,NA
+39,Marine non-living resources,2018,NA
+39,Marine renewable energy,2009,NA
+39,Marine renewable energy,2010,NA
+39,Marine renewable energy,2011,NA
+39,Marine renewable energy,2012,NA
+39,Marine renewable energy,2013,NA
+39,Marine renewable energy,2014,NA
+39,Marine renewable energy,2015,NA
+39,Marine renewable energy,2016,NA
+39,Marine renewable energy,2017,NA
+39,Marine renewable energy,2018,NA
+39,Maritime transport,2009,2.4
+39,Maritime transport,2010,2.4
+39,Maritime transport,2011,2.4
+39,Maritime transport,2012,2.4
+39,Maritime transport,2013,2.4
+39,Maritime transport,2014,2.4
+39,Maritime transport,2015,2.4
+39,Maritime transport,2016,2.4
+39,Maritime transport,2017,2.4
+39,Maritime transport,2018,2.4
+39,Port activites,2009,3.6
+39,Port activites,2010,3.6
+39,Port activites,2011,3.6
+39,Port activites,2012,3.6
+39,Port activites,2013,3.6
+39,Port activites,2014,3.6
+39,Port activites,2015,3.6
+39,Port activites,2016,3.6
+39,Port activites,2017,3.6
+39,Port activites,2018,3.6
+39,Shipbuilding and repair,2009,5.5
+39,Shipbuilding and repair,2010,5.5
+39,Shipbuilding and repair,2011,5.5
+39,Shipbuilding and repair,2012,5.5
+39,Shipbuilding and repair,2013,5.5
+39,Shipbuilding and repair,2014,5.5
+39,Shipbuilding and repair,2015,5.5
+39,Shipbuilding and repair,2016,5.5
+39,Shipbuilding and repair,2017,5.5
+39,Shipbuilding and repair,2018,5.5
+40,Coastal tourism,2009,5.1
+40,Coastal tourism,2010,5.1
+40,Coastal tourism,2011,5.1
+40,Coastal tourism,2012,5.1
+40,Coastal tourism,2013,5.1
+40,Coastal tourism,2014,5.1
+40,Coastal tourism,2015,5.1
+40,Coastal tourism,2016,5.1
+40,Coastal tourism,2017,5.1
+40,Coastal tourism,2018,5.1
+40,Marine living resources,2009,1.4
+40,Marine living resources,2010,1.4
+40,Marine living resources,2011,1.4
+40,Marine living resources,2012,1.4
+40,Marine living resources,2013,1.4
+40,Marine living resources,2014,1.4
+40,Marine living resources,2015,1.4
+40,Marine living resources,2016,1.4
+40,Marine living resources,2017,1.4
+40,Marine living resources,2018,1.4
+40,Marine non-living resources,2009,NA
+40,Marine non-living resources,2010,NA
+40,Marine non-living resources,2011,NA
+40,Marine non-living resources,2012,NA
+40,Marine non-living resources,2013,NA
+40,Marine non-living resources,2014,NA
+40,Marine non-living resources,2015,NA
+40,Marine non-living resources,2016,NA
+40,Marine non-living resources,2017,NA
+40,Marine non-living resources,2018,NA
+40,Marine renewable energy,2009,NA
+40,Marine renewable energy,2010,NA
+40,Marine renewable energy,2011,NA
+40,Marine renewable energy,2012,NA
+40,Marine renewable energy,2013,NA
+40,Marine renewable energy,2014,NA
+40,Marine renewable energy,2015,NA
+40,Marine renewable energy,2016,NA
+40,Marine renewable energy,2017,NA
+40,Marine renewable energy,2018,NA
+40,Maritime transport,2009,1.6
+40,Maritime transport,2010,1.6
+40,Maritime transport,2011,1.6
+40,Maritime transport,2012,1.6
+40,Maritime transport,2013,1.6
+40,Maritime transport,2014,1.6
+40,Maritime transport,2015,1.6
+40,Maritime transport,2016,1.6
+40,Maritime transport,2017,1.6
+40,Maritime transport,2018,1.6
+40,Port activites,2009,0.3
+40,Port activites,2010,0.3
+40,Port activites,2011,0.3
+40,Port activites,2012,0.3
+40,Port activites,2013,0.3
+40,Port activites,2014,0.3
+40,Port activites,2015,0.3
+40,Port activites,2016,0.3
+40,Port activites,2017,0.3
+40,Port activites,2018,0.3
+40,Shipbuilding and repair,2009,-3.5
+40,Shipbuilding and repair,2010,-3.5
+40,Shipbuilding and repair,2011,-3.5
+40,Shipbuilding and repair,2012,-3.5
+40,Shipbuilding and repair,2013,-3.5
+40,Shipbuilding and repair,2014,-3.5
+40,Shipbuilding and repair,2015,-3.5
+40,Shipbuilding and repair,2016,-3.5
+40,Shipbuilding and repair,2017,-3.5
+40,Shipbuilding and repair,2018,-3.5
+41,Coastal tourism,2009,2.9
+41,Coastal tourism,2010,2.9
+41,Coastal tourism,2011,2.9
+41,Coastal tourism,2012,2.9
+41,Coastal tourism,2013,2.9
+41,Coastal tourism,2014,2.9
+41,Coastal tourism,2015,2.9
+41,Coastal tourism,2016,2.9
+41,Coastal tourism,2017,2.9
+41,Coastal tourism,2018,2.9
+41,Marine living resources,2009,2.9
+41,Marine living resources,2010,2.9
+41,Marine living resources,2011,2.9
+41,Marine living resources,2012,2.9
+41,Marine living resources,2013,2.9
+41,Marine living resources,2014,2.9
+41,Marine living resources,2015,2.9
+41,Marine living resources,2016,2.9
+41,Marine living resources,2017,2.9
+41,Marine living resources,2018,2.9
+41,Marine non-living resources,2009,NA
+41,Marine non-living resources,2010,NA
+41,Marine non-living resources,2011,NA
+41,Marine non-living resources,2012,NA
+41,Marine non-living resources,2013,NA
+41,Marine non-living resources,2014,NA
+41,Marine non-living resources,2015,NA
+41,Marine non-living resources,2016,NA
+41,Marine non-living resources,2017,NA
+41,Marine non-living resources,2018,NA
+41,Marine renewable energy,2009,NA
+41,Marine renewable energy,2010,NA
+41,Marine renewable energy,2011,NA
+41,Marine renewable energy,2012,NA
+41,Marine renewable energy,2013,NA
+41,Marine renewable energy,2014,NA
+41,Marine renewable energy,2015,NA
+41,Marine renewable energy,2016,NA
+41,Marine renewable energy,2017,NA
+41,Marine renewable energy,2018,NA
+41,Maritime transport,2009,2.4
+41,Maritime transport,2010,2.4
+41,Maritime transport,2011,2.4
+41,Maritime transport,2012,2.4
+41,Maritime transport,2013,2.4
+41,Maritime transport,2014,2.4
+41,Maritime transport,2015,2.4
+41,Maritime transport,2016,2.4
+41,Maritime transport,2017,2.4
+41,Maritime transport,2018,2.4
+41,Port activites,2009,3.6
+41,Port activites,2010,3.6
+41,Port activites,2011,3.6
+41,Port activites,2012,3.6
+41,Port activites,2013,3.6
+41,Port activites,2014,3.6
+41,Port activites,2015,3.6
+41,Port activites,2016,3.6
+41,Port activites,2017,3.6
+41,Port activites,2018,3.6
+41,Shipbuilding and repair,2009,5.5
+41,Shipbuilding and repair,2010,5.5
+41,Shipbuilding and repair,2011,5.5
+41,Shipbuilding and repair,2012,5.5
+41,Shipbuilding and repair,2013,5.5
+41,Shipbuilding and repair,2014,5.5
+41,Shipbuilding and repair,2015,5.5
+41,Shipbuilding and repair,2016,5.5
+41,Shipbuilding and repair,2017,5.5
+41,Shipbuilding and repair,2018,5.5
+42,Coastal tourism,2009,5.1
+42,Coastal tourism,2010,5.1
+42,Coastal tourism,2011,5.1
+42,Coastal tourism,2012,5.1
+42,Coastal tourism,2013,5.1
+42,Coastal tourism,2014,5.1
+42,Coastal tourism,2015,5.1
+42,Coastal tourism,2016,5.1
+42,Coastal tourism,2017,5.1
+42,Coastal tourism,2018,5.1
+42,Marine living resources,2009,1.4
+42,Marine living resources,2010,1.4
+42,Marine living resources,2011,1.4
+42,Marine living resources,2012,1.4
+42,Marine living resources,2013,1.4
+42,Marine living resources,2014,1.4
+42,Marine living resources,2015,1.4
+42,Marine living resources,2016,1.4
+42,Marine living resources,2017,1.4
+42,Marine living resources,2018,1.4
+42,Marine non-living resources,2009,NA
+42,Marine non-living resources,2010,NA
+42,Marine non-living resources,2011,NA
+42,Marine non-living resources,2012,NA
+42,Marine non-living resources,2013,NA
+42,Marine non-living resources,2014,NA
+42,Marine non-living resources,2015,NA
+42,Marine non-living resources,2016,NA
+42,Marine non-living resources,2017,NA
+42,Marine non-living resources,2018,NA
+42,Marine renewable energy,2009,NA
+42,Marine renewable energy,2010,NA
+42,Marine renewable energy,2011,NA
+42,Marine renewable energy,2012,NA
+42,Marine renewable energy,2013,NA
+42,Marine renewable energy,2014,NA
+42,Marine renewable energy,2015,NA
+42,Marine renewable energy,2016,NA
+42,Marine renewable energy,2017,NA
+42,Marine renewable energy,2018,NA
+42,Maritime transport,2009,1.6
+42,Maritime transport,2010,1.6
+42,Maritime transport,2011,1.6
+42,Maritime transport,2012,1.6
+42,Maritime transport,2013,1.6
+42,Maritime transport,2014,1.6
+42,Maritime transport,2015,1.6
+42,Maritime transport,2016,1.6
+42,Maritime transport,2017,1.6
+42,Maritime transport,2018,1.6
+42,Port activites,2009,0.3
+42,Port activites,2010,0.3
+42,Port activites,2011,0.3
+42,Port activites,2012,0.3
+42,Port activites,2013,0.3
+42,Port activites,2014,0.3
+42,Port activites,2015,0.3
+42,Port activites,2016,0.3
+42,Port activites,2017,0.3
+42,Port activites,2018,0.3
+42,Shipbuilding and repair,2009,-3.5
+42,Shipbuilding and repair,2010,-3.5
+42,Shipbuilding and repair,2011,-3.5
+42,Shipbuilding and repair,2012,-3.5
+42,Shipbuilding and repair,2013,-3.5
+42,Shipbuilding and repair,2014,-3.5
+42,Shipbuilding and repair,2015,-3.5
+42,Shipbuilding and repair,2016,-3.5
+42,Shipbuilding and repair,2017,-3.5
+42,Shipbuilding and repair,2018,-3.5
