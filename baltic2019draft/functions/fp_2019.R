@@ -59,7 +59,15 @@ FP <- function(layers, scores){
       year < 1991 & !is.na(produced_tonnes),
       ratio1991, prop_wildcaught)
     ) %>%
-    select(region_id, year, prop_wildcaught) %>%
+    select(region_id, year, prop_wildcaught)
+
+  ## save ratio of fis vs mar production as intermediate result
+  write_csv(
+    fp_weights,
+    file.path(dir_assess, "intermediate", "wildcaught_weight.csv")
+  )
+
+  fp_weights <- fp_weights %>%
     filter(year == scen_year) %>%
     select(-year)
 
