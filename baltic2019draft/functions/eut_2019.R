@@ -160,7 +160,9 @@ EUT <- function(layers){
 
 
   ## Calculate the five contaminants indicators ----
-  secchi_indicator <- AlignDataYears(layer_nm="cw_eut_secchi", layers_obj=layers) %>%
+  secchi_indicator <- ohicore::AlignDataYears(layer_nm="cw_eut_secchi", layers_obj=layers) %>%
+    ## don't use archipelago sea data points...
+    filter(region_id != 36) %>%
     rename(indicator_value = secchi_depth, year = scenario_year) %>%
     eut_indicators(
       scen_year,
@@ -170,9 +172,14 @@ EUT <- function(layers){
         filter(indicator == "summer_secchi") %>%
         select(helcom_id, target = value),
       no_coastal = TRUE
-    )
+    ) %>%
+    ## region 36 is archipelago sea not åland subbasin;
+    ## will separate subbasins in future calculations, but for now, not calculating CW scores for region 36
+    mutate(score = ifelse(region_id == 36, NA, score))
 
-  chla_indicator <- AlignDataYears(layer_nm="cw_eut_chla", layers_obj=layers) %>%
+  chla_indicator <- ohicore::AlignDataYears(layer_nm="cw_eut_chla", layers_obj=layers) %>%
+    ## don't use archipelago sea data points...
+    filter(region_id != 36) %>%
     rename(indicator_value = chla_conc, year = scenario_year) %>%
     eut_indicators(
       scen_year,
@@ -182,9 +189,14 @@ EUT <- function(layers){
         filter(indicator == "summer_chla") %>%
         select(helcom_id, target = value),
       no_coastal = TRUE
-    )
+    ) %>%
+    ## region 36 is archipelago sea not åland subbasin;
+    ## will separate subbasins in future calculations, but for now, not calculating CW scores for region 36
+    mutate(score = ifelse(region_id == 36, NA, score))
 
-  din_indicator <- AlignDataYears(layer_nm="cw_eut_din", layers_obj=layers) %>%
+  din_indicator <- ohicore::AlignDataYears(layer_nm="cw_eut_din", layers_obj=layers) %>%
+    ## don't use archipelago sea data points...
+    filter(region_id != 36) %>%
     mutate(winterofyear = ifelse(month == 12, scenario_year, scenario_year-1)) %>%
     rename(indicator_value = din_conc, year = winterofyear) %>%
     eut_indicators(
@@ -195,9 +207,14 @@ EUT <- function(layers){
         filter(indicator == "winter_DIN") %>%
         select(helcom_id, target = value),
       no_coastal = TRUE
-    )
+    ) %>%
+    ## region 36 is archipelago sea not åland subbasin;
+    ## will separate subbasins in future calculations, but for now, not calculating CW scores for region 36
+    mutate(score = ifelse(region_id == 36, NA, score))
 
-  dip_indicator <- AlignDataYears(layer_nm="cw_eut_dip", layers_obj=layers) %>%
+  dip_indicator <- ohicore::AlignDataYears(layer_nm="cw_eut_dip", layers_obj=layers) %>%
+    ## don't use archipelago sea data points...
+    filter(region_id != 36) %>%
     mutate(winterofyear = ifelse(month == 12, scenario_year, scenario_year-1)) %>%
     rename(indicator_value = dip_conc, year = winterofyear) %>%
     eut_indicators(
@@ -208,9 +225,14 @@ EUT <- function(layers){
         filter(indicator == "winter_DIP") %>%
         select(helcom_id, target = value),
       no_coastal = TRUE
-    )
+    ) %>%
+    ## region 36 is archipelago sea not åland subbasin;
+    ## will separate subbasins in future calculations, but for now, not calculating CW scores for region 36
+    mutate(score = ifelse(region_id == 36, NA, score))
 
-  oxyg_indicator <- AlignDataYears(layer_nm="cw_eut_oxydebt", layers_obj=layers) %>%
+  oxyg_indicator <- ohicore::AlignDataYears(layer_nm="cw_eut_oxydebt", layers_obj=layers) %>%
+    ## don't include archipelago sea...
+    filter(region_id != 36) %>%
     rename(season_mean = oxygendebt, year = scenario_year) %>%
     eut_indicators(
       scen_year,
@@ -220,7 +242,10 @@ EUT <- function(layers){
         filter(indicator == "oxyg_debt") %>%
         select(helcom_id, target = value),
       no_coastal = TRUE
-    )
+    ) %>%
+    ## region 36 is archipelago sea not åland subbasin;
+    ## will separate subbasins in future calculations, but for now, not calculating CW scores for region 36
+    mutate(score = ifelse(region_id == 36, NA, score))
 
 
   ## save individual indicators as intermediate results
@@ -238,7 +263,7 @@ EUT <- function(layers){
 
   ## EUTROPHIATION SUB-GOAL SCORES ----
   ## join all five indicators, and take geometric mean
-  scores <- dplyr::bind_rows(secchi_indicator, chla_indicator, din_indicator, dip_indicator, oxyg_indicator) %>%
+  eut_scores <- dplyr::bind_rows(secchi_indicator, chla_indicator, din_indicator, dip_indicator, oxyg_indicator) %>%
     select(subbasin_id, indicator, dimension, score) %>%
     distinct() %>%
     dplyr::group_by(subbasin_id, dimension) %>%
@@ -259,7 +284,7 @@ EUT <- function(layers){
   ## because most of archipelago sea is coastal, and coastal data were not used in this assessment
   ## will set archipelago sea (Åland sea Finland, BHI region 36) eutrophication scores to NA for now
   ## so as not to be misleading in presentation/visuzlization of results
-  scores <- scores %>%
+  scores <- eut_scores %>%
     mutate(score = ifelse(region_id == 36, NA, score))
 
 

@@ -87,7 +87,8 @@ FinalizeScores <- function(layers, conf, scores){
   ## merge NAs dataframe with scores, and arrange
   scores <- dplyr::left_join(d, scores, by = c("goal",  "dimension", "region_id")) %>%
     dplyr::arrange(goal, dimension, region_id) %>%
-    dplyr::mutate(score = ifelse(dimension == "trend", round(score, 3), round(score, 1)))
+    dplyr::mutate(score = ifelse(dimension == "trend", round(score, 3), round(score, 1))) %>%
+    dplyr::mutate(score = ifelse(is.nan(score), NA, score))
 
 
   return(scores)

@@ -53,7 +53,10 @@ CON <- function(layers){
       group_by(subbasin_id) %>%
       summarize(score = mean(status, na.rm = TRUE)) %>% # status from biota & sediment data combined w equal wgt
       right_join(rgns_complete, by = "subbasin_id") %>%
-      mutate(dimension = "status")
+      mutate(dimension = "status") %>%
+      ## region 36 is archipelago sea not åland subbasin;
+      ## will separate subbasins in future calculations, but for now, not calculating CW scores for region 36
+      mutate(score = ifelse(region_id == 36, NA, score))
 
     result[["basin_matrix_status"]] <- basin_matrix_status %>%
       right_join(
@@ -62,7 +65,10 @@ CON <- function(layers){
           mutate(matrix = list(c("bio", "sed"))) %>%
           tidyr::unnest(c(matrix)),
         by = c("matrix", "subbasin_id")
-      )
+      ) %>%
+      ## region 36 is archipelago sea not åland subbasin;
+      ## will separate subbasins in future calculations, but for now, not calculating CW scores for region 36
+      mutate(status = ifelse(region_id == 36, NA, status))
 
 
     ## TREND CALCULATIONS ----
@@ -100,7 +106,10 @@ CON <- function(layers){
           mutate(matrix = list(c("bio", "sed"))) %>%
           tidyr::unnest(c(matrix)),
         by = c("matrix", "subbasin_id")
-      )
+      ) %>%
+      ## region 36 is archipelago sea not åland subbasin;
+      ## will separate subbasins in future calculations, but for now, not calculating CW scores for region 36
+      mutate(trend_score = ifelse(region_id == 36, NA, trend_score))
 
     result[["basin_trend"]] <- lm_estim %>%
       select(-trend_mdl) %>%
@@ -109,7 +118,10 @@ CON <- function(layers){
       ## constrain trend values between one and negative one
       mutate(score = ifelse(-1 <= score & score <= 1, score, score*abs(1/score))) %>%
       right_join(rgns_complete, by = "subbasin_id") %>%
-      mutate(dimension = "trend")
+      mutate(dimension = "trend") %>%
+      ## region 36 is archipelago sea not åland subbasin;
+      ## will separate subbasins in future calculations, but for now, not calculating CW scores for region 36
+      mutate(score = ifelse(region_id == 36, NA, score))
 
 
     ## return scores for bio and sed matrices and combined indicator scores
@@ -136,16 +148,22 @@ CON <- function(layers){
   yrs <- (scen_year-6):(scen_year-1)
 
   ## three primary contaminants indicators ----
-  pcb_indicator <- AlignDataYears(layer_nm="cw_con_pcb", layers_obj=layers) %>%
+  pcb_indicator <- ohicore::AlignDataYears(layer_nm="cw_con_pcb", layers_obj=layers) %>%
     rename(year = scenario_year) %>%
+    ## don't use archipelago sea data points...
+    filter(region_id != 36) %>%
     con_indicators(yrs, bio_thresh = 75, sed_thresh = 4.1)
 
-  pfos_indicator <- AlignDataYears(layer_nm="cw_con_pfos", layers_obj=layers) %>%
+  pfos_indicator <- ohicore::AlignDataYears(layer_nm="cw_con_pfos", layers_obj=layers) %>%
     rename(year = scenario_year) %>%
+    ## don't use archipelago sea data points...
+    filter(region_id != 36) %>%
     con_indicators(yrs, bio_thresh = 9.1, sed_thresh = NULL)
 
-  dioxin_indicator <- AlignDataYears(layer_nm="cw_con_dioxin", layers_obj=layers) %>%
+  dioxin_indicator <- ohicore::AlignDataYears(layer_nm="cw_con_dioxin", layers_obj=layers) %>%
     rename(year = scenario_year) %>%
+    ## don't use archipelago sea data points...
+    filter(region_id != 36) %>%
     con_indicators(yrs, bio_thresh = 6.5, sed_thresh = 0.86)
 
   ## save individual indicators as intermediate results
@@ -178,11 +196,15 @@ CON <- function(layers){
     dplyr::mutate(score = round(score, 3)) %>%
     ungroup() %>%
     ## rejoin with region ids so can integrate concerning substances indicator
-    left_join(rgns_complete, by = "subbasin_id")
+    left_join(rgns_complete, by = "subbasin_id") %>%
+    ## region 36 is archipelago sea not åland subbasin;
+    ## will separate subbasins in future calculations, but for now, not calculating CW scores for region 36
+    ## once again, will set to NA here....
+    mutate(score = ifelse(region_id == 36, NA, score))
 
 
   ## concerning substances indicator (previously a uniform baltic-wide penalty factor) ----
-  concern_subst_layer <- AlignDataYears(layer_nm="cw_con_penalty", layers_obj=layers) %>%
+  concern_subst_layer <- ohicore::AlignDataYears(layer_nm="cw_con_penalty", layers_obj=layers) %>%
     rename(year = scenario_year) %>%
     ## look at monitoring only within time period of interest
     dplyr::filter(year %in% yrs) %>%
