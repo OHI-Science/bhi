@@ -5,30 +5,21 @@ MAR <- function(layers){
 
   scen_year <- layers$data$scenario_year
 
-
-  ## Status ----
-
-  mar_status <- AlignDataYears(layer_nm="mar_status", layers_obj=layers) %>%
-    dplyr::mutate(dimension = as.character(dimension)) %>%
-    dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id = rgn_id, score, dimension)
-
-
-  ## Trend ----
-
-  mar_trend <- AlignDataYears(layer_nm="mar_trend", layers_obj=layers) %>%
-    dplyr::mutate(dimension = as.character(dimension)) %>%
-    dplyr::filter(scenario_year == scen_year) %>%
-    dplyr::select(region_id = rgn_id, score, dimension)
-
-
-  ## Return mariculture status and trend scores ----
-
-  mar_status_and_trend <- dplyr::bind_rows(
-    mutate(mar_status, goal = "MAR"),
-    mutate(mar_trend, goal = "MAR")
+  mar_status <- data.frame(
+    region_id = seq(1, 42, 1),
+    goal = "MAR",
+    dimension = "status",
+    score = rep(NA, 42)
   )
-  scores <- select(mar_status_and_trend, region_id, goal, dimension, score)
+
+  mar_trend <- data.frame(
+    region_id = seq(1, 42, 1),
+    goal = "MAR",
+    dimension = "trend",
+    score = rep(NA, 42)
+  )
+
+  scores <- dplyr::bind_rows(mar_status, mar_trend)
 
   return(scores)
 

@@ -36,8 +36,6 @@
 "LSP","lsp_status","","","score","status score","lsp_status_bhi2019.csv",,,,,"rgn_id",,"dimension","year","score",,TRUE,2019,2019,4.1,100,FALSE,"status",,,42,FALSE
 "LSP","lsp_trend","","","score","trend score","lsp_trend_bhi2019.csv",,,,,"rgn_id",,"dimension","year","score",,TRUE,2019,2019,0,0.3,TRUE,,,,42,FALSE
 "MAR","mar_harvest","Mariculture harvest","Mariculture harvest of finfish and Rainbow Trout","produced_tonnes","tons","mar_harvest_bhi2019.csv",,,,,"region_id",,,"year","produced_tonnes",,TRUE,1972,2019,-0.923992633750071,14169.4072485488,FALSE,,,,42,FALSE
-"MAR","mar_status","","","score","status score","mar_status_bhi2019.csv",,,,,"rgn_id",,"dimension","year","score",,TRUE,2014,2019,100,100,FALSE,,,,42,FALSE
-"MAR","mar_trend","","","score","trend score","mar_trend_bhi2019.csv",,,,,"rgn_id",,"dimension","year","score",,TRUE,2019,2019,0,0,TRUE,,,,42,FALSE
 "NP","np_bbmsy","B/BMSY by stock and year of Sprat","ICES BMSY. Data sources: ICES Assessment tools, Stock Assessment Graphs","value","ratio","np_bbmsy_bhi2019.csv",,,,,"region_id",,"stock","year","value",,TRUE,1974,2018,0.470175438596491,3.37368421052632,FALSE,,,,42,FALSE
 "NP","np_ffmsy","F/FMSY by stock and year of Sprat","ICES  FMSY.  Data sources: ICES Assessment tools, Stock Assessment Graphs","value","ratio","np_ffmsy_bhi2019.csv",,,,,"region_id",,"stock","year","value",,TRUE,1974,2018,0.419230769230769,1.92307692307692,FALSE,,,,42,FALSE
 "NP","np_landings","Landings by stock and year of Sprat","Annual Landings by ICES area and stock. Data sources: ICES Assessment tools, Stock Assessment Graphs","landings","metric tons","np_landings_bhi2019.csv",,,,,"region_id",,"stock","year","landings",,TRUE,1974,2018,37000,529000,FALSE,,,,42,FALSE
