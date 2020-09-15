@@ -65,7 +65,7 @@ CalculateAll = function(conf, layers){
   scores = rbind(scores, scores_P)
 
   ## Calculate Resilience, all goals
-  scores_R = CalculateResilienceAll(layers, conf)
+  scores_R = CalculateResilienceAll(layers, conf, scores)
   scores = rbind(scores, scores_R)
   scores = data.frame(scores)
 
@@ -511,7 +511,7 @@ CalculatePressuresAll <- function(layers, conf) {
 
 }
 
-CalculateResilienceAll = function(layers, conf){
+CalculateResilienceAll = function(layers, conf, scores){
 
   # reporting 1
   cat(sprintf('Calculating Resilience for each region...\n'))
@@ -632,7 +632,18 @@ CalculateResilienceAll = function(layers, conf){
     mutate(layer = as.character(layer))
 
   ### get the regional data layer associated with each resilience data layer:
-  r_rgn_layers_data <- ohicore::SelectLayersData(layers, layers=r_layers)
+  r_rgn_layers_data <- bind_rows(
+    ohicore::SelectLayersData(layers, layers=r_layers),
+    scores %>%
+      filter(goal == "BD", dimension == "status") %>%
+      mutate(
+        val_num = score/100, id_name = "region_id", year = 2019,
+        layer = "res_biodiversity",
+        val_name = "resilience_score", category_name = NA,
+        flds = "id_num | year | val_num"
+      ) %>%
+      select(id_num = region_id, val_num, year, layer, id_name, val_name, category_name, flds)
+  )
 
   if(length(which(names(r_rgn_layers_data)=="year"))==0){
     r_rgn_layers_data$year = NA
