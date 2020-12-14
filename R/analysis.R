@@ -7,10 +7,12 @@ library(ggplot2)
 
 sim_elast_of_sub <- function(scorescsv, calcyear = 2014, elast_of_sub = c(0, 1), niter = 10000, goal_weights = NULL){
 
-  # goal_weights <- data.frame(
-  #   goal = unique(scorescsv$goal),
-  #   weight = rep(1, length(unique(scorescsv$goal)))
-  # )
+  if(is.null(goal_weights)){
+    goal_weights <- data.frame(
+      goal = unique(scorescsv$goal),
+      weight = rep(1, length(unique(scorescsv$goal)))
+    )
+  }
 
   ## keep BHI regions 'status' and 'future' dimensions
   scorescsv <- filter(scorescsv, region_id %in% 1:42)
@@ -57,9 +59,9 @@ sim_elast_of_sub <- function(scorescsv, calcyear = 2014, elast_of_sub = c(0, 1),
   registerDoParallel(cl)
 
   t0 <- Sys.time()
-  simulated_scores <- foreach(i = 1:length(nsample_uniform), .packages= c("tidyverse"), .combine = rbind) %dopar% {
+  simulated_scores <- foreach(i = 1:length(sigmas), .packages= c("tidyverse"), .combine = rbind) %dopar% {
 
-    s <- nsample_uniform[[i]]
+    s <- sigmas[[i]]
 
     simulated_scores <- goalscores %>%
 
@@ -86,7 +88,7 @@ sim_elast_of_sub <- function(scorescsv, calcyear = 2014, elast_of_sub = c(0, 1),
       arrange(desc(score)) %>%
       mutate(rank = rank(100-score)) %>%
       ungroup() %>%
-      mutate(elasticity = paste("sigma", round(s, 7)), modelrun = names(nsample_uniform[i]))
+      mutate(elasticity = paste("sigma", round(s, 7)), modelrun = names(sigmas[i]))
   }
   Sys.time() - t0
   stopCluster(cl)
